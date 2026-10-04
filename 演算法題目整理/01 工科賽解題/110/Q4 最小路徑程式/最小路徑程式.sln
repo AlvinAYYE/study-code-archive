@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "最小路徑程式", "最小路徑程式\最小路徑程式.csproj", "{0B4EB777-1C79-4FCE-978F-7206CC152CAE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B4EB777-1C79-4FCE-978F-7206CC152CAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B4EB777-1C79-4FCE-978F-7206CC152CAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B4EB777-1C79-4FCE-978F-7206CC152CAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B4EB777-1C79-4FCE-978F-7206CC152CAE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2B5B57CC-FE33-4538-BAD0-F7B2D6D1965B}
+	EndGlobalSection
+EndGlobal

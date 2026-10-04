@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "簡易依序循環之排程程式", "簡易依序循環之排程程式\簡易依序循環之排程程式.csproj", "{83F25C04-BBF0-4274-9E63-AD57A0B7A6FE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{83F25C04-BBF0-4274-9E63-AD57A0B7A6FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83F25C04-BBF0-4274-9E63-AD57A0B7A6FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83F25C04-BBF0-4274-9E63-AD57A0B7A6FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83F25C04-BBF0-4274-9E63-AD57A0B7A6FE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CCB6FF93-825B-4356-91E8-62EEB11BDD13}
+	EndGlobalSection
+EndGlobal

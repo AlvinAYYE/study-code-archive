@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33027.164
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "凸形直綫環繞系統", "凸形直綫環繞系統\凸形直綫環繞系統.csproj", "{6C1D1448-01B9-4FF6-95E4-50DF7EADCEF9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6C1D1448-01B9-4FF6-95E4-50DF7EADCEF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C1D1448-01B9-4FF6-95E4-50DF7EADCEF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C1D1448-01B9-4FF6-95E4-50DF7EADCEF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C1D1448-01B9-4FF6-95E4-50DF7EADCEF9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7E02979D-88FD-4565-9BAB-AC3C587D8801}
+	EndGlobalSection
+EndGlobal

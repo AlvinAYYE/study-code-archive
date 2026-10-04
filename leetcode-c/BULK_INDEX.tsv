@@ -1,0 +1,935 @@
+001|Two Sum|Easy|array, hash-table|kenjin_Awesome-LC-Cracker|两数之和|bulk/easy/001_two-sum.c
+002|Add Two Numbers|Medium|linked-list, math, recursion|kenjin_Awesome-LC-Cracker|两数相加|bulk/medium/002_add-two-numbers.c
+003|Longest Substring Without Repeating Characters|Medium|hash-table, string, sliding-window|vli02_leetcode|无重复字符的最长子串|bulk/medium/003_longest-substring-without-repeating-characters.c
+004|Median of Two Sorted Arrays|Hard|array, binary-search, divide-and-conquer|kenjin_Awesome-LC-Cracker|寻找两个正序数组的中位数|bulk/hard/004_median-of-two-sorted-arrays.c
+005|Longest Palindromic Substring|Medium|two-pointers, string, dynamic-programming|vli02_leetcode|最长回文子串|bulk/medium/005_longest-palindromic-substring.c
+006|Zigzag Conversion|Medium|string|vli02_leetcode|Z 字形变换|bulk/medium/006_zigzag-conversion.c
+007|Reverse Integer|Medium|math|vli02_leetcode|整数反转|bulk/medium/007_reverse-integer.c
+009|Palindrome Number|Easy|math|vli02_leetcode|回文數|bulk/easy/009_palindrome-number.c
+010|Regular Expression Matching|Hard|string, dynamic-programming, recursion|vli02_leetcode|正则表达式匹配|bulk/hard/010_regular-expression-matching.c
+011|Container With Most Water|Medium|array, two-pointers, greedy|vli02_leetcode|盛最多水的容器|bulk/medium/011_container-with-most-water.c
+013|Roman to Integer|Easy|hash-table, math, string|kenjin_Awesome-LC-Cracker|羅馬數字轉整數|bulk/easy/013_roman-to-integer.c
+014|Longest Common Prefix|Easy|array, string, trie|vli02_leetcode|最長共同前綴|bulk/easy/014_longest-common-prefix.c
+015|3Sum|Medium|array, two-pointers, sorting|kenjin_Awesome-LC-Cracker|三數之和|bulk/medium/015_3sum.c
+016|3Sum Closest|Medium|array, two-pointers, sorting|vli02_leetcode|最接近的三數之和|bulk/medium/016_3sum-closest.c
+017|Letter Combinations of a Phone Number|Medium|hash-table, string, backtracking|vli02_leetcode|電話號碼的字母組合|bulk/medium/017_letter-combinations-of-a-phone-number.c
+018|4Sum|Medium|array, two-pointers, sorting|kenjin_Awesome-LC-Cracker|四數之和|bulk/medium/018_4sum.c
+019|Remove Nth Node From End of List|Medium|linked-list, two-pointers|vli02_leetcode|刪除連結串列的倒數第 N 個節點|bulk/medium/019_remove-nth-node-from-end-of-list.c
+020|Valid Parentheses|Easy|string, stack|vli02_leetcode|有效的括號|bulk/easy/020_valid-parentheses.c
+021|Merge Two Sorted Lists|Easy|linked-list, recursion|vli02_leetcode|合併兩個有序連結串列|bulk/easy/021_merge-two-sorted-lists.c
+022|Generate Parentheses|Medium|string, dynamic-programming, backtracking|vli02_leetcode|括號生成|bulk/medium/022_generate-parentheses.c
+024|Swap Nodes in Pairs|Medium|linked-list, recursion|vli02_leetcode|兩兩交換連結串列中的節點|bulk/medium/024_swap-nodes-in-pairs.c
+025|Reverse Nodes in k-Group|Hard|linked-list, recursion|vli02_leetcode|K 個一組反轉連結串列|bulk/hard/025_reverse-nodes-in-k-group.c
+026|Remove Duplicates from Sorted Array|Easy|array, two-pointers|vli02_leetcode|刪除排序陣列中的重複項|bulk/easy/026_remove-duplicates-from-sorted-array.c
+027|Remove Element|Easy|array, two-pointers|vli02_leetcode|移除元素|bulk/easy/027_remove-element.c
+028|Find the Index of the First Occurrence in a String|Easy|two-pointers, string, string-matching|vli02_leetcode|找出字串中第一個符合項的下標|bulk/easy/028_find-the-index-of-the-first-occurrence-in-a-string.c
+029|Divide Two Integers|Medium|math, bit-manipulation|kenjin_Awesome-LC-Cracker|兩數相除|bulk/medium/029_divide-two-integers.c
+030|Substring with Concatenation of All Words|Hard|hash-table, string, sliding-window|vli02_leetcode|串聯所有單字的子字串|bulk/hard/030_substring-with-concatenation-of-all-words.c
+031|Next Permutation|Medium|array, two-pointers|vli02_leetcode|下一個排列|bulk/medium/031_next-permutation.c
+032|Longest Valid Parentheses|Hard|string, dynamic-programming, stack|vli02_leetcode|最長有效括號|bulk/hard/032_longest-valid-parentheses.c
+033|Search in Rotated Sorted Array|Medium|array, binary-search|vli02_leetcode|搜尋旋轉排序陣列|bulk/medium/033_search-in-rotated-sorted-array.c
+034|Find First and Last Position of Element in Sorted Array|Medium|array, binary-search|vli02_leetcode|在排序陣列中找元素的第一個和最後一個位置|bulk/medium/034_find-first-and-last-position-of-element-in-sorted-array.c
+035|Search Insert Position|Easy|array, binary-search|kenjin_Awesome-LC-Cracker|搜尋插入位置|bulk/easy/035_search-insert-position.c
+039|Combination Sum|Medium|array, backtracking|kenjin_Awesome-LC-Cracker|組合總和|bulk/medium/039_combination-sum.c
+040|Combination Sum II|Medium|array, backtracking|kenjin_Awesome-LC-Cracker|組合總和 II|bulk/medium/040_combination-sum-ii.c
+041|First Missing Positive|Hard|array, hash-table|vli02_leetcode|缺失的第一個正數|bulk/hard/041_first-missing-positive.c
+042|Trapping Rain Water|Hard|array, two-pointers, dynamic-programming, stack, monotonic-stack|vli02_leetcode|接雨水|bulk/hard/042_trapping-rain-water.c
+043|Multiply Strings|Medium|math, string, simulation|vli02_leetcode|字串相乘|bulk/medium/043_multiply-strings.c
+044|Wildcard Matching|Hard|string, dynamic-programming, greedy, recursion|vli02_leetcode|萬用字元匹配|bulk/hard/044_wildcard-matching.c
+045|Jump Game II|Medium|array, dynamic-programming, greedy|kenjin_Awesome-LC-Cracker|跳躍遊戲 II|bulk/medium/045_jump-game-ii.c
+046|Permutations|Medium|array, backtracking|begeekmyfriend_leetcode|全排列|bulk/medium/046_permutations.c
+047|Permutations II|Medium|array, backtracking, sorting|kenjin_Awesome-LC-Cracker|全排列 II|bulk/medium/047_permutations-ii.c
+048|Rotate Image|Medium|array, math, matrix|vli02_leetcode|旋轉影像|bulk/medium/048_rotate-image.c
+050|Pow(x, n)|Medium|math, recursion|vli02_leetcode|Pow(x, n)|bulk/medium/050_powx-n.c
+052|N-Queens II|Hard|backtracking|vli02_leetcode|N 皇后 II|bulk/hard/052_n-queens-ii.c
+053|Maximum Subarray|Medium|array, divide-and-conquer, dynamic-programming|vli02_leetcode|最大子陣列和|bulk/medium/053_maximum-subarray.c
+054|Spiral Matrix|Medium|array, matrix, simulation|begeekmyfriend_leetcode|螺旋矩陣|bulk/medium/054_spiral-matrix.c
+055|Jump Game|Medium|array, dynamic-programming, greedy|kenjin_Awesome-LC-Cracker|跳躍遊戲|bulk/medium/055_jump-game.c
+056|Merge Intervals|Medium|array, sorting|kenjin_Awesome-LC-Cracker|合併區間|bulk/medium/056_merge-intervals.c
+057|Insert Interval|Medium|array|kenjin_Awesome-LC-Cracker|插入區間|bulk/medium/057_insert-interval.c
+058|Length of Last Word|Easy|string|kenjin_Awesome-LC-Cracker|最後一個單字的長度|bulk/easy/058_length-of-last-word.c
+059|Spiral Matrix II|Medium|array, matrix, simulation|kenjin_Awesome-LC-Cracker|螺旋矩陣 II|bulk/medium/059_spiral-matrix-ii.c
+060|Permutation Sequence|Hard|math, recursion|kenjin_Awesome-LC-Cracker|第 k 個排列|bulk/hard/060_permutation-sequence.c
+061|Rotate List|Medium|linked-list, two-pointers|kenjin_Awesome-LC-Cracker|旋轉串列|bulk/medium/061_rotate-list.c
+062|Unique Paths|Medium|math, dynamic-programming, combinatorics|vli02_leetcode|不同路徑|bulk/medium/062_unique-paths.c
+063|Unique Paths II|Medium|array, dynamic-programming, matrix|kenjin_Awesome-LC-Cracker|不同路徑 II|bulk/medium/063_unique-paths-ii.c
+064|Minimum Path Sum|Medium|array, dynamic-programming, matrix|kenjin_Awesome-LC-Cracker|最小路徑和|bulk/medium/064_minimum-path-sum.c
+065|Valid Number|Hard|string|vli02_leetcode|有效數字|bulk/hard/065_valid-number.c
+066|Plus One|Easy|array, math|vli02_leetcode|加一|bulk/easy/066_plus-one.c
+067|Add Binary|Easy|math, string, bit-manipulation, simulation|kenjin_Awesome-LC-Cracker|二進位求和|bulk/easy/067_add-binary.c
+069|Sqrt(x)|Easy|math, binary-search|vli02_leetcode|x 的平方根|bulk/easy/069_sqrtx.c
+070|Climbing Stairs|Easy|math, dynamic-programming, memoization|vli02_leetcode|爬樓梯|bulk/easy/070_climbing-stairs.c
+071|Simplify Path|Medium|string, stack|kenjin_Awesome-LC-Cracker|簡化路徑|bulk/medium/071_simplify-path.c
+072|Edit Distance|Medium|string, dynamic-programming|vli02_leetcode|編輯距離|bulk/medium/072_edit-distance.c
+073|Set Matrix Zeroes|Medium|array, hash-table, matrix|begeekmyfriend_leetcode|矩陣置零|bulk/medium/073_set-matrix-zeroes.c
+074|Search a 2D Matrix|Medium|array, binary-search, matrix|kenjin_Awesome-LC-Cracker|搜尋二維矩陣|bulk/medium/074_search-a-2d-matrix.c
+075|Sort Colors|Medium|array, two-pointers, sorting|vli02_leetcode|顏色分類|bulk/medium/075_sort-colors.c
+076|Minimum Window Substring|Hard|hash-table, string, sliding-window|vli02_leetcode|最小覆蓋子字串|bulk/hard/076_minimum-window-substring.c
+077|Combinations|Medium|backtracking|kenjin_Awesome-LC-Cracker|組合|bulk/medium/077_combinations.c
+078|Subsets|Medium|array, backtracking, bit-manipulation|kenjin_Awesome-LC-Cracker|子集|bulk/medium/078_subsets.c
+080|Remove Duplicates from Sorted Array II|Medium|array, two-pointers|vli02_leetcode|刪除排序陣列中的重複項 II|bulk/medium/080_remove-duplicates-from-sorted-array-ii.c
+081|Search in Rotated Sorted Array II|Medium|array, binary-search|vli02_leetcode|搜尋旋轉排序陣列 II|bulk/medium/081_search-in-rotated-sorted-array-ii.c
+082|Remove Duplicates from Sorted List II|Medium|linked-list, two-pointers|vli02_leetcode|刪除排序串列中的重複元素 II|bulk/medium/082_remove-duplicates-from-sorted-list-ii.c
+083|Remove Duplicates from Sorted List|Easy|linked-list|self_sol|刪除排序串列中的重複元素|bulk/easy/083_remove-duplicates-from-sorted-list.c
+084|Largest Rectangle in Histogram|Hard|array, stack, monotonic-stack|kenjin_Awesome-LC-Cracker|柱狀圖中最大的矩形|bulk/hard/084_largest-rectangle-in-histogram.c
+086|Partition List|Medium|linked-list, two-pointers|kenjin_Awesome-LC-Cracker|分隔串列|bulk/medium/086_partition-list.c
+087|Scramble String|Hard|string, dynamic-programming|begeekmyfriend_leetcode|擾亂字串|bulk/hard/087_scramble-string.c
+088|Merge Sorted Array|Easy|array, two-pointers, sorting|DimitrisJim_leetcode_solutions|合併兩個排序陣列|bulk/easy/088_merge-sorted-array.c
+089|Gray Code|Medium|math, backtracking, bit-manipulation|vli02_leetcode|格雷編碼|bulk/medium/089_gray-code.c
+090|Subsets II|Medium|array, backtracking, bit-manipulation|kenjin_Awesome-LC-Cracker|子集 II|bulk/medium/090_subsets-ii.c
+091|Decode Ways|Medium|string, dynamic-programming|vli02_leetcode|解碼方法|bulk/medium/091_decode-ways.c
+092|Reverse Linked List II|Medium|linked-list|kenjin_Awesome-LC-Cracker|反轉鏈結串列 II|bulk/medium/092_reverse-linked-list-ii.c
+093|Restore IP Addresses|Medium|string, backtracking|vli02_leetcode|復原 IP 位址|bulk/medium/093_restore-ip-addresses.c
+094|Binary Tree Inorder Traversal|Easy|stack, tree, depth-first-search, binary-tree|self_sol|二元樹的中序走訪|bulk/easy/094_binary-tree-inorder-traversal.c
+096|Unique Binary Search Trees|Medium|math, dynamic-programming, tree, binary-search-tree, binary-tree|vli02_leetcode|不同的二元搜尋樹|bulk/medium/096_unique-binary-search-trees.c
+097|Interleaving String|Medium|string, dynamic-programming|lightmen_leetcode|交錯字串|bulk/medium/097_interleaving-string.c
+098|Validate Binary Search Tree|Medium|tree, depth-first-search, binary-search-tree, binary-tree|vli02_leetcode|驗證二元搜尋樹|bulk/medium/098_validate-binary-search-tree.c
+100|Same Tree|Easy|tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker|相同的樹|bulk/easy/100_same-tree.c
+101|Symmetric Tree|Easy|tree, depth-first-search, breadth-first-search, binary-tree|vli02_leetcode|對稱二元樹|bulk/easy/101_symmetric-tree.c
+104|Maximum Depth of Binary Tree|Easy|tree, depth-first-search, breadth-first-search, binary-tree|vli02_leetcode|二元樹的最大深度|bulk/easy/104_maximum-depth-of-binary-tree.c
+110|Balanced Binary Tree|Easy|tree, depth-first-search, binary-tree|self_sol|平衡二元樹|bulk/easy/110_balanced-binary-tree.c
+111|Minimum Depth of Binary Tree|Easy|tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker|二元樹的最小深度|bulk/easy/111_minimum-depth-of-binary-tree.c
+112|Path Sum|Easy|tree, depth-first-search, breadth-first-search, binary-tree|self_sol|路徑總和|bulk/easy/112_path-sum.c
+113|Path Sum II|Medium|backtracking, tree, depth-first-search, binary-tree|begeekmyfriend_leetcode|路徑總和 II|bulk/medium/113_path-sum-ii.c
+115|Distinct Subsequences|Hard|string, dynamic-programming|kenjin_Awesome-LC-Cracker|不同的子序列|bulk/hard/115_distinct-subsequences.c
+118|Pascal's Triangle|Easy|array, dynamic-programming|begeekmyfriend_leetcode|楊輝三角|bulk/easy/118_pascals-triangle.c
+119|Pascal's Triangle II|Easy|array, dynamic-programming|kenjin_Awesome-LC-Cracker|楊輝三角 II|bulk/easy/119_pascals-triangle-ii.c
+120|Triangle|Medium|array, dynamic-programming|vli02_leetcode|三角形最小路徑和|bulk/medium/120_triangle.c
+121|Best Time to Buy and Sell Stock|Easy|array, dynamic-programming|vli02_leetcode|買賣股票的最佳時機|bulk/easy/121_best-time-to-buy-and-sell-stock.c
+122|Best Time to Buy and Sell Stock II|Medium|array, dynamic-programming, greedy|vli02_leetcode|買賣股票的最佳時機 II|bulk/medium/122_best-time-to-buy-and-sell-stock-ii.c
+123|Best Time to Buy and Sell Stock III|Hard|array, dynamic-programming|vli02_leetcode|買賣股票的最佳時機 III|bulk/hard/123_best-time-to-buy-and-sell-stock-iii.c
+124|Binary Tree Maximum Path Sum|Hard|dynamic-programming, tree, depth-first-search, binary-tree|vli02_leetcode|二元樹中的最大路徑和|bulk/hard/124_binary-tree-maximum-path-sum.c
+125|Valid Palindrome|Easy|two-pointers, string|vli02_leetcode|驗證回文串|bulk/easy/125_valid-palindrome.c
+127|Word Ladder|Hard|hash-table, string, breadth-first-search|vli02_leetcode|單字接龍|bulk/hard/127_word-ladder.c
+128|Longest Consecutive Sequence|Medium|array, hash-table, union-find|kenjin_Awesome-LC-Cracker|最長連續序列|bulk/medium/128_longest-consecutive-sequence.c
+129|Sum Root to Leaf Numbers|Medium|tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker|根節點到葉節點數字之和|bulk/medium/129_sum-root-to-leaf-numbers.c
+132|Palindrome Partitioning II|Hard|string, dynamic-programming|vli02_leetcode|回文分割 II|bulk/hard/132_palindrome-partitioning-ii.c
+134|Gas Station|Medium|array, greedy|kenjin_Awesome-LC-Cracker|加油站|bulk/medium/134_gas-station.c
+135|Candy|Hard|array, greedy|vli02_leetcode|分發糖果|bulk/hard/135_candy.c
+136|Single Number|Easy|array, bit-manipulation|vli02_leetcode|只出現一次的數字|bulk/easy/136_single-number.c
+137|Single Number II|Medium|array, bit-manipulation|vli02_leetcode|只出現一次的數字 II|bulk/medium/137_single-number-ii.c
+139|Word Break|Medium|array, hash-table, string, dynamic-programming, trie, memoization|vli02_leetcode|單字拆分|bulk/medium/139_word-break.c
+140|Word Break II|Hard|array, hash-table, string, dynamic-programming, backtracking, trie, memoization|vli02_leetcode|單字拆分 II|bulk/hard/140_word-break-ii.c
+144|Binary Tree Preorder Traversal|Easy|stack, tree, depth-first-search, binary-tree|self_sol|二元樹的前序走訪|bulk/easy/144_binary-tree-preorder-traversal.c
+145|Binary Tree Postorder Traversal|Easy|stack, tree, depth-first-search, binary-tree|self_sol|二元樹的後序走訪|bulk/easy/145_binary-tree-postorder-traversal.c
+147|Insertion Sort List|Medium|linked-list, sorting|kenjin_Awesome-LC-Cracker|對鏈結串列進行插入排序|bulk/medium/147_insertion-sort-list.c
+148|Sort List|Medium|linked-list, two-pointers, divide-and-conquer, sorting, merge-sort|vli02_leetcode|排序鏈結串列|bulk/medium/148_sort-list.c
+149|Max Points on a Line|Hard|array, hash-table, math, geometry|Senthil455_Leetcode-Code|直線上的最大點數|bulk/hard/149_max-points-on-a-line.c
+150|Evaluate Reverse Polish Notation|Medium|array, math, stack|kenjin_Awesome-LC-Cracker|逆波蘭表示法求值|bulk/medium/150_evaluate-reverse-polish-notation.c
+151|Reverse Words in a String|Medium|two-pointers, string|kenjin_Awesome-LC-Cracker|反轉字串中的單字|bulk/medium/151_reverse-words-in-a-string.c
+152|Maximum Product Subarray|Medium|array, dynamic-programming|vli02_leetcode|乘積最大的子陣列|bulk/medium/152_maximum-product-subarray.c
+153|Find Minimum in Rotated Sorted Array|Medium|array, binary-search|kenjin_Awesome-LC-Cracker|尋找旋轉排序陣列中的最小值|bulk/medium/153_find-minimum-in-rotated-sorted-array.c
+154|Find Minimum in Rotated Sorted Array II|Hard|array, binary-search|kenjin_Awesome-LC-Cracker|尋找旋轉排序陣列中的最小值 II|bulk/hard/154_find-minimum-in-rotated-sorted-array-ii.c
+162|Find Peak Element|Medium|array, binary-search|vli02_leetcode|尋找峰值元素|bulk/medium/162_find-peak-element.c
+164|Maximum Gap|Medium|array, sorting, bucket-sort, radix-sort|lennylxx_leetcode|最大間距|bulk/medium/164_maximum-gap.c
+165|Compare Version Numbers|Medium|two-pointers, string|vli02_leetcode|比較版本號|bulk/medium/165_compare-version-numbers.c
+166|Fraction to Recurring Decimal|Medium|hash-table, math, string|vli02_leetcode|分數轉循環小數|bulk/medium/166_fraction-to-recurring-decimal.c
+167|Two Sum II - Input Array Is Sorted|Medium|array, two-pointers, binary-search|vli02_leetcode|兩數之和 II：輸入陣列已排序|bulk/medium/167_two-sum-ii-input-array-is-sorted.c
+168|Excel Sheet Column Title|Easy|math, string|vli02_leetcode|Excel 欄名稱|bulk/easy/168_excel-sheet-column-title.c
+169|Majority Element|Easy|array, hash-table, divide-and-conquer, sorting, counting|kenjin_Awesome-LC-Cracker|多數元素|bulk/easy/169_majority-element.c
+171|Excel Sheet Column Number|Easy|math, string|vli02_leetcode|Excel 欄編號|bulk/easy/171_excel-sheet-column-number.c
+172|Factorial Trailing Zeroes|Medium|math|kenjin_Awesome-LC-Cracker|階乘後的零|bulk/medium/172_factorial-trailing-zeroes.c
+174|Dungeon Game|Hard|array, dynamic-programming, matrix|kenjin_Awesome-LC-Cracker|地下城遊戲|bulk/hard/174_dungeon-game.c
+179|Largest Number|Medium|array, string, greedy, sorting|kenjin_Awesome-LC-Cracker|最大數|bulk/medium/179_largest-number.c
+187|Repeated DNA Sequences|Medium|hash-table, string, bit-manipulation, sliding-window, rolling-hash, hash-function|vli02_leetcode|重複的 DNA 序列|bulk/medium/187_repeated-dna-sequences.c
+188|Best Time to Buy and Sell Stock IV|Hard|array, dynamic-programming|vli02_leetcode|買賣股票的最佳時機 IV|bulk/hard/188_best-time-to-buy-and-sell-stock-iv.c
+189|Rotate Array|Medium|array, math, two-pointers|kenjin_Awesome-LC-Cracker|旋轉陣列|bulk/medium/189_rotate-array.c
+190|Reverse Bits|Easy|divide-and-conquer, bit-manipulation|lennylxx_leetcode|反轉位元|bulk/easy/190_reverse-bits.c
+191|Number of 1 Bits|Easy|divide-and-conquer, bit-manipulation|lennylxx_leetcode|1 的個數|bulk/easy/191_number-of-1-bits.c
+198|House Robber|Medium|array, dynamic-programming|vli02_leetcode|打家劫舍|bulk/medium/198_house-robber.c
+201|Bitwise AND of Numbers Range|Medium|bit-manipulation|kenjin_Awesome-LC-Cracker|數字範圍的位元 AND|bulk/medium/201_bitwise-and-of-numbers-range.c
+202|Happy Number|Easy|hash-table, math, two-pointers|vli02_leetcode|快樂數|bulk/easy/202_happy-number.c
+203|Remove Linked List Elements|Easy|linked-list, recursion|self_sol|移除鏈結串列元素|bulk/easy/203_remove-linked-list-elements.c
+204|Count Primes|Medium|array, math, enumeration, number-theory|lennylxx_leetcode|計數質數|bulk/medium/204_count-primes.c
+205|Isomorphic Strings|Easy|hash-table, string|vli02_leetcode|同構字串|bulk/easy/205_isomorphic-strings.c
+206|Reverse Linked List|Easy|linked-list, recursion|self_sol|反轉鏈結串列|bulk/easy/206_reverse-linked-list.c
+207|Course Schedule|Medium|depth-first-search, breadth-first-search, graph, topological-sort|vli02_leetcode|課程表|bulk/medium/207_course-schedule.c
+209|Minimum Size Subarray Sum|Medium|array, binary-search, sliding-window, prefix-sum|vli02_leetcode|長度最小的子陣列|bulk/medium/209_minimum-size-subarray-sum.c
+210|Course Schedule II|Medium|depth-first-search, breadth-first-search, graph, topological-sort|vli02_leetcode|課程表 II|bulk/medium/210_course-schedule-ii.c
+213|House Robber II|Medium|array, dynamic-programming|vli02_leetcode|打家劫舍 II|bulk/medium/213_house-robber-ii.c
+214|Shortest Palindrome|Hard|string, rolling-hash, string-matching, hash-function|tongtzeho_LeetCode|最短迴文|bulk/hard/214_shortest-palindrome.c
+215|Kth Largest Element in an Array|Medium|array, divide-and-conquer, sorting, heap-(priority-queue, quickselect|vli02_leetcode|陣列中的第 K 大元素|bulk/medium/215_kth-largest-element-in-an-array.c
+216|Combination Sum III|Medium|array, backtracking|kenjin_Awesome-LC-Cracker|組合總和 III|bulk/medium/216_combination-sum-iii.c
+217|Contains Duplicate|Easy|array, hash-table, sorting|vli02_leetcode|存在重複元素|bulk/easy/217_contains-duplicate.c
+219|Contains Duplicate II|Easy|array, hash-table, sliding-window|vli02_leetcode|存在重複元素 II|bulk/easy/219_contains-duplicate-ii.c
+220|Contains Duplicate III|Hard|array, sliding-window, sorting, bucket-sort, ordered-set|vli02_leetcode|存在重複元素 III|bulk/hard/220_contains-duplicate-iii.c
+222|Count Complete Tree Nodes|Easy|binary-search, bit-manipulation, tree, binary-tree|self_sol|完全二元樹的節點個數|bulk/easy/222_count-complete-tree-nodes.c
+223|Rectangle Area|Medium|math, geometry|vli02_leetcode|矩形面積|bulk/medium/223_rectangle-area.c
+224|Basic Calculator|Hard|math, string, stack, recursion|vli02_leetcode|基本計算機|bulk/hard/224_basic-calculator.c
+227|Basic Calculator II|Medium|math, string, stack|vli02_leetcode|基本計算機 II|bulk/medium/227_basic-calculator-ii.c
+228|Summary Ranges|Easy|array|vli02_leetcode|彙總區間|bulk/easy/228_summary-ranges.c
+229|Majority Element II|Medium|array, hash-table, sorting, counting|vli02_leetcode|多數元素 II|bulk/medium/229_majority-element-ii.c
+230|Kth Smallest Element in a BST|Medium|tree, depth-first-search, binary-search-tree, binary-tree|vli02_leetcode|二元搜尋樹中的第 K 小元素|bulk/medium/230_kth-smallest-element-in-a-bst.c
+231|Power of Two|Easy|math, bit-manipulation, recursion|vli02_leetcode|2 的冪次|bulk/easy/231_power-of-two.c
+233|Number of Digit One|Hard|math, dynamic-programming, recursion|lennylxx_leetcode|數字 1 的個數|bulk/hard/233_number-of-digit-one.c
+234|Palindrome Linked List|Easy|linked-list, two-pointers, stack, recursion|vli02_leetcode|迴文連結串列|bulk/easy/234_palindrome-linked-list.c
+238|Product of Array Except Self|Medium|array, prefix-sum|vli02_leetcode|除自身以外陣列的乘積|bulk/medium/238_product-of-array-except-self.c
+239|Sliding Window Maximum|Hard|array, queue, sliding-window, heap-(priority-queue, monotonic-queue|vli02_leetcode|滑動視窗最大值|bulk/hard/239_sliding-window-maximum.c
+240|Search a 2D Matrix II|Medium|array, binary-search, divide-and-conquer, matrix|lightmen_leetcode|搜尋二維矩陣 II|bulk/medium/240_search-a-2d-matrix-ii.c
+241|Different Ways to Add Parentheses|Medium|math, string, dynamic-programming, recursion, memoization|vli02_leetcode|為運算式設計優先序|bulk/medium/241_different-ways-to-add-parentheses.c
+242|Valid Anagram|Easy|hash-table, string, sorting|vli02_leetcode|有效的字母異位詞|bulk/easy/242_valid-anagram.c
+257|Binary Tree Paths|Easy|string, backtracking, tree, depth-first-search, binary-tree|vli02_leetcode|二元樹路徑|bulk/easy/257_binary-tree-paths.c
+258|Add Digits|Easy|math, simulation, number-theory|kenjin_Awesome-LC-Cracker|各位數相加|bulk/easy/258_add-digits.c
+260|Single Number III|Medium|array, bit-manipulation|vli02_leetcode|只出現一次的數字 III|bulk/medium/260_single-number-iii.c
+263|Ugly Number|Easy|math|vli02_leetcode|醜數|bulk/easy/263_ugly-number.c
+264|Ugly Number II|Medium|hash-table, math, dynamic-programming, heap-(priority-queue|vli02_leetcode|醜數 II|bulk/medium/264_ugly-number-ii.c
+268|Missing Number|Easy|array, hash-table, math, binary-search, bit-manipulation, sorting|vli02_leetcode|缺失的數字|bulk/easy/268_missing-number.c
+273|Integer to English Words|Hard|math, string, recursion|vli02_leetcode|整數轉英文單字|bulk/hard/273_integer-to-english-words.c
+274|H-Index|Medium|array, sorting, counting-sort|vli02_leetcode|H 指數|bulk/medium/274_h-index.c
+275|H-Index II|Medium|array, binary-search|vli02_leetcode|H 指數 II|bulk/medium/275_h-index-ii.c
+279|Perfect Squares|Medium|math, dynamic-programming, breadth-first-search|vli02_leetcode|完全平方數|bulk/medium/279_perfect-squares.c
+282|Expression Add Operators|Hard|math, string, backtracking|vli02_leetcode|為運算式加上運算子|bulk/hard/282_expression-add-operators.c
+283|Move Zeroes|Easy|array, two-pointers|vli02_leetcode|移動零|bulk/easy/283_move-zeroes.c
+287|Find the Duplicate Number|Medium|array, two-pointers, binary-search, bit-manipulation|vli02_leetcode|尋找重複數|bulk/medium/287_find-the-duplicate-number.c
+289|Game of Life|Medium|array, matrix, simulation|kenjin_Awesome-LC-Cracker|生命遊戲|bulk/medium/289_game-of-life.c
+290|Word Pattern|Easy|hash-table, string|vli02_leetcode|單詞規律|bulk/easy/290_word-pattern.c
+292|Nim Game|Easy|math, brainteaser, game-theory|vli02_leetcode|尼姆遊戲|bulk/easy/292_nim-game.c
+299|Bulls and Cows|Medium|hash-table, string, counting|kenjin_Awesome-LC-Cracker|猜數字遊戲|bulk/medium/299_bulls-and-cows.c
+300|Longest Increasing Subsequence|Medium|array, binary-search, dynamic-programming|vli02_leetcode|最長遞增子序列|bulk/medium/300_longest-increasing-subsequence.c
+301|Remove Invalid Parentheses|Hard|string, backtracking, breadth-first-search|vli02_leetcode|移除無效括號|bulk/hard/301_remove-invalid-parentheses.c
+309|Best Time to Buy and Sell Stock with Cooldown|Medium|array, dynamic-programming|vli02_leetcode|含冷凍期的最佳買賣股票時機|bulk/medium/309_best-time-to-buy-and-sell-stock-with-cooldown.c
+310|Minimum Height Trees|Medium|depth-first-search, breadth-first-search, graph, topological-sort|kenjin_Awesome-LC-Cracker|最小高度樹|bulk/medium/310_minimum-height-trees.c
+312|Burst Balloons|Hard|array, dynamic-programming|lightmen_leetcode|戳破氣球|bulk/hard/312_burst-balloons.c
+313|Super Ugly Number|Medium|array, math, dynamic-programming|lennylxx_leetcode|超級醜數|bulk/medium/313_super-ugly-number.c
+315|Count of Smaller Numbers After Self|Hard|array, binary-search, divide-and-conquer, binary-indexed-tree, segment-tree, merge-sort, ordered-set|vli02_leetcode|計算右側較小元素的數量|bulk/hard/315_count-of-smaller-numbers-after-self.c
+316|Remove Duplicate Letters|Medium|string, stack, greedy, monotonic-stack|lightmen_leetcode|移除重複字母|bulk/medium/316_remove-duplicate-letters.c
+318|Maximum Product of Word Lengths|Medium|array, string, bit-manipulation|vli02_leetcode|最大單字長度乘積|bulk/medium/318_maximum-product-of-word-lengths.c
+319|Bulb Switcher|Medium|math, brainteaser|zeplios_leetcode|燈泡開關|bulk/medium/319_bulb-switcher.c
+321|Create Maximum Number|Hard|array, two-pointers, stack, greedy, monotonic-stack|tongtzeho_LeetCode|建立最大數|bulk/hard/321_create-maximum-number.c
+322|Coin Change|Medium|array, dynamic-programming, breadth-first-search|vli02_leetcode|零錢兌換|bulk/medium/322_coin-change.c
+324|Wiggle Sort II|Medium|array, divide-and-conquer, greedy, sorting, quickselect|vli02_leetcode|擺動排序 II|bulk/medium/324_wiggle-sort-ii.c
+326|Power of Three|Easy|math, recursion|vli02_leetcode|3 的冪|bulk/easy/326_power-of-three.c
+327|Count of Range Sum|Hard|array, binary-search, divide-and-conquer, binary-indexed-tree, segment-tree, merge-sort, ordered-set|vli02_leetcode|區間和的個數|bulk/hard/327_count-of-range-sum.c
+328|Odd Even Linked List|Medium|linked-list|kenjin_Awesome-LC-Cracker|奇偶連結串列|bulk/medium/328_odd-even-linked-list.c
+329|Longest Increasing Path in a Matrix|Hard|array, dynamic-programming, depth-first-search, breadth-first-search, graph, topological-sort, memoization, matrix|kenjin_Awesome-LC-Cracker|矩陣中的最長遞增路徑|bulk/hard/329_longest-increasing-path-in-a-matrix.c
+330|Patching Array|Hard|array, greedy|kenjin_Awesome-LC-Cracker|修補陣列|bulk/hard/330_patching-array.c
+331|Verify Preorder Serialization of a Binary Tree|Medium|string, stack, tree, binary-tree|lightmen_leetcode|驗證二元樹的前序序列化|bulk/medium/331_verify-preorder-serialization-of-a-binary-tree.c
+334|Increasing Triplet Subsequence|Medium|array, greedy|vli02_leetcode|遞增三元子序列|bulk/medium/334_increasing-triplet-subsequence.c
+335|Self Crossing|Hard|array, math, geometry|tongtzeho_LeetCode|路徑交叉|bulk/hard/335_self-crossing.c
+336|Palindrome Pairs|Hard|array, hash-table, string, trie|kenjin_Awesome-LC-Cracker|回文配對|bulk/hard/336_palindrome-pairs.c
+337|House Robber III|Medium|dynamic-programming, tree, depth-first-search, binary-tree|vli02_leetcode|打家劫舍 III|bulk/medium/337_house-robber-iii.c
+338|Counting Bits|Easy|dynamic-programming, bit-manipulation|vli02_leetcode|位元計數|bulk/easy/338_counting-bits.c
+342|Power of Four|Easy|math, bit-manipulation, recursion|vli02_leetcode|4 的冪|bulk/easy/342_power-of-four.c
+343|Integer Break|Medium|math, dynamic-programming|kenjin_Awesome-LC-Cracker|整數拆分|bulk/medium/343_integer-break.c
+345|Reverse Vowels of a String|Easy|two-pointers, string|vli02_leetcode|反轉字串中的母音字母|bulk/easy/345_reverse-vowels-of-a-string.c
+347|Top K Frequent Elements|Medium|array, hash-table, divide-and-conquer, sorting, heap-(priority-queue, bucket-sort, counting, quickselect|kenjin_Awesome-LC-Cracker|前 K 個高頻元素|bulk/medium/347_top-k-frequent-elements.c
+349|Intersection of Two Arrays|Easy|array, hash-table, two-pointers, binary-search, sorting|kenjin_Awesome-LC-Cracker|兩個陣列的交集|bulk/easy/349_intersection-of-two-arrays.c
+350|Intersection of Two Arrays II|Easy|array, hash-table, two-pointers, binary-search, sorting|vli02_leetcode|兩個陣列的交集 II|bulk/easy/350_intersection-of-two-arrays-ii.c
+354|Russian Doll Envelopes|Hard|array, binary-search, dynamic-programming, sorting|begeekmyfriend_leetcode|俄羅斯套娃信封問題|bulk/hard/354_russian-doll-envelopes.c
+357|Count Numbers with Unique Digits|Medium|math, dynamic-programming, backtracking|ourhouchmohamed97_LeetCode_in_C|計算各位數字不同的數字個數|bulk/medium/357_count-numbers-with-unique-digits.c
+367|Valid Perfect Square|Easy|math, binary-search|vli02_leetcode|有效的完全平方數|bulk/easy/367_valid-perfect-square.c
+368|Largest Divisible Subset|Medium|array, math, dynamic-programming, sorting|kenjin_Awesome-LC-Cracker|最大可整除子集|bulk/medium/368_largest-divisible-subset.c
+371|Sum of Two Integers|Medium|math, bit-manipulation|kenjin_Awesome-LC-Cracker|兩整數之和|bulk/medium/371_sum-of-two-integers.c
+372|Super Pow|Medium|math, divide-and-conquer|ourhouchmohamed97_LeetCode_in_C|超級次方|bulk/medium/372_super-pow.c
+373|Find K Pairs with Smallest Sums|Medium|array, heap-(priority-queue|kenjin_Awesome-LC-Cracker|尋找和最小的 K 對數字|bulk/medium/373_find-k-pairs-with-smallest-sums.c
+375|Guess Number Higher or Lower II|Medium|math, dynamic-programming, game-theory|vli02_leetcode|猜數字大小 II|bulk/medium/375_guess-number-higher-or-lower-ii.c
+376|Wiggle Subsequence|Medium|array, dynamic-programming, greedy|kenjin_Awesome-LC-Cracker|擺動子序列|bulk/medium/376_wiggle-subsequence.c
+377|Combination Sum IV|Medium|array, dynamic-programming|vli02_leetcode|組合總和 IV|bulk/medium/377_combination-sum-iv.c
+378|Kth Smallest Element in a Sorted Matrix|Medium|array, binary-search, sorting, heap-(priority-queue, matrix|kenjin_Awesome-LC-Cracker|有序矩陣中第 K 小的元素|bulk/medium/378_kth-smallest-element-in-a-sorted-matrix.c
+383|Ransom Note|Easy|hash-table, string, counting|vli02_leetcode|贖金信|bulk/easy/383_ransom-note.c
+387|First Unique Character in a String|Easy|hash-table, string, queue, counting|vli02_leetcode|字串中的第一個唯一字元|bulk/easy/387_first-unique-character-in-a-string.c
+389|Find the Difference|Easy|hash-table, string, bit-manipulation, sorting|self_sol|找不同|bulk/easy/389_find-the-difference.c
+391|Perfect Rectangle|Hard|array, hash-table, math, geometry, line-sweep|vli02_leetcode|完美矩形|bulk/hard/391_perfect-rectangle.c
+392|Is Subsequence|Easy|two-pointers, string, dynamic-programming|vli02_leetcode|判斷子序列|bulk/easy/392_is-subsequence.c
+393|UTF-8 Validation|Medium|array, bit-manipulation|vli02_leetcode|UTF-8 驗證|bulk/medium/393_utf-8-validation.c
+394|Decode String|Medium|string, stack, recursion|vli02_leetcode|字串解碼|bulk/medium/394_decode-string.c
+397|Integer Replacement|Medium|dynamic-programming, greedy, bit-manipulation, memoization|vli02_leetcode|整數替換|bulk/medium/397_integer-replacement.c
+400|Nth Digit|Medium|math, binary-search|vli02_leetcode|第 N 位數字|bulk/medium/400_nth-digit.c
+401|Binary Watch|Easy|backtracking, bit-manipulation|vli02_leetcode|二進位手錶|bulk/easy/401_binary-watch.c
+402|Remove K Digits|Medium|string, stack, greedy, monotonic-stack|vli02_leetcode|移掉 K 位數字|bulk/medium/402_remove-k-digits.c
+403|Frog Jump|Hard|array, dynamic-programming|vli02_leetcode|青蛙過河|bulk/hard/403_frog-jump.c
+404|Sum of Left Leaves|Easy|tree, depth-first-search, breadth-first-search, binary-tree|vli02_leetcode|左葉子之和|bulk/easy/404_sum-of-left-leaves.c
+405|Convert a Number to Hexadecimal|Easy|math, string, bit-manipulation|BlackDragonF_LeetcodeSolutions|數字轉十六進位表示|bulk/easy/405_convert-a-number-to-hexadecimal.c
+406|Queue Reconstruction by Height|Medium|array, binary-indexed-tree, segment-tree, sorting|kenjin_Awesome-LC-Cracker|依身高重建佇列|bulk/medium/406_queue-reconstruction-by-height.c
+409|Longest Palindrome|Easy|hash-table, string, greedy|vli02_leetcode|最長迴文串|bulk/easy/409_longest-palindrome.c
+410|Split Array Largest Sum|Hard|array, binary-search, dynamic-programming, greedy, prefix-sum|vli02_leetcode|分割陣列的最大和|bulk/hard/410_split-array-largest-sum.c
+412|Fizz Buzz|Easy|math, string, simulation|kenjin_Awesome-LC-Cracker|Fizz Buzz|bulk/easy/412_fizz-buzz.c
+413|Arithmetic Slices|Medium|array, dynamic-programming, sliding-window|kenjin_Awesome-LC-Cracker|等差數列劃分|bulk/medium/413_arithmetic-slices.c
+414|Third Maximum Number|Easy|array, sorting|kenjin_Awesome-LC-Cracker|第三大的數|bulk/easy/414_third-maximum-number.c
+415|Add Strings|Easy|math, string, simulation|vli02_leetcode|字串相加|bulk/easy/415_add-strings.c
+416|Partition Equal Subset Sum|Medium|array, dynamic-programming|vli02_leetcode|分割等和子集|bulk/medium/416_partition-equal-subset-sum.c
+417|Pacific Atlantic Water Flow|Medium|array, depth-first-search, breadth-first-search, matrix|kenjin_Awesome-LC-Cracker|太平洋大西洋水流問題|bulk/medium/417_pacific-atlantic-water-flow.c
+421|Maximum XOR of Two Numbers in an Array|Medium|array, hash-table, bit-manipulation, trie|vli02_leetcode|陣列中兩數的最大異或值|bulk/medium/421_maximum-xor-of-two-numbers-in-an-array.c
+423|Reconstruct Original Digits from English|Medium|hash-table, math, string|BlackDragonF_LeetcodeSolutions|從英文重建原始數字|bulk/medium/423_reconstruct-original-digits-from-english.c
+424|Longest Repeating Character Replacement|Medium|hash-table, string, sliding-window|vli02_leetcode|替換後的最長重複字元|bulk/medium/424_longest-repeating-character-replacement.c
+433|Minimum Genetic Mutation|Medium|hash-table, string, breadth-first-search|Senthil455_Leetcode-Code|最小基因突變|bulk/medium/433_minimum-genetic-mutation.c
+434|Number of Segments in a String|Easy|string|BlackDragonF_LeetcodeSolutions|字串中的單詞數|bulk/easy/434_number-of-segments-in-a-string.c
+435|Non-overlapping Intervals|Medium|array, dynamic-programming, greedy, sorting|kenjin_Awesome-LC-Cracker|無重疊區間|bulk/medium/435_non-overlapping-intervals.c
+437|Path Sum III|Medium|tree, depth-first-search, binary-tree|vli02_leetcode|路徑總和 III|bulk/medium/437_path-sum-iii.c
+438|Find All Anagrams in a String|Medium|hash-table, string, sliding-window|vli02_leetcode|找到字串中所有字母異位詞|bulk/medium/438_find-all-anagrams-in-a-string.c
+441|Arranging Coins|Easy|math, binary-search|kenjin_Awesome-LC-Cracker|排列硬幣|bulk/easy/441_arranging-coins.c
+442|Find All Duplicates in an Array|Medium|array, hash-table|kenjin_Awesome-LC-Cracker|陣列中所有重複項|bulk/medium/442_find-all-duplicates-in-an-array.c
+445|Add Two Numbers II|Medium|linked-list, math, stack|kenjin_Awesome-LC-Cracker|兩數相加 II|bulk/medium/445_add-two-numbers-ii.c
+446|Arithmetic Slices II - Subsequence|Hard|array, dynamic-programming|kenjin_Awesome-LC-Cracker|等差數列劃分 II：子序列|bulk/hard/446_arithmetic-slices-ii-subsequence.c
+447|Number of Boomerangs|Medium|array, hash-table, math|vli02_leetcode|迴力鏢的數量|bulk/medium/447_number-of-boomerangs.c
+448|Find All Numbers Disappeared in an Array|Easy|array, hash-table|vli02_leetcode|找到所有陣列中消失的數字|bulk/easy/448_find-all-numbers-disappeared-in-an-array.c
+452|Minimum Number of Arrows to Burst Balloons|Medium|array, greedy, sorting|kenjin_Awesome-LC-Cracker|用最少數量的箭引爆氣球|bulk/medium/452_minimum-number-of-arrows-to-burst-balloons.c
+453|Minimum Moves to Equal Array Elements|Medium|array, math|kenjin_Awesome-LC-Cracker|最少移動次數使陣列元素相等|bulk/medium/453_minimum-moves-to-equal-array-elements.c
+454|4Sum II|Medium|array, hash-table|kenjin_Awesome-LC-Cracker|四數相加 II|bulk/medium/454_4sum-ii.c
+455|Assign Cookies|Easy|array, two-pointers, greedy, sorting|lightmen_leetcode|分配餅乾|bulk/easy/455_assign-cookies.c
+456|132 Pattern|Medium|array, binary-search, stack, monotonic-stack, ordered-set|kenjin_Awesome-LC-Cracker|132 模式|bulk/medium/456_132-pattern.c
+457|Circular Array Loop|Medium|array, hash-table, two-pointers|kenjin_Awesome-LC-Cracker|環形陣列迴圈|bulk/medium/457_circular-array-loop.c
+458|Poor Pigs|Hard|math, dynamic-programming, combinatorics|tongtzeho_LeetCode|可憐的小豬|bulk/hard/458_poor-pigs.c
+459|Repeated Substring Pattern|Easy|string, string-matching|vli02_leetcode|重複的子字串模式|bulk/easy/459_repeated-substring-pattern.c
+461|Hamming Distance|Easy|bit-manipulation|vli02_leetcode|漢明距離|bulk/easy/461_hamming-distance.c
+463|Island Perimeter|Easy|array, depth-first-search, breadth-first-search, matrix|kenjin_Awesome-LC-Cracker|島嶼周長|bulk/easy/463_island-perimeter.c
+467|Unique Substrings in Wraparound String|Medium|string, dynamic-programming|kenjin_Awesome-LC-Cracker|環繞字串中的唯一子字串|bulk/medium/467_unique-substrings-in-wraparound-string.c
+468|Validate IP Address|Medium|string|kenjin_Awesome-LC-Cracker|驗證 IP 位址|bulk/medium/468_validate-ip-address.c
+474|Ones and Zeroes|Medium|array, string, dynamic-programming|kenjin_Awesome-LC-Cracker|一和零|bulk/medium/474_ones-and-zeroes.c
+475|Heaters|Medium|array, two-pointers, binary-search, sorting|vli02_leetcode|供暖器|bulk/medium/475_heaters.c
+476|Number Complement|Easy|bit-manipulation|vli02_leetcode|數字的補數|bulk/easy/476_number-complement.c
+477|Total Hamming Distance|Medium|array, math, bit-manipulation|vli02_leetcode|漢明距離總和|bulk/medium/477_total-hamming-distance.c
+482|License Key Formatting|Easy|string|vli02_leetcode|密鑰格式化|bulk/easy/482_license-key-formatting.c
+485|Max Consecutive Ones|Easy|array|kenjin_Awesome-LC-Cracker|最大連續 1 的個數|bulk/easy/485_max-consecutive-ones.c
+491|Non-decreasing Subsequences|Medium|array, hash-table, backtracking, bit-manipulation|kenjin_Awesome-LC-Cracker|遞增子序列|bulk/medium/491_non-decreasing-subsequences.c
+492|Construct the Rectangle|Easy|math|self_sol|建構矩形|bulk/easy/492_construct-the-rectangle.c
+493|Reverse Pairs|Hard|array, binary-search, divide-and-conquer, binary-indexed-tree, segment-tree, merge-sort, ordered-set|tongtzeho_LeetCode|翻轉對|bulk/hard/493_reverse-pairs.c
+494|Target Sum|Medium|array, dynamic-programming, backtracking|vli02_leetcode|目標和|bulk/medium/494_target-sum.c
+495|Teemo Attacking|Easy|array, simulation|BlackDragonF_LeetcodeSolutions|提莫攻擊|bulk/easy/495_teemo-attacking.c
+496|Next Greater Element I|Easy|array, hash-table, stack, monotonic-stack|kenjin_Awesome-LC-Cracker|下一個更大元素 I|bulk/easy/496_next-greater-element-i.c
+498|Diagonal Traverse|Medium|array, matrix, simulation|kenjin_Awesome-LC-Cracker|對角線遍歷|bulk/medium/498_diagonal-traverse.c
+500|Keyboard Row|Easy|array, hash-table, string|lightmen_leetcode|鍵盤列|bulk/easy/500_keyboard-row.c
+501|Find Mode in Binary Search Tree|Easy|tree, depth-first-search, binary-search-tree, binary-tree|kenjin_Awesome-LC-Cracker|二元搜尋樹中的眾數|bulk/easy/501_find-mode-in-binary-search-tree.c
+502|IPO|Hard|array, greedy, sorting, heap-(priority-queue|kenjin_Awesome-LC-Cracker|IPO|bulk/hard/502_ipo.c
+503|Next Greater Element II|Medium|array, stack, monotonic-stack|kenjin_Awesome-LC-Cracker|下一個更大元素 II|bulk/medium/503_next-greater-element-ii.c
+504|Base 7|Easy|math, string|BlackDragonF_LeetcodeSolutions|七進制數|bulk/easy/504_base-7.c
+506|Relative Ranks|Easy|array, sorting, heap-(priority-queue|akib-islam-coder_leetcodesolutions|相對名次|bulk/easy/506_relative-ranks.c
+507|Perfect Number|Easy|math|kenjin_Awesome-LC-Cracker|完美數|bulk/easy/507_perfect-number.c
+508|Most Frequent Subtree Sum|Medium|hash-table, tree, depth-first-search, binary-tree|BlackDragonF_LeetcodeSolutions|出現次數最多的子樹元素和|bulk/medium/508_most-frequent-subtree-sum.c
+509|Fibonacci Number|Easy|math, dynamic-programming, recursion, memoization|MainakRepositor_LeetCode-C|斐波那契數|bulk/easy/509_fibonacci-number.c
+513|Find Bottom Left Tree Value|Medium|tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker|找樹左下角的值|bulk/medium/513_find-bottom-left-tree-value.c
+515|Find Largest Value in Each Tree Row|Medium|tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker|每個樹列中的最大值|bulk/medium/515_find-largest-value-in-each-tree-row.c
+516|Longest Palindromic Subsequence|Medium|string, dynamic-programming|vli02_leetcode|最長回文子序列|bulk/medium/516_longest-palindromic-subsequence.c
+518|Coin Change II|Medium|array, dynamic-programming|kenjin_Awesome-LC-Cracker|零錢兌換 II|bulk/medium/518_coin-change-ii.c
+520|Detect Capital|Easy|string|6lc_git|偵測大寫字母|bulk/easy/520_detect-capital.c
+521|Longest Uncommon Subsequence I|Easy|string|DimitrisJim_leetcode_solutions|最長特殊子序列 I|bulk/easy/521_longest-uncommon-subsequence-i.c
+523|Continuous Subarray Sum|Medium|array, hash-table, math, prefix-sum|vli02_leetcode|連續子陣列和|bulk/medium/523_continuous-subarray-sum.c
+525|Contiguous Array|Medium|array, hash-table, prefix-sum|vli02_leetcode|連續陣列|bulk/medium/525_contiguous-array.c
+530|Minimum Absolute Difference in BST|Easy|tree, depth-first-search, breadth-first-search, binary-search-tree, binary-tree|kenjin_Awesome-LC-Cracker|二元搜尋樹的最小絕對差|bulk/easy/530_minimum-absolute-difference-in-bst.c
+532|K-diff Pairs in an Array|Medium|array, hash-table, two-pointers, binary-search, sorting|kenjin_Awesome-LC-Cracker|陣列中的 K 差值數對|bulk/medium/532_k-diff-pairs-in-an-array.c
+539|Minimum Time Difference|Medium|array, math, string, sorting|kenjin_Awesome-LC-Cracker|最小時間差|bulk/medium/539_minimum-time-difference.c
+541|Reverse String II|Easy|two-pointers, string|kenjin_Awesome-LC-Cracker|反轉字串 II|bulk/easy/541_reverse-string-ii.c
+542|01 Matrix|Medium|array, dynamic-programming, breadth-first-search, matrix|kenjin_Awesome-LC-Cracker|01 矩陣|bulk/medium/542_01-matrix.c
+543|Diameter of Binary Tree|Easy|tree, depth-first-search, binary-tree|vli02_leetcode|二元樹的直徑|bulk/easy/543_diameter-of-binary-tree.c
+547|Number of Provinces|Medium|depth-first-search, breadth-first-search, union-find, graph|kenjin_Awesome-LC-Cracker|省份數量|bulk/medium/547_number-of-provinces.c
+551|Student Attendance Record I|Easy|string|DimitrisJim_leetcode_solutions|學生出席紀錄 I|bulk/easy/551_student-attendance-record-i.c
+556|Next Greater Element III|Medium|math, two-pointers, string|caotrongphuoc_algorithms|下一個更大元素 III|bulk/medium/556_next-greater-element-iii.c
+557|Reverse Words in a String III|Easy|two-pointers, string|kenjin_Awesome-LC-Cracker|反轉字串中的單字 III|bulk/easy/557_reverse-words-in-a-string-iii.c
+560|Subarray Sum Equals K|Medium|array, hash-table, prefix-sum|vli02_leetcode|和為 K 的子陣列|bulk/medium/560_subarray-sum-equals-k.c
+561|Array Partition|Easy|array, greedy, sorting, counting-sort|kenjin_Awesome-LC-Cracker|陣列分割|bulk/easy/561_array-partition.c
+563|Binary Tree Tilt|Easy|tree, depth-first-search, binary-tree|akib-islam-coder_leetcodesolutions|二元樹的坡度|bulk/easy/563_binary-tree-tilt.c
+565|Array Nesting|Medium|array, depth-first-search|kenjin_Awesome-LC-Cracker|陣列巢狀|bulk/medium/565_array-nesting.c
+566|Reshape the Matrix|Easy|array, matrix, simulation|DimitrisJim_leetcode_solutions|重塑矩陣|bulk/easy/566_reshape-the-matrix.c
+567|Permutation in String|Medium|hash-table, two-pointers, string, sliding-window|vli02_leetcode|字串的排列|bulk/medium/567_permutation-in-string.c
+572|Subtree of Another Tree|Easy|tree, depth-first-search, string-matching, binary-tree, hash-function|vli02_leetcode|另一棵樹的子樹|bulk/easy/572_subtree-of-another-tree.c
+575|Distribute Candies|Easy|array, hash-table|akib-islam-coder_leetcodesolutions|分發糖果|bulk/easy/575_distribute-candies.c
+576|Out of Boundary Paths|Medium|dynamic-programming|kenjin_Awesome-LC-Cracker|出界的路徑數|bulk/medium/576_out-of-boundary-paths.c
+581|Shortest Unsorted Continuous Subarray|Medium|array, two-pointers, stack, greedy, sorting, monotonic-stack|kenjin_Awesome-LC-Cracker|最短未排序連續子陣列|bulk/medium/581_shortest-unsorted-continuous-subarray.c
+583|Delete Operation for Two Strings|Medium|string, dynamic-programming|kenjin_Awesome-LC-Cracker|兩個字串的刪除操作|bulk/medium/583_delete-operation-for-two-strings.c
+594|Longest Harmonious Subsequence|Easy|array, hash-table, sliding-window, sorting, counting|kenjin_Awesome-LC-Cracker|最長和諧子序列|bulk/easy/594_longest-harmonious-subsequence.c
+598|Range Addition II|Easy|array, math|kenjin_Awesome-LC-Cracker|範圍加法 II|bulk/easy/598_range-addition-ii.c
+599|Minimum Index Sum of Two Lists|Easy|array, hash-table, string|kenjin_Awesome-LC-Cracker|兩個列表的最小索引總和|bulk/easy/599_minimum-index-sum-of-two-lists.c
+605|Can Place Flowers|Easy|array, greedy|kenjin_Awesome-LC-Cracker|種花問題|bulk/easy/605_can-place-flowers.c
+606|Construct String from Binary Tree|Medium|string, tree, depth-first-search, binary-tree|akib-islam-coder_leetcodesolutions|根據二叉樹建立字串|bulk/medium/606_construct-string-from-binary-tree.c
+611|Valid Triangle Number|Medium|array, two-pointers, binary-search, greedy, sorting|kenjin_Awesome-LC-Cracker|有效三角形的個數|bulk/medium/611_valid-triangle-number.c
+628|Maximum Product of Three Numbers|Easy|array, math, sorting|kenjin_Awesome-LC-Cracker|三個數的最大乘積|bulk/easy/628_maximum-product-of-three-numbers.c
+629|K Inverse Pairs Array|Hard|dynamic-programming|kenjin_Awesome-LC-Cracker|K 個逆序對陣列|bulk/hard/629_k-inverse-pairs-array.c
+630|Course Schedule III|Hard|array, greedy, sorting, heap-(priority-queue|vli02_leetcode|課程表 III|bulk/hard/630_course-schedule-iii.c
+633|Sum of Square Numbers|Medium|math, two-pointers, binary-search|kenjin_Awesome-LC-Cracker|平方數之和|bulk/medium/633_sum-of-square-numbers.c
+636|Exclusive Time of Functions|Medium|array, stack|vli02_leetcode|函式的獨占時間|bulk/medium/636_exclusive-time-of-functions.c
+637|Average of Levels in Binary Tree|Easy|tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker|二叉樹的層平均值|bulk/easy/637_average-of-levels-in-binary-tree.c
+639|Decode Ways II|Hard|string, dynamic-programming|vli02_leetcode|解碼方法 II|bulk/hard/639_decode-ways-ii.c
+643|Maximum Average Subarray I|Easy|array, sliding-window|Senthil455_Leetcode-Code|子陣列最大平均數 I|bulk/easy/643_maximum-average-subarray-i.c
+645|Set Mismatch|Easy|array, hash-table, bit-manipulation, sorting|kenjin_Awesome-LC-Cracker|錯誤的集合|bulk/easy/645_set-mismatch.c
+646|Maximum Length of Pair Chain|Medium|array, dynamic-programming, greedy, sorting|vli02_leetcode|最長數對鏈|bulk/medium/646_maximum-length-of-pair-chain.c
+647|Palindromic Substrings|Medium|two-pointers, string, dynamic-programming|vli02_leetcode|回文子串|bulk/medium/647_palindromic-substrings.c
+648|Replace Words|Medium|array, hash-table, string, trie|vli02_leetcode|單詞替換|bulk/medium/648_replace-words.c
+649|Dota2 Senate|Medium|string, greedy, queue|Senthil455_Leetcode-Code|Dota2 參議院|bulk/medium/649_dota2-senate.c
+653|Two Sum IV - Input is a BST|Easy|hash-table, two-pointers, tree, depth-first-search, breadth-first-search, binary-search-tree, binary-tree|kenjin_Awesome-LC-Cracker|兩數之和 IV－輸入為 BST|bulk/easy/653_two-sum-iv-input-is-a-bst.c
+657|Robot Return to Origin|Easy|string, simulation|kenjin_Awesome-LC-Cracker|機器人能否返回原點|bulk/easy/657_robot-return-to-origin.c
+658|Find K Closest Elements|Medium|array, two-pointers, binary-search, sliding-window, sorting, heap-(priority-queue|kenjin_Awesome-LC-Cracker|找到 K 個最接近的元素|bulk/medium/658_find-k-closest-elements.c
+661|Image Smoother|Easy|array, matrix|kenjin_Awesome-LC-Cracker|圖片平滑器|bulk/easy/661_image-smoother.c
+662|Maximum Width of Binary Tree|Medium|tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker|二叉樹的最大寬度|bulk/medium/662_maximum-width-of-binary-tree.c
+665|Non-decreasing Array|Medium|array|kenjin_Awesome-LC-Cracker|非遞減陣列|bulk/medium/665_non-decreasing-array.c
+671|Second Minimum Node In a Binary Tree|Easy|tree, depth-first-search, binary-tree|akib-islam-coder_leetcodesolutions|二叉樹中第二小的節點|bulk/easy/671_second-minimum-node-in-a-binary-tree.c
+673|Number of Longest Increasing Subsequence|Medium|array, dynamic-programming, binary-indexed-tree, segment-tree|vli02_leetcode|最長遞增子序列的個數|bulk/medium/673_number-of-longest-increasing-subsequence.c
+674|Longest Continuous Increasing Subsequence|Easy|array|kenjin_Awesome-LC-Cracker|最長連續遞增序列|bulk/easy/674_longest-continuous-increasing-subsequence.c
+678|Valid Parenthesis String|Medium|string, dynamic-programming, stack, greedy|kenjin_Awesome-LC-Cracker|有效的括號字串|bulk/medium/678_valid-parenthesis-string.c
+679|24 Game|Hard|array, math, backtracking|6lc_git|24 點遊戲|bulk/hard/679_24-game.c
+680|Valid Palindrome II|Easy|two-pointers, string, greedy|kenjin_Awesome-LC-Cracker|驗證回文字符串 II|bulk/easy/680_valid-palindrome-ii.c
+684|Redundant Connection|Medium|depth-first-search, breadth-first-search, union-find, graph|kenjin_Awesome-LC-Cracker|冗餘連線|bulk/medium/684_redundant-connection.c
+685|Redundant Connection II|Hard|depth-first-search, breadth-first-search, union-find, graph|kenjin_Awesome-LC-Cracker|冗餘連線 II|bulk/hard/685_redundant-connection-ii.c
+687|Longest Univalue Path|Medium|tree, depth-first-search, binary-tree|vli02_leetcode|最長同值路徑|bulk/medium/687_longest-univalue-path.c
+689|Maximum Sum of 3 Non-Overlapping Subarrays|Hard|array, dynamic-programming, sliding-window, prefix-sum|vli02_leetcode|三個不重疊子陣列的最大和|bulk/hard/689_maximum-sum-of-3-non-overlapping-subarrays.c
+692|Top K Frequent Words|Medium|array, hash-table, string, trie, sorting, heap-(priority-queue, bucket-sort, counting|kenjin_Awesome-LC-Cracker|前 K 個高頻單詞|bulk/medium/692_top-k-frequent-words.c
+693|Binary Number with Alternating Bits|Easy|bit-manipulation|vli02_leetcode|交替位元的二進位數|bulk/easy/693_binary-number-with-alternating-bits.c
+695|Max Area of Island|Medium|array, depth-first-search, breadth-first-search, union-find, matrix|kenjin_Awesome-LC-Cracker|島嶼的最大面積|bulk/medium/695_max-area-of-island.c
+696|Count Binary Substrings|Easy|two-pointers, string|6lc_git|計數二進位子字串|bulk/easy/696_count-binary-substrings.c
+697|Degree of an Array|Easy|array, hash-table|kenjin_Awesome-LC-Cracker|陣列的度|bulk/easy/697_degree-of-an-array.c
+704|Binary Search|Easy|array, binary-search|kenjin_Awesome-LC-Cracker|二分搜尋|bulk/easy/704_binary-search.c
+709|To Lower Case|Easy|string|kenjin_Awesome-LC-Cracker|轉換成小寫字母|bulk/easy/709_to-lower-case.c
+713|Subarray Product Less Than K|Medium|array, binary-search, sliding-window, prefix-sum|kenjin_Awesome-LC-Cracker|乘積小於 K 的子陣列|bulk/medium/713_subarray-product-less-than-k.c
+714|Best Time to Buy and Sell Stock with Transaction Fee|Medium|array, dynamic-programming, greedy|kenjin_Awesome-LC-Cracker|買賣股票的最佳時機含手續費|bulk/medium/714_best-time-to-buy-and-sell-stock-with-transaction-fee.c
+717|1-bit and 2-bit Characters|Easy|array|self_sol|1 位元與 2 位元字元|bulk/easy/717_1-bit-and-2-bit-characters.c
+718|Maximum Length of Repeated Subarray|Medium|array, binary-search, dynamic-programming, sliding-window, rolling-hash, hash-function|kenjin_Awesome-LC-Cracker|最長重複子陣列|bulk/medium/718_maximum-length-of-repeated-subarray.c
+719|Find K-th Smallest Pair Distance|Hard|array, two-pointers, binary-search, sorting|kenjin_Awesome-LC-Cracker|找出第 K 小的數對距離|bulk/hard/719_find-k-th-smallest-pair-distance.c
+720|Longest Word in Dictionary|Medium|array, hash-table, string, trie, sorting|kenjin_Awesome-LC-Cracker|字典中的最長單詞|bulk/medium/720_longest-word-in-dictionary.c
+724|Find Pivot Index|Easy|array, prefix-sum|kenjin_Awesome-LC-Cracker|尋找樞紐索引|bulk/easy/724_find-pivot-index.c
+728|Self Dividing Numbers|Easy|math|ourhouchmohamed97_LeetCode_in_C|自除數|bulk/easy/728_self-dividing-numbers.c
+733|Flood Fill|Easy|array, depth-first-search, breadth-first-search, matrix|kenjin_Awesome-LC-Cracker|圖像渲染|bulk/easy/733_flood-fill.c
+735|Asteroid Collision|Medium|array, stack, simulation|kenjin_Awesome-LC-Cracker|行星碰撞|bulk/medium/735_asteroid-collision.c
+736|Parse Lisp Expression|Hard|hash-table, string, stack, recursion|vli02_leetcode|解析 Lisp 表達式|bulk/hard/736_parse-lisp-expression.c
+738|Monotone Increasing Digits|Medium|math, greedy|kenjin_Awesome-LC-Cracker|單調遞增的數字|bulk/medium/738_monotone-increasing-digits.c
+739|Daily Temperatures|Medium|array, stack, monotonic-stack|kenjin_Awesome-LC-Cracker|每日溫度|bulk/medium/739_daily-temperatures.c
+743|Network Delay Time|Medium|depth-first-search, breadth-first-search, graph, heap-(priority-queue, shortest-path|kenjin_Awesome-LC-Cracker|網路延遲時間|bulk/medium/743_network-delay-time.c
+746|Min Cost Climbing Stairs|Easy|array, dynamic-programming|kenjin_Awesome-LC-Cracker|使用最小花費爬樓梯|bulk/easy/746_min-cost-climbing-stairs.c
+747|Largest Number At Least Twice of Others|Easy|array, sorting|kenjin_Awesome-LC-Cracker|至少是其他數字兩倍的最大數|bulk/easy/747_largest-number-at-least-twice-of-others.c
+748|Shortest Completing Word|Easy|array, hash-table, string|kenjin_Awesome-LC-Cracker|最短補全單詞|bulk/easy/748_shortest-completing-word.c
+752|Open the Lock|Medium|array, hash-table, string, breadth-first-search|kenjin_Awesome-LC-Cracker|打開轉盤鎖|bulk/medium/752_open-the-lock.c
+762|Prime Number of Set Bits in Binary Representation|Easy|math, bit-manipulation|self_sol|二進位表示中質數個計算置位|bulk/easy/762_prime-number-of-set-bits-in-binary-representation.c
+763|Partition Labels|Medium|hash-table, two-pointers, string, greedy|kenjin_Awesome-LC-Cracker|劃分字母區間|bulk/medium/763_partition-labels.c
+766|Toeplitz Matrix|Easy|array, matrix|DimitrisJim_leetcode_solutions|托普利茲矩陣|bulk/easy/766_toeplitz-matrix.c
+767|Reorganize String|Medium|hash-table, string, greedy, sorting, heap-(priority-queue, counting|vli02_leetcode|重組字串|bulk/medium/767_reorganize-string.c
+771|Jewels and Stones|Easy|hash-table, string|kenjin_Awesome-LC-Cracker|寶石與石頭|bulk/easy/771_jewels-and-stones.c
+773|Sliding Puzzle|Hard|array, dynamic-programming, backtracking, breadth-first-search, memoization, matrix|caotrongphuoc_algorithms|滑動拼圖|bulk/hard/773_sliding-puzzle.c
+777|Swap Adjacent in LR String|Medium|two-pointers, string|vli02_leetcode|LR 字串中的相鄰交換|bulk/medium/777_swap-adjacent-in-lr-string.c
+779|K-th Symbol in Grammar|Medium|math, bit-manipulation, recursion|kenjin_Awesome-LC-Cracker|第 K 個文法符號|bulk/medium/779_k-th-symbol-in-grammar.c
+780|Reaching Points|Hard|math|vli02_leetcode|到達座標|bulk/hard/780_reaching-points.c
+783|Minimum Distance Between BST Nodes|Easy|tree, depth-first-search, breadth-first-search, binary-search-tree, binary-tree|kenjin_Awesome-LC-Cracker|BST 節點間的最小距離|bulk/easy/783_minimum-distance-between-bst-nodes.c
+784|Letter Case Permutation|Medium|string, backtracking, bit-manipulation|kenjin_Awesome-LC-Cracker|字母大小寫排列|bulk/medium/784_letter-case-permutation.c
+786|K-th Smallest Prime Fraction|Medium|array, two-pointers, binary-search, sorting, heap-(priority-queue|kenjin_Awesome-LC-Cracker|第 K 小的質數分數|bulk/medium/786_k-th-smallest-prime-fraction.c
+787|Cheapest Flights Within K Stops|Medium|dynamic-programming, depth-first-search, breadth-first-search, graph, heap-(priority-queue, shortest-path|kenjin_Awesome-LC-Cracker|K 次轉機內最便宜的航班|bulk/medium/787_cheapest-flights-within-k-stops.c
+788|Rotated Digits|Medium|math, dynamic-programming|kenjin_Awesome-LC-Cracker|旋轉數字|bulk/medium/788_rotated-digits.c
+791|Custom Sort String|Medium|hash-table, string, sorting|kenjin_Awesome-LC-Cracker|自訂字串排序|bulk/medium/791_custom-sort-string.c
+796|Rotate String|Easy|string, string-matching|kenjin_Awesome-LC-Cracker|旋轉字串|bulk/easy/796_rotate-string.c
+799|Champagne Tower|Medium|dynamic-programming|ourhouchmohamed97_LeetCode_in_C|香檳塔|bulk/medium/799_champagne-tower.c
+804|Unique Morse Code Words|Easy|array, hash-table, string|DimitrisJim_leetcode_solutions|獨特的摩斯密碼詞|bulk/easy/804_unique-morse-code-words.c
+806|Number of Lines To Write String|Easy|array, string|akib-islam-coder_leetcodesolutions|寫字串所需的行數|bulk/easy/806_number-of-lines-to-write-string.c
+807|Max Increase to Keep City Skyline|Medium|array, greedy, matrix|DimitrisJim_leetcode_solutions|保持城市天際線的最大增高|bulk/medium/807_max-increase-to-keep-city-skyline.c
+808|Soup Servings|Medium|math, dynamic-programming, probability-and-statistics|ourhouchmohamed97_LeetCode_in_C|分湯|bulk/medium/808_soup-servings.c
+809|Expressive Words|Medium|array, two-pointers, string|vli02_leetcode|彈性字串|bulk/medium/809_expressive-words.c
+811|Subdomain Visit Count|Medium|array, hash-table, string, counting|kenjin_Awesome-LC-Cracker|子網域造訪計數|bulk/medium/811_subdomain-visit-count.c
+812|Largest Triangle Area|Easy|array, math, geometry|ourhouchmohamed97_LeetCode_in_C|最大三角形面積|bulk/easy/812_largest-triangle-area.c
+813|Largest Sum of Averages|Medium|array, dynamic-programming, prefix-sum|kenjin_Awesome-LC-Cracker|最大平均值和|bulk/medium/813_largest-sum-of-averages.c
+816|Ambiguous Coordinates|Medium|string, backtracking, enumeration|kenjin_Awesome-LC-Cracker|模糊座標|bulk/medium/816_ambiguous-coordinates.c
+817|Linked List Components|Medium|array, hash-table, linked-list|akib-islam-coder_leetcodesolutions|連結串列元件|bulk/medium/817_linked-list-components.c
+821|Shortest Distance to a Character|Easy|array, two-pointers, string|kenjin_Awesome-LC-Cracker|字元的最短距離|bulk/easy/821_shortest-distance-to-a-character.c
+824|Goat Latin|Easy|string|kenjin_Awesome-LC-Cracker|山羊拉丁文|bulk/easy/824_goat-latin.c
+827|Making A Large Island|Hard|array, depth-first-search, breadth-first-search, union-find, matrix|kenjin_Awesome-LC-Cracker|製作一座大島|bulk/hard/827_making-a-large-island.c
+830|Positions of Large Groups|Easy|string|self_sol|較大群組的位置|bulk/easy/830_positions-of-large-groups.c
+832|Flipping an Image|Easy|array, two-pointers, bit-manipulation, matrix, simulation|kenjin_Awesome-LC-Cracker|翻轉影像|bulk/easy/832_flipping-an-image.c
+833|Find And Replace in String|Medium|array, hash-table, string, sorting|vli02_leetcode|字串中的查找與替換|bulk/medium/833_find-and-replace-in-string.c
+836|Rectangle Overlap|Easy|math, geometry|kenjin_Awesome-LC-Cracker|矩形重疊|bulk/easy/836_rectangle-overlap.c
+840|Magic Squares In Grid|Medium|array, hash-table, math, matrix|kenjin_Awesome-LC-Cracker|網格中的幻方|bulk/medium/840_magic-squares-in-grid.c
+841|Keys and Rooms|Medium|depth-first-search, breadth-first-search, graph|kenjin_Awesome-LC-Cracker|鑰匙和房間|bulk/medium/841_keys-and-rooms.c
+844|Backspace String Compare|Easy|two-pointers, string, stack, simulation|kenjin_Awesome-LC-Cracker|比較含退格的字串|bulk/easy/844_backspace-string-compare.c
+845|Longest Mountain in Array|Medium|array, two-pointers, dynamic-programming, enumeration|DimitrisJim_leetcode_solutions|陣列中的最長山脈|bulk/medium/845_longest-mountain-in-array.c
+846|Hand of Straights|Medium|array, hash-table, greedy, sorting|kenjin_Awesome-LC-Cracker|一手順子|bulk/medium/846_hand-of-straights.c
+849|Maximize Distance to Closest Person|Medium|array|kenjin_Awesome-LC-Cracker|到最近人的最大距離|bulk/medium/849_maximize-distance-to-closest-person.c
+852|Peak Index in a Mountain Array|Medium|array, binary-search|kenjin_Awesome-LC-Cracker|山脈陣列的峰頂索引|bulk/medium/852_peak-index-in-a-mountain-array.c
+853|Car Fleet|Medium|array, stack, sorting, monotonic-stack|kenjin_Awesome-LC-Cracker|車隊|bulk/medium/853_car-fleet.c
+857|Minimum Cost to Hire K Workers|Hard|array, greedy, sorting, heap-(priority-queue|vli02_leetcode|雇用 K 名工人的最低成本|bulk/hard/857_minimum-cost-to-hire-k-workers.c
+859|Buddy Strings|Easy|hash-table, string|DimitrisJim_leetcode_solutions|親密字串|bulk/easy/859_buddy-strings.c
+860|Lemonade Change|Easy|array, greedy|kenjin_Awesome-LC-Cracker|檸檬水找零|bulk/easy/860_lemonade-change.c
+867|Transpose Matrix|Easy|array, matrix, simulation|kenjin_Awesome-LC-Cracker|轉置矩陣|bulk/easy/867_transpose-matrix.c
+868|Binary Gap|Easy|bit-manipulation|ourhouchmohamed97_LeetCode_in_C|二進位間距|bulk/easy/868_binary-gap.c
+872|Leaf-Similar Trees|Easy|tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker|葉節點相似的樹|bulk/easy/872_leaf-similar-trees.c
+875|Koko Eating Bananas|Medium|array, binary-search|kenjin_Awesome-LC-Cracker|珂珂吃香蕉|bulk/medium/875_koko-eating-bananas.c
+876|Middle of the Linked List|Easy|linked-list, two-pointers|self_sol|鏈結串列的中間節點|bulk/easy/876_middle-of-the-linked-list.c
+877|Stone Game|Medium|array, math, dynamic-programming, game-theory|Senthil455_Leetcode-Code|石子遊戲|bulk/medium/877_stone-game.c
+881|Boats to Save People|Medium|array, two-pointers, greedy, sorting|kenjin_Awesome-LC-Cracker|救生艇|bulk/medium/881_boats-to-save-people.c
+883|Projection Area of 3D Shapes|Easy|array, math, geometry, matrix|DimitrisJim_leetcode_solutions|三維形狀的投影面積|bulk/easy/883_projection-area-of-3d-shapes.c
+888|Fair Candy Swap|Easy|array, hash-table, binary-search, sorting|akib-islam-coder_leetcodesolutions|公平的糖果交換|bulk/easy/888_fair-candy-swap.c
+892|Surface Area of 3D Shapes|Easy|array, math, geometry, matrix|self_sol|三維形狀的表面積|bulk/easy/892_surface-area-of-3d-shapes.c
+893|Groups of Special-Equivalent Strings|Medium|array, hash-table, string, sorting|akib-islam-coder_leetcodesolutions|特殊等價字串群組|bulk/medium/893_groups-of-special-equivalent-strings.c
+896|Monotonic Array|Easy|array|DimitrisJim_leetcode_solutions|單調陣列|bulk/easy/896_monotonic-array.c
+898|Bitwise ORs of Subarrays|Medium|array, dynamic-programming, bit-manipulation|kenjin_Awesome-LC-Cracker|子陣列的按位或|bulk/medium/898_bitwise-ors-of-subarrays.c
+904|Fruit Into Baskets|Medium|array, hash-table, sliding-window|vli02_leetcode|水果成籃|bulk/medium/904_fruit-into-baskets.c
+905|Sort Array By Parity|Easy|array, two-pointers, sorting|kenjin_Awesome-LC-Cracker|依奇偶排序陣列|bulk/easy/905_sort-array-by-parity.c
+907|Sum of Subarray Minimums|Medium|array, dynamic-programming, stack, monotonic-stack|kenjin_Awesome-LC-Cracker|子陣列最小值之和|bulk/medium/907_sum-of-subarray-minimums.c
+908|Smallest Range I|Easy|array, math|ourhouchmohamed97_LeetCode_in_C|最小範圍 I|bulk/easy/908_smallest-range-i.c
+909|Snakes and Ladders|Medium|array, breadth-first-search, matrix|kenjin_Awesome-LC-Cracker|蛇梯棋|bulk/medium/909_snakes-and-ladders.c
+912|Sort an Array|Medium|array, divide-and-conquer, sorting, heap-(priority-queue, merge-sort, bucket-sort, radix-sort, counting-sort|kenjin_Awesome-LC-Cracker|排序陣列|bulk/medium/912_sort-an-array.c
+913|Cat and Mouse|Hard|math, dynamic-programming, graph, topological-sort, memoization, game-theory|vli02_leetcode|貓和老鼠|bulk/hard/913_cat-and-mouse.c
+914|X of a Kind in a Deck of Cards|Easy|array, hash-table, math, counting, number-theory|self_sol|一副牌中的 X 張同數字|bulk/easy/914_x-of-a-kind-in-a-deck-of-cards.c
+917|Reverse Only Letters|Easy|two-pointers, string|MainakRepositor_LeetCode-C|僅反轉字母|bulk/easy/917_reverse-only-letters.c
+920|Number of Music Playlists|Hard|math, dynamic-programming, combinatorics|vli02_leetcode|音樂播放清單數量|bulk/hard/920_number-of-music-playlists.c
+921|Minimum Add to Make Parentheses Valid|Medium|string, stack, greedy|caotrongphuoc_algorithms|使括號字串有效的最少新增次數|bulk/medium/921_minimum-add-to-make-parentheses-valid.c
+922|Sort Array By Parity II|Easy|array, two-pointers, sorting|kenjin_Awesome-LC-Cracker|按奇偶排序陣列 II|bulk/easy/922_sort-array-by-parity-ii.c
+923|3Sum With Multiplicity|Medium|array, hash-table, two-pointers, sorting, counting|kenjin_Awesome-LC-Cracker|三數之和的多重性|bulk/medium/923_3sum-with-multiplicity.c
+925|Long Pressed Name|Easy|two-pointers, string|kenjin_Awesome-LC-Cracker|長按鍵入的名稱|bulk/easy/925_long-pressed-name.c
+926|Flip String to Monotone Increasing|Medium|string, dynamic-programming|kenjin_Awesome-LC-Cracker|將字串翻轉為單調遞增|bulk/medium/926_flip-string-to-monotone-increasing.c
+930|Binary Subarrays With Sum|Medium|array, hash-table, sliding-window, prefix-sum|kenjin_Awesome-LC-Cracker|和相同的二進位子陣列|bulk/medium/930_binary-subarrays-with-sum.c
+931|Minimum Falling Path Sum|Medium|array, dynamic-programming, matrix|kenjin_Awesome-LC-Cracker|最小下降路徑和|bulk/medium/931_minimum-falling-path-sum.c
+934|Shortest Bridge|Medium|array, depth-first-search, breadth-first-search, matrix|caotrongphuoc_algorithms|最短橋|bulk/medium/934_shortest-bridge.c
+935|Knight Dialer|Medium|dynamic-programming|vli02_leetcode|騎士撥號器|bulk/medium/935_knight-dialer.c
+937|Reorder Data in Log Files|Medium|array, string, sorting|kenjin_Awesome-LC-Cracker|重新排列日誌檔案|bulk/medium/937_reorder-data-in-log-files.c
+938|Range Sum of BST|Easy|tree, depth-first-search, binary-search-tree, binary-tree|kenjin_Awesome-LC-Cracker|二元搜尋樹的範圍總和|bulk/easy/938_range-sum-of-bst.c
+941|Valid Mountain Array|Easy|array|kenjin_Awesome-LC-Cracker|有效的山脈陣列|bulk/easy/941_valid-mountain-array.c
+942|DI String Match|Easy|array, two-pointers, string, greedy|kenjin_Awesome-LC-Cracker|DI 字串匹配|bulk/easy/942_di-string-match.c
+944|Delete Columns to Make Sorted|Easy|array, string|DimitrisJim_leetcode_solutions|刪除欄位以使其有序|bulk/easy/944_delete-columns-to-make-sorted.c
+945|Minimum Increment to Make Array Unique|Medium|array, greedy, sorting, counting|kenjin_Awesome-LC-Cracker|使陣列元素互不相同的最少遞增次數|bulk/medium/945_minimum-increment-to-make-array-unique.c
+947|Most Stones Removed with Same Row or Column|Medium|hash-table, depth-first-search, union-find, graph|vli02_leetcode|移除最多的同行或同列石頭|bulk/medium/947_most-stones-removed-with-same-row-or-column.c
+948|Bag of Tokens|Medium|array, two-pointers, greedy, sorting|kenjin_Awesome-LC-Cracker|代幣背包|bulk/medium/948_bag-of-tokens.c
+949|Largest Time for Given Digits|Medium|array, string, backtracking, enumeration|kenjin_Awesome-LC-Cracker|由給定數字組成的最大時間|bulk/medium/949_largest-time-for-given-digits.c
+950|Reveal Cards In Increasing Order|Medium|array, queue, sorting, simulation|kenjin_Awesome-LC-Cracker|按遞增順序顯示卡牌|bulk/medium/950_reveal-cards-in-increasing-order.c
+952|Largest Component Size by Common Factor|Hard|array, hash-table, math, union-find, number-theory|kenjin_Awesome-LC-Cracker|按公因數連通的最大元件大小|bulk/hard/952_largest-component-size-by-common-factor.c
+953|Verifying an Alien Dictionary|Easy|array, hash-table, string|kenjin_Awesome-LC-Cracker|驗證外星語字典|bulk/easy/953_verifying-an-alien-dictionary.c
+957|Prison Cells After N Days|Medium|array, hash-table, math, bit-manipulation|kenjin_Awesome-LC-Cracker|N 天後的監獄牢房|bulk/medium/957_prison-cells-after-n-days.c
+958|Check Completeness of a Binary Tree|Medium|tree, breadth-first-search, binary-tree|vli02_leetcode|檢查二元樹完整性|bulk/medium/958_check-completeness-of-a-binary-tree.c
+961|N-Repeated Element in Size 2N Array|Easy|array, hash-table|DimitrisJim_leetcode_solutions|大小為 2N 的陣列中的 N 次重複元素|bulk/easy/961_n-repeated-element-in-size-2n-array.c
+965|Univalued Binary Tree|Easy|tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/easy/965_univalued-binary-tree.c
+968|Binary Tree Cameras|Hard|dynamic-programming, tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/hard/968_binary-tree-cameras.c
+971|Flip Binary Tree To Match Preorder Traversal|Medium|tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/medium/971_flip-binary-tree-to-match-preorder-traversal.c
+973|K Closest Points to Origin|Medium|array, math, divide-and-conquer, geometry, sorting, heap-(priority-queue, quickselect|kenjin_Awesome-LC-Cracker||bulk/medium/973_k-closest-points-to-origin.c
+974|Subarray Sums Divisible by K|Medium|array, hash-table, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/974_subarray-sums-divisible-by-k.c
+975|Odd Even Jump|Hard|array, dynamic-programming, stack, sorting, monotonic-stack, ordered-set|vli02_leetcode||bulk/hard/975_odd-even-jump.c
+976|Largest Perimeter Triangle|Easy|array, math, greedy, sorting|DimitrisJim_leetcode_solutions||bulk/easy/976_largest-perimeter-triangle.c
+977|Squares of a Sorted Array|Easy|array, two-pointers, sorting|kenjin_Awesome-LC-Cracker||bulk/easy/977_squares-of-a-sorted-array.c
+979|Distribute Coins in Binary Tree|Medium|tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/medium/979_distribute-coins-in-binary-tree.c
+980|Unique Paths III|Hard|array, backtracking, bit-manipulation, matrix|kenjin_Awesome-LC-Cracker||bulk/hard/980_unique-paths-iii.c
+983|Minimum Cost For Tickets|Medium|array, dynamic-programming|kenjin_Awesome-LC-Cracker||bulk/medium/983_minimum-cost-for-tickets.c
+985|Sum of Even Numbers After Queries|Medium|array, simulation|kenjin_Awesome-LC-Cracker||bulk/medium/985_sum-of-even-numbers-after-queries.c
+986|Interval List Intersections|Medium|array, two-pointers, line-sweep|vli02_leetcode||bulk/medium/986_interval-list-intersections.c
+987|Vertical Order Traversal of a Binary Tree|Hard|hash-table, tree, depth-first-search, breadth-first-search, sorting, binary-tree|kenjin_Awesome-LC-Cracker||bulk/hard/987_vertical-order-traversal-of-a-binary-tree.c
+988|Smallest String Starting From Leaf|Medium|string, backtracking, tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/medium/988_smallest-string-starting-from-leaf.c
+989|Add to Array-Form of Integer|Easy|array, math|kenjin_Awesome-LC-Cracker||bulk/easy/989_add-to-array-form-of-integer.c
+990|Satisfiability of Equality Equations|Medium|array, string, union-find, graph|begeekmyfriend_leetcode||bulk/medium/990_satisfiability-of-equality-equations.c
+991|Broken Calculator|Medium|math, greedy|kenjin_Awesome-LC-Cracker||bulk/medium/991_broken-calculator.c
+992|Subarrays with K Different Integers|Hard|array, hash-table, sliding-window, counting|vli02_leetcode||bulk/hard/992_subarrays-with-k-different-integers.c
+993|Cousins in Binary Tree|Easy|tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/easy/993_cousins-in-binary-tree.c
+994|Rotting Oranges|Medium|array, breadth-first-search, matrix|kenjin_Awesome-LC-Cracker||bulk/medium/994_rotting-oranges.c
+995|Minimum Number of K Consecutive Bit Flips|Hard|array, bit-manipulation, queue, sliding-window, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/hard/995_minimum-number-of-k-consecutive-bit-flips.c
+997|Find the Town Judge|Easy|array, hash-table, graph|kenjin_Awesome-LC-Cracker||bulk/easy/997_find-the-town-judge.c
+1002|Find Common Characters|Easy|array, hash-table, string|akib-islam-coder_leetcodesolutions||bulk/easy/1002_find-common-characters.c
+1004|Max Consecutive Ones III|Medium|array, binary-search, sliding-window, prefix-sum|akib-islam-coder_leetcodesolutions||bulk/medium/1004_max-consecutive-ones-iii.c
+1005|Maximize Sum Of Array After K Negations|Easy|array, greedy, sorting|kenjin_Awesome-LC-Cracker||bulk/easy/1005_maximize-sum-of-array-after-k-negations.c
+1007|Minimum Domino Rotations For Equal Row|Medium|array, greedy|vli02_leetcode||bulk/medium/1007_minimum-domino-rotations-for-equal-row.c
+1009|Complement of Base 10 Integer|Easy|bit-manipulation|self_sol||bulk/easy/1009_complement-of-base-10-integer.c
+1010|Pairs of Songs With Total Durations Divisible by 60|Medium|array, hash-table, counting|kenjin_Awesome-LC-Cracker||bulk/medium/1010_pairs-of-songs-with-total-durations-divisible-by-60.c
+1011|Capacity To Ship Packages Within D Days|Medium|array, binary-search|vli02_leetcode||bulk/medium/1011_capacity-to-ship-packages-within-d-days.c
+1013|Partition Array Into Three Parts With Equal Sum|Easy|array, greedy|self_sol||bulk/easy/1013_partition-array-into-three-parts-with-equal-sum.c
+1018|Binary Prefix Divisible By 5|Easy|array, bit-manipulation|self_sol||bulk/easy/1018_binary-prefix-divisible-by-5.c
+1019|Next Greater Node In Linked List|Medium|array, linked-list, stack, monotonic-stack|kenjin_Awesome-LC-Cracker||bulk/medium/1019_next-greater-node-in-linked-list.c
+1020|Number of Enclaves|Medium|array, depth-first-search, breadth-first-search, union-find, matrix|kenjin_Awesome-LC-Cracker||bulk/medium/1020_number-of-enclaves.c
+1021|Remove Outermost Parentheses|Easy|string, stack|kenjin_Awesome-LC-Cracker||bulk/easy/1021_remove-outermost-parentheses.c
+1022|Sum of Root To Leaf Binary Numbers|Easy|tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/easy/1022_sum-of-root-to-leaf-binary-numbers.c
+1025|Divisor Game|Easy|math, dynamic-programming, brainteaser, game-theory|kenjin_Awesome-LC-Cracker||bulk/easy/1025_divisor-game.c
+1026|Maximum Difference Between Node and Ancestor|Medium|tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/medium/1026_maximum-difference-between-node-and-ancestor.c
+1029|Two City Scheduling|Medium|array, greedy, sorting|kenjin_Awesome-LC-Cracker||bulk/medium/1029_two-city-scheduling.c
+1030|Matrix Cells in Distance Order|Easy|array, math, geometry, sorting, matrix|kenjin_Awesome-LC-Cracker||bulk/easy/1030_matrix-cells-in-distance-order.c
+1033|Moving Stones Until Consecutive|Medium|math, brainteaser|kenjin_Awesome-LC-Cracker||bulk/medium/1033_moving-stones-until-consecutive.c
+1034|Coloring A Border|Medium|array, depth-first-search, breadth-first-search, matrix|kenjin_Awesome-LC-Cracker||bulk/medium/1034_coloring-a-border.c
+1035|Uncrossed Lines|Medium|array, dynamic-programming|kenjin_Awesome-LC-Cracker||bulk/medium/1035_uncrossed-lines.c
+1037|Valid Boomerang|Easy|array, math, geometry|DimitrisJim_leetcode_solutions||bulk/easy/1037_valid-boomerang.c
+1041|Robot Bounded In Circle|Medium|math, string, simulation|kenjin_Awesome-LC-Cracker||bulk/medium/1041_robot-bounded-in-circle.c
+1043|Partition Array for Maximum Sum|Medium|array, dynamic-programming|kenjin_Awesome-LC-Cracker||bulk/medium/1043_partition-array-for-maximum-sum.c
+1044|Longest Duplicate Substring|Hard|string, binary-search, sliding-window, rolling-hash, suffix-array, hash-function|kenjin_Awesome-LC-Cracker||bulk/hard/1044_longest-duplicate-substring.c
+1046|Last Stone Weight|Easy|array, heap-(priority-queue|DimitrisJim_leetcode_solutions||bulk/easy/1046_last-stone-weight.c
+1047|Remove All Adjacent Duplicates In String|Easy|string, stack|kenjin_Awesome-LC-Cracker||bulk/easy/1047_remove-all-adjacent-duplicates-in-string.c
+1048|Longest String Chain|Medium|array, hash-table, two-pointers, string, dynamic-programming, sorting|kenjin_Awesome-LC-Cracker||bulk/medium/1048_longest-string-chain.c
+1049|Last Stone Weight II|Medium|array, dynamic-programming|kenjin_Awesome-LC-Cracker||bulk/medium/1049_last-stone-weight-ii.c
+1051|Height Checker|Easy|array, sorting, counting-sort|kenjin_Awesome-LC-Cracker||bulk/easy/1051_height-checker.c
+1052|Grumpy Bookstore Owner|Medium|array, sliding-window|kenjin_Awesome-LC-Cracker||bulk/medium/1052_grumpy-bookstore-owner.c
+1054|Distant Barcodes|Medium|array, hash-table, greedy, sorting, heap-(priority-queue, counting|kenjin_Awesome-LC-Cracker||bulk/medium/1054_distant-barcodes.c
+1071|Greatest Common Divisor of Strings|Easy|math, string|kenjin_Awesome-LC-Cracker||bulk/easy/1071_greatest-common-divisor-of-strings.c
+1074|Number of Submatrices That Sum to Target|Hard|array, hash-table, matrix, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/hard/1074_number-of-submatrices-that-sum-to-target.c
+1078|Occurrences After Bigram|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1078_occurrences-after-bigram.c
+1089|Duplicate Zeros|Easy|array, two-pointers|MainakRepositor_LeetCode-C||bulk/easy/1089_duplicate-zeros.c
+1094|Car Pooling|Medium|array, sorting, heap-(priority-queue, simulation, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/1094_car-pooling.c
+1103|Distribute Candies to People|Easy|math, simulation|kenjin_Awesome-LC-Cracker||bulk/easy/1103_distribute-candies-to-people.c
+1108|Defanging an IP Address|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1108_defanging-an-ip-address.c
+1122|Relative Sort Array|Easy|array, hash-table, sorting, counting-sort|kenjin_Awesome-LC-Cracker||bulk/easy/1122_relative-sort-array.c
+1128|Number of Equivalent Domino Pairs|Easy|array, hash-table, counting|self_sol||bulk/easy/1128_number-of-equivalent-domino-pairs.c
+1130|Minimum Cost Tree From Leaf Values|Medium|array, dynamic-programming, stack, greedy, monotonic-stack|kenjin_Awesome-LC-Cracker||bulk/medium/1130_minimum-cost-tree-from-leaf-values.c
+1137|N-th Tribonacci Number|Easy|math, dynamic-programming, memoization|kenjin_Awesome-LC-Cracker||bulk/easy/1137_n-th-tribonacci-number.c
+1143|Longest Common Subsequence|Medium|string, dynamic-programming|kenjin_Awesome-LC-Cracker||bulk/medium/1143_longest-common-subsequence.c
+1145|Binary Tree Coloring Game|Medium|tree, depth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/medium/1145_binary-tree-coloring-game.c
+1154|Day of the Year|Easy|math, string|self_sol||bulk/easy/1154_day-of-the-year.c
+1160|Find Words That Can Be Formed by Characters|Easy|array, hash-table, string, counting|akib-islam-coder_leetcodesolutions||bulk/easy/1160_find-words-that-can-be-formed-by-characters.c
+1161|Maximum Level Sum of a Binary Tree|Medium|tree, depth-first-search, breadth-first-search, binary-tree|akib-islam-coder_leetcodesolutions||bulk/medium/1161_maximum-level-sum-of-a-binary-tree.c
+1170|Compare Strings by Frequency of the Smallest Character|Medium|array, hash-table, string, binary-search, sorting|kenjin_Awesome-LC-Cracker||bulk/medium/1170_compare-strings-by-frequency-of-the-smallest-character.c
+1175|Prime Arrangements|Easy|math|self_sol||bulk/easy/1175_prime-arrangements.c
+1184|Distance Between Bus Stops|Easy|array|MainakRepositor_LeetCode-C||bulk/easy/1184_distance-between-bus-stops.c
+1185|Day of the Week|Easy|math|ourhouchmohamed97_LeetCode_in_C||bulk/easy/1185_day-of-the-week.c
+1189|Maximum Number of Balloons|Easy|hash-table, string, counting|MainakRepositor_LeetCode-C||bulk/easy/1189_maximum-number-of-balloons.c
+1200|Minimum Absolute Difference|Easy|array, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1200_minimum-absolute-difference.c
+1207|Unique Number of Occurrences|Easy|array, hash-table|kenjin_Awesome-LC-Cracker||bulk/easy/1207_unique-number-of-occurrences.c
+1208|Get Equal Substrings Within Budget|Medium|string, binary-search, sliding-window, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/1208_get-equal-substrings-within-budget.c
+1209|Remove All Adjacent Duplicates in String II|Medium|string, stack|kenjin_Awesome-LC-Cracker||bulk/medium/1209_remove-all-adjacent-duplicates-in-string-ii.c
+1217|Minimum Cost to Move Chips to The Same Position|Easy|array, math, greedy|DimitrisJim_leetcode_solutions||bulk/easy/1217_minimum-cost-to-move-chips-to-the-same-position.c
+1218|Longest Arithmetic Subsequence of Given Difference|Medium|array, hash-table, dynamic-programming|kenjin_Awesome-LC-Cracker||bulk/medium/1218_longest-arithmetic-subsequence-of-given-difference.c
+1219|Path with Maximum Gold|Medium|array, backtracking, matrix|kenjin_Awesome-LC-Cracker||bulk/medium/1219_path-with-maximum-gold.c
+1221|Split a String in Balanced Strings|Easy|string, greedy, counting|kenjin_Awesome-LC-Cracker||bulk/easy/1221_split-a-string-in-balanced-strings.c
+1232|Check If It Is a Straight Line|Easy|array, math, geometry|kenjin_Awesome-LC-Cracker||bulk/easy/1232_check-if-it-is-a-straight-line.c
+1233|Remove Sub-Folders from the Filesystem|Medium|array, string, depth-first-search, trie|kenjin_Awesome-LC-Cracker||bulk/medium/1233_remove-sub-folders-from-the-filesystem.c
+1239|Maximum Length of a Concatenated String with Unique Characters|Medium|array, string, backtracking, bit-manipulation|kenjin_Awesome-LC-Cracker||bulk/medium/1239_maximum-length-of-a-concatenated-string-with-unique-characters.c
+1248|Count Number of Nice Subarrays|Medium|array, hash-table, math, sliding-window, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/1248_count-number-of-nice-subarrays.c
+1249|Minimum Remove to Make Valid Parentheses|Medium|string, stack|kenjin_Awesome-LC-Cracker||bulk/medium/1249_minimum-remove-to-make-valid-parentheses.c
+1252|Cells with Odd Values in a Matrix|Easy|array, math, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1252_cells-with-odd-values-in-a-matrix.c
+1260|Shift 2D Grid|Easy|array, matrix, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1260_shift-2d-grid.c
+1266|Minimum Time Visiting All Points|Easy|array, math, geometry|DimitrisJim_leetcode_solutions||bulk/easy/1266_minimum-time-visiting-all-points.c
+1275|Find Winner on a Tic Tac Toe Game|Easy|array, hash-table, matrix, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1275_find-winner-on-a-tic-tac-toe-game.c
+1277|Count Square Submatrices with All Ones|Medium|array, dynamic-programming, matrix|kenjin_Awesome-LC-Cracker||bulk/medium/1277_count-square-submatrices-with-all-ones.c
+1281|Subtract the Product and Sum of Digits of an Integer|Easy|math|DimitrisJim_leetcode_solutions||bulk/easy/1281_subtract-the-product-and-sum-of-digits-of-an-integer.c
+1287|Element Appearing More Than 25% In Sorted Array|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1287_element-appearing-more-than-25-in-sorted-array.c
+1288|Remove Covered Intervals|Medium|array, sorting|ourhouchmohamed97_LeetCode_in_C||bulk/medium/1288_remove-covered-intervals.c
+1289|Minimum Falling Path Sum II|Hard|array, dynamic-programming, matrix|kenjin_Awesome-LC-Cracker||bulk/hard/1289_minimum-falling-path-sum-ii.c
+1290|Convert Binary Number in a Linked List to Integer|Easy|linked-list, math|DimitrisJim_leetcode_solutions||bulk/easy/1290_convert-binary-number-in-a-linked-list-to-integer.c
+1291|Sequential Digits|Medium|enumeration|kenjin_Awesome-LC-Cracker||bulk/medium/1291_sequential-digits.c
+1295|Find Numbers with Even Number of Digits|Easy|array, math|DimitrisJim_leetcode_solutions||bulk/easy/1295_find-numbers-with-even-number-of-digits.c
+1299|Replace Elements with Greatest Element on Right Side|Easy|array|kenjin_Awesome-LC-Cracker||bulk/easy/1299_replace-elements-with-greatest-element-on-right-side.c
+1302|Deepest Leaves Sum|Medium|tree, depth-first-search, breadth-first-search, binary-tree|DimitrisJim_leetcode_solutions||bulk/medium/1302_deepest-leaves-sum.c
+1305|All Elements in Two Binary Search Trees|Medium|tree, depth-first-search, binary-search-tree, sorting, binary-tree|akib-islam-coder_leetcodesolutions||bulk/medium/1305_all-elements-in-two-binary-search-trees.c
+1309|Decrypt String from Alphabet to Integer Mapping|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1309_decrypt-string-from-alphabet-to-integer-mapping.c
+1313|Decompress Run-Length Encoded List|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1313_decompress-run-length-encoded-list.c
+1315|Sum of Nodes with Even-Valued Grandparent|Medium|tree, depth-first-search, breadth-first-search, binary-tree|DimitrisJim_leetcode_solutions||bulk/medium/1315_sum-of-nodes-with-even-valued-grandparent.c
+1317|Convert Integer to the Sum of Two No-Zero Integers|Easy|math|DimitrisJim_leetcode_solutions||bulk/easy/1317_convert-integer-to-the-sum-of-two-no-zero-integers.c
+1323|Maximum 69 Number|Easy|math, greedy|DimitrisJim_leetcode_solutions||bulk/easy/1323_maximum-69-number.c
+1329|Sort the Matrix Diagonally|Medium|array, sorting, matrix|DimitrisJim_leetcode_solutions||bulk/medium/1329_sort-the-matrix-diagonally.c
+1331|Rank Transform of an Array|Easy|array, hash-table, sorting|self_sol||bulk/easy/1331_rank-transform-of-an-array.c
+1332|Remove Palindromic Subsequences|Easy|two-pointers, string|DimitrisJim_leetcode_solutions||bulk/easy/1332_remove-palindromic-subsequences.c
+1337|The K Weakest Rows in a Matrix|Easy|array, binary-search, sorting, heap-(priority-queue, matrix|akib-islam-coder_leetcodesolutions||bulk/easy/1337_the-k-weakest-rows-in-a-matrix.c
+1339|Maximum Product of Splitted Binary Tree|Medium|tree, depth-first-search, binary-tree|akib-islam-coder_leetcodesolutions||bulk/medium/1339_maximum-product-of-splitted-binary-tree.c
+1342|Number of Steps to Reduce a Number to Zero|Easy|math, bit-manipulation|DimitrisJim_leetcode_solutions||bulk/easy/1342_number-of-steps-to-reduce-a-number-to-zero.c
+1346|Check If N and Its Double Exist|Easy|array, hash-table, two-pointers, binary-search, sorting|kenjin_Awesome-LC-Cracker||bulk/easy/1346_check-if-n-and-its-double-exist.c
+1351|Count Negative Numbers in a Sorted Matrix|Easy|array, binary-search, matrix|DimitrisJim_leetcode_solutions||bulk/easy/1351_count-negative-numbers-in-a-sorted-matrix.c
+1356|Sort Integers by The Number of 1 Bits|Easy|array, bit-manipulation, sorting, counting|DimitrisJim_leetcode_solutions||bulk/easy/1356_sort-integers-by-the-number-of-1-bits.c
+1360|Number of Days Between Two Dates|Easy|math, string|self_sol||bulk/easy/1360_number-of-days-between-two-dates.c
+1365|How Many Numbers Are Smaller Than the Current Number|Easy|array, hash-table, sorting, counting-sort|DimitrisJim_leetcode_solutions||bulk/easy/1365_how-many-numbers-are-smaller-than-the-current-number.c
+1367|Linked List in Binary Tree|Medium|linked-list, tree, depth-first-search, binary-tree|akib-islam-coder_leetcodesolutions||bulk/medium/1367_linked-list-in-binary-tree.c
+1370|Increasing Decreasing String|Easy|hash-table, string, counting|DimitrisJim_leetcode_solutions||bulk/easy/1370_increasing-decreasing-string.c
+1380|Lucky Numbers in a Matrix|Easy|array, matrix|akib-islam-coder_leetcodesolutions||bulk/easy/1380_lucky-numbers-in-a-matrix.c
+1385|Find the Distance Value Between Two Arrays|Easy|array, two-pointers, binary-search, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1385_find-the-distance-value-between-two-arrays.c
+1389|Create Target Array in the Given Order|Easy|array, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1389_create-target-array-in-the-given-order.c
+1394|Find Lucky Integer in an Array|Easy|array, hash-table, counting|akib-islam-coder_leetcodesolutions||bulk/easy/1394_find-lucky-integer-in-an-array.c
+1399|Count Largest Group|Easy|hash-table, math|ourhouchmohamed97_LeetCode_in_C||bulk/easy/1399_count-largest-group.c
+1403|Minimum Subsequence in Non-Increasing Order|Easy|array, greedy, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1403_minimum-subsequence-in-non-increasing-order.c
+1408|String Matching in an Array|Easy|array, string, string-matching|DimitrisJim_leetcode_solutions||bulk/easy/1408_string-matching-in-an-array.c
+1409|Queries on a Permutation With Key|Medium|array, binary-indexed-tree, simulation|DimitrisJim_leetcode_solutions||bulk/medium/1409_queries-on-a-permutation-with-key.c
+1413|Minimum Value to Get Positive Step by Step Sum|Easy|array, prefix-sum|DimitrisJim_leetcode_solutions||bulk/easy/1413_minimum-value-to-get-positive-step-by-step-sum.c
+1414|Find the Minimum Number of Fibonacci Numbers Whose Sum Is K|Medium|math, greedy|DimitrisJim_leetcode_solutions||bulk/medium/1414_find-the-minimum-number-of-fibonacci-numbers-whose-sum-is-k.c
+1422|Maximum Score After Splitting a String|Easy|string, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/easy/1422_maximum-score-after-splitting-a-string.c
+1431|Kids With the Greatest Number of Candies|Easy|array|self_sol||bulk/easy/1431_kids-with-the-greatest-number-of-candies.c
+1437|Check If All 1's Are at Least Length K Places Away|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1437_check-if-all-1s-are-at-least-length-k-places-away.c
+1438|Longest Continuous Subarray With Absolute Diff Less Than or Equal to Limit|Medium|array, queue, sliding-window, heap-(priority-queue, ordered-set, monotonic-queue|kenjin_Awesome-LC-Cracker||bulk/medium/1438_longest-continuous-subarray-with-absolute-diff-less-than-or-equal-to-limit.c
+1441|Build an Array With Stack Operations|Medium|array, stack, simulation|DimitrisJim_leetcode_solutions||bulk/medium/1441_build-an-array-with-stack-operations.c
+1442|Count Triplets That Can Form Two Arrays of Equal XOR|Medium|array, hash-table, math, bit-manipulation, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/1442_count-triplets-that-can-form-two-arrays-of-equal-xor.c
+1446|Consecutive Characters|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1446_consecutive-characters.c
+1448|Count Good Nodes in Binary Tree|Medium|tree, depth-first-search, breadth-first-search, binary-tree|akib-islam-coder_leetcodesolutions||bulk/medium/1448_count-good-nodes-in-binary-tree.c
+1450|Number of Students Doing Homework at a Given Time|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1450_number-of-students-doing-homework-at-a-given-time.c
+1455|Check If a Word Occurs As a Prefix of Any Word in a Sentence|Easy|two-pointers, string, string-matching|DimitrisJim_leetcode_solutions||bulk/easy/1455_check-if-a-word-occurs-as-a-prefix-of-any-word-in-a-sentence.c
+1456|Maximum Number of Vowels in a Substring of Given Length|Medium|string, sliding-window|akib-islam-coder_leetcodesolutions||bulk/medium/1456_maximum-number-of-vowels-in-a-substring-of-given-length.c
+1457|Pseudo-Palindromic Paths in a Binary Tree|Medium|bit-manipulation, tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/medium/1457_pseudo-palindromic-paths-in-a-binary-tree.c
+1460|Make Two Arrays Equal by Reversing Subarrays|Easy|array, hash-table, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1460_make-two-arrays-equal-by-reversing-subarrays.c
+1463|Cherry Pickup II|Hard|array, dynamic-programming, matrix|kenjin_Awesome-LC-Cracker||bulk/hard/1463_cherry-pickup-ii.c
+1464|Maximum Product of Two Elements in an Array|Easy|array, sorting, heap-(priority-queue|DimitrisJim_leetcode_solutions||bulk/easy/1464_maximum-product-of-two-elements-in-an-array.c
+1470|Shuffle the Array|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1470_shuffle-the-array.c
+1475|Final Prices With a Special Discount in a Shop|Easy|array, stack, monotonic-stack|DimitrisJim_leetcode_solutions||bulk/easy/1475_final-prices-with-a-special-discount-in-a-shop.c
+1480|Running Sum of 1d Array|Easy|array, prefix-sum|akib-islam-coder_leetcodesolutions||bulk/easy/1480_running-sum-of-1d-array.c
+1481|Least Number of Unique Integers after K Removals|Medium|array, hash-table, greedy, sorting, counting|kenjin_Awesome-LC-Cracker||bulk/medium/1481_least-number-of-unique-integers-after-k-removals.c
+1486|XOR Operation in an Array|Easy|math, bit-manipulation|self_sol||bulk/easy/1486_xor-operation-in-an-array.c
+1491|Average Salary Excluding the Minimum and Maximum Salary|Easy|array, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1491_average-salary-excluding-the-minimum-and-maximum-salary.c
+1496|Path Crossing|Easy|hash-table, string|self_sol||bulk/easy/1496_path-crossing.c
+1502|Can Make Arithmetic Progression From Sequence|Easy|array, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1502_can-make-arithmetic-progression-from-sequence.c
+1507|Reformat Date|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1507_reformat-date.c
+1512|Number of Good Pairs|Easy|array, hash-table, math, counting|DimitrisJim_leetcode_solutions||bulk/easy/1512_number-of-good-pairs.c
+1518|Water Bottles|Easy|math, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1518_water-bottles.c
+1523|Count Odd Numbers in an Interval Range|Easy|math|DimitrisJim_leetcode_solutions||bulk/easy/1523_count-odd-numbers-in-an-interval-range.c
+1528|Shuffle String|Easy|array, string|DimitrisJim_leetcode_solutions||bulk/easy/1528_shuffle-string.c
+1530|Number of Good Leaf Nodes Pairs|Medium|tree, depth-first-search, binary-tree|akib-islam-coder_leetcodesolutions||bulk/medium/1530_number-of-good-leaf-nodes-pairs.c
+1534|Count Good Triplets|Easy|array, enumeration|DimitrisJim_leetcode_solutions||bulk/easy/1534_count-good-triplets.c
+1539|Kth Missing Positive Number|Easy|array, binary-search|DimitrisJim_leetcode_solutions||bulk/easy/1539_kth-missing-positive-number.c
+1544|Make The String Great|Easy|string, stack|kenjin_Awesome-LC-Cracker||bulk/easy/1544_make-the-string-great.c
+1550|Three Consecutive Odds|Easy|array|kenjin_Awesome-LC-Cracker||bulk/easy/1550_three-consecutive-odds.c
+1556|Thousand Separator|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1556_thousand-separator.c
+1557|Minimum Number of Vertices to Reach All Nodes|Medium|graph|DimitrisJim_leetcode_solutions||bulk/medium/1557_minimum-number-of-vertices-to-reach-all-nodes.c
+1560|Most Visited Sector in  a Circular Track|Easy|array, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1560_most-visited-sector-in-a-circular-track.c
+1566|Detect Pattern of Length M Repeated K or More Times|Easy|array, enumeration|self_sol||bulk/easy/1566_detect-pattern-of-length-m-repeated-k-or-more-times.c
+1572|Matrix Diagonal Sum|Easy|array, matrix|DimitrisJim_leetcode_solutions||bulk/easy/1572_matrix-diagonal-sum.c
+1576|Replace All ?'s to Avoid Consecutive Repeating Characters|Easy|string|self_sol||bulk/easy/1576_replace-all-s-to-avoid-consecutive-repeating-characters.c
+1579|Remove Max Number of Edges to Keep Graph Fully Traversable|Hard|union-find, graph|kenjin_Awesome-LC-Cracker||bulk/hard/1579_remove-max-number-of-edges-to-keep-graph-fully-traversable.c
+1582|Special Positions in a Binary Matrix|Easy|array, matrix|akib-islam-coder_leetcodesolutions||bulk/easy/1582_special-positions-in-a-binary-matrix.c
+1588|Sum of All Odd Length Subarrays|Easy|array, math, prefix-sum|akib-islam-coder_leetcodesolutions||bulk/easy/1588_sum-of-all-odd-length-subarrays.c
+1592|Rearrange Spaces Between Words|Easy|string|self_sol||bulk/easy/1592_rearrange-spaces-between-words.c
+1598|Crawler Log Folder|Easy|array, string, stack|DimitrisJim_leetcode_solutions||bulk/easy/1598_crawler-log-folder.c
+1608|Special Array With X Elements Greater Than or Equal X|Easy|array, binary-search, sorting|kenjin_Awesome-LC-Cracker||bulk/easy/1608_special-array-with-x-elements-greater-than-or-equal-x.c
+1609|Even Odd Tree|Medium|tree, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/medium/1609_even-odd-tree.c
+1614|Maximum Nesting Depth of the Parentheses|Easy|string, stack|kenjin_Awesome-LC-Cracker||bulk/easy/1614_maximum-nesting-depth-of-the-parentheses.c
+1619|Mean of Array After Removing Some Elements|Easy|array, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1619_mean-of-array-after-removing-some-elements.c
+1624|Largest Substring Between Two Equal Characters|Easy|hash-table, string|self_sol||bulk/easy/1624_largest-substring-between-two-equal-characters.c
+1629|Slowest Key|Easy|array, string|self_sol||bulk/easy/1629_slowest-key.c
+1636|Sort Array by Increasing Frequency|Easy|array, hash-table, sorting|akib-islam-coder_leetcodesolutions||bulk/easy/1636_sort-array-by-increasing-frequency.c
+1637|Widest Vertical Area Between Two Points Containing No Points|Easy|array, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1637_widest-vertical-area-between-two-points-containing-no-points.c
+1640|Check Array Formation Through Concatenation|Easy|array, hash-table|akib-islam-coder_leetcodesolutions||bulk/easy/1640_check-array-formation-through-concatenation.c
+1641|Count Sorted Vowel Strings|Medium|math, dynamic-programming, combinatorics|DimitrisJim_leetcode_solutions||bulk/medium/1641_count-sorted-vowel-strings.c
+1642|Furthest Building You Can Reach|Medium|array, greedy, heap-(priority-queue|kenjin_Awesome-LC-Cracker||bulk/medium/1642_furthest-building-you-can-reach.c
+1646|Get Maximum in Generated Array|Easy|array, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1646_get-maximum-in-generated-array.c
+1652|Defuse the Bomb|Easy|array, sliding-window|DimitrisJim_leetcode_solutions||bulk/easy/1652_defuse-the-bomb.c
+1657|Determine if Two Strings Are Close|Medium|hash-table, string, sorting, counting|kenjin_Awesome-LC-Cracker||bulk/medium/1657_determine-if-two-strings-are-close.c
+1662|Check If Two String Arrays are Equivalent|Easy|array, string|DimitrisJim_leetcode_solutions||bulk/easy/1662_check-if-two-string-arrays-are-equivalent.c
+1664|Ways to Make a Fair Array|Medium|array, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/1664_ways-to-make-a-fair-array.c
+1668|Maximum Repeating Substring|Easy|string, dynamic-programming, string-matching|self_sol||bulk/easy/1668_maximum-repeating-substring.c
+1669|Merge In Between Linked Lists|Medium|linked-list|kenjin_Awesome-LC-Cracker||bulk/medium/1669_merge-in-between-linked-lists.c
+1672|Richest Customer Wealth|Easy|array, matrix|DimitrisJim_leetcode_solutions||bulk/easy/1672_richest-customer-wealth.c
+1678|Goal Parser Interpretation|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1678_goal-parser-interpretation.c
+1684|Count the Number of Consistent Strings|Easy|array, hash-table, string, bit-manipulation, counting|akib-islam-coder_leetcodesolutions||bulk/easy/1684_count-the-number-of-consistent-strings.c
+1688|Count of Matches in Tournament|Easy|math, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1688_count-of-matches-in-tournament.c
+1689|Partitioning Into Minimum Number Of Deci-Binary Numbers|Medium|string, greedy|DimitrisJim_leetcode_solutions||bulk/medium/1689_partitioning-into-minimum-number-of-deci-binary-numbers.c
+1694|Reformat Phone Number|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1694_reformat-phone-number.c
+1700|Number of Students Unable to Eat Lunch|Easy|array, stack, queue, simulation|kenjin_Awesome-LC-Cracker||bulk/easy/1700_number-of-students-unable-to-eat-lunch.c
+1704|Determine if String Halves Are Alike|Easy|string, counting|kenjin_Awesome-LC-Cracker||bulk/easy/1704_determine-if-string-halves-are-alike.c
+1710|Maximum Units on a Truck|Easy|array, greedy, sorting|DimitrisJim_leetcode_solutions||bulk/easy/1710_maximum-units-on-a-truck.c
+1716|Calculate Money in Leetcode Bank|Easy|math|DimitrisJim_leetcode_solutions||bulk/easy/1716_calculate-money-in-leetcode-bank.c
+1721|Swapping Nodes in a Linked List|Medium|linked-list, two-pointers|kenjin_Awesome-LC-Cracker||bulk/medium/1721_swapping-nodes-in-a-linked-list.c
+1725|Number Of Rectangles That Can Form The Largest Square|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1725_number-of-rectangles-that-can-form-the-largest-square.c
+1732|Find the Highest Altitude|Easy|array, prefix-sum|DimitrisJim_leetcode_solutions||bulk/easy/1732_find-the-highest-altitude.c
+1736|Latest Time by Replacing Hidden Digits|Easy|string, greedy|self_sol||bulk/easy/1736_latest-time-by-replacing-hidden-digits.c
+1742|Maximum Number of Balls in a Box|Easy|hash-table, math, counting|DimitrisJim_leetcode_solutions||bulk/easy/1742_maximum-number-of-balls-in-a-box.c
+1748|Sum of Unique Elements|Easy|array, hash-table, counting|akib-islam-coder_leetcodesolutions||bulk/easy/1748_sum-of-unique-elements.c
+1750|Minimum Length of String After Deleting Similar Ends|Medium|two-pointers, string|kenjin_Awesome-LC-Cracker||bulk/medium/1750_minimum-length-of-string-after-deleting-similar-ends.c
+1752|Check if Array Is Sorted and Rotated|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1752_check-if-array-is-sorted-and-rotated.c
+1758|Minimum Changes To Make Alternating Binary String|Easy|string|self_sol||bulk/easy/1758_minimum-changes-to-make-alternating-binary-string.c
+1763|Longest Nice Substring|Easy|hash-table, string, divide-and-conquer, bit-manipulation, sliding-window|self_sol||bulk/easy/1763_longest-nice-substring.c
+1768|Merge Strings Alternately|Easy|two-pointers, string|DimitrisJim_leetcode_solutions||bulk/easy/1768_merge-strings-alternately.c
+1779|Find Nearest Point That Has the Same X or Y Coordinate|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1779_find-nearest-point-that-has-the-same-x-or-y-coordinate.c
+1784|Check if Binary String Has at Most One Segment of Ones|Easy|string|self_sol||bulk/easy/1784_check-if-binary-string-has-at-most-one-segment-of-ones.c
+1790|Check if One String Swap Can Make Strings Equal|Easy|hash-table, string, counting|DimitrisJim_leetcode_solutions||bulk/easy/1790_check-if-one-string-swap-can-make-strings-equal.c
+1791|Find Center of Star Graph|Easy|graph|kenjin_Awesome-LC-Cracker||bulk/easy/1791_find-center-of-star-graph.c
+1796|Second Largest Digit in a String|Easy|hash-table, string|DimitrisJim_leetcode_solutions||bulk/easy/1796_second-largest-digit-in-a-string.c
+1800|Maximum Ascending Subarray Sum|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1800_maximum-ascending-subarray-sum.c
+1805|Number of Different Integers in a String|Easy|hash-table, string|self_sol||bulk/easy/1805_number-of-different-integers-in-a-string.c
+1816|Truncate Sentence|Easy|array, string|DimitrisJim_leetcode_solutions||bulk/easy/1816_truncate-sentence.c
+1822|Sign of the Product of an Array|Easy|array, math|DimitrisJim_leetcode_solutions||bulk/easy/1822_sign-of-the-product-of-an-array.c
+1827|Minimum Operations to Make the Array Increasing|Easy|array, greedy|akib-islam-coder_leetcodesolutions||bulk/easy/1827_minimum-operations-to-make-the-array-increasing.c
+1829|Maximum XOR for Each Query|Medium|array, bit-manipulation, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/1829_maximum-xor-for-each-query.c
+1832|Check if the Sentence Is Pangram|Easy|hash-table, string|akib-islam-coder_leetcodesolutions||bulk/easy/1832_check-if-the-sentence-is-pangram.c
+1844|Replace All Digits with Characters|Easy|string|kenjin_Awesome-LC-Cracker||bulk/easy/1844_replace-all-digits-with-characters.c
+1848|Minimum Distance to the Target Element|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/1848_minimum-distance-to-the-target-element.c
+1854|Maximum Population Year|Easy|array, counting, prefix-sum|DimitrisJim_leetcode_solutions||bulk/easy/1854_maximum-population-year.c
+1859|Sorting the Sentence|Easy|string, sorting|akib-islam-coder_leetcodesolutions||bulk/easy/1859_sorting-the-sentence.c
+1863|Sum of All Subset XOR Totals|Easy|array, math, backtracking, bit-manipulation, combinatorics, enumeration|kenjin_Awesome-LC-Cracker||bulk/easy/1863_sum-of-all-subset-xor-totals.c
+1869|Longer Contiguous Segments of Ones than Zeros|Easy|string|self_sol||bulk/easy/1869_longer-contiguous-segments-of-ones-than-zeros.c
+1876|Substrings of Size Three with Distinct Characters|Easy|hash-table, string, sliding-window, counting|DimitrisJim_leetcode_solutions||bulk/easy/1876_substrings-of-size-three-with-distinct-characters.c
+1880|Check if Word Equals Summation of Two Words|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/1880_check-if-word-equals-summation-of-two-words.c
+1886|Determine Whether Matrix Can Be Obtained By Rotation|Easy|array, matrix|kenjin_Awesome-LC-Cracker||bulk/easy/1886_determine-whether-matrix-can-be-obtained-by-rotation.c
+1893|Check if All the Integers in a Range Are Covered|Easy|array, hash-table, prefix-sum|DimitrisJim_leetcode_solutions||bulk/easy/1893_check-if-all-the-integers-in-a-range-are-covered.c
+1897|Redistribute Characters to Make All Strings Equal|Easy|hash-table, string, counting|DimitrisJim_leetcode_solutions||bulk/easy/1897_redistribute-characters-to-make-all-strings-equal.c
+1903|Largest Odd Number in String|Easy|math, string, greedy|self_sol||bulk/easy/1903_largest-odd-number-in-string.c
+1909|Remove One Element to Make the Array Strictly Increasing|Easy|array|self_sol||bulk/easy/1909_remove-one-element-to-make-the-array-strictly-increasing.c
+1913|Maximum Product Difference Between Two Pairs|Easy|array, sorting|akib-islam-coder_leetcodesolutions||bulk/easy/1913_maximum-product-difference-between-two-pairs.c
+1915|Number of Wonderful Substrings|Medium|hash-table, string, bit-manipulation, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/1915_number-of-wonderful-substrings.c
+1920|Build Array from Permutation|Easy|array, simulation|DimitrisJim_leetcode_solutions||bulk/easy/1920_build-array-from-permutation.c
+1925|Count Square Sum Triples|Easy|math, enumeration|DimitrisJim_leetcode_solutions||bulk/easy/1925_count-square-sum-triples.c
+1929|Concatenation of Array|Easy|array, simulation|akib-islam-coder_leetcodesolutions||bulk/easy/1929_concatenation-of-array.c
+1935|Maximum Number of Words You Can Type|Easy|hash-table, string|DimitrisJim_leetcode_solutions||bulk/easy/1935_maximum-number-of-words-you-can-type.c
+1937|Maximum Number of Points with Cost|Medium|array, dynamic-programming, matrix|kenjin_Awesome-LC-Cracker||bulk/medium/1937_maximum-number-of-points-with-cost.c
+1941|Check if All Characters Have Equal Number of Occurrences|Easy|hash-table, string, counting|DimitrisJim_leetcode_solutions||bulk/easy/1941_check-if-all-characters-have-equal-number-of-occurrences.c
+1944|Number of Visible People in a Queue|Hard|array, stack, monotonic-stack|kaushiknrk_leetcode-c-practice||bulk/hard/1944_number-of-visible-people-in-a-queue.c
+1945|Sum of Digits of String After Convert|Easy|string, simulation|self_sol||bulk/easy/1945_sum-of-digits-of-string-after-convert.c
+1952|Three Divisors|Easy|math, enumeration, number-theory|self_sol||bulk/easy/1952_three-divisors.c
+1957|Delete Characters to Make Fancy String|Easy|string|self_sol||bulk/easy/1957_delete-characters-to-make-fancy-string.c
+1961|Check If String Is a Prefix of Array|Easy|array, two-pointers, string|DimitrisJim_leetcode_solutions||bulk/easy/1961_check-if-string-is-a-prefix-of-array.c
+1967|Number of Strings That Appear as Substrings in Word|Easy|array, string|DimitrisJim_leetcode_solutions||bulk/easy/1967_number-of-strings-that-appear-as-substrings-in-word.c
+1971|Find if Path Exists in Graph|Easy|depth-first-search, breadth-first-search, union-find, graph|kenjin_Awesome-LC-Cracker||bulk/easy/1971_find-if-path-exists-in-graph.c
+1974|Minimum Time to Type Word Using Special Typewriter|Easy|string, greedy|caotrongphuoc_algorithms||bulk/easy/1974_minimum-time-to-type-word-using-special-typewriter.c
+1979|Find Greatest Common Divisor of Array|Easy|array, math, number-theory|DimitrisJim_leetcode_solutions||bulk/easy/1979_find-greatest-common-divisor-of-array.c
+1984|Minimum Difference Between Highest and Lowest of K Scores|Easy|array, sliding-window, sorting|self_sol||bulk/easy/1984_minimum-difference-between-highest-and-lowest-of-k-scores.c
+1991|Find the Middle Index in Array|Easy|array, prefix-sum|self_sol||bulk/easy/1991_find-the-middle-index-in-array.c
+1995|Count Special Quadruplets|Easy|array, hash-table, enumeration|self_sol||bulk/easy/1995_count-special-quadruplets.c
+2000|Reverse Prefix of Word|Easy|two-pointers, string, stack|kenjin_Awesome-LC-Cracker||bulk/easy/2000_reverse-prefix-of-word.c
+2006|Count Number of Pairs With Absolute Difference K|Easy|array, hash-table, counting|DimitrisJim_leetcode_solutions||bulk/easy/2006_count-number-of-pairs-with-absolute-difference-k.c
+2011|Final Value of Variable After Performing Operations|Easy|array, string, simulation|DimitrisJim_leetcode_solutions||bulk/easy/2011_final-value-of-variable-after-performing-operations.c
+2016|Maximum Difference Between Increasing Elements|Easy|array|self_sol||bulk/easy/2016_maximum-difference-between-increasing-elements.c
+2022|Convert 1D Array Into 2D Array|Easy|array, matrix, simulation|self_sol||bulk/easy/2022_convert-1d-array-into-2d-array.c
+2027|Minimum Moves to Convert String|Easy|string, greedy|self_sol||bulk/easy/2027_minimum-moves-to-convert-string.c
+2032|Two Out of Three|Easy|array, hash-table, bit-manipulation|self_sol||bulk/easy/2032_two-out-of-three.c
+2037|Minimum Number of Moves to Seat Everyone|Easy|array, greedy, sorting, counting-sort|kenjin_Awesome-LC-Cracker||bulk/easy/2037_minimum-number-of-moves-to-seat-everyone.c
+2042|Check if Numbers Are Ascending in a Sentence|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/2042_check-if-numbers-are-ascending-in-a-sentence.c
+2047|Number of Valid Words in a Sentence|Easy|string|self_sol||bulk/easy/2047_number-of-valid-words-in-a-sentence.c
+2053|Kth Distinct String in an Array|Easy|array, hash-table, string, counting|self_sol||bulk/easy/2053_kth-distinct-string-in-an-array.c
+2057|Smallest Index With Equal Value|Easy|array|DimitrisJim_leetcode_solutions||bulk/easy/2057_smallest-index-with-equal-value.c
+2062|Count Vowel Substrings of a String|Easy|hash-table, string|kenjin_Awesome-LC-Cracker||bulk/easy/2062_count-vowel-substrings-of-a-string.c
+2068|Check Whether Two Strings are Almost Equivalent|Easy|hash-table, string, counting|self_sol||bulk/easy/2068_check-whether-two-strings-are-almost-equivalent.c
+2073|Time Needed to Buy Tickets|Easy|array, queue, simulation|kenjin_Awesome-LC-Cracker||bulk/easy/2073_time-needed-to-buy-tickets.c
+2078|Two Furthest Houses With Different Colors|Easy|array, greedy|self_sol||bulk/easy/2078_two-furthest-houses-with-different-colors.c
+2085|Count Common Words With One Occurrence|Easy|array, hash-table, string, counting|self_sol||bulk/easy/2085_count-common-words-with-one-occurrence.c
+2089|Find Target Indices After Sorting Array|Easy|array, binary-search, sorting|DimitrisJim_leetcode_solutions||bulk/easy/2089_find-target-indices-after-sorting-array.c
+2094|Finding 3-Digit Even Numbers|Easy|array, hash-table, sorting, enumeration|self_sol||bulk/easy/2094_finding-3-digit-even-numbers.c
+2095|Delete the Middle Node of a Linked List|Medium|linked-list, two-pointers|kenjin_Awesome-LC-Cracker||bulk/medium/2095_delete-the-middle-node-of-a-linked-list.c
+2099|Find Subsequence of Length K With the Largest Sum|Easy|array, hash-table, sorting, heap-(priority-queue|self_sol||bulk/easy/2099_find-subsequence-of-length-k-with-the-largest-sum.c
+2103|Rings and Rods|Easy|hash-table, string|DimitrisJim_leetcode_solutions||bulk/easy/2103_rings-and-rods.c
+2104|Sum of Subarray Ranges|Medium|array, stack, monotonic-stack|kenjin_Awesome-LC-Cracker||bulk/medium/2104_sum-of-subarray-ranges.c
+2108|Find First Palindromic String in the Array|Easy|array, two-pointers, string|kenjin_Awesome-LC-Cracker||bulk/easy/2108_find-first-palindromic-string-in-the-array.c
+2114|Maximum Number of Words Found in Sentences|Easy|array, string|DimitrisJim_leetcode_solutions||bulk/easy/2114_maximum-number-of-words-found-in-sentences.c
+2119|A Number After a Double Reversal|Easy|math|DimitrisJim_leetcode_solutions||bulk/easy/2119_a-number-after-a-double-reversal.c
+2124|Check if All A's Appears Before All B's|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/2124_check-if-all-as-appears-before-all-bs.c
+2125|Number of Laser Beams in a Bank|Medium|array, math, string, matrix|kenjin_Awesome-LC-Cracker||bulk/medium/2125_number-of-laser-beams-in-a-bank.c
+2129|Capitalize the Title|Easy|string|self_sol||bulk/easy/2129_capitalize-the-title.c
+2130|Maximum Twin Sum of a Linked List|Medium|linked-list, two-pointers, stack|kenjin_Awesome-LC-Cracker||bulk/medium/2130_maximum-twin-sum-of-a-linked-list.c
+2133|Check if Every Row and Column Contains All Numbers|Easy|array, hash-table, matrix|self_sol||bulk/easy/2133_check-if-every-row-and-column-contains-all-numbers.c
+2138|Divide a String Into Groups of Size k|Easy|string, simulation|self_sol||bulk/easy/2138_divide-a-string-into-groups-of-size-k.c
+2144|Minimum Cost of Buying Candies With Discount|Easy|array, greedy, sorting|self_sol||bulk/easy/2144_minimum-cost-of-buying-candies-with-discount.c
+2148|Count Elements With Strictly Smaller and Greater Elements |Easy|array, sorting, counting|self_sol||bulk/easy/2148_count-elements-with-strictly-smaller-and-greater-elements.c
+2149|Rearrange Array Elements by Sign|Medium|array, two-pointers, simulation|kenjin_Awesome-LC-Cracker||bulk/medium/2149_rearrange-array-elements-by-sign.c
+2154|Keep Multiplying Found Values by Two|Easy|array, hash-table, sorting, simulation|self_sol||bulk/easy/2154_keep-multiplying-found-values-by-two.c
+2160|Minimum Sum of Four Digit Number After Splitting Digits|Easy|math, greedy, sorting|DimitrisJim_leetcode_solutions||bulk/easy/2160_minimum-sum-of-four-digit-number-after-splitting-digits.c
+2164|Sort Even and Odd Indices Independently|Easy|array, sorting|self_sol||bulk/easy/2164_sort-even-and-odd-indices-independently.c
+2169|Count Operations to Obtain Zero|Easy|math, simulation|DimitrisJim_leetcode_solutions||bulk/easy/2169_count-operations-to-obtain-zero.c
+2176|Count Equal and Divisible Pairs in an Array|Easy|array|self_sol||bulk/easy/2176_count-equal-and-divisible-pairs-in-an-array.c
+2180|Count Integers With Even Digit Sum|Easy|math, simulation|self_sol||bulk/easy/2180_count-integers-with-even-digit-sum.c
+2181|Merge Nodes in Between Zeros|Medium|linked-list, simulation|kenjin_Awesome-LC-Cracker||bulk/medium/2181_merge-nodes-in-between-zeros.c
+2185|Counting Words With a Given Prefix|Easy|array, string, string-matching|DimitrisJim_leetcode_solutions||bulk/easy/2185_counting-words-with-a-given-prefix.c
+2190|Most Frequent Number Following Key In an Array|Easy|array, hash-table, counting|self_sol||bulk/easy/2190_most-frequent-number-following-key-in-an-array.c
+2191|Sort the Jumbled Numbers|Medium|array, sorting|kenjin_Awesome-LC-Cracker||bulk/medium/2191_sort-the-jumbled-numbers.c
+2194|Cells in a Range on an Excel Sheet|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/2194_cells-in-a-range-on-an-excel-sheet.c
+2200|Find All K-Distant Indices in an Array|Easy|array, two-pointers|self_sol||bulk/easy/2200_find-all-k-distant-indices-in-an-array.c
+2206|Divide Array Into Equal Pairs|Easy|array, hash-table, bit-manipulation, counting|self_sol||bulk/easy/2206_divide-array-into-equal-pairs.c
+2210|Count Hills and Valleys in an Array|Easy|array|self_sol||bulk/easy/2210_count-hills-and-valleys-in-an-array.c
+2213|Longest Substring of One Repeating Character|Hard|array, string, segment-tree, ordered-set|kaushiknrk_leetcode-c-practice||bulk/hard/2213_longest-substring-of-one-repeating-character.c
+2215|Find the Difference of Two Arrays|Easy|array, hash-table|self_sol||bulk/easy/2215_find-the-difference-of-two-arrays.c
+2220|Minimum Bit Flips to Convert Number|Easy|bit-manipulation|DimitrisJim_leetcode_solutions||bulk/easy/2220_minimum-bit-flips-to-convert-number.c
+2224|Minimum Number of Operations to Convert Time|Easy|string, greedy|self_sol||bulk/easy/2224_minimum-number-of-operations-to-convert-time.c
+2225|Find Players With Zero or One Losses|Medium|array, hash-table, sorting, counting|kenjin_Awesome-LC-Cracker||bulk/medium/2225_find-players-with-zero-or-one-losses.c
+2231|Largest Number After Digit Swaps by Parity|Easy|sorting, heap-(priority-queue|self_sol||bulk/easy/2231_largest-number-after-digit-swaps-by-parity.c
+2235|Add Two Integers|Easy|math|DimitrisJim_leetcode_solutions||bulk/easy/2235_add-two-integers.c
+2236|Root Equals Sum of Children|Easy|tree, binary-tree|DimitrisJim_leetcode_solutions||bulk/easy/2236_root-equals-sum-of-children.c
+2239|Find Closest Number to Zero|Easy|array|self_sol||bulk/easy/2239_find-closest-number-to-zero.c
+2243|Calculate Digit Sum of a String|Easy|string, simulation|self_sol||bulk/easy/2243_calculate-digit-sum-of-a-string.c
+2248|Intersection of Multiple Arrays|Easy|array, hash-table, sorting, counting|self_sol||bulk/easy/2248_intersection-of-multiple-arrays.c
+2255|Count Prefixes of a Given String|Easy|array, string|DimitrisJim_leetcode_solutions||bulk/easy/2255_count-prefixes-of-a-given-string.c
+2259|Remove Digit From Number to Maximize Result|Easy|string, greedy, enumeration|self_sol||bulk/easy/2259_remove-digit-from-number-to-maximize-result.c
+2264|Largest 3-Same-Digit Number in String|Easy|string|self_sol||bulk/easy/2264_largest-3-same-digit-number-in-string.c
+2269|Find the K-Beauty of a Number|Easy|math, string, sliding-window|self_sol||bulk/easy/2269_find-the-k-beauty-of-a-number.c
+2273|Find Resultant Array After Removing Anagrams|Easy|array, hash-table, string, sorting|kenjin_Awesome-LC-Cracker||bulk/easy/2273_find-resultant-array-after-removing-anagrams.c
+2278|Percentage of Letter in String|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/2278_percentage-of-letter-in-string.c
+2283|Check if Number Has Equal Digit Count and Digit Value|Easy|hash-table, string, counting|self_sol||bulk/easy/2283_check-if-number-has-equal-digit-count-and-digit-value.c
+2285|Maximum Total Importance of Roads|Medium|greedy, graph, sorting, heap-(priority-queue|kenjin_Awesome-LC-Cracker||bulk/medium/2285_maximum-total-importance-of-roads.c
+2287|Rearrange Characters to Make Target String|Easy|hash-table, string, counting|self_sol||bulk/easy/2287_rearrange-characters-to-make-target-string.c
+2288|Apply Discount to Prices|Medium|string|kenjin_Awesome-LC-Cracker||bulk/medium/2288_apply-discount-to-prices.c
+2293|Min Max Game|Easy|array, simulation|self_sol||bulk/easy/2293_min-max-game.c
+2299|Strong Password Checker II|Easy|string|self_sol||bulk/easy/2299_strong-password-checker-ii.c
+2303|Calculate Amount Paid in Taxes|Easy|array, simulation|self_sol||bulk/easy/2303_calculate-amount-paid-in-taxes.c
+2309|Greatest English Letter in Upper and Lower Case|Easy|hash-table, string, enumeration|self_sol||bulk/easy/2309_greatest-english-letter-in-upper-and-lower-case.c
+2315|Count Asterisks|Easy|string|DimitrisJim_leetcode_solutions||bulk/easy/2315_count-asterisks.c
+2319|Check if Matrix Is X-Matrix|Easy|array, matrix|DimitrisJim_leetcode_solutions||bulk/easy/2319_check-if-matrix-is-x-matrix.c
+2325|Decode the Message|Easy|hash-table, string|DimitrisJim_leetcode_solutions||bulk/easy/2325_decode-the-message.c
+2331|Evaluate Boolean Binary Tree|Easy|tree, depth-first-search, binary-tree|self_sol||bulk/easy/2331_evaluate-boolean-binary-tree.c
+2335|Minimum Amount of Time to Fill Cups|Easy|array, greedy, sorting, heap-(priority-queue|self_sol||bulk/easy/2335_minimum-amount-of-time-to-fill-cups.c
+2341|Maximum Number of Pairs in Array|Easy|array, hash-table, counting|self_sol||bulk/easy/2341_maximum-number-of-pairs-in-array.c
+2351|First Letter to Appear Twice|Easy|hash-table, string, bit-manipulation, counting|DimitrisJim_leetcode_solutions||bulk/easy/2351_first-letter-to-appear-twice.c
+2357|Make Array Zero by Subtracting Equal Amounts|Easy|array, hash-table, greedy, sorting, heap-(priority-queue, simulation|self_sol||bulk/easy/2357_make-array-zero-by-subtracting-equal-amounts.c
+2363|Merge Similar Items|Easy|array, hash-table, sorting, ordered-set|self_sol||bulk/easy/2363_merge-similar-items.c
+2367|Number of Arithmetic Triplets|Easy|array, hash-table, two-pointers, enumeration|DimitrisJim_leetcode_solutions||bulk/easy/2367_number-of-arithmetic-triplets.c
+2370|Longest Ideal Subsequence|Medium|hash-table, string, dynamic-programming|kenjin_Awesome-LC-Cracker||bulk/medium/2370_longest-ideal-subsequence.c
+2379|Minimum Recolors to Get K Consecutive Black Blocks|Easy|string, sliding-window|self_sol||bulk/easy/2379_minimum-recolors-to-get-k-consecutive-black-blocks.c
+2383|Minimum Hours of Training to Win a Competition|Easy|array, greedy|self_sol||bulk/easy/2383_minimum-hours-of-training-to-win-a-competition.c
+2385|Amount of Time for Binary Tree to Be Infected|Medium|hash-table, tree, depth-first-search, breadth-first-search, binary-tree|kenjin_Awesome-LC-Cracker||bulk/medium/2385_amount-of-time-for-binary-tree-to-be-infected.c
+2389|Longest Subsequence With Limited Sum|Easy|array, binary-search, greedy, sorting, prefix-sum|DimitrisJim_leetcode_solutions||bulk/easy/2389_longest-subsequence-with-limited-sum.c
+2395|Find Subarrays With Equal Sum|Easy|array, hash-table|self_sol||bulk/easy/2395_find-subarrays-with-equal-sum.c
+2399|Check Distances Between Same Letters|Easy|array, hash-table, string|DimitrisJim_leetcode_solutions||bulk/easy/2399_check-distances-between-same-letters.c
+2401|Longest Nice Subarray|Medium|array, bit-manipulation, sliding-window|kenjin_Awesome-LC-Cracker||bulk/medium/2401_longest-nice-subarray.c
+2402|Meeting Rooms III|Hard|array, hash-table, sorting, heap-(priority-queue, simulation|kenjin_Awesome-LC-Cracker||bulk/hard/2402_meeting-rooms-iii.c
+2404|Most Frequent Even Element|Easy|array, hash-table, counting|self_sol||bulk/easy/2404_most-frequent-even-element.c
+2409|Count Days Spent Together|Easy|math, string|self_sol||bulk/easy/2409_count-days-spent-together.c
+2413|Smallest Even Multiple|Easy|math, number-theory|ourhouchmohamed97_LeetCode_in_C||bulk/easy/2413_smallest-even-multiple.c
+2418|Sort the People|Easy|array, hash-table, string, sorting|DimitrisJim_leetcode_solutions||bulk/easy/2418_sort-the-people.c
+2423|Remove Letter To Equalize Frequency|Easy|hash-table, string, counting|self_sol||bulk/easy/2423_remove-letter-to-equalize-frequency.c
+2427|Number of Common Factors|Easy|math, enumeration, number-theory|DimitrisJim_leetcode_solutions||bulk/easy/2427_number-of-common-factors.c
+2432|The Employee That Worked on the Longest Task|Easy|array|self_sol||bulk/easy/2432_the-employee-that-worked-on-the-longest-task.c
+2437|Number of Valid Clock Times|Easy|string, enumeration|self_sol||bulk/easy/2437_number-of-valid-clock-times.c
+2441|Largest Positive Integer That Exists With Its Negative|Easy|array, hash-table, two-pointers, sorting|kenjin_Awesome-LC-Cracker||bulk/easy/2441_largest-positive-integer-that-exists-with-its-negative.c
+2444|Count Subarrays With Fixed Bounds|Hard|array, queue, sliding-window, monotonic-queue|kenjin_Awesome-LC-Cracker||bulk/hard/2444_count-subarrays-with-fixed-bounds.c
+2446|Determine if Two Events Have Conflict|Easy|array, string|self_sol||bulk/easy/2446_determine-if-two-events-have-conflict.c
+2451|Odd String Difference|Easy|array, hash-table, string|self_sol||bulk/easy/2451_odd-string-difference.c
+2455|Average Value of Even Numbers That Are Divisible by Three|Easy|array, math|DimitrisJim_leetcode_solutions||bulk/easy/2455_average-value-of-even-numbers-that-are-divisible-by-three.c
+2460|Apply Operations to an Array|Easy|array, two-pointers, simulation|self_sol||bulk/easy/2460_apply-operations-to-an-array.c
+2465|Number of Distinct Averages|Easy|array, hash-table, two-pointers, sorting|self_sol||bulk/easy/2465_number-of-distinct-averages.c
+2475|Number of Unequal Triplets in Array|Easy|array, hash-table, sorting|self_sol||bulk/easy/2475_number-of-unequal-triplets-in-array.c
+2481|Minimum Cuts to Divide a Circle|Easy|math, geometry|self_sol||bulk/easy/2481_minimum-cuts-to-divide-a-circle.c
+2485|Find the Pivot Integer|Easy|math, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/easy/2485_find-the-pivot-integer.c
+2486|Append Characters to String to Make Subsequence|Medium|two-pointers, string, greedy|kenjin_Awesome-LC-Cracker||bulk/medium/2486_append-characters-to-string-to-make-subsequence.c
+2487|Remove Nodes From Linked List|Medium|linked-list, stack, recursion, monotonic-stack|kenjin_Awesome-LC-Cracker||bulk/medium/2487_remove-nodes-from-linked-list.c
+2490|Circular Sentence|Easy|string|self_sol||bulk/easy/2490_circular-sentence.c
+2496|Maximum Value of a String in an Array|Easy|array, string|self_sol||bulk/easy/2496_maximum-value-of-a-string-in-an-array.c
+2500|Delete Greatest Value in Each Row|Easy|array, sorting, heap-(priority-queue, matrix, simulation|self_sol||bulk/easy/2500_delete-greatest-value-in-each-row.c
+2506|Count Pairs Of Similar Strings|Easy|array, hash-table, string, bit-manipulation, counting|self_sol||bulk/easy/2506_count-pairs-of-similar-strings.c
+2511|Maximum Enemy Forts That Can Be Captured|Easy|array, two-pointers|self_sol||bulk/easy/2511_maximum-enemy-forts-that-can-be-captured.c
+2514|Count Anagrams|Hard|hash-table, math, string, combinatorics, counting|kenjin_Awesome-LC-Cracker||bulk/hard/2514_count-anagrams.c
+2515|Shortest Distance to Target String in a Circular Array|Easy|array, string|self_sol||bulk/easy/2515_shortest-distance-to-target-string-in-a-circular-array.c
+2520|Count the Digits That Divide a Number|Easy|math|self_sol||bulk/easy/2520_count-the-digits-that-divide-a-number.c
+2529|Maximum Count of Positive Integer and Negative Integer|Easy|array, binary-search, counting|self_sol||bulk/easy/2529_maximum-count-of-positive-integer-and-negative-integer.c
+2535|Difference Between Element Sum and Digit Sum of an Array|Easy|array, math|self_sol||bulk/easy/2535_difference-between-element-sum-and-digit-sum-of-an-array.c
+2540|Minimum Common Value|Easy|array, hash-table, two-pointers, binary-search|kenjin_Awesome-LC-Cracker||bulk/easy/2540_minimum-common-value.c
+2544|Alternating Digit Sum|Easy|math|self_sol||bulk/easy/2544_alternating-digit-sum.c
+2549|Count Distinct Numbers on Board|Easy|array, hash-table, math, simulation|self_sol||bulk/easy/2549_count-distinct-numbers-on-board.c
+2553|Separate the Digits in an Array|Easy|array, simulation|self_sol||bulk/easy/2553_separate-the-digits-in-an-array.c
+2558|Take Gifts From the Richest Pile|Easy|array, heap-(priority-queue, simulation|self_sol||bulk/easy/2558_take-gifts-from-the-richest-pile.c
+2562|Find the Array Concatenation Value|Easy|array, two-pointers, simulation|self_sol||bulk/easy/2562_find-the-array-concatenation-value.c
+2566|Maximum Difference by Remapping a Digit|Easy|math, greedy|self_sol||bulk/easy/2566_maximum-difference-by-remapping-a-digit.c
+2570|Merge Two 2D Arrays by Summing Values|Easy|array, hash-table, two-pointers|self_sol||bulk/easy/2570_merge-two-2d-arrays-by-summing-values.c
+2574|Left and Right Sum Differences|Easy|array, prefix-sum|self_sol||bulk/easy/2574_left-and-right-sum-differences.c
+2578|Split With Minimum Sum|Easy|math, greedy, sorting|self_sol||bulk/easy/2578_split-with-minimum-sum.c
+2582|Pass the Pillow|Easy|math, simulation|ourhouchmohamed97_LeetCode_in_C||bulk/easy/2582_pass-the-pillow.c
+2586|Count the Number of Vowel Strings in Range|Easy|array, string, counting|self_sol||bulk/easy/2586_count-the-number-of-vowel-strings-in-range.c
+2595|Number of Even and Odd Bits|Easy|bit-manipulation|self_sol||bulk/easy/2595_number-of-even-and-odd-bits.c
+2597|The Number of Beautiful Subsets|Medium|array, hash-table, math, dynamic-programming, backtracking, sorting, combinatorics|kenjin_Awesome-LC-Cracker||bulk/medium/2597_the-number-of-beautiful-subsets.c
+2600|K Items With the Maximum Sum|Easy|math, greedy|self_sol||bulk/easy/2600_k-items-with-the-maximum-sum.c
+2605|Form Smallest Number From Two Digit Arrays|Easy|array, hash-table, enumeration|self_sol||bulk/easy/2605_form-smallest-number-from-two-digit-arrays.c
+2609|Find the Longest Balanced Substring of a Binary String|Easy|string|self_sol||bulk/easy/2609_find-the-longest-balanced-substring-of-a-binary-string.c
+2610|Convert an Array Into a 2D Array With Conditions|Medium|array, hash-table|kenjin_Awesome-LC-Cracker||bulk/medium/2610_convert-an-array-into-a-2d-array-with-conditions.c
+2614|Prime In Diagonal|Easy|array, math, matrix, number-theory|self_sol||bulk/easy/2614_prime-in-diagonal.c
+2639|Find the Width of Columns of a Grid|Easy|array, matrix|self_sol||bulk/easy/2639_find-the-width-of-columns-of-a-grid.c
+2643|Row With Maximum Ones|Easy|array, matrix|self_sol||bulk/easy/2643_row-with-maximum-ones.c
+2644|Find the Maximum Divisibility Score|Easy|array|self_sol||bulk/easy/2644_find-the-maximum-divisibility-score.c
+2651|Calculate Delayed Arrival Time|Easy|math|self_sol||bulk/easy/2651_calculate-delayed-arrival-time.c
+2652|Sum Multiples|Easy|math|self_sol||bulk/easy/2652_sum-multiples.c
+2656|Maximum Sum With Exactly K Elements |Easy|array, greedy|self_sol||bulk/easy/2656_maximum-sum-with-exactly-k-elements.c
+2660|Determine the Winner of a Bowling Game|Easy|array, simulation|self_sol||bulk/easy/2660_determine-the-winner-of-a-bowling-game.c
+2670|Find the Distinct Difference Array|Easy|array, hash-table|self_sol||bulk/easy/2670_find-the-distinct-difference-array.c
+2678|Number of Senior Citizens|Easy|array, string|self_sol||bulk/easy/2678_number-of-senior-citizens.c
+2682|Find the Losers of the Circular Game|Easy|array, hash-table, simulation|self_sol||bulk/easy/2682_find-the-losers-of-the-circular-game.c
+2696|Minimum String Length After Removing Substrings|Easy|string, stack, simulation|self_sol||bulk/easy/2696_minimum-string-length-after-removing-substrings.c
+2697|Lexicographically Smallest Palindrome|Easy|two-pointers, string, greedy|self_sol||bulk/easy/2697_lexicographically-smallest-palindrome.c
+2706|Buy Two Chocolates|Easy|array, greedy, sorting|self_sol||bulk/easy/2706_buy-two-chocolates.c
+2710|Remove Trailing Zeros From a String|Easy|string|self_sol||bulk/easy/2710_remove-trailing-zeros-from-a-string.c
+2716|Minimize String Length|Easy|hash-table, string|kenjin_Awesome-LC-Cracker||bulk/easy/2716_minimize-string-length.c
+2717|Semi-Ordered Permutation|Easy|array, simulation|self_sol||bulk/easy/2717_semi-ordered-permutation.c
+2729|Check if The Number is Fascinating|Easy|hash-table, math|kenjin_Awesome-LC-Cracker||bulk/easy/2729_check-if-the-number-is-fascinating.c
+2733|Neither Minimum nor Maximum|Easy|array, sorting|self_sol||bulk/easy/2733_neither-minimum-nor-maximum.c
+2739|Total Distance Traveled|Easy|math, simulation|self_sol||bulk/easy/2739_total-distance-traveled.c
+2744|Find Maximum Number of String Pairs|Easy|array, hash-table, string, simulation|self_sol||bulk/easy/2744_find-maximum-number-of-string-pairs.c
+2748|Number of Beautiful Pairs|Easy|array, hash-table, math, counting, number-theory|self_sol||bulk/easy/2748_number-of-beautiful-pairs.c
+2760|Longest Even Odd Subarray With Threshold|Easy|array, sliding-window|self_sol||bulk/easy/2760_longest-even-odd-subarray-with-threshold.c
+2769|Find the Maximum Achievable Number|Easy|math|self_sol||bulk/easy/2769_find-the-maximum-achievable-number.c
+2778|Sum of Squares of Special Elements |Easy|array, enumeration|self_sol||bulk/easy/2778_sum-of-squares-of-special-elements.c
+2798|Number of Employees Who Met the Target|Easy|array|self_sol||bulk/easy/2798_number-of-employees-who-met-the-target.c
+2806|Account Balance After Rounded Purchase|Easy|math|self_sol||bulk/easy/2806_account-balance-after-rounded-purchase.c
+2810|Faulty Keyboard|Easy|string, simulation|self_sol||bulk/easy/2810_faulty-keyboard.c
+2815|Max Pair Sum in an Array|Easy|array, hash-table|self_sol||bulk/easy/2815_max-pair-sum-in-an-array.c
+2816|Double a Number Represented as a Linked List|Medium|linked-list, math, stack|kenjin_Awesome-LC-Cracker||bulk/medium/2816_double-a-number-represented-as-a-linked-list.c
+2824|Count Pairs Whose Sum is Less than Target|Easy|array, two-pointers, binary-search, sorting|self_sol||bulk/easy/2824_count-pairs-whose-sum-is-less-than-target.c
+2828|Check if a String Is an Acronym of Words|Easy|array, string|self_sol||bulk/easy/2828_check-if-a-string-is-an-acronym-of-words.c
+2833|Furthest Point From Origin|Easy|string, counting|self_sol||bulk/easy/2833_furthest-point-from-origin.c
+2839|Check if Strings Can be Made Equal With Operations I|Easy|string|self_sol||bulk/easy/2839_check-if-strings-can-be-made-equal-with-operations-i.c
+2843|  Count Symmetric Integers|Easy|math, enumeration|self_sol||bulk/easy/2843_count-symmetric-integers.c
+2848|Points That Intersect With Cars|Easy|array, hash-table, prefix-sum|self_sol||bulk/easy/2848_points-that-intersect-with-cars.c
+2864|Maximum Odd Binary Number|Easy|math, string, greedy|kenjin_Awesome-LC-Cracker||bulk/easy/2864_maximum-odd-binary-number.c
+2870|Minimum Number of Operations to Make Array Empty|Medium|array, hash-table, greedy, counting|kenjin_Awesome-LC-Cracker||bulk/medium/2870_minimum-number-of-operations-to-make-array-empty.c
+2874|Maximum Value of an Ordered Triplet II|Medium|array|kenjin_Awesome-LC-Cracker||bulk/medium/2874_maximum-value-of-an-ordered-triplet-ii.c
+2906|Construct Product Matrix|Medium|array, matrix, prefix-sum|ourhouchmohamed97_LeetCode_in_C||bulk/medium/2906_construct-product-matrix.c
+2958|Length of Longest Subarray With at Most K Frequency|Medium|array, hash-table, sliding-window|kenjin_Awesome-LC-Cracker||bulk/medium/2958_length-of-longest-subarray-with-at-most-k-frequency.c
+2962|Count Subarrays Where Max Element Appears at Least K Times|Medium|array, sliding-window|kenjin_Awesome-LC-Cracker||bulk/medium/2962_count-subarrays-where-max-element-appears-at-least-k-times.c
+2966|Divide Array Into Arrays With Max Difference|Medium|array, greedy, sorting|kenjin_Awesome-LC-Cracker||bulk/medium/2966_divide-array-into-arrays-with-max-difference.c
+2971|Find Polygon With the Largest Perimeter|Medium|array, greedy, sorting, prefix-sum|kenjin_Awesome-LC-Cracker||bulk/medium/2971_find-polygon-with-the-largest-perimeter.c
+2996|Smallest Missing Integer Greater Than Sequential Prefix Sum|Easy|array, hash-table, sorting|kaushiknrk_leetcode-c-practice||bulk/easy/2996_smallest-missing-integer-greater-than-sequential-prefix-sum.c
+2997|Minimum Number of Operations to Make Array XOR Equal to K|Medium|array, bit-manipulation|kenjin_Awesome-LC-Cracker||bulk/medium/2997_minimum-number-of-operations-to-make-array-xor-equal-to-k.c
+3005|Count Elements With Maximum Frequency|Easy|array, hash-table, counting|kenjin_Awesome-LC-Cracker||bulk/easy/3005_count-elements-with-maximum-frequency.c
+3024|Type of Triangle|Easy|array, math, sorting|ourhouchmohamed97_LeetCode_in_C||bulk/easy/3024_type-of-triangle.c
+3068|Find the Maximum Sum of Node Values|Hard|array, dynamic-programming, greedy, bit-manipulation, tree, sorting|kenjin_Awesome-LC-Cracker||bulk/hard/3068_find-the-maximum-sum-of-node-values.c
+3075|Maximize Happiness of Selected Children|Medium|array, greedy, sorting|kenjin_Awesome-LC-Cracker||bulk/medium/3075_maximize-happiness-of-selected-children.c
+3090|Maximum Length Substring With Two Occurrences|Easy|hash-table, string, sliding-window|kaushiknrk_leetcode-c-practice||bulk/easy/3090_maximum-length-substring-with-two-occurrences.c
+3116|Kth Smallest Amount With Single Denomination Combination|Hard|array, math, binary-search, bit-manipulation, combinatorics, number-theory|kaushiknrk_leetcode-c-practice||bulk/hard/3116_kth-smallest-amount-with-single-denomination-combination.c
+3471|Find the Largest Almost Missing Integer|Easy|array, hash-table|kaushiknrk_leetcode-c-practice||bulk/easy/3471_find-the-largest-almost-missing-integer.c
+3499|Maximize Active Section with Trade I|Medium|string, enumeration|kaushiknrk_leetcode-c-practice||bulk/medium/3499_maximize-active-section-with-trade-i.c
+3622|Check Divisibility by Digit Sum and Product|Easy|math|kaushiknrk_leetcode-c-practice||bulk/easy/3622_check-divisibility-by-digit-sum-and-product.c

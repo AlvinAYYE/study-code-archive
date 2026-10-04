@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33027.164
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "逆波蘭表示法計算機", "逆波蘭表示法計算機\逆波蘭表示法計算機.csproj", "{4432C7B6-E54D-4B93-B621-3500D537A70F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4432C7B6-E54D-4B93-B621-3500D537A70F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4432C7B6-E54D-4B93-B621-3500D537A70F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4432C7B6-E54D-4B93-B621-3500D537A70F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4432C7B6-E54D-4B93-B621-3500D537A70F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9D7C45C1-9EA8-4684-8458-BD804DD00BB7}
+	EndGlobalSection
+EndGlobal

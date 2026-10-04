@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33027.164
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "簡易霍夫曼解碼", "簡易霍夫曼解碼\簡易霍夫曼解碼.csproj", "{44EC2E95-BBF0-4526-9C06-D1CCE7B72770}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{44EC2E95-BBF0-4526-9C06-D1CCE7B72770}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44EC2E95-BBF0-4526-9C06-D1CCE7B72770}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44EC2E95-BBF0-4526-9C06-D1CCE7B72770}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44EC2E95-BBF0-4526-9C06-D1CCE7B72770}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2735952D-B435-4537-B3F7-518F83431307}
+	EndGlobalSection
+EndGlobal

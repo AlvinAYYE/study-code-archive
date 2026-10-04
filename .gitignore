@@ -1,0 +1,22 @@
+# Excluded: portable app >100MB files, blocked by GitHub; not study material
+zeal-0.9.1-portable-windows-x64/
+
+# Windows system folder (access denied)
+System Volume Information/
+
+# Common build/temp artifacts
+*.obj
+*.exe
+*.o
+Thumbs.db
+desktop.ini
+
+# Visual Studio caches / IDE state
+.vs/
+*.suo
+*.ipch
+*.pdb
+*.ilk
+Debug/
+Release/
+x64/

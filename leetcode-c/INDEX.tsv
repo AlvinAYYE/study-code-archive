@@ -1,0 +1,33 @@
+001|Two Sum|兩數之和|Easy|array, hash-table|easy/001_two-sum.c
+002|Add Two Numbers|兩數相加|Medium|linked-list, math, recursion|medium/002_add-two-numbers.c
+003|Longest Substring Without Repeating Characters|無重複字元的最長子字串|Medium|hash-table, string, sliding-window|medium/003_longest-substring-without-repeating-characters.c
+004|Median of Two Sorted Arrays|尋找兩個正序數組的中位數|Hard|array, binary-search, divide-and-conquer|hard/004_median-of-two-sorted-arrays.c
+005|Longest Palindromic Substring|最長迴文子字串|Medium|two-pointers, string, dynamic-programming|medium/005_longest-palindromic-substring.c
+007|Reverse Integer|整數反轉|Medium|math|medium/007_reverse-integer.c
+009|Palindrome Number|迴文數|Easy|math|easy/009_palindrome-number.c
+010|Regular Expression Matching|正則表達式匹配|Hard|string, dynamic-programming, recursion|hard/010_regular-expression-matching.c
+013|Roman to Integer|羅馬轉整數|Easy|hash-table, math, string|easy/013_roman-to-integer.c
+014|Longest Common Prefix|最長共同前綴|Easy|array, string, trie|easy/014_longest-common-prefix.c
+015|3Sum|三數之和|Medium|array, two-pointers, sorting|medium/015_3sum.c
+020|Valid Parentheses|有效的括號|Easy|string, stack|easy/020_valid-parentheses.c
+021|Merge Two Sorted Lists|合併兩個有序鏈表|Easy|linked-list, recursion|easy/021_merge-two-sorted-lists.c
+022|Generate Parentheses|括號生成|Medium|string, dynamic-programming, backtracking|medium/022_generate-parentheses.c
+023|Merge k Sorted Lists|合併 K 個升序鏈表|Hard|linked-list, divide-and-conquer, heap-priority-queue, merge-sort|hard/023_merge-k-sorted-lists.c
+042|Trapping Rain Water|接雨水|Hard|array, two-pointers, dynamic-programming, stack, monotonic-stack|hard/042_trapping-rain-water.c
+046|Permutations|全排列|Medium|array, backtracking|medium/046_permutations.c
+049|Group Anagrams|字母異位詞分組|Medium|array, hash-table, string, sorting|medium/049_group-anagrams.c
+051|N-Queens|N 皇后|Hard|array, backtracking|hard/051_n-queens.c
+053|Maximum Subarray|最大子陣列和|Medium|array, divide-and-conquer, dynamic-programming|medium/053_maximum-subarray.c
+056|Merge Intervals|合併區間|Medium|array, sorting|medium/056_merge-intervals.c
+070|Climbing Stairs|爬樓梯|Easy|math, dynamic-programming, memoization|easy/070_climbing-stairs.c
+076|Minimum Window Substring|最小覆蓋子串|Hard|hash-table, string, sliding-window|hard/076_minimum-window-substring.c
+084|Largest Rectangle in Histogram|柱狀圖中最大的矩形|Hard|array, stack, monotonic-stack|hard/084_largest-rectangle-in-histogram.c
+102|Binary Tree Level Order Traversal|二叉樹的層序遍歷|Medium|tree, breadthfirst-search, binary-tree|medium/102_binary-tree-level-order-traversal.c
+104|Maximum Depth of Binary Tree|二叉樹的最大深度|Easy|tree, depthfirst-search, breadthfirst-search, binary-tree|easy/104_maximum-depth-of-binary-tree.c
+121|Best Time to Buy and Sell Stock|買賣股票的最佳時機|Easy|array, dynamic-programming|easy/121_best-time-to-buy-and-sell-stock.c
+136|Single Number|只出現一次的數字|Easy|array, bit-manipulation|easy/136_single-number.c
+146|LRU Cache|LRU 緩存|Medium|hash-table, linked-list, design, doublylinked-list|medium/146_lru-cache.c
+169|Majority Element|多數元素|Easy|array, hash-table, divide-and-conquer, sorting, counting|easy/169_majority-element.c
+200|Number of Islands|島嶼數量|Medium|array, depthfirst-search, breadthfirst-search, union-find, matrix|medium/200_number-of-islands.c
+239|Sliding Window Maximum|滑動視窗最大值|Hard|array, queue, sliding-window, heap-priority-queue, monotonic-queue|hard/239_sliding-window-maximum.c
+322|Coin Change|硬幣找零|Medium|array, dynamic-programming, breadthfirst-search|medium/322_coin-change.c

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.33027.164
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "最短路徑規劃", "最短路徑規劃\最短路徑規劃.csproj", "{2F7C70D8-62D8-4965-8350-FE9BD0FF80A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2F7C70D8-62D8-4965-8350-FE9BD0FF80A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F7C70D8-62D8-4965-8350-FE9BD0FF80A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F7C70D8-62D8-4965-8350-FE9BD0FF80A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F7C70D8-62D8-4965-8350-FE9BD0FF80A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A007AD6D-334F-4CF9-BE4F-879CA3B82F0B}
+	EndGlobalSection
+EndGlobal

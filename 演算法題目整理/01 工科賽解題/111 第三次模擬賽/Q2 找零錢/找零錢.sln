@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32929.386
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "找零錢", "找零錢\找零錢.csproj", "{C1964BCF-0F77-4A89-982A-FE6EE9D3165E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C1964BCF-0F77-4A89-982A-FE6EE9D3165E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1964BCF-0F77-4A89-982A-FE6EE9D3165E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1964BCF-0F77-4A89-982A-FE6EE9D3165E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1964BCF-0F77-4A89-982A-FE6EE9D3165E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FAE622C6-85C7-4E27-BBBE-659D222E2298}
+	EndGlobalSection
+EndGlobal
