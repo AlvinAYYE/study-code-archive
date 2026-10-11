@@ -1,0 +1,204 @@
+# tan, tanf, tanl
+
+> 來源：cppreference C 語言參考文件（離線轉換版）。
+
+Defined in header `<math.h>`
+|   |  |   |  |
+
+```c
+float tanf( float arg );
+```
+|   |  (1)  |   |  (since C99)  |
+
+```c
+double tan( double arg );
+```
+|   |  (2)  |   |   |
+
+```c
+long double tanl( long double arg );
+```
+|   |  (3)  |   |  (since C99)  |
+
+```c
+_Decimal32 tand32( _Decimal32 arg );
+```
+|   |  (4)  |   |  (since C23)  |
+
+```c
+_Decimal64 tand64( _Decimal64 arg );
+```
+|   |  (5)  |   |  (since C23)  |
+
+```c
+_Decimal128 tand128( _Decimal128 arg );
+```
+|   |  (6)  |   |  (since C23)  |
+
+Defined in header `<tgmath.h>`
+|   |  |   |  |
+
+```c
+#define tan( arg )
+```
+|   |  (7)  |   |  (since C99)  |
+
+|  |  |  |  |
+
+1-6) Computes the tangent of `arg` (measured in radians).
+
+7) Type-generic macro: If the argument has type `long double`, (3) (`tanl`) is called. Otherwise, if the argument has integer type or the type `double`, (2) (`tan`) is called. Otherwise, (1) (`tanf`) is called. If the argument is complex, then the macro invokes the corresponding complex function (ctanf, ctan, ctanl).
+
+The functions (4-6) are declared if and only if the implementation predefines `__STDC_IEC_60559_DFP__` (i.e. the implementation supports decimal floating-point numbers).
+|   | (since C23) |
+
+### Parameters
+
+| arg  |   | -  |   | floating-point value representing angle in radians  |
+
+### Return value
+
+If no errors occur, the tangent of `arg` (tan(arg)) is returned.
+若沒有發生錯誤，回傳 arg 的正切 tan(arg)。
+
+The result may have little or no significance if the magnitude of `arg` is large.
+|   | (until C99) |
+
+If a domain error occurs, an implementation-defined value is returned (NaN where supported).
+若發生定義域錯誤，回傳由實作定義的值（若支援則回傳 NaN）。
+If a range error occurs due to underflow, the correct result (after rounding) is returned.
+若因浮點下溢而發生值域錯誤，回傳正確結果（經捨入後）。
+
+### Error handling
+
+Errors are reported as specified in math_errhandling.
+錯誤會依照 math_errhandling 的規定回報。
+If the implementation supports IEEE floating-point arithmetic (IEC 60559):
+若實作支援 IEEE 浮點運算（IEC 60559）：
+
+- if the argument is ±0, it is returned unmodified;
+若參數為 ±0，則原樣回傳。
+
+- if the argument is ±∞, NaN is returned and FE_INVALID is raised;
+若參數為 ±∞，回傳 NaN 並引發 FE_INVALID。
+
+- if the argument is NaN, NaN is returned.
+若參數為 NaN，回傳 NaN。
+
+### Notes
+
+The case where the argument is infinite is not specified to be a domain error in C, but it is defined as a domain error in POSIX.
+在 C 標準中，參數為無窮大的情況不屬於定義域錯誤；POSIX 則將它定義為定義域錯誤。
+The function has mathematical poles at π(1/2 + n); however no common floating-point representation is able to represent `π/2` exactly, thus there is no value of the argument for which a pole error occurs.
+此函式在 π(1/2 + n) 處有數學上的極點；但常見的浮點格式都無法精確表示 π/2，因此沒有任何參數會造成極點錯誤。
+
+### Example
+
+Run this code
+
+```c
+#include <errno.h> #include <fenv.h> #include <math.h> #include <stdio.h> #ifndef __GNUC__ #pragma STDC FENV_ACCESS ON #endif int main(void) {  const double pi = acos(-1);  // typical usage  printf("tan(pi*1/4) = %+f\n", tan(pi * 1 / 4)); // 45 deg  printf("tan(pi*3/4) = %+f\n", tan(pi * 3 / 4)); // 135 deg  printf("tan(pi*5/4) = %+f\n", tan(pi * 5 / 4)); // -135 deg  printf("tan(pi*7/4) = %+f\n", tan(pi * 7 / 4)); // -45 deg  // special values  printf("tan(+0) = %f\n", tan(0.0));  printf("tan(-0) = %f\n", tan(-0.0));  // error handling  feclearexcept(FE_ALL_EXCEPT);  printf("tan(INFINITY) = %f\n", tan(INFINITY));  if (fetestexcept(FE_INVALID))  puts(" FE_INVALID raised"); }
+```
+
+Possible output:
+可能的輸出：
+
+```c
+tan(pi*1/4) = +1.000000 tan(pi*3/4) = -1.000000 tan(pi*5/4) = +1.000000 tan(pi*7/4) = -1.000000 tan(+0) = 0.000000 tan(-0) = -0.000000 tan(INFINITY) = -nan FE_INVALID raised
+```
+
+### References
+
+- C23 standard (ISO/IEC 9899:2024):
+C23 標準（ISO/IEC 9899:2024）：
+
+- 7.12.4.7 The tan functions (p: TBD)
+7.12.4.7 tan 函式（p: TBD）
+7.12.4.7 tan 函式（p: TBD）
+
+- 7.25 Type-generic math <tgmath.h> (p: TBD)
+7.25 型別泛型數學 <tgmath.h>（p: TBD）
+7.25 型別泛型數學 <tgmath.h>（p: TBD）
+
+- F.10.1.7 The tan functions (p: TBD)
+F.10.1.7 tan 函式（p: TBD）
+F.10.1.7 tan 函式（p: TBD）
+
+- C17 standard (ISO/IEC 9899:2018):
+C17 標準（ISO/IEC 9899:2018）：
+
+- 7.12.4.7 The tan functions (p: 175)
+7.12.4.7 tan 函式（p: 175）
+7.12.4.7 tan 函式（p: 175）
+
+- 7.25 Type-generic math <tgmath.h> (p: 272-273)
+7.25 型別通用數學 <tgmath.h> (p: 272-273)
+7.25 型別通用數學 <tgmath.h> (p: 272-273)
+
+- F.10.1.7 The tan functions (p: 378)
+F.10.1.7 tan 函式（p: 378）
+F.10.1.7 tan 函式（p: 378）
+
+- C11 standard (ISO/IEC 9899:2011):
+C11 標準（ISO/IEC 9899:2011）：
+
+- 7.12.4.7 The tan functions (p: 240)
+7.12.4.7 tan 函式（p: 240）
+7.12.4.7 tan 函式（p: 240）
+
+- 7.25 Type-generic math <tgmath.h> (p: 373-375)
+7.25 泛型數學 <tgmath.h>（頁：373-375）
+7.25 泛型數學 <tgmath.h>（頁：373-375）
+
+- F.10.1.7 The tan functions (p: 519)
+F.10.1.7 tan 函式（p: 519）
+F.10.1.7 tan 函式（p: 519）
+
+- C99 standard (ISO/IEC 9899:1999):
+C99 標準（ISO/IEC 9899:1999）：
+
+- 7.12.4.7 The tan functions (p: 220)
+7.12.4.7 tan 函式（p: 220）
+7.12.4.7 tan 函式（p: 220）
+
+- 7.22 Type-generic math <tgmath.h> (p: 335-337)
+7.22 泛型數學 <tgmath.h>（頁：335-337）
+7.22 泛型數學 <tgmath.h>（頁：335-337）
+
+- F.9.1.7 The tan functions (p: 457)
+F.9.1.7 tan 函式（p: 457）
+F.9.1.7 tan 函式（p: 457）
+
+- C89/C90 standard (ISO/IEC 9899:1990):
+C89/C90 標準（ISO/IEC 9899:1990）：
+
+- 4.5.2.7 The tan function
+4.5.2.7 tan 函式
+4.5.2.7 tan 函式
+
+### See also
+
+sinsinfsinl
+(C99)(C99)
+|   | computes sine (sinxsin⁡xsin(x))
+(function)   |
+
+coscosfcosl
+(C99)(C99)
+|   | computes cosine (cosxcos⁡xcos(x))
+(function)   |
+
+atanatanfatanl
+(C99)(C99)
+|   | computes arc tangent (arctanxarctan⁡xarctan(x))
+(function)   |
+
+ctanctanfctanl
+(C99)(C99)(C99)
+|   | computes the complex tangent
+(function)   |
+
+C++ documentation for tan
+
+---
+來源頁路徑：`en.cppreference.com/c/numeric/math/tan.html`

@@ -1,0 +1,11 @@
+# C keywords: else
+
+> 來源：cppreference C 語言參考文件（離線轉換版）。
+
+### Usage
+
+-  `if` statement: as the declaration of the alternative branch
+if 陳述式：作為備選分支的宣告
+
+---
+來源頁路徑：`en.cppreference.com/c/keyword/else.html`

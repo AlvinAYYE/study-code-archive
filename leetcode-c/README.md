@@ -32,31 +32,36 @@ leetcode-c\
   problems\        ← 完整題庫 2913 題 JSON(英文題面+官方C簽名) + merged_problems.json
   DB_INDEX.tsv     ← 全庫索引(題號|標題|難度|slug|tags)
   DB_STATS.md      ← 全庫統計+標籤計數
-  search.ps1 / search.bat   ← 模糊搜尋+tag 查閱(同時搜精選33與全庫2913)
   run.ps1   / run.bat       ← 一鍵編譯執行精選題
-  INDEX.tsv / INDEX.md      ← 精選 33 題清單
+  INDEX.tsv / INDEX.md      ← 精選 33 題清單（中英文題名、標籤與檔案路徑）
+  BULK_INDEX.tsv            ← 批量解答索引（中英文題名、標籤與檔案路徑）
+  DB_INDEX.tsv              ← 全題庫索引（英文題名、難度、slug 與標籤）
   TAGS.md                   ← 精選題標籤索引
   README.md
 ```
 
-## 快速模糊搜尋（非網頁）
+## 快速查找（純文字索引）
 
-```bat
-search.bat two sum          :: 模糊搜尋(英文/數字/中文/難度/tags 皆可)
-search.bat 括號              :: 中文題名搜尋
-search.bat 146              :: 題號
-search.bat -tags            :: 列出所有標籤與題數
-search.bat -tag dp          :: tag 查閱(支援部分比對, 如 -tag dynam)
-search.bat -diff hard       :: 只列 Hard
-search.bat cache -edit      :: 搜尋並用編輯器打開第一筆
-```
+參考 `C_Offline_Reference` 的首頁導覽方式，先依查找目的選索引，再用考場電腦已有的文字編輯器尋找關鍵字。索引是純文字，不需安裝或執行搜尋程式。
 
-模糊演算法：連續子字串 > 詞首前綴 > 子序列(+連續加分)，多關鍵字為 AND。
-結果分兩區：【精選解答 C 可執行】(33) 與【完整題庫】(2913)；加 `-only cur` / `-only db` 只查其中一區。
-搜尋不需重建索引——精選區直接解析每個 .c 頂部 metadata，全庫區讀 DB_INDEX.tsv。
+| 查找內容 | 開啟檔案 | 欄位 |
+|---|---|---|
+| 精選 33 題 | `INDEX.md` 或 `INDEX.tsv` | 題號、英文／中文題名、難度、標籤、C 檔路徑 |
+| 有 C 解答的批量題目 | `BULK_INDEX.tsv` | 題號、英文／中文題名、難度、標籤、C 檔路徑 |
+| 完整題庫題面 | `DB_INDEX.tsv` | 題號、英文題名、難度、slug、標籤 |
+
+查找步驟：
+
+1. 按題號查：在索引尋找題號（例如 `146`）。
+2. 按題名查：在 `INDEX.tsv` 或 `BULK_INDEX.tsv` 尋找中英文關鍵字；完整題庫索引目前只有英文題名。
+3. 按演算法查：尋找標籤，例如 `dynamic-programming`、`sliding-window` 或 `binary-search`。
+4. 按難度查：尋找 `Easy`、`Medium` 或 `Hard`。若使用試算表，匯入文字時指定 `|` 為分隔符號，即可篩選欄位。
+5. 開啟題目：沿索引的相對路徑找到 `.c` 解答，或由 `DB_INDEX.tsv` 的題號與 slug 找到 `problems\題號-slug.json`。
+
+也可直接按主題瀏覽 `easy\`、`medium\`、`hard\` 與 `bulk\` 資料夾。索引欄位順序與來源如下：精選 `INDEX.tsv`、批量 `BULK_INDEX.tsv`、完整題庫 `DB_INDEX.tsv`。
 
 用完整題庫寫新題解答的流程建議：
-1. `search.bat -only db 題目關鍵字` 找到題號與 JSON 檔名
+1. 在 `DB_INDEX.tsv` 尋找題目關鍵字，取得題號與 slug
 2. 開 `problems\NNNN-slug.json` 看 description / examples / constraints / **code_snippets.c 的官方簽名**
 3. 依精選 33 題任一檔的格式複製一份，改寫解答與 `main()` 測試，`run.bat` 驗證後歸入 easy/medium/hard 資料夾
 
@@ -144,6 +149,6 @@ Traditional-Chinese explanation, the solution matching LeetCode's official C
 signature, and a local `main()` test that prints `PASS`/`FAIL`.
 
 - Every file compiled & run with MSVC `/std:c17 /utf-8`, all tests PASS; code is plain C11 (no compiler extensions) and also builds with gcc `-std=c11` / LeetCode.
-- `search.bat` = fast fuzzy search + tag browsing (pure PowerShell, no web UI).
+- `INDEX.tsv`, `BULK_INDEX.tsv`, and `DB_INDEX.tsv` are plain-text lookup indexes. Use `|` as the import delimiter in spreadsheet software.
 - `run.bat <num-or-name>` = compile & run any problem with auto-detected compiler.
 - To submit on LeetCode: copy the "LeetCode submission" block only (drop the test `main`).

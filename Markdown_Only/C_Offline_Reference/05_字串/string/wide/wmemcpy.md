@@ -1,0 +1,139 @@
+# wmemcpy, wmemcpy_s
+
+> 來源：cppreference C 語言參考文件（離線轉換版）。
+
+Defined in header `<wchar.h>`
+|   |  |   |  |
+
+```c
+wchar_t* wmemcpy( wchar_t* dest, const wchar_t* src, size_t count );
+```
+|   |  (1) |   | (since C95)
+(until C99) |
+
+```c
+wchar_t* wmemcpy(wchar_t* restrict dest, const wchar_t* restrict src,  size_t count );
+```
+|   |   |   | (since C99) |
+
+```c
+errno_t wmemcpy_s( wchar_t* restrict dest, rsize_t destsz,  const wchar_t* restrict src, rsize_t count );
+```
+|   |  (2)  |   |  (since C11)  |
+
+|  |  |  |  |
+
+1) Copies exactly `count` successive wide characters from the wide character array pointed to by `src` to the wide character array pointed to by `dest`. If the objects overlap, the behavior is undefined. If `count` is zero, the function does nothing.
+
+2) Same as (1), except that the following errors are detected at runtime and call the currently installed constraint handler function:
+- `src` or `dest` is a null pointer
+src 或 dest 為空指標
+
+- `destsz` or `count` is greater than `RSIZE_MAX / sizeof(wchar_t)`
+destsz 或 count 大於 RSIZE_MAX / sizeof ( wchar_t )
+
+- `count` is greater than `destsz` (overflow would occur)
+count 大於 destsz（會發生溢位）
+
+- overlap would occur between the source and the destination arrays
+源陣列和目標陣列之間會發生重疊
+src 或 dest 為空指標 destsz 或 count 大於 RSIZE_MAX / sizeof ( wchar_t ) count 大於 destsz（會發生溢位）源陣列和目標陣列之間會發生重疊
+As with all bounds-checked functions, `wmemcpy_s` is only guaranteed to be available if `__STDC_LIB_EXT1__` is defined by the implementation and if the user defines `__STDC_WANT_LIB_EXT1__` to the integer constant `1` before including <wchar.h>.
+與所有邊界檢查函式一樣，僅當實現定義了 __STDC_LIB_EXT1__ 且使用者在包含 <wchar.h> 之前將 __STDC_WANT_LIB_EXT1__ 定義為整數常量 1 時，才保證 wmemcpy_s 可用。
+
+### Parameters
+
+| dest  |   | -  |   | pointer to the wide character array to copy to  |
+
+| src  |   | -  |   | pointer to the wide character array to copy from  |
+
+| count  |   | -  |   | number of wide characters to copy  |
+
+| destsz  |   | -  |   | max number of wide characters to write (the size of the destination buffer)  |
+
+### Return value
+
+1) returns a copy of `dest`
+
+2) returns zero on success, returns non-zero on error. Also, on error, fills the entire `dest` up to and not including `dest + destsz` with null wide characters, `L'\0'` (unless `dest` is null or `destsz` is greater than `RSIZE_MAX / sizeof(wchar_t)`)
+
+### Notes
+
+This function's analog for byte strings is strncpy, not strcpy.
+此函式針對位元組字串的對應函式是 strncpy ，而不是 strcpy 。
+This function is not locale-sensitive and pays no attention to the values of the `wchar_t` objects it copies: nulls as well as invalid characters are copied too.
+此函式不區分本地化環境，也不關注它複製的 wchar_t 物件的值：空值以及無效字元也會被複制。
+
+### Example
+
+Run this code
+
+```c
+#include <locale.h> #include <stdio.h> #include <wchar.h> int main(void) {  wchar_t from1[] = L"नमस्ते";  size_t sz1 = sizeof from1 / sizeof *from1;  wchar_t from2[] = L"Բարև";  size_t sz2 = sizeof from2 / sizeof *from2;  wchar_t to[sz1 + sz2];  wmemcpy(to, from1, sz1); // copy from1, along with its null terminator  wmemcpy(to + sz1, from2, sz2); // append from2, along with its null terminator  setlocale(LC_ALL, "en_US.utf8");  printf("Wide array contains: ");  for(size_t n = 0; n < sizeof to / sizeof *to; ++n)  if(to[n])  printf("%lc", to[n]);  else  printf("\\0");  printf("\n"); }
+```
+
+Possible output:
+可能的輸出：
+
+```c
+Wide array contains: नमस्ते\0Բարև\0
+```
+
+### References
+
+- C23 standard (ISO/IEC 9899:2024):
+C23 標準（ISO/IEC 9899:2024）：
+
+- 7.29.4.2.3 The wmemcpy function (p: TBD)
+7.29.4.2.3 wmemcpy 函式（頁碼：待定）
+7.29.4.2.3 wmemcpy 函式（頁碼：待定）
+
+- K.3.9.2.1.3 The wmemcpy_s function (p: TBD)
+K.3.9.2.1.3 wmemcpy_s 函式（頁碼：待定）
+K.3.9.2.1.3 wmemcpy_s 函式（頁碼：待定）
+
+- C17 standard (ISO/IEC 9899:2018):
+C17 標準（ISO/IEC 9899:2018）：
+
+- 7.29.4.2.3 The wmemcpy function (p: TBD)
+7.29.4.2.3 wmemcpy 函式（頁碼：待定）
+7.29.4.2.3 wmemcpy 函式（頁碼：待定）
+
+- K.3.9.2.1.3 The wmemcpy_s function (p: TBD)
+K.3.9.2.1.3 wmemcpy_s 函式（頁碼：待定）
+K.3.9.2.1.3 wmemcpy_s 函式（頁碼：待定）
+
+- C11 standard (ISO/IEC 9899:2011):
+C11 標準（ISO/IEC 9899:2011）：
+
+- 7.29.4.2.3 The wmemcpy function (p: 431)
+7.29.4.2.3 wmemcpy 函式（頁碼：431）
+7.29.4.2.3 wmemcpy 函式（頁碼：431）
+
+- K.3.9.2.1.3 The wmemcpy_s function (p: 641)
+K.3.9.2.1.3 wmemcpy_s 函式（頁碼：641）
+K.3.9.2.1.3 wmemcpy_s 函式（頁碼：641）
+
+- C99 standard (ISO/IEC 9899:1999):
+C99 標準（ISO/IEC 9899:1999）：
+
+- 7.24.4.2.3 The wmemcpy function (p: 377)
+7.24.4.2.3 wmemcpy 函式（頁碼：377）
+7.24.4.2.3 wmemcpy 函式（頁碼：377）
+
+### See also
+
+wmemmovewmemmove_s
+(C95)(C11)
+|   | copies a certain amount of wide characters between two, possibly overlapping, arrays
+(function)   |
+
+strncpystrncpy_s
+(C11)
+|   | copies a certain amount of characters from one string to another
+(function)   |
+
+C++ documentation for wmemcpy
+
+---
+來源頁路徑：`en.cppreference.com/c/string/wide/wmemcpy.html`
