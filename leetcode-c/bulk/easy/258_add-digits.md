@@ -1,46 +1,37 @@
-# 0258. Add Digits《各位數相加》
+# LeetCode 258. Add Digits
 
-- **Difficulty**: Easy
-- **Tags**: math, simulation, number-theory
-- **題目連結**: https://leetcode.com/problems/add-digits/
-- **程式碼**: [`258_add-digits.c`](./258_add-digits.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+**難度：Easy**
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定整數 num，反覆將其各位數相加，直到結果只剩一位數，並回傳該數字。題目追問能否不用迴圈或遞迴，在 O(1) 時間完成。
+給定非負整數 num，不斷把它替換成各位數字的總和，直到結果只剩一位數。請回傳最後的一位數結果。
 
-**思路**：直接使用數根公式 (num - 1) % 9 + 1 計算；在 C 中 num 為 0 時也會得到 0。
+## 範例
 
-## Problem Statement (English)
+1. num = 38 → 2（38 → 3 + 8 = 11 → 1 + 1 = 2）
+2. num = 0 → 0
 
-Given an integer num, repeatedly add all its digits until the result has only one digit, and return it.
-Example 1:
-Example 2:
-Constraints:
-Follow up: Could you do it without any loop/recursion in O(1) runtime?
+## 限制
 
-## 範例 Examples
+- 0 <= num <= 2³¹ - 1
 
-```text
-Input: num = 38
-Output: 2
-Explanation: The process is
-38 --> 3 + 8 --> 11
-11 --> 1 + 1 --> 2 
-Since 2 has only one digit, return it.
+## 解題思路
 
-Input: num = 0
-Output: 0
-```
+1. 若 num 是 0，答案就是 0。
+2. 對正整數而言，反覆加總各位數的結果可直接用數位根公式計算：1 + (num - 1) % 9。
+3. 回傳公式結果，不必真的重複拆解每一位數。
 
-## 限制 Constraints
+## 複雜度
 
-0 <= num <= 231 - 1
+- 時間：O(1)
+- 空間：O(1)
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-int addDigits(int num) {
-    
-}
-```
+~~~c
+int addDigits(int num);
+~~~
+
+## 程式如何運作
+
+提交函式依照上述步驟完成計算；程式註解標出每個關鍵動作。本地測試 harness 保留在 .c 檔尾端。

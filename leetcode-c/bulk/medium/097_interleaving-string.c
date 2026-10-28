@@ -218,46 +218,43 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
+/* ---- 易讀解法：一維 DP 記錄兩字串前綴能否交錯 ---- */
 bool isInterleave(char* s1, char* s2, char* s3) {
-    int len1,len2,len3;
-    int **dp;
-    int i,j;
-    bool ret;
+    char *rowString = s1;
+    char *columnString = s2;
+    int rowLength = (int)strlen(rowString);
+    int columnLength = (int)strlen(columnString);
+    int targetLength = (int)strlen(s3);
+    bool dp[101] = {false};
+    int row;
+    int column;
 
-    len1 = strlen(s1);
-    len2 = strlen(s2);
-    len3 = strlen(s3);
-
-    if(len1 + len2 != len3)
-        return false;
-
-    dp = (int **)malloc(sizeof(int *) * (len1 + 1));
-    for(i = 0; i <= len1; ++i)
-        dp[i] = (int *)malloc(sizeof(int) * (len2 + 1));
-
-    dp[0][0] = 1;
-    for(i = 1; i <= len1; ++i)
-        dp[i][0] = dp[i-1][0] && (s1[i-1] == s3[i-1]);
-
-    for(j = 1; j <= len2; ++j)
-        dp[0][j] = dp[0][j-1] && (s2[j-1] == s3[j-1]);
-
-
-    for(i = 1; i <= len1; ++i){
-        for(j = 1; j <= len2; ++j){
-            dp[i][j] = (dp[i-1][j] && (s1[i-1] == s3[i + j - 1])) ||
-                    (dp[i][j-1] && (s2[j-1] == s3[i + j - 1]));
-        }
+    if (rowLength + columnLength != targetLength) return false;
+    if (columnLength > rowLength) {
+        char *temporary = rowString;
+        int temporaryLength = rowLength;
+        rowString = columnString;
+        columnString = temporary;
+        rowLength = columnLength;
+        columnLength = temporaryLength;
     }
 
-    ret = dp[len1][len2];
-    for(i = 0; i <= len1; ++i)
-        free(dp[i]);
-    free(dp);
+    dp[0] = true;
+    for (column = 1; column <= columnLength; ++column) {
+        dp[column] = dp[column - 1] &&
+                     columnString[column - 1] == s3[column - 1];
+    }
 
-    return ret;
+    for (row = 1; row <= rowLength; ++row) {
+        dp[0] = dp[0] && rowString[row - 1] == s3[row - 1];
+        for (column = 1; column <= columnLength; ++column) {
+            int targetIndex = row + column - 1;
+            bool takeFromRow = dp[column] && rowString[row - 1] == s3[targetIndex];
+            bool takeFromColumn = dp[column - 1] && columnString[column - 1] == s3[targetIndex];
+            dp[column] = takeFromRow || takeFromColumn;
+        }
+    }
+    return dp[columnLength];
 }
 
 /* ---- generated tests ---- */

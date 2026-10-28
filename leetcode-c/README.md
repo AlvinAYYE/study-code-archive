@@ -1,154 +1,55 @@
-﻿# LeetCode in C — 完整題庫 + 精選雙語解答（USB 随身版）
+# LeetCode 題庫與解答
 
-## 內容組成
+這個資料夾保存 2,913 題題目資料，以及目前已寫好的解答。整理目標是：**每題都有完整繁體中文題意、容易照著做的解題步驟、可執行解答與測試**。演算法題使用 C；資料庫與 Shell 題使用題目指定的原語言。
 
-1. **完整題庫 2914 題**（`problems\`，取自 <https://github.com/mcaupybugs/leetcode-problems-db>）
-   每題一個 JSON：官方英文題面 description / examples / constraints / hints / topics / difficulty / **code_snippets.c（LeetCode 官方 C 函式簽名）**；部分題目另有英文官方題解 solution 欄。
-   統計與標籤總覽見 `DB_STATS.md`；全題索引見 `DB_INDEX.tsv`（2914 列，可直接用 Excel 開）。
-   難度分布：Easy 763 / Medium 1464 / Hard 686。
+## 目前進度
 
-2. **精選 33 題完整 C 解答**（`easy\ medium\ hard\`，11 Easy / 14 Medium / 8 Hard，難度以官方為準），每題 .c 檔皆含：
-   - **官方題目描述**（英文原文，抓取自資料源）
-   - **中文題目說明 + 思路**（繁體中文，自官方英文題面翻譯；leetcode.cn 官方簡體被雲端防護擋下無法批量抓取）
-   - **可編譯、可執行的 C 解答**（附 `main()` 本地測試，過關印 `PASS`）
-   - **LeetCode 官方 C 函式簽名**（與線上 stub 一致，可直接貼回 LeetCode）
-   全部 33 題已實際編譯+執行驗證 PASS。
+| 類別 | 數量 | 位置 |
+|---|---:|---|
+| 題目原始資料 | 2,913 題 | `problems/` |
+| 精選 C 解答 | 174 份 | `easy/`、`medium/`、`hard/` |
+| 既有批量 C 解答 | 935 份 | `bulk/` |
+| 有 C 解答的不同題目 | 1,082 題 | 以上兩類有部分重複 |
+| SQL 解答 | 94 題 | `sql/` |
+| Shell 解答 | 4 題 | `shell/` |
+| 已有任一語言解答 | 1,180 題 | C、SQL、Shell 合計 |
+| 尚無解答 | 1,733 題 | 以 `inventory.py` 重新盤點 |
 
-3. **社群批量 C 解答**（`bulk\easy|medium|hard\`，共 **935 題**：500 Easy / 353 Medium / 82 Hard，見 BULK_INDEX.tsv）：
-   自網路公開解答 repo（27 個 GitHub 專案：kenjin/vli02/lightmen/zeplios/DimitrisJim/Hearen/akib/SaulLawliet/Senthil455/tongtzeho/ourhouchmohamed97 等，共 3169 個候選檔），
-   每題自動組上官方示例測試（examples 轉成 C assert），**全部經過「實際編譯 + 執行 + 示例比對 PASS」驗證**（2765 檔通過，每題取首個通過者）。
-   檔頭附官方英文題面 + 來源出處 + **[中文] 題目說明與思路**（由 AI 逐題摘要、以繁體中文撰寫，思路基於該檔實際程式碼；少數缺漏者以術語規則翻譯補）。每題另附**同檔名的 .md 說明檔**（如 `bulk\easy\520_detect-capital.md`）：中英雙語題面、範例、限制、中文思路、官方 C 函式簽名、以及對應 .c 的連結，可直接用任何編輯器/閱讀器開啟，無需跑編譯。
-   ※ 全庫 2914 題中，目前 **941 題有可執行解答**（33 精選 + 935 批量，重疊 27；其中 162 題為本專案自行撰寫、經編譯+官方示例執行驗證——補的是社群沒有 C 解的近年題，含鏈表/二叉樹/週賽 Easy）。其餘約 1970 題多為 Design 設計題/SQL/Shell 或社群僅有 C++/Python 的高難度題，可依 Hot-100 / Easy 優先繼續分批補。
+數字以目前檔案為準；執行 `python leetcode-c/inventory.py --missing` 可重新盤點，`--limit 0` 會列出全部缺題。批量檔案的繁體中文題意與解說仍在逐題校訂；不能因為存在解答檔就視為中文整理已完成。原始 `problems/*.json` 只有英文來源資料，部分敘述已缺少列表內容，寫新題解時須核對完整規則。
 
----
+## 從哪裡開始看
 
-## 目錄結構
+| 想找的內容 | 檔案 |
+|---|---|
+| 精選題：題號、英文與中文題名、難度、C 檔路徑 | `INDEX.md` 或 `INDEX.tsv` |
+| 既有批量 C 解答 | `BULK_INDEX.tsv` |
+| SQL 與 Shell 解答 | `OTHER_INDEX.md` 或 `OTHER_INDEX.tsv` |
+| 全部題目的題號、英文題名、難度與標籤 | `DB_INDEX.tsv` |
+| 題面原始資料、範例、限制與官方函式簽名 | `problems/題號-slug.json` |
 
-```
-leetcode-c\
-  easy\    11 題 001_two-sum.c ...(精選: 中英題面+C解答+測試)
-  medium\  14 題 015_3sum.c ...
-  hard\     8 題 042_trapping-rain-water.c ...
-  problems\        ← 完整題庫 2913 題 JSON(英文題面+官方C簽名) + merged_problems.json
-  DB_INDEX.tsv     ← 全庫索引(題號|標題|難度|slug|tags)
-  DB_STATS.md      ← 全庫統計+標籤計數
-  run.ps1   / run.bat       ← 一鍵編譯執行精選題
-  INDEX.tsv / INDEX.md      ← 精選 33 題清單（中英文題名、標籤與檔案路徑）
-  BULK_INDEX.tsv            ← 批量解答索引（中英文題名、標籤與檔案路徑）
-  DB_INDEX.tsv              ← 全題庫索引（英文題名、難度、slug 與標籤）
-  TAGS.md                   ← 精選題標籤索引
-  README.md
-```
+精選 `.c` 檔包含繁體中文題意、例子、限制、分步解法、LeetCode 的 C 函式，以及可在本機執行的 `main()` 測試。提交到 LeetCode 時，只複製檔案標示的「提交區」及其所需標頭；`main()` 是本地測試用。
 
-## 快速查找（純文字索引）
+## 本機驗證
 
-參考 `C_Offline_Reference` 的首頁導覽方式，先依查找目的選索引，再用考場電腦已有的文字編輯器尋找關鍵字。索引是純文字，不需安裝或執行搜尋程式。
+在專案根目錄執行：
 
-| 查找內容 | 開啟檔案 | 欄位 |
-|---|---|---|
-| 精選 33 題 | `INDEX.md` 或 `INDEX.tsv` | 題號、英文／中文題名、難度、標籤、C 檔路徑 |
-| 有 C 解答的批量題目 | `BULK_INDEX.tsv` | 題號、英文／中文題名、難度、標籤、C 檔路徑 |
-| 完整題庫題面 | `DB_INDEX.tsv` | 題號、英文題名、難度、slug、標籤 |
-
-查找步驟：
-
-1. 按題號查：在索引尋找題號（例如 `146`）。
-2. 按題名查：在 `INDEX.tsv` 或 `BULK_INDEX.tsv` 尋找中英文關鍵字；完整題庫索引目前只有英文題名。
-3. 按演算法查：尋找標籤，例如 `dynamic-programming`、`sliding-window` 或 `binary-search`。
-4. 按難度查：尋找 `Easy`、`Medium` 或 `Hard`。若使用試算表，匯入文字時指定 `|` 為分隔符號，即可篩選欄位。
-5. 開啟題目：沿索引的相對路徑找到 `.c` 解答，或由 `DB_INDEX.tsv` 的題號與 slug 找到 `problems\題號-slug.json`。
-
-也可直接按主題瀏覽 `easy\`、`medium\`、`hard\` 與 `bulk\` 資料夾。索引欄位順序與來源如下：精選 `INDEX.tsv`、批量 `BULK_INDEX.tsv`、完整題庫 `DB_INDEX.tsv`。
-
-用完整題庫寫新題解答的流程建議：
-1. 在 `DB_INDEX.tsv` 尋找題目關鍵字，取得題號與 slug
-2. 開 `problems\NNNN-slug.json` 看 description / examples / constraints / **code_snippets.c 的官方簽名**
-3. 依精選 33 題任一檔的格式複製一份，改寫解答與 `main()` 測試，`run.bat` 驗證後歸入 easy/medium/hard 資料夾
-
-## 本地編譯執行（每題都能跑）
-
-```bat
-run.bat 001                 :: 編譯+執行 Two Sum → PASS: 001 two-sum
-run.bat trapping            :: 名稱部分比對亦可
+```powershell
+python leetcode-c/verify.py
+python leetcode-c/verify.py leetcode-c/medium/008_string-to-integer-atoi.c
+python leetcode-c/verify_sql.py
+python leetcode-c/verify_shell.py
+python leetcode-c/inventory.py --missing --limit 20
+python leetcode-c/build_curated_index.py
+python leetcode-c/build_other_index.py
 ```
 
-或手動（任一編譯器）：
+`verify.py` 會把每份 C 檔分開編譯並執行其中的 `main()`。不指定檔案時，會驗證 `easy/`、`medium/`、`hard/`；可指定批量解答的檔案路徑。支援 PATH 中的 GCC／Clang，Windows 上也能尋找 Visual Studio C 編譯器。編譯產物放在暫存目錄，不會留在題庫中。`verify_sql.py` 用 SQLite 測試 SQL；MySQL 專用語法以等價查詢驗證。`verify_shell.py` 用 Git Bash 執行 Shell 題的範例。兩個 `build_*_index.py` 腳本可依解答檔重建索引。
 
-```bat
-gcc -std=c11 -O2 easy\001_two-sum.c -o two.exe && two.exe
-:: MSVC:
-cl /std:c17 /utf-8 easy\001_two-sum.c && 001_two-sum.exe
-```
+## 補題與校訂準則
 
-本題庫全部 33 題已以 MSVC 14.44 (`/std:c17 /utf-8`) 實際編譯+執行驗證，測試全 PASS。
-程式碼一律使用標準 C11（無 MSVC/gcc 專屬擴充），可直接在 gcc/MinGW 與 LeetCode 線上編譯器編譯。
-檔案編碼：UTF-8 (含 BOM)，中文註解不會亂碼。
+1. 先讀 `problems/` 中對應的題目資料；若來源文字缺段落，查明完整題目規則後再撰寫。
+2. 用繁體中文完整交代輸入、輸出、規則、例子與限制；解法以「每一步做什麼、為何可行」說明。
+3. 用題目指定語言實作：演算法題為 C，資料庫題為 SQL，Shell 題為 Shell；保留線上判題需要的函式簽名或輸出格式。
+4. 為新解答加入有代表性的本地測試；C 題可用 `verify.py`。更新對應索引後，再用 `inventory.py` 檢查是否漏列。
 
-## 每題檔案結構
-
-```
-/* 標題塊: 官方英文題目 + 中文說明 + 例子 + 限制 + 官方 C 簽名 + 雙語思路 */
-#include ...
-/* ---- LeetCode submission ---- */   ← 提交區(函式本體), 直接複製貼回 LeetCode 可用
-/* ---- 本地測試 main ---- */          ← 一般 C 編譯器可執行的測試
-```
-
-LeetCode 提交時：複製「LeetCode submission」區段的 function（含其 static helper）即可；
-`main()`/測試部分不要貼（LeetCode 會自己接 main 呼叫你的 function）。
-
-## 題目清單
-
-| # | 難度 | 題目 | tags |
-|---|------|------|------|
-| 001 Two Sum | Easy | 兩數之和 | array, hash-table |
-| 007 Reverse Integer | **Medium** | 整數反轉 | math |
-| 009 Palindrome Number | Easy | 迴文數 | math |
-| 013 Roman to Integer | Easy | 羅馬轉整數 | string, hash-table |
-| 014 Longest Common Prefix | Easy | 最長共同前綴 | string |
-| 020 Valid Parentheses | Easy | 有效的括號 | stack, string |
-| 021 Merge Two Sorted Lists | Easy | 合併兩個有序鏈表 | linked-list |
-| 053 Maximum Subarray | **Medium** | 最大子陣列和 | dp, divide-conquer |
-| 070 Climbing Stairs | Easy | 爬樓梯 | dp, math |
-| 104 Max Depth of Binary Tree | Easy | 二叉樹最大深度 | tree, dfs |
-| 121 Best Time to Buy/Sell Stock | Easy | 買賣股票最佳時機 | array, dp |
-| 136 Single Number | Easy | 只出現一次的數字 | bit-manipulation |
-| 169 Majority Element | Easy | 多數元素 | array, voting |
-| 002 Add Two Numbers | Medium | 兩數相加 | linked-list, math |
-| 003 Longest Substring W/O Repeat | Medium | 無重複字元最長子字串 | sliding-window |
-| 005 Longest Palindromic Substring | Medium | 最長迴文子字串 | dp, two-pointers |
-| 015 3Sum | Medium | 三數之和 | sorting, two-pointers |
-| 022 Generate Parentheses | Medium | 括號生成 | backtracking |
-| 046 Permutations | Medium | 全排列 | backtracking |
-| 049 Group Anagrams | Medium | 字母異位詞分組 | hash-table, sorting |
-| 056 Merge Intervals | Medium | 合併區間 | sorting, greedy |
-| 102 Binary Tree Level Order | Medium | 二叉樹層序遍歷 | bfs, tree |
-| 146 LRU Cache | Medium | LRU 快取 | design, linked-list |
-| 200 Number of Islands | Medium | 島嶼數量 | dfs, bfs, matrix |
-| 322 Coin Change | Medium | 硬幣找零 | dp |
-| 004 Median of Two Sorted Arrays | Hard | 兩正序數組中位數 | binary-search |
-| 010 Regular Expression Matching | Hard | 正則表達式匹配 | dp, recursion |
-| 023 Merge K Sorted Lists | Hard | 合併K個升序鏈表 | heap, divide-conquer |
-| 042 Trapping Rain Water | Hard | 接雨水 | two-pointers, stack |
-| 051 N-Queens | Hard | N 皇后 | backtracking |
-| 076 Minimum Window Substring | Hard | 最小覆蓋子串 | sliding-window |
-| 084 Largest Rectangle in Histogram | Hard | 柱狀圖最大矩形 | monotonic-stack |
-| 239 Sliding Window Maximum | Hard | 滑動視窗最大值 | deque, sliding-window |
-
-（完整 machine-readable 清單見 `INDEX.tsv`；標籤索引見 `TAGS.md`。）
-
----
-
-# English
-
-Two layers on this USB:
-
-- **Full LeetCode free problem DB (2913 problems)** in `problems\` — one JSON per problem with the official English statement, examples, constraints, hints, topics, difficulty, and the official C function signature (`code_snippets.c`). Plus `DB_INDEX.tsv` and `DB_STATS.md`. Source: the GitHub dataset above (statements only; it ships no C solutions).
-- **33 curated fully-solved problems (11 Easy / 14 Medium / 8 Hard)**. Each `.c` file embeds the
-official English statement (fetched from the dataset above), a
-Traditional-Chinese explanation, the solution matching LeetCode's official C
-signature, and a local `main()` test that prints `PASS`/`FAIL`.
-
-- Every file compiled & run with MSVC `/std:c17 /utf-8`, all tests PASS; code is plain C11 (no compiler extensions) and also builds with gcc `-std=c11` / LeetCode.
-- `INDEX.tsv`, `BULK_INDEX.tsv`, and `DB_INDEX.tsv` are plain-text lookup indexes. Use `|` as the import delimiter in spreadsheet software.
-- `run.bat <num-or-name>` = compile & run any problem with auto-detected compiler.
-- To submit on LeetCode: copy the "LeetCode submission" block only (drop the test `main`).
+題庫原始英文資料取自 [mcaupybugs/leetcode-problems-db](https://github.com/mcaupybugs/leetcode-problems-db)；`bulk/` 的既有 C 程式收錄自公開社群解答，個別來源標在檔案開頭或索引中。

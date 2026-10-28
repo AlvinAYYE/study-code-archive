@@ -13,7 +13,7 @@
  *
  * [中文] 題目: 醜數
  * [中文] 題目說明:
- *     醜數是正整數，且其質因數只可為 2、3、5。給定整數 n，判斷 n 
+ *     醜數是正整數，且其質因數只可為 2、3、5。給定整數 n，判斷 n
  *     是否為醜數；1 視為醜數，非正數不是。
  *
  * [中文] 思路:
@@ -208,47 +208,55 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-263. Ugly Number
+/* 解題說明
+ * 題目：263. Ugly Number（醜數）
+ *
+ * 題意完整翻譯：
+ *     醜數是正整數，且它的質因數只能是 2、3、5。給定整數 n，若 n 是醜數就回傳 true，否則回傳 false。1
+ *     沒有質因數，因此也算醜數；0 與負數不是正整數。
+ *
+ * 範例：
+ *   輸入：n = 6
+ *   輸出：true
+ *   說明：6 = 2 × 3，質因數只有 2、3。
+ *   輸入：n = 1
+ *   輸出：true
+ *   說明：1 沒有質因數。
+ *   輸入：n = 14
+ *   輸出：false
+ *   說明：14 含有質因數 7。
+ *
+ * 限制：
+ *   - -2^31 <= n <= 2^31 - 1
+ *
+ * 解題步驟：
+ *   1. 若 n <= 0，直接回傳 false。
+ *   2. 依序用 2、3、5 除 n；只要能整除，就一直除到不能再除。
+ *   3. 若最後剩下 1，表示沒有其他質因數，回傳 true；否則回傳 false。
+ *
+ * 複雜度：
+ *   時間：O(log n)，每次除法都會讓 n 變小。
+ *   空間：O(1)，只使用固定數量的變數。
+ */
 
-Write a program to check whether a given number is an ugly number.
+bool isUgly(int n) {
+    int factors[] = {2, 3, 5};
+    int i;
 
+    if (n <= 0) {
+        return false;
+    }
 
-
-Ugly numbers are positive numbers whose prime factors only include 2, 3, 5. For example, 6, 8 are ugly while 14 is not ugly since it includes another prime factor 7.
-
-
-
-Note that 1 is typically treated as an ugly number.
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
-
-bool isUgly(int num) {
-    int pf[] = { 2, 3, 5 };
-    int i = sizeof(pf) / sizeof(pf[0]);
-    while (num && -- i >= 0) {
-        while (!(num % pf[i])) {
-            num = num / pf[i];
-            //printf("%d, ", num);
+    // 移除所有允許出現的質因數。
+    for (i = 0; i < 3; ++i) {
+        while (n % factors[i] == 0) {
+            n /= factors[i];
         }
     }
-    return num == 1 ? true : false;
+
+    // 若仍有其他質因數，最後的 n 就不會是 1。
+    return n == 1;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:104.7K
-Total Submissions:267K
-
-
-Related Topics Math
-Similar Questions Happy Number Count Primes Ugly Number II
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

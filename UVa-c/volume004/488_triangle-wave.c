@@ -13,8 +13,47 @@
  */
 #include <stdio.h>
 
+static void print_row(FILE *out, int value) {
+    int i;
+    for (i = 0; i < value; i++) {
+        fputc('0' + value, out);
+    }
+    fputc('\n', out);
+}
+
+void solve_uva488(FILE *in, FILE *out) {
+    int test_cases;
+    int test_case;
+    int first_wave = 1;
+
+    if (fscanf(in, "%d", &test_cases) != 1) {
+        return;
+    }
+    for (test_case = 0; test_case < test_cases; test_case++) {
+        int amplitude;
+        int frequency;
+        int wave;
+
+        if (fscanf(in, "%d %d", &amplitude, &frequency) != 2) {
+            return;
+        }
+        for (wave = 0; wave < frequency; wave++) {
+            int value;
+            if (!first_wave) {
+                fputc('\n', out);
+            }
+            first_wave = 0;
+            for (value = 1; value <= amplitude; value++) {
+                print_row(out, value);
+            }
+            for (value = amplitude - 1; value >= 1; value--) {
+                print_row(out, value);
+            }
+        }
+    }
+}
+
 int main(void) {
-    int ok = 1;
-    printf("%s: UVa 488 - Triangle Wave\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    solve_uva488(stdin, stdout);
+    return 0;
 }

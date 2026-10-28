@@ -1,45 +1,68 @@
-# 0367. Valid Perfect Square《有效的完全平方數》
+# 367 Valid Perfect Square：有效的完全平方數
 
-- **Difficulty**: Easy
-- **Tags**: math, binary-search
-- **題目連結**: https://leetcode.com/problems/valid-perfect-square/
-- **程式碼**: [`367_valid-perfect-square.c`](./367_valid-perfect-square.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定正整數 num，若它是完全平方數則回傳 true，否則回傳 false。完全平方數是某個整數與自身相乘的結果，且不可使用 sqrt 等內建函式。
+給定正整數 num，判斷它是否為完全平方數。完全平方數可以寫成某個整數乘上自身，例如 16 = 4 × 4。不可使用 sqrt 等內建平方根函式。
 
-**思路**：在 1 到 min(num, 46341) 間二分搜尋，將中點平方後與 num 比較。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given a positive integer num, return true if num is a perfect square or false otherwise.
-A perfect square is an integer that is the square of an integer. In other words, it is the product of some integer with itself.
-You must not use any built-in library function, such as sqrt.
-Example 1:
-Example 2:
-Constraints:
+- 輸入：num = 16
+- 輸出：true
+- 說明：4 × 4 = 16，且 4 是整數。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: num = 16
-Output: true
-Explanation: We return true because 4 * 4 = 16 and 4 is an integer.
+- 輸入：num = 14
+- 輸出：false
+- 說明：14 的平方根不是整數，因此不是完全平方數。
 
-Input: num = 14
-Output: false
-Explanation: We return false because 3.742 * 3.742 = 14 and 3.742 is not an integer.
-```
+## 限制
 
-## 限制 Constraints
+- 1 <= num <= 2^31 - 1
 
-1 <= num <= 231 - 1
+## 解題思路
 
-## 官方 C 函式簽名 Signature
+1. 在 1 到 num 之間二分搜尋可能的整數平方根 middle。
+2. 用 64 位元計算 middle × middle，避免 32 位元整數乘法溢位。
+3. 若平方等於 num 就回傳 true；若平方太大，往左半部找；平方太小則往右半部找。
+4. 搜尋範圍用完仍找不到時回傳 false。
 
-```c
+## 複雜度
+
+- 時間：O(log num)，二分搜尋每次將範圍縮小一半。
+- 空間：O(1)。
+
+## C 函式簽名
+
+~~~c
+bool isPerfectSquare(int num);
+~~~
+
+## 程式如何運作
+
+~~~c
 bool isPerfectSquare(int num) {
-    
+    int left = 1;
+    int right = num;
+
+    while (left <= right) {
+        int middle = left + (right - left) / 2;
+        long long square = (long long)middle * middle;
+
+        if (square == num) {
+            return true;
+        }
+        if (square < num) {
+            left = middle + 1;
+        } else {
+            right = middle - 1;
+        }
+    }
+
+    return false;
 }
-```
+~~~

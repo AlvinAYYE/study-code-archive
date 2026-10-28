@@ -38,6 +38,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include <limits.h>
 struct ListNode { int val; struct ListNode *next; };
 typedef struct ListNode ListNode;
 struct TreeNode { int val; struct TreeNode *left; struct TreeNode *right; };
@@ -204,68 +205,24 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-7. Reverse Integer
-
-Reverse digits of an integer.
-
-
-Example1: x =  123, return  321
-Example2: x = -123, return -321
-
-
-click to show spoilers.
-
-Have you thought about this?
-
-Here are some good questions to ask before coding. Bonus points for you if you have already thought through this!
-
-If the integer's last digit is 0, what should the output be? ie, cases such as 10, 100.
-
-Did you notice that the reversed integer might overflow? Assume the input is a 32-bit integer, then the reverse of 1000000003 overflows. How should you handle such cases?
-
-For the purpose of this problem, assume that your function returns 0 when the reversed integer overflows.
-
-
-
-
-
-Note:
-The input is assumed to be a 32-bit signed integer. Your function should return 0 when the reversed integer overflows.
-*/
-
+/* ---- 易讀解法：每次取出一位，先檢查 int 邊界 ---- */
 int reverse(int x) {
-    int d, k = 0;
-    // 2147483647
-    //-2147483648
-    while (x) {
-        d = x % 10;
-        if ((x > 0 && k > (0x7fffffff - d) / 10) ||
-            (x < 0 && k < ((signed)0x80000000 - d) / 10)) {
-            return 0;   // overflow
-        }
-        k = k * 10 + d;
-        x = x / 10;
+    int reversed = 0;
+
+    while (x != 0) {
+        int digit = x % 10;
+
+        if (reversed > INT_MAX / 10 ||
+            (reversed == INT_MAX / 10 && digit > 7)) return 0;
+        if (reversed < INT_MIN / 10 ||
+            (reversed == INT_MIN / 10 && digit < -8)) return 0;
+
+        reversed = reversed * 10 + digit;
+        x /= 10;
     }
-    return k; //(int)k == k ? (int)k : 0;
+    return reversed;
 }
 
-
-/*
-Difficulty:Easy
-Total Accepted:275.6K
-Total Submissions:1.1M
-
-
-Companies Bloomberg Apple
-Related Topics Math
-Similar Questions 
-                
-                  
-                    String to Integer (atoi)
-*/
 
 /* ---- generated tests ---- */
 int main(void){

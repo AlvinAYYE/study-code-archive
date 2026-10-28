@@ -1,47 +1,43 @@
-# 0187. Repeated DNA Sequences《重複的 DNA 序列》
+# 0187. Repeated DNA Sequences｜重複的 DNA 序列
 
-- **Difficulty**: Medium
-- **Tags**: hash-table, string, bit-manipulation, sliding-window, rolling-hash, hash-function
-- **題目連結**: https://leetcode.com/problems/repeated-dna-sequences/
-- **程式碼**: [`187_repeated-dna-sequences.c`](./187_repeated-dna-sequences.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：雜湊表、字串、位元運算、滑動視窗
+- **題目連結**：[LeetCode 0187](https://leetcode.com/problems/repeated-dna-sequences/)
+- **C 程式**：[187_repeated-dna-sequences.c](./187_repeated-dna-sequences.c)
 
-## 題目說明（中文）
+## 題目說明
 
-DNA 字串只由 A、C、G、T 組成。請找出其中所有長度恰為 10、且在該 DNA 序列中出現超過一次的子字串，回傳順序不限。字串長度最多為 10^5。
+DNA 字串只由 `A`、`C`、`G`、`T` 組成。給定 DNA 序列 `s`，找出所有長度恰好為 10、且在字串中出現超過一次的連續片段。每種重複片段只需回傳一次，順序不限。
 
-**思路**：將四種鹼基映射為 2 位元，為每個長度 10 的視窗編成整數碼並放入雜湊桶；第二次出現時輸出一次，並以旗標避免重複加入。
-
-## Problem Statement (English)
-
-The DNA sequence is composed of a series of nucleotides abbreviated as 'A', 'C', 'G', and 'T'.
-When studying DNA, it is useful to identify repeated sequences within the DNA.
-Given a string s that represents a DNA sequence, return all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule. You may return the answer in any order.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
-Output: ["AAAAACCCCC","CCCCCAAAAA"]
+輸入：s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
+輸出：["AAAAACCCCC","CCCCCAAAAA"]
 
-Input: s = "AAAAAAAAAAAAA"
-Output: ["AAAAAAAAAA"]
+輸入：s = "AAAAAAAAAAAAA"
+輸出：["AAAAAAAAAA"]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= s.length <= 105
-s[i] is either 'A', 'C', 'G', or 'T'.
+- `1 <= s.length <= 10^5`。
+- 每個字元都是 `A`、`C`、`G` 或 `T`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 每個 DNA 字母可編成 2 個位元：A、C、G、T 分別用 00、01、10、11 表示；長度 10 的片段因此可編成 20 位元整數。
+2. 從左到右滑動長度 10 的視窗。每讀一個字元，就把編碼左移 2 位、加入新字母，再用遮罩保留最近 20 位元。
+3. 用編碼當索引記錄片段出現次數。第一次記為 1，第二次遇到時複製原字串片段加入答案；之後不再重複加入。
+4. 編碼唯一對應一段 10 字母 DNA，因此無須為所有視窗建立字串鍵。
+
+## 複雜度
+
+- 時間：`O(n)`，每個字元更新一次編碼。
+- 額外空間：`O(4^10 + n)`，固定大小的片段計數表及回傳結果。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-char** findRepeatedDnaSequences(char* s, int* returnSize) {
-    
-}
+char** findRepeatedDnaSequences(char* s, int* returnSize);
 ```

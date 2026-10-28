@@ -1,52 +1,41 @@
 # 0111. Minimum Depth of Binary Tree《二元樹的最小深度》
 
-- **Difficulty**: Easy
-- **Tags**: tree, depth-first-search, breadth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/minimum-depth-of-binary-tree/
-- **程式碼**: [`111_minimum-depth-of-binary-tree.c`](./111_minimum-depth-of-binary-tree.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：樹、深度優先搜尋、廣度優先搜尋、二元樹
+- **題目連結**：https://leetcode.com/problems/minimum-depth-of-binary-tree/
 
-## 題目說明（中文）
+## 題目說明
 
-給定一棵二元樹，求其最小深度。最小深度是從根節點到最近葉節點的最短路徑所包含的節點數。葉節點是沒有任何子節點的節點；樹可為空。樹的節點數介於 0 至 10^5，節點值介於 -1000 至 1000。
+給定一棵二元樹，回傳從根節點到最近葉節點的最短路徑所包含的節點數。葉節點是沒有左、右子節點的節點；空樹的最小深度為 0。
 
-**思路**：以遞迴 DFS 走訪樹，沿途累計深度；每到葉節點便用目前深度更新最小值。
-
-## Problem Statement (English)
-
-Given a binary tree, find its minimum depth.
-The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
-Note: A leaf is a node with no children.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [3,9,20,null,null,15,7]
-Output: 2
+輸入：root = [3,9,20,null,null,15,7]
+輸出：2
+說明：最近葉節點是 9，路徑 3 → 9 包含 2 個節點。
 
-Input: root = [2,null,3,null,4,null,5,null,6]
-Output: 5
+輸入：root = [2,null,3,null,4,null,5,null,6]
+輸出：5
+說明：這棵樹只有往右延伸的路徑，最近葉節點距離根有 5 個節點。
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [0, 105].
--1000 <= Node.val <= 1000
+- 節點數介於 `0` 到 `10^5`。
+- `-1000 <= Node.val <= 1000`。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 使用廣度優先搜尋，先檢查根，再一層一層檢查節點。
+2. 每一層都把存在的左、右子節點放進佇列。
+3. 廣度優先搜尋遇到的第一個葉節點必定距離根最近，因此回傳目前的層數即可。
+4. 佇列最多存放樹中的節點，搜尋結束後釋放佇列。
+
+**複雜度**：最壞情況下時間 `O(n)`、佇列額外空間 `O(n)`。
+
+## C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-int minDepth(struct TreeNode* root) {
-    
-}
+int minDepth(struct TreeNode* root);
 ```

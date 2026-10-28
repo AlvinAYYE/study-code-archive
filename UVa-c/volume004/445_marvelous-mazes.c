@@ -14,8 +14,31 @@
 #include <stdio.h>
 #include <ctype.h>
 
+void solve_uva445(FILE *in, FILE *out) {
+    int repeat = 0;
+    int ch;
+
+    while ((ch = fgetc(in)) != EOF) {
+        if (ch >= '0' && ch <= '9') {
+            repeat += ch - '0';
+        } else if (ch == '!') {
+            fputc('\n', out);
+            repeat = 0;
+        } else if (ch == '\n') {
+            fputc('\n', out);
+            repeat = 0;
+        } else if (ch != '\r') {
+            int output = ch == 'b' ? ' ' : ch;
+            int i;
+            for (i = 0; i < repeat; i++) {
+                fputc(output, out);
+            }
+            repeat = 0;
+        }
+    }
+}
+
 int main(void) {
-    int ok = 1;
-    printf("%s: UVa 445 - Marvelous Mazes\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    solve_uva445(stdin, stdout);
+    return 0;
 }

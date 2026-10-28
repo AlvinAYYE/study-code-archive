@@ -17,43 +17,41 @@
  * [中文] 題目: 串聯所有單字的子字串
  * [中文] 題目說明:
  *     給定字串 s 與單字陣列 words，其中所有單字長度相同；串聯字串
- *     必須恰好包含 words 的所有單字各一次、順序任意且中間沒有其他字
- *     元。回傳 s 中所有符合此條件之子字串的起始索引，順序不限。
+ *     必須恰好包含 words 中的每個單字一次（重複單字也須計入）、排列順序
+ *     任意，且中間沒有其他字元。回傳 s 中所有符合條件的起始索引，順序不限。
  *
- * [中文] 思路:
- *     程式建立單字雜湊表，記錄每個相異單字的需求次數與目前視窗次數，並以單
- *     字長度逐段掃描。遇到過量單字便從左端移出單字，集滿所有單字時記錄起點
- *     並重設下一次搜尋位置。
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：s = "barfoothefoobarman", words = ["foo","bar"]
+ *     輸出：[0,9]
+ *     說明：索引 0 的 "barfoo" 與索引 9 的 "foobar" 都恰好串聯全部單字。
+ *   範例 2：
+ *     輸入：s = "wordgoodgoodgoodbestword",
+ *           words = ["word","good","best","word"]
+ *     輸出：[]
+ *     說明：不存在符合條件的連續子字串。
+ *   範例 3：
+ *     輸入：s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
+ *     輸出：[6,9,12]
+ *     說明：對應子字串依序為 "foobarthe"、"barthefoo"、"thefoobar"。
  *
- * Examples:
- *     Input: s = "barfoothefoobarman", words = ["foo","bar"]
- *     Output: [0,9]
- *     Explanation:
- *     The substring starting at 0 is "barfoo" . It is the
- *     concatenation of ["bar","foo"] which is a permutation of words
- *     . The substring starting at 9 is "foobar" . It is the
- *     concatenation of ["foo","bar"] which is a permutation of words
- *     .
- *     Input: s = "wordgoodgoodgoodbestword", words =
- *     ["word","good","best","word"]
- *     Output: []
- *     Explanation:
- *     There is no concatenated substring.
- *     Input: s = "barfoofoobarthefoobarman", words =
- *     ["bar","foo","the"]
- *     Output: [6,9,12]
- *     Explanation:
- *     The substring starting at 6 is "foobarthe" . It is the
- *     concatenation of ["foo","bar","the"] . The substring starting
- *     at 9 is "barthefoo" . It is the concatenation of
- *     ["bar","the","foo"] . The substring starting at 12 is
- *     "thefoobar" . It is the concatenation of ["the","foo","bar"] .
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= s.length <= 10^4
  *   - 1 <= words.length <= 5000
  *   - 1 <= words[i].length <= 30
- *   - s and words[i] consist of lowercase English letters.
+ *   - s 與 words[i] 僅包含小寫英文字母。
+ *
+ * [中文] 直觀解題思路：
+ *   1. 因所有單字等長，可把 s 依 word_len 為步長切成一個個候選單字。
+ *   2. 先用雜湊表為每個相異單字編號，counts 記錄需求次數，counts2 記錄
+ *      目前視窗已收集的次數。
+ *   3. right 每次讀取一個單字。若它不在 words 中，清空視窗並把起點向右
+ *      移一個字元，從新的對齊位置重新掃描。
+ *   4. 若某單字出現過量，持續從 mid 移出左端單字，直到次數重新合法。
+ *   5. 視窗累計 wordsSize 個單字時記錄 mid；接著從下一個可能起點繼續找，
+ *      因此也能涵蓋起點彼此重疊的答案。
+ *
+ * 平均時間約 O(|s| * word_len)，額外空間 O(|s| + wordsSize)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -284,14 +282,7 @@ item_t *lookup(item_t **ht, unsigned int hc, const char *w, int len) {
 }
 
 int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
-    // 1. sort all words
-    // 2. caculate each uniq words appears how many times
-    /* for (i = 0; i < length of string; i ++) {
-        substr = s[i ... length of one word]
-        if (substr is not one of the words or it appears more than what we have) continue;
-        increase the count of this word
-        if all words are found, add i into result
-    } */
+    /* 雜湊表將候選片段對應到單字編號，再以兩組計數比較需求與現況。 */
     
     item_t *ht[HF] = { 0 }, **sp, *p;
     int *counts, *counts2, total, i;
@@ -349,8 +340,8 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
         p = lookup(ht, hc, w, word_len);
         if (!p) {
             total = 0;
-            memset(counts2, 0, buff.n * sizeof(int));   // reset all counts
-            left ++;           // shift one character from left
+            memset(counts2, 0, buff.n * sizeof(int));   /* 此對齊位置失敗，重設視窗 */
+            left ++;           /* 改試下一個字元作為起點 */
             mid = left;
             right = left;      // reset right
         } else {
@@ -360,11 +351,11 @@ int* findSubstring(char* s, char** words, int wordsSize, int* returnSize) {
             total ++;
             while (counts2[i] > counts[i]) {
                 p = sp[mid];
-                mid += word_len;   // push out a word
+                mid += word_len;   /* 從左端移出一個過量視窗單字 */
                 counts2[p->idx] --;
                 total --;
             }
-            if (total == wordsSize) {   // all are found
+            if (total == wordsSize) {   /* 視窗恰好包含所有需求單字 */
                 results[*returnSize] = mid;
                 (*returnSize) ++;
                 total = 0;

@@ -222,68 +222,31 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-165. Compare Version Numbers
-
-Compare two version numbers version1 and version2.
-If version1 > version2 return 1, if version1 < version2 return -1, otherwise return 0.
-
-You may assume that the version strings are non-empty and contain only digits and the . character.
-The . character does not represent a decimal point and is used to separate number sequences.
-For instance, 2.5 is not "two and a half" or "half way to version three", it is the fifth second-level revision of the second first-level revision.
-
-Here is an example of version numbers ordering:
-0.1 < 1.1 < 1.2 < 13.37
-
-Credits:Special thanks to @ts for adding this problem and creating all test cases.
-*/
-
+/* ---- 易讀解法：逐段轉成整數比較，缺少的版本段視為 0 ---- */
 int compareVersion(char* version1, char* version2) {
-    int a, b;
-    char *v1, *v2;
-    while (version1 || version2) {
-        if (version1) {
-            v1 = version1;
-            version1 = strchr(version1, '.');
-            if (version1) {
-                *version1 = 0;
-                version1 ++;
-            }
-            a = atoi(v1);
-        } else {
-            a = 0;
+    int first = 0;
+    int second = 0;
+
+    while (version1[first] != '\0' || version2[second] != '\0') {
+        int firstRevision = 0;
+        int secondRevision = 0;
+
+        while (version1[first] >= '0' && version1[first] <= '9') {
+            firstRevision = firstRevision * 10 + version1[first] - '0';
+            ++first;
         }
-        if (version2) {
-            v2 = version2;
-            version2 = strchr(version2, '.');
-            if (version2) {
-                *version2 = 0;
-                version2 ++;
-            }
-            b = atoi(v2);
-        } else {
-            b = 0;
+        while (version2[second] >= '0' && version2[second] <= '9') {
+            secondRevision = secondRevision * 10 + version2[second] - '0';
+            ++second;
         }
-        if (a > b) return 1;
-        if (a < b) return -1;
+
+        if (firstRevision < secondRevision) return -1;
+        if (firstRevision > secondRevision) return 1;
+        if (version1[first] == '.') ++first;
+        if (version2[second] == '.') ++second;
     }
-    
     return 0;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:86.5K
-Total Submissions:431.1K
-
-
-Companies Microsoft Apple
-Related Topics String
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

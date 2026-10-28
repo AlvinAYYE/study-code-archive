@@ -1,39 +1,11 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0202. Happy Number
- * Difficulty: Easy
- * Tags: hash-table, math, two-pointers
- * URL: https://leetcode.com/problems/happy-number/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Write an algorithm to determine if a number n is happy.
- *     A happy number is a number defined by the following process:
- *     Return true if n is a happy number, and false if not.
- *
- * [中文] 題目: 快樂數
- * [中文] 題目說明:
- *     對正整數反覆將數字替換為其各位數平方和；若最終到達 1，該數為快樂數
- *     ，若進入不含 1 的循環則不是。請判斷給定 n 是否為快樂數。
- *
- * [中文] 思路:
- *     每輪計算各位數平方和，並將已出現的數值存入動態陣列；若結果為 1 則
- *     成功，若新值已出現則判定進入循環。
- *
- * Examples:
- *     Input: n = 19
- *     Output: true
- *     Explanation:
- *     12 + 92 = 82
- *     82 + 22 = 68
- *     62 + 82 = 100
- *     12 + 02 + 02 = 1
- *     Input: n = 2
- *     Output: false
- *
- * Constraints:
- *   - 1 <= n <= 231 - 1
- * ==========================================================================
+ * LeetCode 0202. Happy Number《快樂數》
+ * 題意：反覆把正整數替換成其每位數字平方的總和。若最後到達 1 就是快樂數；
+ *       若進入不含 1 的循環則不是快樂數。
+ * 範例：19 -> 82 -> 68 -> 100 -> 1，回傳 true；2 最後會循環，回傳 false。
+ * 限制：1 <= n <= 2^31 - 1。
+ * 解法：每次計算各位數平方和，並用 seen 表記錄已出現的結果；重複即代表循環。
+ * 複雜度：32 位元輸入下狀態數有固定上限，時間與額外空間皆為 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,80 +179,31 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-202. Happy Number
 
-Write an algorithm to determine if a number is "happy".
-
-A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.
-
-Example: 19 is a happy number
-
-
-12 + 92 = 82
-82 + 22 = 68
-62 + 82 = 100
-12 + 02 + 02 = 1
-
-
-Credits:Special thanks to @mithmatt and @ts for adding this problem and creating all test cases.
-*/
-
-bool has_cycle(int *set, int x, int k) {
-    int i;
-    for (i = 0; i < x; i ++) {
-        if (set[i] == k) return true;
+/* 將整數替換成各位數字平方和。 */
+static int sumOfDigitSquares(int number) {
+    int sum = 0;
+    while (number > 0) {
+        int digit = number % 10;
+        sum += digit * digit;
+        number /= 10;
     }
-    return false;
+    return sum;
 }
+
 bool isHappy(int n) {
-    int i, k;
-    int *set, sz, x;
-    
-    //assert(n > 0);
-    sz  = 100;
-    x   = 0;
-    set = malloc(sz * sizeof(int));
-    //assert(set);
-    
-    do {
-        if (x == sz) {
-            sz *= 2;
-            set = realloc(set, sz * sizeof(int));
-            //assert(set);
+    /* 由限制可知最多 10 位數，第一次平方和不會超過 10 * 9^2 = 810。 */
+    bool seen[811] = {false};
+
+    while (n != 1) {
+        n = sumOfDigitSquares(n);
+        if (seen[n]) {
+            return false;
         }
-        set[x ++] = n;
-        k = 0;
-        while (n) {
-            i = n % 10;
-            n = n / 10;
-            k += i * i;
-        }
-        n = k;
-    } while (k != 1 && !has_cycle(set, x, k));
-    
-    free(set);
-    
-    return k == 1 ? true : false;
+        seen[n] = true;
+    }
+    return true;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:129.1K
-Total Submissions:317.8K
-
-
-Companies Uber Airbnb Twitter
-Related Topics Hash Table Math
-Similar Questions 
-                
-                  
-                    Add Digits
-                  
-                    Ugly Number
-*/
 
 /* ---- generated tests ---- */
 int main(void){

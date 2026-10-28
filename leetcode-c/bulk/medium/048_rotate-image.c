@@ -19,8 +19,8 @@
  *     修改原矩陣，不能另配置第二個二維矩陣。
  *
  * [中文] 思路:
- *     程式以遞迴逐層處理矩陣，將每層同一圈的上、右、下、左四個位置輪換。完
- *     成外圈後往內縮一圈繼續旋轉。
+ *     先沿主對角線轉置矩陣，再將每一列左右反轉。兩步都在原矩陣中交換元素，
+ *     最後得到順時針旋轉 90 度的結果。
  *
  * Examples:
  *     Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
@@ -206,57 +206,33 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-48. Rotate Image
+/* ---- 易讀解法：先轉置，再反轉每一列 ---- */
+void rotate(int** matrix, int matrixSize, int* matrixColSize) {
+    int row;
+    int column;
+    (void)matrixColSize; /* 方陣的列數與欄數相同。 */
 
-You are given an n x n 2D matrix representing an image.
-Rotate the image by 90 degrees (clockwise).
-Follow up:
-Could you do this in-place?
-*/
-
-#define RIGHT(I)    (matrix[I][y])
-#define BOTTOM(I)   (matrix[y][y + x - I])
-#define LEFT(I)     (matrix[y + x - I][x])
-#define TOP(I)      (matrix[x][I])
- 
-void spin(int **matrix, int x, int y) {
-    int i;
-    int a, b, c;
-    
-    if (x >= y) return;
-    
-    for (i = x; i < y; i ++) {
-        a = RIGHT(i);
-        RIGHT(i) = TOP(i);
-        
-        b = BOTTOM(i);
-        BOTTOM(i) = a;
-        
-        c = LEFT(i);
-        LEFT(i) = b;
-        
-        TOP(i) = c;
+    for (row = 0; row < matrixSize; ++row) {
+        for (column = row + 1; column < matrixSize; ++column) {
+            int temporary = matrix[row][column];
+            matrix[row][column] = matrix[column][row];
+            matrix[column][row] = temporary;
+        }
     }
-    spin(matrix, x + 1, y - 1);
+
+    for (row = 0; row < matrixSize; ++row) {
+        int left = 0;
+        int right = matrixSize - 1;
+        while (left < right) {
+            int temporary = matrix[row][left];
+            matrix[row][left] = matrix[row][right];
+            matrix[row][right] = temporary;
+            ++left;
+            --right;
+        }
+    }
 }
-void rotate(int** matrix, int matrixRowSize, int matrixColSize) {
-    spin(matrix, 0, matrixRowSize - 1);
-}
 
-
-/*
-Difficulty:Medium
-Total Accepted:121.1K
-Total Submissions:314.2K
-
-
-Companies Amazon Microsoft Apple
-Related Topics Array
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

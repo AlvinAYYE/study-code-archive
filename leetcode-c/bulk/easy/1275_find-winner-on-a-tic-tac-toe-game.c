@@ -1,46 +1,24 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1275. Find Winner on a Tic Tac Toe Game
- * Difficulty: Easy
- * Tags: array, hash-table, matrix, simulation
- * URL: https://leetcode.com/problems/find-winner-on-a-tic-tac-toe-game/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Tic-tac-toe is played by two players A and B on a 3 x 3 grid. The
- *     rules of Tic-Tac-Toe are:
- *     Given a 2D integer array moves where moves[i] = [rowi, coli]
- *     indicates that the ith move will be played on grid[rowi][coli].
- *     return the winner of the game if it exists (A or B). In case the
- *     game ends in a draw return "Draw". If there are still movements to
- *     play return "Pending".
- *     You can assume that moves is valid (i.e., it follows the rules of
- *     Tic-Tac-Toe), the grid is initially empty, and A will play first.
+ * Title-CN: 找出井字棋的勝者
+ * LeetCode 1275. Find Winner on a Tic Tac Toe Game (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Tic-tac-toe is played by two players A and B on a 3 x 3 網格. The
- *     rules of Tic-Tac-Toe are:
+ * 題意翻譯：A、B 兩人輪流在 3 x 3 棋盤落子，A 先下。moves[i] = [row, col]
+ * 表示第 i 步落在第 row 列、第 col 欄。三格橫向、直向或斜向相同者獲勝；若有人
+ * 獲勝就回傳 "A" 或 "B"。若九格下完仍沒人獲勝，回傳 "Draw"；棋局尚未結束則
+ * 回傳 "Pending"。題目保證落子順序合法且不會重複佔用格子。
  *
- * Examples:
- *     Input: moves = [[0,0],[2,0],[1,1],[2,1],[2,2]]
- *     Output: "A"
- *     Explanation: A wins, they always play first.
- *     Input: moves = [[0,0],[1,1],[0,1],[0,2],[1,0],[2,0]]
- *     Output: "B"
- *     Explanation: B wins.
- *     Input: moves =
- *     [[0,0],[1,1],[2,0],[1,0],[1,2],[2,1],[0,1],[0,2],[2,2]]
- *     Output: "Draw"
- *     Explanation: The game ends in a draw since there are no moves
- *     to make.
+ * 範例 1：moves = [[0,0],[2,0],[1,1],[2,1],[2,2]]，輸出 "A"；A 連成左上到
+ *         右下的斜線。
+ * 範例 2：moves = [[0,0],[1,1],[0,1],[0,2],[1,0],[2,0]]，輸出 "B"；B 連成
+ *         第一欄。
+ * 範例 3：moves = [[0,0],[1,1],[2,0],[1,0],[1,2],[2,1],[0,1],[0,2],[2,2]]，
+ *         輸出 "Draw"；棋盤已滿，沒有三格連線。
  *
- * Constraints:
- *   - 1 <= moves.length <= 9
- *   - moves[i].length == 2
- *   - 0 <= rowi, coli <= 2
- *   - There are no repeated elements on moves.
- *   - moves follow the rules of tic tac toe.
- * ==========================================================================
+ * 限制：1 <= moves.length <= 9；每步座標都介於 0 和 2；所有落子都合法。
+ *
+ * 解題思路：先把 moves 依序放進 3 x 3 棋盤，奇數步由 A 落子、偶數步由 B 落子。
+ * 放完後，逐一檢查三列、三欄和兩條對角線。若找到三格相同且不是空格，回傳對應
+ * 玩家；否則依落子數判斷棋盤是否已滿。最多只有九步，時間與空間都是 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -213,37 +191,40 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
 char *tictactoe(int **moves, int movesSize, int *movesColSize) {
-  if (movesSize < 5)
-    return "Pending";
+    int board[3][3] = {{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}};
+    int move;
+    int line;
 
-  // Fill board up.
-  int board[3][3] = {{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}}, turn = 1;
-  for (int i = 0; i < movesSize; i++) {
-    int x = moves[i][0], y = moves[i][1];
-    board[x][y] = turn;
-    turn ^= 1;
-  }
-
-  for (int i = 0; i < 3; i++) {
-    int *r = board[i];
-    if (r[i] == -1)
-      continue;
-    if ((r[0] == r[1] && r[1] == r[2]) ||
-        (board[0][i] == board[1][i] && board[1][i] == board[2][i]))
-      return r[i] ? "A" : "B";
-    if (i == 0) {
-      int common = board[1][1];
-      if (common == -1)
-        continue;
-      if ((board[0][0] == common && common == board[2][2]) ||
-          (board[0][2] == common && common == board[2][0]))
-        return common ? "A" : "B";
+    (void)movesColSize;
+    for (move = 0; move < movesSize; ++move) {
+        int player = move % 2 == 0 ? 1 : 0;
+        int row = moves[move][0];
+        int column = moves[move][1];
+        board[row][column] = player;
     }
-  }
-  return movesSize < 9 ? "Pending" : "Draw";
+
+    for (line = 0; line < 3; ++line) {
+        if (board[line][0] != -1 && board[line][0] == board[line][1] &&
+            board[line][1] == board[line][2]) {
+            return board[line][0] == 1 ? "A" : "B";
+        }
+        if (board[0][line] != -1 && board[0][line] == board[1][line] &&
+            board[1][line] == board[2][line]) {
+            return board[0][line] == 1 ? "A" : "B";
+        }
+    }
+
+    if (board[1][1] != -1 && board[0][0] == board[1][1] &&
+        board[1][1] == board[2][2]) {
+        return board[1][1] == 1 ? "A" : "B";
+    }
+    if (board[1][1] != -1 && board[0][2] == board[1][1] &&
+        board[1][1] == board[2][0]) {
+        return board[1][1] == 1 ? "A" : "B";
+    }
+
+    return movesSize == 9 ? "Draw" : "Pending";
 }
 
 /* ---- generated tests ---- */
@@ -286,6 +267,21 @@ int main(void){
   static int mc2_0[] = {2,2,2,2,2,2,2,2,2};
   char *act_2 = tictactoe(mp2_0, 9,mc2_0);
   if (!(strcmp(act_2, "Draw") == 0)) { pass = 0; printf("  test 2 FAIL\n"); }
+  ntests++; }
+{
+  static int anti0[] = {0,2}, anti1[] = {0,0}, anti2[] = {1,1};
+  static int anti3[] = {0,1}, anti4[] = {2,0};
+  static int *antiMoves[] = {anti0,anti1,anti2,anti3,anti4};
+  static int antiColumns[] = {2,2,2,2,2};
+  char *actual = tictactoe(antiMoves, 5, antiColumns);
+  if (!(strcmp(actual, "A") == 0)) { pass = 0; printf("  anti-diagonal test FAIL\n"); }
+  ntests++; }
+{
+  static int pending0[] = {0,0}, pending1[] = {1,1};
+  static int *pendingMoves[] = {pending0,pending1};
+  static int pendingColumns[] = {2,2};
+  char *actual = tictactoe(pendingMoves, 2, pendingColumns);
+  if (!(strcmp(actual, "Pending") == 0)) { pass = 0; printf("  pending test FAIL\n"); }
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 1275, "tictactoe", ntests);
  return (pass&&ntests)?0:1;

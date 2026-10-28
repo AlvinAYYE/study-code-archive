@@ -15,11 +15,11 @@
  * [中文] 題目: 4 的冪
  * [中文] 題目說明:
  *     給定整數 n，判斷它是否為 4 的冪，若是則回傳 true，否則回傳
- *      false。當存在整數 x 使 n = 4^x 時，n 即為 4 
+ *      false。當存在整數 x 使 n = 4^x 時，n 即為 4
  *     的冪。
  *
  * [中文] 思路:
- *     以位元條件判斷：n 必須為正且只有一個位元為 1，並且該位元要落在 
+ *     以位元條件判斷：n 必須為正且只有一個位元為 1，並且該位元要落在
  *     0x55555555 所標示的偶數位位置。
  *
  * Examples:
@@ -206,43 +206,49 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-342. Power of Four
+/* 解題說明
+ * 題目：342. Power of Four（4 的次方）
+ *
+ * 題意完整翻譯：
+ *     給定整數 n，若存在整數 x 使 n = 4^x，則 n 是 4 的次方，回傳 true；否則回傳 false。指數 x 可以是
+ *     0，因此 1 也算 4 的次方。
+ *
+ * 範例：
+ *   輸入：n = 16
+ *   輸出：true
+ *   說明：16 = 4^2。
+ *   輸入：n = 5
+ *   輸出：false
+ *   說明：5 不是 4 的整數次方。
+ *   輸入：n = 1
+ *   輸出：true
+ *   說明：1 = 4^0。
+ *
+ * 限制：
+ *   - -2^31 <= n <= 2^31 - 1
+ *
+ * 解題步驟：
+ *   1. 4 的次方必須是正數，因此 n <= 0 時直接回傳 false。
+ *   2. 只要 n 能被 4 整除，就把 n 除以 4。
+ *   3. 若最後剩下 1，n 原本就是 4 的某個次方；例如 8 除以 4 後剩 2，因此不符合。
+ *
+ * 複雜度：
+ *   時間：O(log_4 n)，每次迴圈都將 n 除以 4。
+ *   空間：O(1)。
+ */
 
-Given an integer (signed 32 bits), write a function to check whether it is a power of 4.
+bool isPowerOfFour(int n) {
+    if (n <= 0) {
+        return false;
+    }
 
-Example:
-Given num = 16, return true.
-Given num = 5, return false.
+    // 4 的各次方反覆除以 4 後會恰好剩下 1。
+    while (n % 4 == 0) {
+        n /= 4;
+    }
 
-
-Follow up: Could you solve it without loops/recursion?
-
-Credits:Special thanks to @yukuairoy  for adding this problem and creating all test cases.
-*/
-
-bool isPowerOfFour(int num) {
-    // one bit only and has to be on 0101 0101 0101 0101
-    return num > 0 && (num&(num-1)) == 0 && (num & 0x55555555) != 0;
+    return n == 1;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:67.8K
-Total Submissions:176.4K
-
-
-Companies Two Sigma
-Related Topics Bit Manipulation
-Similar Questions 
-                
-                  
-                    Power of Two
-                  
-                    Power of Three
-*/
 
 /* ---- generated tests ---- */
 int main(void){

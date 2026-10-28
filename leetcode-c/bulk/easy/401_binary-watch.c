@@ -212,107 +212,67 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-401. Binary Watch
-
-A binary watch has 4 LEDs on the top which represent the hours (0-11), and the 6 LEDs on the bottom represent the minutes (0-59).
-Each LED represents a zero or one, with the least significant bit on the right.
-
-For example, the above binary watch reads "3:25".
-
-Given a non-negative integer n which represents the number of LEDs that are currently on, return all possible times the watch could represent.
-
-Example:
-Input: n = 1Return: ["1:00", "2:00", "4:00", "8:00", "0:01", "0:02", "0:04", "0:08", "0:16", "0:32"]
-
-
-Note:
-
-The order of output does not matter.
-The hour must not contain a leading zero, for example "01:00" is not valid, it should be "1:00".
-The minute must be consist of two digits and may contain a leading zero, for example "10:2" is not valid, it should be "10:02".
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
+/* 解題說明
+ * 題目：401. Binary Watch（二進位手錶）
+ *
+ * 題意完整翻譯：
+ *     二進位手錶上方有 4 個 LED 表示小時（0 到 11），下方有 6 個 LED 表示分鐘（0 到 59）；亮起的 LED
+ *     代表二進位中的 1，最右邊是最低位。給定亮著的 LED 數量
+ *     turnedOn，回傳手錶可能顯示的所有時間，順序不限。小時不能有前導零；分鐘固定兩位，必要時在前面補 0。
+ *
+ * 範例：
+ *   輸入：turnedOn = 1
+ *   輸出：["0:01","0:02","0:04","0:08","0:16","0:32","1:00","2:00","4:00","8:00"]
+ *   說明：只有一個燈亮時，可能是分鐘的六個位元之一，或小時的四個位元之一。
+ *   輸入：turnedOn = 9
+ *   輸出：[]
+ *   說明：手錶總共只有 10 個 LED，且小時和分鐘的有效範圍無法讓 9 個燈同時亮起。
+ *
+ * 限制：
+ *   - 0 <= turnedOn <= 10
+ *
+ * 解題步驟：
+ *   1. 列舉所有合法小時 0 到 11，以及分鐘 0 到 59。
+ *   2. 分別計算小時與分鐘的二進位 1 數量；兩者相加等於 turnedOn 時，這個時間就是答案。
+ *   3. 用小時不補零、分鐘補成兩位數的格式建立時間字串。
+ *
+ * 複雜度：
+ *   時間：O(12 × 60 × 6)，範圍固定；也可視為 O(1)。
+ *   空間：O(1) 額外空間；回傳的時間清單另需 O(k) 空間。
  */
-#define MAX_HOUR 12  // this should be 13 so it includes 12:xx pm.
-#define MAX_MIN  60
- 
-char** readBinaryWatch(int num, int* returnSize) {
-    char **pp, *p;
-    int sz = MAX_HOUR * MAX_MIN;
- 
-    int hh[13]; // number of digits in hours
-    int mm[60]; // number of digits in minutes
-    int i, j, k, x;
-    
-    i = 0;
-    while (i < MAX_HOUR) {
-        hh[i] = 0;
-        k = i;
-        while (k != 0) {
-            while (!(k & 0x1)) k = k >> 1;
-            k = k >> 1;
-            hh[i] ++;
-        }
-        i ++;
+
+static int countOnBits(int value) {
+    int count = 0;
+
+    while (value > 0) {
+        count += value & 1;
+        value >>= 1;
     }
-    i = 0;
-    while (i < MAX_MIN) {
-        mm[i] = 0;
-        k = i;
-        while (k != 0) {
-            while (!(k & 0x1)) k = k >> 1;
-            k = k >> 1;
-            mm[i] ++;
-        }
-        i ++;
-    }
-    
-    *returnSize = 0;
-    
-    pp = malloc(sz * sizeof(char *));
-    p = malloc(sz * 6 * sizeof(char));
-    if (!pp || !p) return NULL;
-    
-    k = 0;
-    i = 0;
-    while (i < MAX_HOUR) {
-        j = 0;
-        while (j < MAX_MIN) {
-            if (hh[i] + mm[j] == num) {
-                pp[k ++] = p;
-                sprintf(p, "%d:%02d", i, j);
-                p += 6;
-            }
-            j ++;
-        }
-        i ++;
-    }
-    *returnSize = k;
-    
-    return pp;
+
+    return count;
 }
 
+char** readBinaryWatch(int turnedOn, int* returnSize) {
+    char** times = (char**)malloc(sizeof(char*) * 720);
+    int hour;
+    int minute;
 
-/*
-Difficulty:Easy
-Total Accepted:34K
-Total Submissions:75.9K
+    *returnSize = 0;
 
+    // 手錶只有 12 個合法小時與 60 個合法分鐘，逐一檢查即可。
+    for (hour = 0; hour < 12; ++hour) {
+        for (minute = 0; minute < 60; ++minute) {
+            if (countOnBits(hour) + countOnBits(minute) == turnedOn) {
+                char* time = (char*)malloc(6);
+                sprintf(time, "%d:%02d", hour, minute);
+                times[*returnSize] = time;
+                ++(*returnSize);
+            }
+        }
+    }
 
-Companies Google
-Related Topics Backtracking Bit Manipulation
-Similar Questions 
-                
-                  
-                    Letter Combinations of a Phone Number
-                  
-                    Number of 1 Bits
-*/
+    return times;
+}
 
 /* ---- generated tests ---- */
 int main(void){

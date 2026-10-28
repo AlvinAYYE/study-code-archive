@@ -207,27 +207,47 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
+/* 解題說明
+ * 題目：434. Number of Segments in a String（字串中的片段數）
+ *
+ * 題意完整翻譯：
+ *     給定字串 s，回傳其中片段（segment）的數量。片段是連續的一段非空格字元；字串只用普通空格分隔片段，空字串的片段數為 0。
+ *
+ * 範例：
+ *   輸入：s = "Hello, my name is John"
+ *   輸出：5
+ *   說明：片段依序為 Hello,、my、name、is、John，共 5 段。
+ *   輸入：s = "Hello"
+ *   輸出：1
+ *   說明：整個字串是一段。
+ *
+ * 限制：
+ *   - 0 <= s.length <= 300
+ *   - s 由英文字母、數字、指定標點符號與普通空格組成
+ *   - s 中唯一的空白字元是普通空格
+ *
+ * 解題步驟：
+ *   1. 從左到右掃描字串。
+ *   2. 當前字元不是空格，而前一個位置是字串開頭或空格時，代表一個新片段開始，計數加 1。
+ *   3. 掃描結束後回傳計數。
+ *
+ * 複雜度：
+ *   時間：O(n)，掃描字串一次。
+ *   空間：O(1)，只使用計數與索引。
+ */
+
 int countSegments(char* s) {
-	int state = 1; //0-IN-SEGMENT 1-BETWEEN-SEGMENTS
-	int count = 0;
-	if (!*s) {
-		return 0;
-	}
-	do {
-		if (*s == ' ') {
-			if (state == 0) {
-				state = 1;
-			}
-		} else {
-			if (state == 1) {
-				state = 0;
-				count++;
-			}
-		}
-		s++;
-	} while (*s);
-	return count;
+    int count = 0;
+    int i;
+
+    for (i = 0; s[i] != '\0'; ++i) {
+        // 非空格字元若位於開頭或空格後方，就是一段的起點。
+        if (s[i] != ' ' && (i == 0 || s[i - 1] == ' ')) {
+            ++count;
+        }
+    }
+
+    return count;
 }
 
 /* ---- generated tests ---- */

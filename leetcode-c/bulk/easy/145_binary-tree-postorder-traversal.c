@@ -1,41 +1,27 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0145. Binary Tree Postorder Traversal
- * Difficulty: Easy
- * Tags: stack, tree, depth-first-search, binary-tree
- * URL: https://leetcode.com/problems/binary-tree-postorder-traversal/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the root of a binary tree, return the postorder traversal of
- *     its nodes' values.
+ * LeetCode 145. Binary Tree Postorder Traversal
+ * 難度：Easy
  *
- * [中文] 題目: 二元樹的後序走訪
- * [中文] 題目說明:
- *     給定二元樹根節點，回傳節點值的後序走訪結果。後序走訪順序為左子樹、右
- *     子樹、根節點。樹的節點數介於 0 至 100，節點值介於 -100 
- *     至 100。
+ * 【完整中文題意】給定二元樹的根節點 root，請回傳後序走訪結果。後序走訪的順序是：先走訪左子樹，再走訪右子樹，最後處理目前節點。
  *
- * [中文] 思路:
- *     依左、右、根的順序遞迴 DFS，待兩個子樹都走訪後才將目前節點值寫入
- *     輸出。
+ * 【範例】
+ * 1. root = [1,null,2,3] → [3,2,1]
+ * 2. root = [1,2,3,4,5,null,8,null,null,6,7,9] → [4,6,7,5,2,9,8,3,1]
+ * 3. root = [] → []
+ * 4. root = [1] → [1]
  *
- * Examples:
- *     Input: root = [1,null,2,3]
- *     Output: [3,2,1]
- *     Explanation:
- *     Input: root = [1,2,3,4,5,null,8,null,null,6,7,9]
- *     Output: [4,6,7,5,2,9,8,3,1]
- *     Explanation:
- *     Input: root = []
- *     Output: []
- *     Input: root = [1]
- *     Output: [1]
+ * 【限制】
+ * - 節點數介於 0 到 100
+ * - -100 <= Node.val <= 100
  *
- * Constraints:
- *   - The number of the nodes in the tree is in the range [0, 100].
- *   - -100 <= Node.val <= 100
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 建立一個結果陣列和目前寫入位置。
+ * 2. 遞迴遇到節點時，先走訪左子樹，再走訪右子樹。
+ * 3. 左右子樹處理完後，才把目前節點的值放入結果。
+ *
+ * 【複雜度】時間 O(n)，每個節點走訪一次；空間 O(n) 回傳陣列，另有 O(h) 遞迴堆疊
+ *
+ * 【LeetCode C 函式】int* postorderTraversal(struct TreeNode* root, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -209,17 +195,20 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-void post145(struct TreeNode *t, int *out, int *n) {
-    if (!t) return;
-    post145(t->left, out, n);
-    post145(t->right, out, n);
-    out[(*n)++] = t->val;
+static void fillPostorder145(struct TreeNode* node, int* values, int* size) {
+    if (node == NULL) return;
+
+    // 後序順序：先走左、右子樹，最後記錄根節點。
+    fillPostorder145(node->left, values, size);
+    fillPostorder145(node->right, values, size);
+    values[(*size)++] = node->val;
 }
+
 int* postorderTraversal(struct TreeNode* root, int* returnSize) {
-    int *out = (int*)malloc(601 * sizeof(int)); int n = 0;
-    post145(root, out, &n);
-    *returnSize = n; return out;
+    int* values = (int*)malloc(100 * sizeof(int));
+    *returnSize = 0;
+    fillPostorder145(root, values, returnSize);
+    return values;
 }
 
 /* ---- generated tests ---- */

@@ -211,34 +211,33 @@ static int lc_dummy_;
  * 
  */
 
-void minDepthHelper(struct TreeNode* root, int ctr, int *ret)
-{
-	if (root && NULL == root->left && NULL == root->right)
-	{
-		*ret = *ret < ctr ? *ret : ctr; 
-		return;
-	}
+int minDepth(struct TreeNode* root) {
+    struct TreeNode **queue;
+    int head = 0, tail = 0, depth = 0;
 
-	if (root->left)
-	{
-		minDepthHelper(root->left, ctr+1, ret);
-	}
-	if (root->right)
-	{
-		minDepthHelper(root->right, ctr+1, ret);
-	}
-}
+    if (!root) return 0;
 
-int minDepth(struct TreeNode* root)
-{
-	if (NULL == root)
-	{
-		return 0;
-	}
+    /* 依照限制最多 100000 個節點，每個節點最多入列一次。 */
+    queue = (struct TreeNode**)malloc(sizeof(*queue) * 100000);
+    queue[tail++] = root;
 
-	int ret = INT_MAX;
-	minDepthHelper(root, 1, &ret);
-	return ret;
+    /* 一次取出同一層的節點；最先遇到的葉節點距離根最近。 */
+    while (head < tail) {
+        int levelEnd = tail;
+        depth++;
+        while (head < levelEnd) {
+            struct TreeNode *node = queue[head++];
+            if (!node->left && !node->right) {
+                free(queue);
+                return depth;
+            }
+            if (node->left) queue[tail++] = node->left;
+            if (node->right) queue[tail++] = node->right;
+        }
+    }
+
+    free(queue);
+    return depth;
 }
 
 

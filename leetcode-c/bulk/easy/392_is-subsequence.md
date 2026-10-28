@@ -1,44 +1,62 @@
-# 0392. Is Subsequence《判斷子序列》
+# 392 Is Subsequence：判斷子序列
 
-- **Difficulty**: Easy
-- **Tags**: two-pointers, string, dynamic-programming
-- **題目連結**: https://leetcode.com/problems/is-subsequence/
-- **程式碼**: [`392_is-subsequence.c`](./392_is-subsequence.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定字串 s 與 t，判斷 s 是否為 t 的子序列。子序列可刪除原字串中的任意字元，但剩餘字元的相對順序不可改變。
+給定字串 s 與 t，判斷 s 是否為 t 的子序列。子序列是從原字串刪除零個或多個字元後形成的字串，但保留下來的字元相對順序必須不變。例如 ace 是 abcde 的子序列，aec 則不是。
 
-**思路**：以兩個指標掃描，依序在 t 中尋找 s 當前需要的字元；s 全部匹配即為 true。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
-A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of "abcde" while "aec" is not).
-Example 1:
-Example 2:
-Constraints:
+- 輸入：s = "abc", t = "ahbgdc"
+- 輸出：true
+- 說明：依序可在 t 中找到 a、b、c。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: s = "abc", t = "ahbgdc"
-Output: true
+- 輸入：s = "axc", t = "ahbgdc"
+- 輸出：false
+- 說明：找到 a 後，後面沒有 x，因此無法按順序找到整個 s。
 
-Input: s = "axc", t = "ahbgdc"
-Output: false
-```
+## 限制
 
-## 限制 Constraints
+- 0 <= s.length <= 100
+- 0 <= t.length <= 10^4
+- s 與 t 都只含小寫英文字母
 
-0 <= s.length <= 100
-0 <= t.length <= 104
-s and t consist only of lowercase English letters.
+## 解題思路
 
-## 官方 C 函式簽名 Signature
+1. 用 i 指向 s 目前要比對的字元。
+2. 從左到右掃描 t；若 t[j] 等於 s[i]，就讓 i 前進，表示成功配對一個字元。
+3. t 掃描完後，若 s[i] 已到結尾，表示所有字元都按順序找到，回傳 true。空字串也是任何字串的子序列。
 
-```c
+## 複雜度
+
+- 時間：O(|s| + |t|)，每個字串最多掃描一次。
+- 空間：O(1)，只使用索引變數。
+
+## C 函式簽名
+
+~~~c
+bool isSubsequence(char* s, char* t);
+~~~
+
+## 程式如何運作
+
+~~~c
 bool isSubsequence(char* s, char* t) {
-    
+    int sIndex = 0;
+    int tIndex = 0;
+
+    while (s[sIndex] != '\0' && t[tIndex] != '\0') {
+        if (s[sIndex] == t[tIndex]) {
+            ++sIndex; /* 配對到下一個需要的字元。 */
+        }
+        ++tIndex;
+    }
+
+    return s[sIndex] == '\0';
 }
-```
+~~~

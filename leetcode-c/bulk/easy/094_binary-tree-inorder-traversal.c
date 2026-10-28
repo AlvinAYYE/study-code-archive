@@ -210,11 +210,13 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 static int lc_dummy_;
 void in94(struct TreeNode *t, int *out, int *n) {
     if (!t) return;
+    /* 中序順序是左子樹、目前節點、右子樹。 */
     in94(t->left, out, n);
     out[(*n)++] = t->val;
     in94(t->right, out, n);
 }
 int* inorderTraversal(struct TreeNode* root, int* returnSize) {
+    /* 題目最多 100 個節點；配置結果陣列並回報實際寫入數量。 */
     int *out = (int*)malloc(201 * sizeof(int)); int n = 0;
     in94(root, out, &n);
     *returnSize = n; return out;

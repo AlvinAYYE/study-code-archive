@@ -11,26 +11,26 @@
  *     quadruplets [nums[a], nums[b], nums[c], nums[d]] such that:
  *     You may return the answer in any order.
  *
- * [中文] 題目: 四數之和
- * [中文] 題目說明:
- *     給定整數陣列 nums 與目標值 target，找出所有由四個不同索
- *     引構成、元素總和等於 target 的四元組。答案順序不限，但不得包
- *     含重複的四元組。
+ * [中文] 題目：四數之和
+ *     給定整數陣列 nums 與 target，找出所有由四個不同索引組成且總和等於
+ *     target 的四元組。答案順序不限，但不能包含內容相同的四元組。
  *
- * [中文] 思路:
- *     程式先排序並用兩層迴圈固定前兩個數，剩餘兩個數以左右雙指針尋找所需和
- *     。固定值及成功配對後的左側重複值都會跳過，以避免重複答案。
+ * [中文] 範例
+ *   範例 1：輸入 nums = [1,0,-1,0,-2,2], target = 0，輸出
+ *           [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]。
+ *   範例 2：輸入 nums = [2,2,2,2,2], target = 8，輸出 [[2,2,2,2]]。
  *
- * Examples:
- *     Input: nums = [1,0,-1,0,-2,2], target = 0
- *     Output: [[-2,-1,1,2],[-2,0,0,2],[-1,0,0,1]]
- *     Input: nums = [2,2,2,2,2], target = 8
- *     Output: [[2,2,2,2]]
+ * [中文] 限制
+ *   - 1 <= nums.length <= 200。
+ *   - -10^9 <= nums[i] <= 10^9。
+ *   - -10^9 <= target <= 10^9。
  *
- * Constraints:
- *   - 1 <= nums.length <= 200
- *   - -10^9 <= nums[i] <= 10^9
- *   - -10^9 <= target <= 10^9
+ * [中文] 直觀解題思路
+ *   1. 先排序，使用兩層迴圈固定前兩個數。
+ *   2. 剩餘區間用左右雙指標搜尋；總和小就左移，大就右移。
+ *   3. 找到答案後，同時跳過左右兩側的重複值；固定位置也跳過重複值。
+ *   4. 加總使用 long long，避免四個 10^9 整數相加溢位。
+ *   時間複雜度 O(n^3)，不計輸出與排序實作所需空間為 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -204,88 +204,72 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#define MALLOC_SIZE_UNIT (500)
-
-int compare(const void *a, const void *b)
-{
-	int n1 = *(int *)a;
-	int n2 = *(int *)b;
-
-	return n1 - n2;
+/* qsort 比較器不能直接相減，以免整數溢位。 */
+static int compareInts(const void *a, const void *b) {
+    int x = *(const int *)a;
+    int y = *(const int *)b;
+    return (x > y) - (x < y);
 }
 
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** fourSum(int* nums, int numsSize, int target, int* returnSize, int** returnColumnSizes)
-{
-	if (numsSize < 4)
-	{
-		*returnSize = 0;
-		return NULL;
-	}
+/* ---- 易讀解法：固定兩數，再用雙指標找另外兩數 ---- */
+int** fourSum(int* nums, int numsSize, int target, int* returnSize,
+              int** returnColumnSizes) {
+    int **answer = NULL;
+    int *columnSizes = NULL;
+    int count = 0;
+    int capacity = 0;
+    int i;
 
-	qsort(nums, numsSize, sizeof(int), compare);
+    *returnSize = 0;
+    *returnColumnSizes = NULL;
+    if (numsSize < 4) return NULL;
 
-	int** ret = (int**)malloc(sizeof(int *)*MALLOC_SIZE_UNIT);
-	*returnColumnSizes = malloc(sizeof(int)*MALLOC_SIZE_UNIT);
-	int retCtr = 0;
+    qsort(nums, (size_t)numsSize, sizeof(int), compareInts);
 
-	for (int i = 0; i < numsSize-3; i++)
-	{
-		if (i > 0 && nums[i] == nums[i-1])
-		{
-			continue; //avoid redundant traversal by isolating the duplicates;
-		}
-		int tmpTarget = target - nums[i];
-		for (int x = i+1; x <= numsSize-3; x++)
-		{
-			if (x > (i+1) && nums[x] == nums[x-1])
-			{
-				continue; //avoid redundant traversal by isolating the duplicates;
-			}
+    for (i = 0; i < numsSize - 3; ++i) {
+        int j;
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
 
-			int sum = tmpTarget - nums[x];
-			int left = x+1;
-			int right = numsSize-1;
-			while (left < right)
-			{
-				if (nums[left] + nums[right] == sum)
-				{
-					ret[retCtr] = malloc(sizeof(int)*4);
-					(*returnColumnSizes)[retCtr] = 4;
-					ret[retCtr][0] = nums[i];
-					ret[retCtr][1] = nums[x];
-					ret[retCtr][2] = nums[left];
-					ret[retCtr][3] = nums[right];
-					retCtr++;
-					if (retCtr % MALLOC_SIZE_UNIT == 0)
-					{
-						ret = realloc(ret, sizeof(int **)*(retCtr+MALLOC_SIZE_UNIT));
-						*returnColumnSizes = realloc(*returnColumnSizes, sizeof(int)*(retCtr+MALLOC_SIZE_UNIT));
-					}
-					left++;
-					while (nums[left] == nums[left-1] && left < right)
-					{
-						left++;
-					}
-				} else if (nums[left] + nums[right] < sum)
-				{
-					left++;
-				} else
-				{
-					right--;
-				}
-			}
-		}
-	}
+        for (j = i + 1; j < numsSize - 2; ++j) {
+            int left;
+            int right;
+            if (j > i + 1 && nums[j] == nums[j - 1]) continue;
 
-	*returnSize = retCtr;    
-	return ret;
+            left = j + 1;
+            right = numsSize - 1;
+            while (left < right) {
+                long long sum = (long long)nums[i] + nums[j] + nums[left] + nums[right];
+
+                if (sum < target) {
+                    ++left;
+                } else if (sum > target) {
+                    --right;
+                } else {
+                    if (count == capacity) {
+                        capacity = capacity == 0 ? 16 : capacity * 2;
+                        answer = (int **)realloc(answer, (size_t)capacity * sizeof(int *));
+                        columnSizes = (int *)realloc(columnSizes, (size_t)capacity * sizeof(int));
+                    }
+                    answer[count] = (int *)malloc(4 * sizeof(int));
+                    answer[count][0] = nums[i];
+                    answer[count][1] = nums[j];
+                    answer[count][2] = nums[left];
+                    answer[count][3] = nums[right];
+                    columnSizes[count] = 4;
+                    ++count;
+
+                    ++left;
+                    --right;
+                    while (left < right && nums[left] == nums[left - 1]) ++left;
+                    while (left < right && nums[right] == nums[right + 1]) --right;
+                }
+            }
+        }
+    }
+
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
 
 

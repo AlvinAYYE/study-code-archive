@@ -16,31 +16,30 @@
  *
  * [中文] 題目: 分發糖果
  * [中文] 題目說明:
- *     有 n 個排成一列的孩子，ratings[i] 表示第 i 個孩子的
- *     評分。每個孩子至少要拿一顆糖，且評分高於相鄰孩子者必須拿到更多糖。請
- *     回傳符合規則所需的最少糖果總數。n 介於 1 至 2×10^4，評分
- *     介於 0 至 2×10^4。
+ *     有 n 個排成一列的孩子，ratings[i] 表示第 i 個孩子的評分。
+ *     每個孩子至少要拿一顆糖；評分高於相鄰孩子者必須拿到更多糖。
+ *     請回傳符合規則所需的最少糖果總數。
  *
- * [中文] 思路:
- *     先由左到右配置以滿足左鄰居的遞增關係，再由右到左補強較高評分者的糖果
- *     數並加總。
+ * [中文] 範例：
+ *   範例 1：輸入 ratings = [1,0,2]；輸出 5。
+ *     說明：依序分配 [2,1,2] 顆糖即可滿足規則。
+ *   範例 2：輸入 ratings = [1,2,2]；輸出 4。
+ *     說明：可分配 [1,2,1]；相同評分之間不要求糖果數相同或遞增。
  *
- * Examples:
- *     Input: ratings = [1,0,2]
- *     Output: 5
- *     Explanation: You can allocate to the first, second and third
- *     child with 2, 1, 2 candies respectively.
- *     Input: ratings = [1,2,2]
- *     Output: 4
- *     Explanation: You can allocate to the first, second and third
- *     child with 1, 2, 1 candies respectively.
- *     The third child gets 1 candy because it satisfies the above
- *     two conditions.
- *
- * Constraints:
+ * [中文] 限制：
  *   - n == ratings.length
  *   - 1 <= n <= 2 * 10^4
  *   - 0 <= ratings[i] <= 2 * 10^4
+ *
+ * [中文] 直觀解題思路：
+ *   1. 每個孩子先至少分到一顆糖。
+ *   2. 從左往右掃描；若 ratings[i] > ratings[i-1]，令 candies[i] 比左鄰居
+ *      多一顆，否則維持一顆。這一趟滿足所有「高於左鄰居」的限制。
+ *   3. 再從右往左掃描；若目前評分高於右鄰居，但糖果沒有更多，就補成右鄰居
+ *      加一顆。使用較大值可保留第一趟已滿足的左側限制。
+ *   4. 第二趟同步累加每個孩子最後的糖果數，即得到最少總數。
+ *
+ * 複雜度：兩次線性掃描，時間 O(n)，糖果陣列使用 O(n) 額外空間。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -242,6 +241,7 @@ int candy(int* ratings, int ratingsSize) {
     //assert(candies);
     
     candies[0] = 1;
+    /* 左到右先滿足「評分高於左鄰居」的限制。 */
     for (i = 1; i < ratingsSize; i ++) {
         if (ratings[i] > ratings[i - 1]) {
             candies[i] = candies[i - 1] + 1;
@@ -252,6 +252,7 @@ int candy(int* ratings, int ratingsSize) {
     
     x = candies[ratingsSize - 1];
     
+    /* 右到左補強另一方向，並保留第一趟較大的分配。 */
     for (i = ratingsSize - 2; i >= 0; i --) {
         if (ratings[i] > ratings[i + 1]) {
             if (candies[i] <= candies[i + 1]) {

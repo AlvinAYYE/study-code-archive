@@ -20,9 +20,12 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct {
     int id, solved, penalty, submitted;
+    int solved_problem[10];
+    int incorrect[10];
 } Team;
 
 static int cmp_team(const void *a, const void *b) {
@@ -33,13 +36,63 @@ static int cmp_team(const void *a, const void *b) {
     return ta->id - tb->id;
 }
 
+static int is_blank(const char *line) {
+    return line[0] == '\n' || line[0] == '\r' || line[0] == '\0';
+}
+
+int solve(FILE *in, FILE *out) {
+    char line[256];
+    int test_cases;
+    int case_number;
+
+    if (fgets(line, sizeof(line), in) == NULL) return 0;
+    test_cases = atoi(line);
+
+    for (case_number = 0; case_number < test_cases; ++case_number) {
+        Team teams[101] = {{0}};
+        Team ranking[100];
+        int ranking_count = 0;
+        int i;
+
+        while (fgets(line, sizeof(line), in) != NULL && is_blank(line)) {
+            /* Skip separators before this case. */
+        }
+        if (!is_blank(line)) {
+            for (;;) {
+                int contestant;
+                int problem;
+                int time;
+                char status;
+                if (sscanf(line, "%d %d %d %c", &contestant, &problem,
+                           &time, &status) == 4) {
+                    Team *team = &teams[contestant];
+                    team->id = contestant;
+                    team->submitted = 1;
+                    if (status == 'C' && !team->solved_problem[problem]) {
+                        team->solved_problem[problem] = 1;
+                        ++team->solved;
+                        team->penalty += time + 20 * team->incorrect[problem];
+                    } else if (status == 'I' && !team->solved_problem[problem]) {
+                        ++team->incorrect[problem];
+                    }
+                }
+                if (fgets(line, sizeof(line), in) == NULL || is_blank(line)) break;
+            }
+        }
+
+        for (i = 1; i <= 100; ++i) {
+            if (teams[i].submitted) ranking[ranking_count++] = teams[i];
+        }
+        qsort(ranking, (size_t)ranking_count, sizeof(*ranking), cmp_team);
+        for (i = 0; i < ranking_count; ++i) {
+            fprintf(out, "%d %d %d\n", ranking[i].id,
+                    ranking[i].solved, ranking[i].penalty);
+        }
+        if (case_number + 1 < test_cases) fputc('\n', out);
+    }
+    return 0;
+}
+
 int main(void) {
-    Team t[2] = {
-        {1, 2, 100, 1},
-        {2, 3, 50, 1}
-    };
-    qsort(t, 2, sizeof(Team), cmp_team);
-    int ok = (t[0].id == 2); /* Team 2 solved 3 > 2 */
-    printf("%s: UVa 10258 - Contest Scoreboard\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    return solve(stdin, stdout);
 }

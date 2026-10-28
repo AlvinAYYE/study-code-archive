@@ -1,44 +1,42 @@
 # 0169. Majority Element《多數元素》
 
-- **Difficulty**: Easy
-- **Tags**: array, hash-table, divide-and-conquer, sorting, counting
-- **題目連結**: https://leetcode.com/problems/majority-element/
-- **程式碼**: [`169_majority-element.c`](./169_majority-element.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/majority-element/
 
-## 題目說明（中文）
+## 題目翻譯
 
-給定大小為 n 的整數陣列，請回傳出現次數超過 ⌊n / 2⌋ 的元素。題目保證多數元素一定存在。
+給定長度為 n 的整數陣列，找出出現次數嚴格大於 n/2 的元素。可以假設這個元素一定存在。
 
-**思路**：採 Boyer-Moore 投票法，維護候選值與計數；不同值抵銷計數，計數歸零時改選目前元素為候選者。
+## 範例
 
-## Problem Statement (English)
+~~~text
+輸入：nums = [3,2,3]
+輸出：3
 
-Given an array nums of size n, return the majority element.
-The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
-Example 1:
-Example 2:
-Constraints:
+輸入：nums = [2,2,1,1,1,2,2]
+輸出：2
+~~~
 
-## 範例 Examples
+## 限制
 
-```text
-Input: nums = [3,2,3]
-Output: 3
+- 1 <= n == nums.length <= 5 * 10^4
+- -10^9 <= nums[i] <= 10^9
+- 多數元素一定存在。
 
-Input: nums = [2,2,1,1,1,2,2]
-Output: 2
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 維護一個候選值 candidate 和票數 votes。
+2. 票數為 0 時，將目前元素設為新候選值。
+3. 若目前元素等於候選值就加一票，否則扣一票。
+4. 不同元素成對抵銷；多數元素數量超過其他元素總和，因此最後候選值必是答案。
 
-n == nums.length
-1 <= n <= 5 * 104
--109 <= nums[i] <= 109
+## 複雜度
 
-## 官方 C 函式簽名 Signature
+- 時間：O(n)，只掃描一次陣列。
+- 空間：O(1)，只使用候選值和票數。
 
-```c
-int majorityElement(int* nums, int numsSize) {
-    
-}
-```
+## C 函式簽名
+
+~~~c
+int majorityElement(int* nums, int numsSize);
+~~~

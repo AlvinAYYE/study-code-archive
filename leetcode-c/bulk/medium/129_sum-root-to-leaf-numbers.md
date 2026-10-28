@@ -1,63 +1,47 @@
-# 0129. Sum Root to Leaf Numbers《根節點到葉節點數字之和》
+# 0129. Sum Root to Leaf Numbers｜根到葉節點數字總和
 
-- **Difficulty**: Medium
-- **Tags**: tree, depth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/sum-root-to-leaf-numbers/
-- **程式碼**: [`129_sum-root-to-leaf-numbers.c`](./129_sum-root-to-leaf-numbers.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：樹、深度優先搜尋、二元樹
+- **題目連結**：[LeetCode 0129](https://leetcode.com/problems/sum-root-to-leaf-numbers/)
+- **C 程式**：[129_sum-root-to-leaf-numbers.c](./129_sum-root-to-leaf-numbers.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定一棵節點值只含 0 至 9 的二元樹，每條根到葉路徑代表一個十進位數字。請回傳所有根到葉數字的總和。測資保證答案可放入 32 位元帶符號整數。樹有 1 至 1000 個節點，深度不超過 10。
+給定只包含 `0` 到 `9` 的二元樹。每條根到葉節點路徑上的數字依序組成一個整數，請回傳所有這些整數的總和。葉節點是沒有子節點的節點。
 
-**思路**：DFS 向下時將累積值更新為 cur×10 加上目前數字，抵達葉節點便回傳該數字，最後加總左右子樹結果。
-
-## Problem Statement (English)
-
-You are given the root of a binary tree containing digits from 0 to 9 only.
-Each root-to-leaf path in the tree represents a number.
-Return the total sum of all root-to-leaf numbers. Test cases are generated so that the answer will fit in a 32-bit integer.
-A leaf node is a node with no children.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [1,2,3]
-Output: 25
-Explanation:
-The root-to-leaf path 1->2 represents the number 12.
-The root-to-leaf path 1->3 represents the number 13.
-Therefore, sum = 12 + 13 = 25.
+輸入：root = [1,2,3]
+輸出：25
+說明：兩條路徑形成 12 和 13，總和為 25。
 
-Input: root = [4,9,0,5,1]
-Output: 1026
-Explanation:
-The root-to-leaf path 4->9->5 represents the number 495.
-The root-to-leaf path 4->9->1 represents the number 491.
-The root-to-leaf path 4->0 represents the number 40.
-Therefore, sum = 495 + 491 + 40 = 1026.
+輸入：root = [4,9,0,5,1]
+輸出：1026
+說明：路徑形成 495、491 和 40，總和為 1026。
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [1, 1000].
-0 <= Node.val <= 9
-The depth of the tree will not exceed 10.
+- 節點數介於 `1` 到 `1000`。
+- `0 <= Node.val <= 9`。
+- 樹深度不超過 `10`。
+- 答案可放入 32 位元有號整數。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 深度優先走訪時，用 `prefix` 保存目前路徑已組成的數字。
+2. 進入新節點時，將新數字接到末尾：`prefix = prefix × 10 + node->val`。
+3. 若節點是葉節點，這個 `prefix` 就是一個完整路徑數字，回傳它。
+4. 否則遞迴計算左右子樹的路徑總和並相加；空子樹回傳 0。
+
+## 複雜度
+
+- 時間：`O(n)`，每個節點處理一次。
+- 額外空間：`O(h)` 遞迴呼叫堆疊，`h` 是樹高。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-int sumNumbers(struct TreeNode* root) {
-    
-}
+int sumNumbers(struct TreeNode* root);
 ```

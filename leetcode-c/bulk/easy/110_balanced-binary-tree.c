@@ -207,6 +207,7 @@ static int lc_dummy_;
 int h110(struct TreeNode *t) {
     int l, r;
     if (!t) return 0;
+    /* 子樹已不平衡就直接往上傳 -1，避免重複計算高度。 */
     l = h110(t->left); if (l < 0) return -1;
     r = h110(t->right); if (r < 0) return -1;
     if (l - r > 1 || r - l > 1) return -1;

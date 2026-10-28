@@ -1,48 +1,20 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0213. House Robber II
+ * LeetCode 0213. House Robber II（打家劫舍 II）
  * Difficulty: Medium
- * Tags: array, dynamic-programming
- * URL: https://leetcode.com/problems/house-robber-ii/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are a professional robber planning to rob houses along a street.
- *     Each house has a certain amount of money stashed. All houses at this
- *     place are arranged in a circle. That means the first house is the
- *     neighbor of the last one. Meanwhile, adjacent houses have a security
- *     system connected, and it will automatically contact the police if
- *     two adjacent houses were broken into on the same night.
- *     Given an integer array nums representing the amount of money of each
- *     house, return the maximum amount of money you can rob tonight
- *     without alerting the police.
- *
- * [中文] 題目: 打家劫舍 II
- * [中文] 題目說明:
- *     房屋排列成環狀，因此第一間與最後一間也相鄰，不能在同一晚同時偷取相鄰
- *     房屋。給定各房屋金額，請回傳不觸發警報時可取得的最大金額。
- *
- * [中文] 思路:
- *     將環拆成兩種互斥情況：排除最後一間或排除第一間；各自以記憶化遞迴求線
- *     性房屋的最佳結果，再取較大值。
- *
- * Examples:
- *     Input: nums = [2,3,2]
- *     Output: 3
- *     Explanation: You cannot rob house 1 (money = 2) and then rob
- *     house 3 (money = 2), because they are adjacent houses.
- *     Input: nums = [1,2,3,1]
- *     Output: 4
- *     Explanation: Rob house 1 (money = 1) and then rob house 3
- *     (money = 3).
- *     Total amount you can rob = 1 + 3 = 4.
- *     Input: nums = [1,2,3]
- *     Output: 3
- *
- * Constraints:
+ * 題意：房屋沿著圓形街道排列，每間房都有金額 nums[i]。相鄰房屋不能同時偷，且第一間與最後一間也相鄰。請計算不觸發警報時最多能取得多少金額。
+ * 範例：
+ *   1. 輸入：nums = [2,3,2]；輸出：3。第一間和最後一間相鄰，不能一起偷。
+ *   2. 輸入：nums = [1,2,3,1]；輸出：4。可偷第 1 間和第 3 間，總額為 1 + 3。
+ *   3. 輸入：nums = [1,2,3]；輸出：3。
+ * 限制：
  *   - 1 <= nums.length <= 100
  *   - 0 <= nums[i] <= 1000
- * ==========================================================================
+ * 解法：
+ *   1. 若房屋只有一間，直接回傳那間金額。
+ *   2. 圓形只造成第一間和最後一間互斥。把情況拆成兩次直線問題：只考慮第 0 到 n-2 間，或只考慮第 1 到 n-1 間。
+ *   3. 在線性範圍逐間計算：取目前房屋時可得「隔一間前的最佳值 + 目前金額」；不取時沿用前一間最佳值。
+ *   4. 兩種範圍的最大值就是答案。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -216,79 +188,30 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-213. House Robber II
+static int robLinearRange(int *nums, int start, int endExclusive) {
+    int twoHousesBack = 0;
+    int oneHouseBack = 0;
 
-Note: This is an extension of House Robber.
-
-After robbing those houses on that street, the thief has found himself a new place for his thievery so that he will not get too much attention. This time, all houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, the security system for these houses remain the same as for those in the previous street. 
-
-Given a list of non-negative integers representing the amount of money of each house, determine the maximum amount of money you can rob tonight without alerting the police.
-
-Credits:Special thanks to @Freezen for adding this problem and creating all test cases.
-*/
-
-int robx(int *m, int *nums, int numsSize) {
-    int k1 = 0, k2 = 0;
-    
-    if (numsSize == 1) return nums[0];
-    if (numsSize == 2) return nums[0] > nums[1] ? nums[0] : nums[1];
-    
-    if (m[2] == -1) {
-        m[2] = robx(&m[2], &nums[2], numsSize - 2);
+    for (int i = start; i < endExclusive; i++) {
+        int takeThisHouse = twoHousesBack + nums[i];
+        int skipThisHouse = oneHouseBack;
+        int bestHere = takeThisHouse > skipThisHouse ? takeThisHouse : skipThisHouse;
+        twoHousesBack = oneHouseBack;
+        oneHouseBack = bestHere;
     }
-    k2 = nums[0] + m[2];
-    if (m[1] == -1) {
-        m[1] = robx(&m[1], &nums[1], numsSize - 1);
-    }
-    k1 = m[1];
-    
-    return k1 > k2 ? k1 : k2;
+    return oneHouseBack;
 }
- 
+
 int rob(int* nums, int numsSize) {
-    int *m, k1, k2;
-    
-    if (numsSize == 0) return 0;
-    
-    m = malloc(numsSize * sizeof(int));
-    //assert(m);
- 
-    memset(m, -1, numsSize * sizeof(int));
-    k1 = robx(m, &nums[0], numsSize - 1);  // exclude the last house
-    memset(m, -1, numsSize * sizeof(int));
-    k2 = robx(m, &nums[1], numsSize - 1);  // exclude the first house
-    
-    free(m);
-    
-    return k1 > k2 ? k1 : k2;
+    if (numsSize == 1) {
+        return nums[0];
+    }
+
+    // 不同時考慮首尾：一個範圍排除最後一間，另一個排除第一間。
+    int robWithoutLast = robLinearRange(nums, 0, numsSize - 1);
+    int robWithoutFirst = robLinearRange(nums, 1, numsSize);
+    return robWithoutLast > robWithoutFirst ? robWithoutLast : robWithoutFirst;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:59K
-Total Submissions:173.9K
-
-
-Companies Microsoft
-Related Topics Dynamic Programming
-Similar Questions 
-                
-                  
-                    House Robber
-                  
-                    Paint House
-                  
-                    Paint Fence
-                  
-                    House Robber III
-                  
-                    Non-negative Integers without Consecutive Ones
-                  
-                    Coin Path
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -234,29 +234,26 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
+/* ---- 易讀解法：總油量判斷可行性，負油量時重設起點 ---- */
+int canCompleteCircuit(int* gas, int gasSize, int* cost, int costSize) {
+    int totalBalance = 0;
+    int currentBalance = 0;
+    int start = 0;
+    int station;
+    (void)costSize;
 
-int canCompleteCircuit(int* gas, int gasSize, int* cost, int costSize)
-{
-	int head = gasSize-1, tail = gasSize-1;
-	int tank = gas[head] - cost[head];
-	while ((head+gasSize-1)%gasSize != tail)
-	{
-		if (tank < 0)
-		{            
-			head = (head+gasSize-1)%gasSize;
-			tank += gas[head] - cost[head];
-		} else
-		{
-			tail = (tail+1)%gasSize;
-			tank += gas[tail] - cost[tail];            
-		}
-	}
+    for (station = 0; station < gasSize; ++station) {
+        int netGas = gas[station] - cost[station];
+        totalBalance += netGas;
+        currentBalance += netGas;
 
-	return (tank >= 0 ? head : -1);
+        if (currentBalance < 0) {
+            start = station + 1;
+            currentBalance = 0;
+        }
+    }
+    return totalBalance >= 0 ? start : -1;
 }
-
 
 /* ---- generated tests ---- */
 int main(void){

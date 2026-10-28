@@ -17,12 +17,26 @@
  *
  * [中文] 題目: 加一
  * [中文] 題目說明:
- *     以整數陣列 digits 表示一個大整數，數字由最高有效位到最低有效
- *     位排列，且除零外沒有前導零。將此整數加一後，回傳結果的數字陣列。
+ *     整數陣列 digits 表示一個大整數，每個元素是一位數，並由最高位到
+ *     最低位排列；除了數字 0 本身外，不含前導零。將此整數加一後，以相同
+ *     形式回傳結果。
  *
- * [中文] 思路:
- *     從最低有效位開始加上進位 1，逐位保存餘數並更新進位。若最高位仍有進
- *     位，將既有結果右移並在前方補上 1。
+ * [中文] 範例:
+ *     1. digits = [1,2,3]，輸出 [1,2,4]，因為 123 + 1 = 124。
+ *     2. digits = [4,3,2,1]，輸出 [4,3,2,2]。
+ *     3. digits = [9]，輸出 [1,0]。
+ *
+ * [中文] 限制:
+ *     - 1 <= digits.length <= 100
+ *     - 0 <= digits[i] <= 9
+ *     - digits 不含前導零。
+ *
+ * [中文] 直觀解題思路:
+ *     1. 先配置 digitsSize + 1 格結果，並令進位 s = 1，代表要加一。
+ *     2. 從最低位往左計算：目前位存 (digits[i] + s) % 10，進位更新為
+ *        (digits[i] + s) / 10。
+ *     3. 若最高位處理完仍有進位，將結果右移一格並在最前方放 1。
+ *     4. 時間 O(n)，回傳陣列使用 O(n) 空間；除回傳值外為 O(1)。
  *
  * Examples:
  *     Input: digits = [1,2,3]
@@ -235,7 +249,7 @@ The digits are stored such that the most significant digit is at the head of the
  * Note: The returned array must be malloced, assume caller calls free().
  */
 int* plusOne(int* digits, int digitsSize, int* returnSize) {
-    int s = 1;
+    int s = 1;  /* 初始進位 1 就代表要對原數加一。 */
     int i;
     int *p;
     
@@ -253,6 +267,7 @@ int* plusOne(int* digits, int digitsSize, int* returnSize) {
         i --;
     }
     if (s) {
+        /* 全部位數都是 9 時，結果會多一位，將既有數字整體右移。 */
         memcpy(&p[1], &p[0], digitsSize * sizeof(int));
         //i = digitsSize - 1;
         //while (i >= 0) {

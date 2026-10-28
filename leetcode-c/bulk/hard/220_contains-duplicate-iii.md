@@ -1,52 +1,53 @@
-# 0220. Contains Duplicate III《存在重複元素 III》
+# 0220. 存在重複元素 III（Contains Duplicate III）
 
-- **Difficulty**: Hard
-- **Tags**: array, sliding-window, sorting, bucket-sort, ordered-set
-- **題目連結**: https://leetcode.com/problems/contains-duplicate-iii/
-- **程式碼**: [`220_contains-duplicate-iii.c`](./220_contains-duplicate-iii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Hard
+- **標籤**：陣列、滑動視窗、排序、桶排序
+- **題目連結**：[LeetCode 220](https://leetcode.com/problems/contains-duplicate-iii/)
+- **解答檔案**：[220_contains-duplicate-iii.c](./220_contains-duplicate-iii.c)
 
-## 題目說明（中文）
+## 題目完整翻譯
 
-給定 nums、indexDiff 與 valueDiff，找出兩個不同索引 i、j。其索引差絕對值須不大於 indexDiff，且對應數值差絕對值須不大於 valueDiff；存在即回傳 true。
+給定整數陣列 `nums`，以及整數 `indexDiff`、`valueDiff`。請判斷是否存在兩個不同索引 `i`、`j`，同時滿足：
 
-**思路**：將數值與索引配對並按數值排序，對每個元素向後枚舉仍在 valueDiff 範圍內的元素。若其中任何一對的索引差不超過 k，便回傳 true。
+- `|i - j| <= indexDiff`
+- `|nums[i] - nums[j]| <= valueDiff`
 
-## Problem Statement (English)
+存在就回傳 `true`，否則回傳 `false`。
 
-You are given an integer array nums and two integers indexDiff and valueDiff.
-Find a pair of indices (i, j) such that:
-Return true if such pair exists or false otherwise.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [1,2,3,1], indexDiff = 3, valueDiff = 0
-Output: true
-Explanation: We can choose (i, j) = (0, 3).
-We satisfy the three conditions:
-i != j --> 0 != 3
-abs(i - j) <= indexDiff --> abs(0 - 3) <= 3
-abs(nums[i] - nums[j]) <= valueDiff --> abs(1 - 1) <= 0
+輸入：nums = [1,2,3,1], indexDiff = 3, valueDiff = 0
+輸出：true
+說明：選 i = 0、j = 3；索引差為 3，數值差為 0。
 
-Input: nums = [1,5,9,1,5,9], indexDiff = 2, valueDiff = 3
-Output: false
-Explanation: After trying all the possible pairs (i, j), we cannot satisfy the three conditions, so we return false.
+輸入：nums = [1,5,9,1,5,9], indexDiff = 2, valueDiff = 3
+輸出：false
 ```
 
-## 限制 Constraints
+## 限制
 
-2 <= nums.length <= 105
--109 <= nums[i] <= 109
-1 <= indexDiff <= nums.length
-0 <= valueDiff <= 109
+- `2 <= nums.length <= 10^5`
+- `-10^9 <= nums[i] <= 10^9`
+- `1 <= indexDiff <= nums.length`
+- `0 <= valueDiff <= 10^9`
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 從左到右掃描，維持一個最多包含 `indexDiff` 個舊元素的滑動視窗；太舊的元素先移除。
+2. 把數值分成寬度 `valueDiff + 1` 的桶。同一桶內任兩數的差一定不超過 `valueDiff`，因此桶已有人就找到答案。
+3. 只要再檢查相鄰兩桶，並確認實際差值是否不超過 `valueDiff`。更遠的桶不可能符合條件。
+4. 將目前數值放入桶，繼續掃描。
+
+桶編號使用數學上的向下取整；C 的整數除法會朝 0 截斷，因此負數需要特別修正。
+
+## 複雜度
+
+- 時間：雜湊表平均 `O(n)`。
+- 額外空間：`O(indexDiff)`，最多為 `O(n)`。
+
+## C 函式介面
 
 ```c
-bool containsNearbyAlmostDuplicate(int* nums, int numsSize, int indexDiff, int valueDiff) {
-    
-}
+bool containsNearbyAlmostDuplicate(int* nums, int numsSize, int indexDiff, int valueDiff);
 ```

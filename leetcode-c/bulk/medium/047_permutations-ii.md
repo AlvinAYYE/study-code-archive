@@ -1,50 +1,43 @@
-# 0047. Permutations II《全排列 II》
+# 0047. Permutations II｜全排列 II
 
-- **Difficulty**: Medium
-- **Tags**: array, backtracking, sorting
-- **題目連結**: https://leetcode.com/problems/permutations-ii/
-- **程式碼**: [`047_permutations-ii.c`](./047_permutations-ii.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、回溯、排序
+- **題目連結**：[LeetCode 0047](https://leetcode.com/problems/permutations-ii/)
+- **C 程式**：[047_permutations-ii.c](./047_permutations-ii.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定可能含重複元素的整數陣列 nums，回傳所有不重複的排列，輸出順序不限。重複數值不能導致相同排列重複出現在答案中。
+給定可能含有重複值的整數陣列 `nums`，回傳所有不同排列，排列順序不限。相同的排列只能出現一次。
 
-**思路**：先排序，再用 DFS 與已使用標記建立排列。若當前值與前一值相同且前一位置尚未使用，就跳過它以避免產生重複排列。
-
-## Problem Statement (English)
-
-Given a collection of numbers, nums, that might contain duplicates, return all possible unique permutations in any order.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [1,1,2]
-Output:
-[[1,1,2],
- [1,2,1],
- [2,1,1]]
+輸入：nums = [1,1,2]
+輸出：[[1,1,2],[1,2,1],[2,1,1]]
 
-Input: nums = [1,2,3]
-Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+輸入：nums = [1,2,3]
+輸出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= nums.length <= 8
--10 <= nums[i] <= 10
+- `1 <= nums.length <= 8`。
+- `-10 <= nums[i] <= 10`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 先排序陣列，讓相同數字相鄰；`used[i]` 表示該索引的數字是否已放進目前排列。
+2. 每一層依序嘗試未使用的數字。
+3. 若 `nums[i] == nums[i - 1]`，且前一個相同數字尚未在本層路徑中使用，就跳過目前的 `nums[i]`。這會避免相同值互換索引造成重複排列。
+4. 路徑長度到 `numsSize` 時，複製並輸出該排列；回溯時取消使用標記。
+
+## 複雜度
+
+- 時間：與不同排列數及每個排列長度成正比，最壞為 `O(n × n!)`。
+- 額外空間：`O(n)` 遞迴路徑與使用標記，不含答案。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** permuteUnique(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
-    
-}
+int** permuteUnique(int* nums, int numsSize, int* returnSize, int** returnColumnSizes);
 ```

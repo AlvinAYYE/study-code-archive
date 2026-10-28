@@ -1,36 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1128. Number of Equivalent Domino Pairs
- * Difficulty: Easy
- * Tags: array, hash-table, counting
- * URL: https://leetcode.com/problems/number-of-equivalent-domino-pairs/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a list of dominoes, dominoes[i] = [a, b] is equivalent to
- *     dominoes[j] = [c, d] if and only if either (a == c and b == d), or
- *     (a == d and b == c) - that is, one domino can be rotated to be equal
- *     to another domino.
- *     Return the number of pairs (i, j) for which 0 <= i < j <
- *     dominoes.length, and dominoes[i] is equivalent to dominoes[j].
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given a list of dominoes, dominoes[i] = [a, b] is equivalent to
- *     dominoes[j] = [c, d] if and only if either (a == c and b == d), or
- *     (a == d and b == c) - that is, one domino can be rotated to be equal
- *     to another domino.
+ * 【完整中文題意】每張骨牌以 [a,b] 表示。若兩張骨牌的兩個數字相同，且允許把其中一張翻面（[a,b] 與 [b,a] 視為相同），就稱它們等價。請計算所有索引組合 i < j 中，有多少對骨牌彼此等價。
  *
- * Examples:
- *     Input: dominoes = [[1,2],[2,1],[3,4],[5,6]]
- *     Output: 1
- *     Input: dominoes = [[1,2],[1,2],[1,1],[1,2],[2,2]]
- *     Output: 3
+ * 【範例】
+ * 1. dominoes = [[1,2],[2,1],[3,4],[5,6]] → 1
+ * 2. dominoes = [[1,2],[1,2],[1,1],[1,2],[2,2]] → 3
  *
- * Constraints:
- *   - 1 <= dominoes.length <= 4 * 10^4
- *   - dominoes[i].length == 2
- *   - 1 <= dominoes[i][j] <= 9
- * ==========================================================================
+ * 【限制】
+ * - 1 <= dominoes.length <= 4 × 10⁴
+ * - 每張骨牌恰有兩個數字
+ * - 1 <= dominoes[i][j] <= 9
+ *
+ * 【解題步驟】
+ * 1. 把每張骨牌的兩個數字整理成小的在前、大的在後，這樣旋轉前後會得到同一組表示。
+ * 2. 用固定計數表記錄每種表示先前出現幾次。
+ * 3. 遇到新骨牌時，將相同表示先前的數量加到答案，再把該表示的計數加一。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)（固定大小的計數表）
+ *
+ * 【LeetCode C 函式】int numEquivDominoPairs(int** dominoes, int dominoesSize, int* dominoesColSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -204,17 +194,26 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
 int numEquivDominoPairs(int** dominoes, int dominoesSize, int* dominoesColSize) {
-    int cnt[100] = {0}, i, a, b, r = 0;
     (void)dominoesColSize;
-    for (i = 0; i < dominoesSize; ++i) {
-        a = dominoes[i][0]; b = dominoes[i][1];
-        if (a > b) { int t = a; a = b; b = t; }
-        r += cnt[a * 10 + b];
-        ++cnt[a * 10 + b];
+    int count[10][10] = {{0}};
+    int pairs = 0;
+
+    for (int i = 0; i < dominoesSize; ++i) {
+        int a = dominoes[i][0];
+        int b = dominoes[i][1];
+        if (a > b) {
+            int temporary = a;
+            a = b;
+            b = temporary;
+        }
+
+        // 新骨牌會和所有先前相同的骨牌各形成一對。
+        pairs += count[a][b];
+        ++count[a][b];
     }
-    return r;
+
+    return pairs;
 }
 
 /* ---- generated tests ---- */

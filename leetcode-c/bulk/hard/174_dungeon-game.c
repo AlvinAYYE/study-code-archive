@@ -34,24 +34,29 @@
  *     持或增加生命值，且生命值在任何時刻降至 0 或以下就會死亡。請回傳保
  *     證可抵達終點所需的最小初始生命值，起點與終點格也必須計入。
  *
- * [中文] 思路:
- *     從右下角反向動態規劃，以一維 dp 記錄進入各欄後續所需的最低生命；
- *     每格取右與下的較小需求，扣除格子值後至少維持 1。
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入 dungeon = [[-2,-3,3],[-5,-10,1],[10,30,-5]]
+ *     輸出 7。
+ *     說明：以初始生命 7 走「右、右、下、下」即可存活並抵達終點。
+ *   範例 2：輸入 dungeon = [[0]]；輸出 1。
  *
- * Examples:
- *     Input: dungeon = [[-2,-3,3],[-5,-10,1],[10,30,-5]]
- *     Output: 7
- *     Explanation: The initial health of the knight must be at least
- *     7 if he follows the optimal path: RIGHT-> RIGHT -> DOWN ->
- *     DOWN.
- *     Input: dungeon = [[0]]
- *     Output: 1
- *
- * Constraints:
- *   - m == dungeon.length
- *   - n == dungeon[i].length
+ * [中文] 限制：
+ *   - m == dungeon.length，n == dungeon[i].length
  *   - 1 <= m, n <= 200
  *   - -1000 <= dungeon[i][j] <= 1000
+ *
+ * [中文] 直觀解題思路：
+ *   1. 正向走時，某條路需要多少初始生命取決於途中最低生命，不易只靠當前
+ *      最大生命判斷；因此從終點反向計算「進入每格至少需要多少生命」。
+ *   2. dp[j] 在更新前代表下方格的需求，dp[j+1] 代表右方格的需求；選較小者
+ *      就是離開目前格後所需的最小生命。
+ *   3. 進入目前格前的需求為 min(下,右)-dungeon[i][j]；若結果小於 1，
+ *      仍須設為 1，因為生命值任何時刻都必須為正。
+ *   4. 將終點外側的哨兵設成 1，其餘設為 INT_MAX，即可用同一公式處理邊界。
+ *   5. 由右下逐列更新到左上後，dp[0] 就是答案。
+ *
+ * 複雜度：時間 O(mn)，一維 DP 使用 O(n) 額外空間。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -237,10 +242,12 @@ int calculateMinimumHP(int **dungeon, int dungeonSize, int *dungeonColSize)
     for (int i = 0; i <= c_sz; i++)
         dp[i] = INT_MAX;
 
+    /* 終點右側/下側的虛擬入口需求為 1，其餘不可達方向維持 INT_MAX。 */
     dp[c_sz - 1] = 1;
 
     for (int i = r_sz - 1; i >= 0; i--) {
         for (int j = c_sz - 1; j >= 0; j--) {
+            /* 更新前 dp[j] 是下方需求，dp[j+1] 是右方需求。 */
             dp[j] = MAX(1, MIN(dp[j], dp[j + 1]) - dungeon[i][j]);
         }
     }

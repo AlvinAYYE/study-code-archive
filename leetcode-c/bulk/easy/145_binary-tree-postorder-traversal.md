@@ -1,63 +1,40 @@
-# 0145. Binary Tree Postorder Traversal《二元樹的後序走訪》
+# LeetCode 145. Binary Tree Postorder Traversal
 
-- **Difficulty**: Easy
-- **Tags**: stack, tree, depth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/binary-tree-postorder-traversal/
-- **程式碼**: [`145_binary-tree-postorder-traversal.c`](./145_binary-tree-postorder-traversal.c) — 本專案自行撰寫並通過官方示例驗證
+**難度：Easy**
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定二元樹根節點，回傳節點值的後序走訪結果。後序走訪順序為左子樹、右子樹、根節點。樹的節點數介於 0 至 100，節點值介於 -100 至 100。
+給定二元樹的根節點 root，請回傳後序走訪結果。後序走訪的順序是：先走訪左子樹，再走訪右子樹，最後處理目前節點。
 
-**思路**：依左、右、根的順序遞迴 DFS，待兩個子樹都走訪後才將目前節點值寫入輸出。
+## 範例
 
-## Problem Statement (English)
+1. root = [1,null,2,3] → [3,2,1]
+2. root = [1,2,3,4,5,null,8,null,null,6,7,9] → [4,6,7,5,2,9,8,3,1]
+3. root = [] → []
+4. root = [1] → [1]
 
-Given the root of a binary tree, return the postorder traversal of its nodes' values.
-Example 1:
-Example 2:
-Example 3:
-Example 4:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 節點數介於 0 到 100
+- -100 <= Node.val <= 100
 
-```text
-Input: root = [1,null,2,3]
-Output: [3,2,1]
-Explanation:
+## 解題思路
 
-Input: root = [1,2,3,4,5,null,8,null,null,6,7,9]
-Output: [4,6,7,5,2,9,8,3,1]
-Explanation:
+1. 建立一個結果陣列和目前寫入位置。
+2. 遞迴遇到節點時，先走訪左子樹，再走訪右子樹。
+3. 左右子樹處理完後，才把目前節點的值放入結果。
 
-Input: root = []
-Output: []
+## 複雜度
 
-Input: root = [1]
-Output: [1]
-```
+- 時間：O(n)，每個節點走訪一次
+- 空間：O(n) 回傳陣列，另有 O(h) 遞迴堆疊
 
-## 限制 Constraints
+## C 函式簽名
 
-The number of the nodes in the tree is in the range [0, 100].
--100 <= Node.val <= 100
+~~~c
+int* postorderTraversal(struct TreeNode* root, int* returnSize);
+~~~
 
-## 官方 C 函式簽名 Signature
+## 程式如何運作
 
-```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* postorderTraversal(struct TreeNode* root, int* returnSize) {
-    
-}
-```
+提交函式依照上述步驟完成計算；程式註解標出每個關鍵動作。本地測試 harness 保留在 .c 檔尾端。

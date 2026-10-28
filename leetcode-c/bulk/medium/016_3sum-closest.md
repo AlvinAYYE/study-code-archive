@@ -1,47 +1,45 @@
-# 0016. 3Sum Closest《最接近的三數之和》
+# 0016. 3Sum Closest｜最接近的三數之和
 
-- **Difficulty**: Medium
-- **Tags**: array, two-pointers, sorting
-- **題目連結**: https://leetcode.com/problems/3sum-closest/
-- **程式碼**: [`016_3sum-closest.c`](./016_3sum-closest.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、雙指標、排序
+- **題目連結**：[LeetCode 0016](https://leetcode.com/problems/3sum-closest/)
+- **C 程式**：[016_3sum-closest.c](./016_3sum-closest.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定整數陣列 nums 與 target，找出三個元素，使其總和最接近 target，並回傳該總和。每筆輸入保證恰有一個答案。
+給定整數陣列 `nums` 和整數 `target`，從不同索引選三個數，使總和與 `target` 的差距最小，回傳這個總和。題目保證每筆輸入有唯一的最接近答案。
 
-**思路**：程式先排序，逐一固定第一個元素，並以兩個指針在其右側逼近 target。每次計算目前和與 target 的差距，保存絕對值最小的差；若剛好相等則立即回傳。
-
-## Problem Statement (English)
-
-Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
-Return the sum of the three integers.
-You may assume that each input would have exactly one solution.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [-1,2,1,-4], target = 1
-Output: 2
-Explanation: The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
+輸入：nums = [-1,2,1,-4], target = 1
+輸出：2
+說明：-1 + 2 + 1 = 2，和 target 的差距是 1。
 
-Input: nums = [0,0,0], target = 1
-Output: 0
-Explanation: The sum that is closest to the target is 0. (0 + 0 + 0 = 0).
+輸入：nums = [0,0,0], target = 1
+輸出：0
 ```
 
-## 限制 Constraints
+## 限制
 
-3 <= nums.length <= 500
--1000 <= nums[i] <= 1000
--104 <= target <= 104
+- `3 <= nums.length <= 500`。
+- `-1000 <= nums[i] <= 1000`。
+- `-10^4 <= target <= 10^4`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 排序陣列，方便判斷總和太小或太大。
+2. 用 `i` 固定第一個數，再以 `left`、`right` 搜尋另外兩個數。
+3. `sum` 是目前三數總和；若 `|sum - target|` 小於已知差距，就更新 `closest`。
+4. `sum < target` 時增加 `left` 讓總和變大；`sum > target` 時減少 `right` 讓總和變小；相等時已找到最佳答案，可直接回傳。
+
+## 複雜度
+
+- 時間：`O(n^2)`。
+- 額外空間：搜尋使用 `O(1)`；不含排序使用的空間。
+
+## LeetCode C 函式簽名
 
 ```c
-int threeSumClosest(int* nums, int numsSize, int target) {
-    
-}
+int threeSumClosest(int* nums, int numsSize, int target);
 ```

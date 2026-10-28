@@ -1,36 +1,11 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0190. Reverse Bits
- * Difficulty: Easy
- * Tags: divide-and-conquer, bit-manipulation
- * URL: https://leetcode.com/problems/reverse-bits/
- * Source: community solution, repo lennylxx_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Reverse bits of a given 32 bits unsigned integer.
- *     Note:
- *
- * [中文] 題目: 反轉位元
- * [中文] 題目說明:
- *     給定一個 32 位元無號整數，請將它的 32 個二進位位元順序完全反
- *     轉，並回傳結果。題目也詢問在函式需多次呼叫時可如何最佳化。
- *
- * [中文] 思路:
- *     以遮罩分階段交換相鄰的 1、2、4、8 與 16 位元區塊，五輪即可
- *     完成整個 32 位元字的反轉。
- *
- * Examples:
- *     Input: n = 43261596
- *     Output: 964176192
- *     Explanation:
- *     Input: n = 2147483644
- *     Output: 1073741822
- *     Explanation:
- *
- * Constraints:
- *   - 0 <= n <= 231 - 2
- *   - n is even.
- * ==========================================================================
+ * LeetCode 0190. Reverse Bits《反轉位元》
+ * 題意：把 32 位元整數的二進位位元順序反轉，最高位和最低位對調。
+ * 範例：43261596 的 32 位元反轉結果為 964176192；
+ *       2147483644 反轉後為 1073741822。
+ * 限制：0 <= n <= 2^31 - 2，且 n 是偶數；輸入以 32 位元表示。
+ * 解法：重複 32 次：取來源最低位，接到答案右移後空出的最低位，再右移來源。
+ * 複雜度：時間 O(1)，固定處理 32 位；額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -204,64 +179,19 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
+
 #include <stdint.h>
 
-/*
-    https://graphics.stanford.edu/~seander/bithacks.html
-*/
+int reverseBits(int n) {
+    uint32_t remaining = (uint32_t)n;
+    uint32_t reversed = 0;
 
-void print_bits(uint32_t n) {
-    int i = 32;
-    while(i--){
-        if ((n >> i) & 1)
-            printf("1");
-        else
-            printf("0");
+    for (int bit = 0; bit < 32; ++bit) {
+        /* 把來源最低位接到答案末端，再準備讀下一位。 */
+        reversed = (reversed << 1) | (remaining & 1u);
+        remaining >>= 1;
     }
-    printf("\n");
-}
-
-/* 32 steps */
-uint32_t reverseBits_1(uint32_t n) {
-    uint32_t ret = 0;
-    int i = 31;
-    while (i--) { // 31 times
-        ret += n & 0x01;
-        n >>= 1;
-        ret <<= 1;
-    }
-    ret += n & 0x01;
-
-    return ret;
-}
-
-/* 5 steps : 5 * lg(N) operations */
-uint32_t reverseBits_2(uint32_t n) {
-    uint32_t t = n;
-    /* swap odd and even bits  1 bit*/
-    t = ((t & 0xAAAAAAAA) >> 1) | ((t & 0x55555555) << 1);
-    /* 2 bits */
-    t = ((t & 0xCCCCCCCC) >> 2) | ((t & 0x33333333) << 2);
-    /* 4 bits */
-    t = ((t & 0xF0F0F0F0) >> 4) | ((t & 0x0F0F0F0F) << 4);
-    /* 8 bits */
-    t = ((t & 0xFF00FF00) >> 8) | ((t & 0x00FF00FF) << 8);
-    /* 16 bits */
-    t = ((t & 0xFFFF0000) >> 16) | ((t & 0x0000FFFF) << 16);
-    
-    return t;
-}
-
-/* simplification of reverseBits_2 */
-uint32_t reverseBits(uint32_t n) {
-    n = ((n >> 1) & 0x55555555) | ((n & 0x55555555) << 1);
-    n = ((n >> 2) & 0x33333333) | ((n & 0x33333333) << 2);
-    n = ((n >> 4) & 0x0F0F0F0F) | ((n & 0x0F0F0F0F) << 4);
-    n = ((n >> 8) & 0x00FF00FF) | ((n & 0x00FF00FF) << 8);
-    n = ( n >> 16             ) | ( n               << 16);
-    return n;
+    return (int)reversed;
 }
 
 /* ---- generated tests ---- */

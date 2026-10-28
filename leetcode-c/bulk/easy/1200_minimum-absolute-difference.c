@@ -1,35 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1200. Minimum Absolute Difference
- * Difficulty: Easy
- * Tags: array, sorting
- * URL: https://leetcode.com/problems/minimum-absolute-difference/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array of distinct integers arr, find all pairs of elements
- *     with the minimum absolute difference of any two elements.
- *     Return a list of pairs in ascending order(with respect to pairs),
- *     each pair [a, b] follows
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 陣列 of 不重複 integers arr, find all pairs of elements with the
- *     最小 absolute difference of any two elements.
+ * 【完整中文題意】給定整數陣列 arr，請找出所有數值差最小的元素配對。每一對以 [較小值, 較大值] 表示，並依照第一個值由小到大回傳。陣列中可能有重複數字。
  *
- * Examples:
- *     Input: arr = [4,2,1,3]
- *     Output: [[1,2],[2,3],[3,4]]
- *     Explanation: The minimum absolute difference is 1. List all
- *     pairs with difference equal to 1 in ascending order.
- *     Input: arr = [1,3,6,10,15]
- *     Output: [[1,3]]
- *     Input: arr = [3,8,-10,23,19,-4,-14,27]
- *     Output: [[-14,-10],[19,23],[23,27]]
+ * 【範例】
+ * 1. arr = [4,2,1,3] → [[1,2],[2,3],[3,4]]（最小差為 1）
+ * 2. arr = [1,3,6,10,15] → [[1,3]]
+ * 3. arr = [3,8,-10,23,19,-4,-14,27] → [[-14,-10],[19,23],[23,27]]
  *
- * Constraints:
- *   - 2 <= arr.length <= 10^5
- *   - -10^6 <= arr[i] <= 10^6
- * ==========================================================================
+ * 【限制】
+ * - 2 <= arr.length <= 10⁵
+ * - -10⁶ <= arr[i] <= 10⁶
+ *
+ * 【解題步驟】
+ * 1. 先將 arr 由小到大排序。
+ * 2. 排序後，最小差值一定出現在相鄰元素之間；掃描一次找出最小差。
+ * 3. 再掃描一次，將差值等於最小差的相鄰配對依序放入回傳陣列。
+ *
+ * 【複雜度】時間 O(n log n)；空間 O(k + log n)，k 是回傳的配對數（含排序堆疊）
+ *
+ * 【LeetCode C 函式】int** minimumAbsDifference(int* arr, int arrSize, int* returnSize, int** returnColumnSizes)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -203,69 +194,43 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <limits.h>
-#include <stdlib.h>
-
-#define ABS(X) (X < 0) ? -X : X
-
-#define ALLOC_N_PUT(res, length, x, y)                                         \
-  res[length] = malloc(2 * sizeof(int));                                       \
-  res[length][0] = x;                                                          \
-  res[length++][1] = y;
-
-// Compare function for qsort.
-int cmpi(const void *x, const void *y) {
-  int a = *(const int *)x;
-  int b = *(const int *)y;
-
-  return (a > b) - (a < b);
+static int compareForMinimumDifference(const void* left, const void* right) {
+    int a = *(const int*)left;
+    int b = *(const int*)right;
+    return (a > b) - (a < b);
 }
 
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume
- * caller calls free().
- */
-int **minimumAbsDifference(int *arr, int arrSize, int *returnSize,
-                           int **returnColumnSizes) {
-  int min_diff = INT_MAX, size = (arrSize / 10) + 4, length = 0;
-  // Initialize arrays.
-  int **result = malloc(size * sizeof(*result));
-  int *cols = malloc(size * sizeof(*cols));
+int** minimumAbsDifference(int* arr, int arrSize, int* returnSize,
+                           int** returnColumnSizes) {
+    qsort(arr, (size_t)arrSize, sizeof(int), compareForMinimumDifference);
 
-  // Sort, ascending.
-  qsort(arr, arrSize, sizeof(*arr), cmpi);
-
-  // Go through pairs and add those with minimum differences.
-  for (int k = 0; k < arrSize - 1; k++) {
-    int i = arr[k + 1], j = arr[k];
-    int diff = ABS(i - j);
-    if (diff < min_diff) {
-      // Free stuff we've already happened to allocate.
-      for (int t = 0; t < length; t++)
-        free(result[t]);
-      // No need to resize in here, we go to zero again.
-      length = 0;
-      min_diff = diff;
-      *(cols + length) = 2;
-      ALLOC_N_PUT(result, length, j, i);
-    } else if (diff == min_diff) {
-      // Resize if necessary.
-      if (length + 1 >= size) {
-        size *= 1.5;
-        cols = realloc(cols, size * sizeof(*cols));
-        result = realloc(result, size * sizeof(*result));
-      }
-      *(cols + length) = 2;
-      ALLOC_N_PUT(result, length, j, i);
+    int minimum = arr[1] - arr[0];
+    for (int i = 2; i < arrSize; ++i) {
+        int difference = arr[i] - arr[i - 1];
+        if (difference < minimum) minimum = difference;
     }
-  }
-  // They free cols.
-  *returnColumnSizes = cols;
-  *returnSize = length;
-  return result;
+
+    int pairCount = 0;
+    for (int i = 1; i < arrSize; ++i) {
+        if (arr[i] - arr[i - 1] == minimum) ++pairCount;
+    }
+
+    int** answer = (int**)malloc((size_t)pairCount * sizeof(int*));
+    int* columnSizes = (int*)malloc((size_t)pairCount * sizeof(int));
+    int out = 0;
+    for (int i = 1; i < arrSize; ++i) {
+        if (arr[i] - arr[i - 1] == minimum) {
+            answer[out] = (int*)malloc(2 * sizeof(int));
+            answer[out][0] = arr[i - 1];
+            answer[out][1] = arr[i];
+            columnSizes[out] = 2;
+            ++out;
+        }
+    }
+
+    *returnSize = pairCount;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
 
 /* ---- generated tests ---- */

@@ -213,86 +213,28 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-1007. Minimum Domino Rotations For Equal Row
+/* ---- 易讀解法：只檢查第一張多米諾的兩個候選值 ---- */
+static int rotationsToMakeRow(int* tops, int* bottoms, int size, int target) {
+    int rotateTop = 0;
+    int rotateBottom = 0;
+    int i;
 
-In a row of dominoes, A[i] and B[i] represent the top and bottom halves of the i-th domino.  (A domino is a tile with two numbers from 1 to 6 - one on each half of the tile.)
-
-We may rotate the i-th domino, so that A[i] and B[i] swap values.
-
-Return the minimum number of rotations so that all the values in A are the same, or all the values in B are the same.
-
-If it cannot be done, return -1.
-
- 
-
-Example 1:
-
-
-
-Input: A = [2,1,2,4,2,2], B = [5,2,6,2,3,2]
-Output: 2
-Explanation: 
-The first figure represents the dominoes as given by A and B: before we do any rotations.
-If we rotate the second and fourth dominoes, we can make every value in the top row equal to 2, as indicated by the second figure.
-
-
-Example 2:
-
-Input: A = [3,5,1,2,3], B = [3,6,3,3,4]
-Output: -1
-Explanation: 
-In this case, it is not possible to rotate the dominoes to make one row of values equal.
-
-
- 
-
-Note:
-
-
-	1 <= A[i], B[i] <= 6
-	2 <= A.length == B.length <= 20000
-*/
-
-
-int minDominoRotations(int* A, int ASize, int* B, int BSize){
-    bool a_ok, b_ok;
-    int i, a_up, a_down, b_down, b_up;
-    
-    a_ok = b_ok = true;
-    a_up = a_down = b_down = b_up = 0;
-    
-    for (i = 0; i < ASize; i ++) {
-        if (a_ok && A[i] != A[0] && B[i] != A[0]) a_ok = false;
-        if (b_ok && B[i] != B[0] && A[i] != B[0]) b_ok = false;
-        
-        if (!a_ok && !b_ok) return -1;
-        
-        if (a_ok) {
-            if (A[i] != A[0]) a_up ++;          // flip up to make all are A[0] on top
-            else if (B[i] != A[0]) a_down ++;   // flip down to make all are A[0] in bottom
-        }
-        if (b_ok) {
-            if (B[i] != B[0]) b_down ++;
-            else if (A[i] != B[0]) b_up ++;
-        }
+    for (i = 0; i < size; ++i) {
+        if (tops[i] != target && bottoms[i] != target) return -1;
+        if (tops[i] != target) ++rotateTop;
+        if (bottoms[i] != target) ++rotateBottom;
     }
-    
-    if (a_ok) return a_up < a_down ? a_up : a_down;
-    
-    if (b_ok) return b_up < b_down ? b_up : b_down;
-    
-    return -1;
+    return rotateTop < rotateBottom ? rotateTop : rotateBottom;
 }
 
+int minDominoRotations(int* tops, int topsSize, int* bottoms, int bottomsSize) {
+    int rotations;
+    (void)bottomsSize;
 
-/*
-Difficulty:Medium
-
-
-*/
+    rotations = rotationsToMakeRow(tops, bottoms, topsSize, tops[0]);
+    if (rotations != -1) return rotations;
+    return rotationsToMakeRow(tops, bottoms, topsSize, bottoms[0]);
+}
 
 /* ---- generated tests ---- */
 int main(void){

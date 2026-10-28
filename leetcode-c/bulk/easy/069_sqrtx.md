@@ -1,44 +1,39 @@
 # 0069. Sqrt(x)《x 的平方根》
 
-- **Difficulty**: Easy
-- **Tags**: math, binary-search
-- **題目連結**: https://leetcode.com/problems/sqrtx/
-- **程式碼**: [`069_sqrtx.c`](./069_sqrtx.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：數學、二分搜尋
+- **題目連結**：https://leetcode.com/problems/sqrtx/
 
-## 題目說明（中文）
+## 題目說明
 
-給定非負整數 x，回傳其平方根向下取整後的非負整數。不得使用任何內建次方函式或運算子。
+給定一個非負整數 `x`，請回傳 `√x` 向下取整後的整數。例如 `√8 ≈ 2.828`，向下取整結果為 `2`。不可使用內建的次方函式或次方運算子。
 
-**思路**：在 1 到安全上界之間進行二分搜尋，以 mid × mid 與 x 比較來調整範圍。未命中時，最終的右界就是平方根向下取整的值。
-
-## Problem Statement (English)
-
-Given a non-negative integer x, return the square root of x rounded down to the nearest integer. The returned integer should be non-negative as well.
-You must not use any built-in exponent function or operator.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: x = 4
-Output: 2
-Explanation: The square root of 4 is 2, so we return 2.
+輸入：x = 4
+輸出：2
+說明：√4 = 2。
 
-Input: x = 8
-Output: 2
-Explanation: The square root of 8 is 2.82842..., and since we round it down to the nearest integer, 2 is returned.
+輸入：x = 8
+輸出：2
+說明：√8 約為 2.828，向下取整後是 2。
 ```
 
-## 限制 Constraints
+## 限制
 
-0 <= x <= 231 - 1
+- `0 <= x <= 2^31 - 1`
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 要找的是最大的整數 `k`，使得 `k * k <= x`。
+2. 用二分搜尋猜測 `mid`。若 `mid <= x / mid`，表示 `mid` 的平方不大於 `x`，記下它並往右找更大的答案；否則往左找較小的值。
+3. 搜尋區間縮到空時，記錄下來的最大可行值就是平方根向下取整的結果。使用除法比較可避免 `mid * mid` 超出整數範圍。
+
+**複雜度**：時間 `O(log x)`，額外空間 `O(1)`。
+
+## C 函式簽名
 
 ```c
-int mySqrt(int x) {
-    
-}
+int mySqrt(int x);
 ```

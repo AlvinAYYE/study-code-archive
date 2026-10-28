@@ -239,48 +239,22 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-80. Remove Duplicates from Sorted Array II
-
-Follow up for "Remove Duplicates":
-What if duplicates are allowed at most twice?
-
-
-For example,
-Given sorted array nums = [1,1,1,2,2,3],
-
-
-Your function should return length = 5, with the first five elements of nums being 1, 1, 2, 2 and 3. It doesn't matter what you leave beyond the new length.
-*/
-
+/* ---- 易讀解法：寫入位置之前的兩格決定能否保留 ---- */
 int removeDuplicates(int* nums, int numsSize) {
-    int i, j;
-    
-    if (numsSize < 3) return numsSize;
-    
-    for (i = 2, j = 2; j < numsSize; j ++) {
-        if (nums[j] != nums[i - 2]) {
-            nums[i] = nums[j];
-            i ++;
+    int write;
+    int read;
+
+    if (numsSize <= 2) return numsSize;
+
+    write = 2;
+    for (read = 2; read < numsSize; ++read) {
+        if (nums[read] != nums[write - 2]) {
+            nums[write] = nums[read];
+            ++write;
         }
     }
-    
-    return i;
+    return write;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:122.8K
-Total Submissions:341.5K
-
-
-Companies Facebook
-Related Topics Array Two Pointers
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

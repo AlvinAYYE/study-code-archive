@@ -1,59 +1,40 @@
-# 0228. Summary Ranges《彙總區間》
+# LeetCode 228. Summary Ranges
 
-- **Difficulty**: Easy
-- **Tags**: array
-- **題目連結**: https://leetcode.com/problems/summary-ranges/
-- **程式碼**: [`228_summary-ranges.c`](./228_summary-ranges.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：Easy**
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定已遞增排序且元素互異的整數陣列 nums，回傳最小的區間列表以剛好涵蓋所有元素。單一數字輸出為數字字串，連續區間則輸出為 "起點->終點"，不可涵蓋陣列中不存在的數字。
+給定已依遞增排序且沒有重複值的整數陣列 nums。請將連續整數合併成範圍字串：若某段只有一個數字，輸出該數字；若包含多個連續數字，輸出「起點->終點」。依原本數字順序回傳所有範圍。
 
-**思路**：每次從目前開頭向後找出最長的連續遞增段，格式化成一個區間字串。接著對剩餘後綴遞迴重複處理。
+## 範例
 
-## Problem Statement (English)
+1. nums = [0,1,2,4,5,7] → ["0->2","4->5","7"]
+2. nums = [0,2,3,4,6,8,9] → ["0","2->4","6","8->9"]
 
-You are given a sorted unique integer array nums.
-A range [a,b] is the set of all integers from a to b (inclusive).
-Return the smallest sorted list of ranges that cover all the numbers in the array exactly. That is, each element of nums is covered by exactly one of the ranges, and there is no integer x such that x is in one of the ranges but not in nums.
-Each range [a,b] in the list should be output as:
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 0 <= nums.length <= 20
+- -2³¹ <= nums[i] <= 2³¹ - 1
+- nums 中的值互不相同，且已遞增排序
 
-```text
-Input: nums = [0,1,2,4,5,7]
-Output: ["0->2","4->5","7"]
-Explanation: The ranges are:
-[0,2] --> "0->2"
-[4,5] --> "4->5"
-[7,7] --> "7"
+## 解題思路
 
-Input: nums = [0,2,3,4,6,8,9]
-Output: ["0","2->4","6","8->9"]
-Explanation: The ranges are:
-[0,0] --> "0"
-[2,4] --> "2->4"
-[6,6] --> "6"
-[8,9] --> "8->9"
-```
+1. 從目前尚未處理的位置開始，把它當作一段範圍的起點。
+2. 往後延伸，只要下一個數恰好比目前數大 1，就繼續延伸終點。
+3. 若起點等於終點，只把起點轉成字串；否則格式化成 起點->終點。
+4. 將字串加入答案，再從下一個尚未處理的數字繼續。
 
-## 限制 Constraints
+## 複雜度
 
-0 <= nums.length <= 20
--231 <= nums[i] <= 231 - 1
-All the values of nums are unique.
-nums is sorted in ascending order.
+- 時間：O(n + 輸出字元總數)
+- 空間：O(n + 輸出字元總數)
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-char** summaryRanges(int* nums, int numsSize, int* returnSize) {
-    
-}
-```
+~~~c
+char** summaryRanges(int* nums, int numsSize, int* returnSize);
+~~~
+
+## 程式如何運作
+
+提交函式依照上述步驟完成計算；程式註解標出每個關鍵動作。本地測試 harness 保留在 .c 檔尾端。

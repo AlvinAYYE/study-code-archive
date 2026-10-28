@@ -1,45 +1,74 @@
-# 0409. Longest Palindrome《最長迴文串》
+# 409 Longest Palindrome：最長回文
 
-- **Difficulty**: Easy
-- **Tags**: hash-table, string, greedy
-- **題目連結**: https://leetcode.com/problems/longest-palindrome/
-- **程式碼**: [`409_longest-palindrome.c`](./409_longest-palindrome.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定只含英文大小寫字母的字串 s，求能以其中字元重新排列出的最長迴文串長度。字母大小寫有別，例如 "A" 與 "a" 不視為相同字元。
+給定只含大小寫英文字母的字串 s，使用其中的字母可以組成的最長回文，最多能有多長？大小寫視為不同字母，例如 A 與 a 不能互相配對。只需回傳最長回文的長度，不必建立回文字串。
 
-**思路**：以 52 格計數陣列統計每種大小寫字母出現次數。每種字元可貢獻最大的偶數數量，若存在任一奇數次字元，額外放一個到迴文中心。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given a string s which consists of lowercase or uppercase letters, return the length of the longest palindrome that can be built with those letters.
-Letters are case sensitive, for example, "Aa" is not considered a palindrome.
-Example 1:
-Example 2:
-Constraints:
+- 輸入：s = "abccccdd"
+- 輸出：7
+- 說明：可組成 "dccaccd"，長度為 7。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: s = "abccccdd"
-Output: 7
-Explanation: One longest palindrome that can be built is "dccaccd", whose length is 7.
+- 輸入：s = "a"
+- 輸出：1
+- 說明：唯一的字母 a 可放在回文中央，長度為 1。
 
-Input: s = "a"
-Output: 1
-Explanation: The longest palindrome that can be built is "a", whose length is 1.
-```
+## 限制
 
-## 限制 Constraints
+- 1 <= s.length <= 2000
+- s 只含大小寫英文字母
 
-1 <= s.length <= 2000
-s consists of lowercase and/or uppercase English letters only.
+## 解題思路
 
-## 官方 C 函式簽名 Signature
+1. 分別統計 26 個小寫字母與 26 個大寫字母的次數。
+2. 每種字母可放入左右兩側的數量是其出現次數向下取偶數，例如 5 個可用 4 個。
+3. 若有任一字母出現奇數次，可從其中一種字母取 1 個放在回文中央。
 
-```c
+## 複雜度
+
+- 時間：O(n + 52)，掃描字串並檢查固定 52 種字母。
+- 空間：O(1)，只使用 52 個計數欄位。
+
+## C 函式簽名
+
+~~~c
+int longestPalindrome(char* s);
+~~~
+
+## 程式如何運作
+
+~~~c
 int longestPalindrome(char* s) {
-    
+    int frequency[52] = {0};
+    int length = 0;
+    bool hasMiddle = false;
+    int i;
+
+    for (i = 0; s[i] != '\0'; ++i) {
+        int letter;
+
+        if (s[i] >= 'a') {
+            letter = s[i] - 'a';
+        } else {
+            letter = s[i] - 'A' + 26;
+        }
+        ++frequency[letter];
+    }
+
+    for (i = 0; i < 52; ++i) {
+        length += (frequency[i] / 2) * 2;
+        if (frequency[i] % 2 == 1) {
+            hasMiddle = true;
+        }
+    }
+
+    return length + (hasMiddle ? 1 : 0);
 }
-```
+~~~

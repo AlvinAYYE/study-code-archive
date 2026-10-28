@@ -1,48 +1,44 @@
 # 0136. Single Number《只出現一次的數字》
 
-- **Difficulty**: Easy
-- **Tags**: array, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/single-number/
-- **程式碼**: [`136_single-number.c`](./136_single-number.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/single-number/
 
-## 題目說明（中文）
+## 題目翻譯
 
-給定非空整數陣列 nums，除了某一個元素只出現一次外，其餘每個元素都恰好出現兩次。請找出並回傳該唯一元素。解法必須為線性時間且只使用常數額外空間。nums 長度介於 1 至 3×10^4，元素值介於 -3×10^4 至 3×10^4。
+給定非空整數陣列 nums。每個數字都出現兩次，只有一個數字出現一次，請找出它。要求時間複雜度為線性，並且只使用常數額外空間。
 
-**思路**：將所有元素逐一做 XOR；成對元素會互相消去，最後保留只出現一次的數字。
+## 範例
 
-## Problem Statement (English)
+~~~text
+輸入：nums = [2,2,1]
+輸出：1
 
-Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
-You must implement a solution with a linear runtime complexity and use only constant extra space.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+輸入：nums = [4,1,2,1,2]
+輸出：4
 
-## 範例 Examples
+輸入：nums = [1]
+輸出：1
+~~~
 
-```text
-Input: nums = [2,2,1]
-Output: 1
+## 限制
 
-Input: nums = [4,1,2,1,2]
-Output: 4
+- 1 <= nums.length <= 3 * 10^4
+- -3 * 10^4 <= nums[i] <= 3 * 10^4
+- 除一個數字只出現一次外，其餘數字都恰好出現兩次。
 
-Input: nums = [1]
-Output: 1
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 從答案 0 開始，依序把每個數字和答案做 XOR。
+2. 相同數字 XOR 會變成 0，因此成對的數字會互相抵銷。
+3. 最後只剩下那個沒有配對的數字。
 
-1 <= nums.length <= 3 * 104
--3 * 104 <= nums[i] <= 3 * 104
-Each element in the array appears twice except for one element which appears only once.
+## 複雜度
 
-## 官方 C 函式簽名 Signature
+- 時間：O(n)，掃描陣列一次。
+- 空間：O(1)，只使用一個整數。
 
-```c
-int singleNumber(int* nums, int numsSize) {
-    
-}
-```
+## C 函式簽名
+
+~~~c
+int singleNumber(int* nums, int numsSize);
+~~~

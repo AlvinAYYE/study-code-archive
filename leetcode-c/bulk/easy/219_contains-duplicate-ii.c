@@ -1,39 +1,28 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0219. Contains Duplicate II
- * Difficulty: Easy
- * Tags: array, hash-table, sliding-window
- * URL: https://leetcode.com/problems/contains-duplicate-ii/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array nums and an integer k, return true if there
- *     are two distinct indices i and j in the array such that nums[i] ==
- *     nums[j] and abs(i - j) <= k.
+ * LeetCode 219. Contains Duplicate II
+ * 難度：Easy
  *
- * [中文] 題目: 存在重複元素 II
- * [中文] 題目說明:
- *     給定整數陣列 nums 與 k，判斷是否存在兩個不同索引 i、j，使
- *      nums[i] 等於 nums[j]。兩索引的絕對差必須不大於 k
- *     。
+ * 【完整中文題意】給定整數陣列 nums 和整數 k。判斷是否存在兩個不同索引 i、j，使 nums[i] == nums[j]，而且兩個索引距離 |i - j| 不超過 k。
  *
- * [中文] 思路:
- *     將每個值與原索引組成配對後，依值、索引排序。相同值會相鄰，比較相鄰配
- *     對的索引差是否不超過 k。
+ * 【範例】
+ * 1. nums = [1,2,3,1], k = 3 → true
+ * 2. nums = [1,0,1,1], k = 1 → true
+ * 3. nums = [1,2,3,1,2,3], k = 2 → false
  *
- * Examples:
- *     Input: nums = [1,2,3,1], k = 3
- *     Output: true
- *     Input: nums = [1,0,1,1], k = 1
- *     Output: true
- *     Input: nums = [1,2,3,1,2,3], k = 2
- *     Output: false
+ * 【限制】
+ * - 1 <= nums.length <= 10⁵
+ * - -10⁹ <= nums[i] <= 10⁹
+ * - 0 <= k <= 10⁵
  *
- * Constraints:
- *   - 1 <= nums.length <= 10^5
- *   - -10^9 <= nums[i] <= 10^9
- *   - 0 <= k <= 10^5
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 建立由 (數值, 原索引) 組成的副本，不修改輸入陣列。
+ * 2. 先依數值排序；數值相同時，再依原索引排序。
+ * 3. 檢查相鄰的相同數值配對；因索引已由小到大，相鄰配對中若有距離不超過 k 的，就回傳 true。
+ * 4. 若所有配對距離都太遠，回傳 false。
+ *
+ * 【複雜度】時間 O(n log n)；空間 O(n)（索引副本與排序堆疊）
+ *
+ * 【LeetCode C 函式】bool containsNearbyDuplicate(int* nums, int numsSize, int k)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,62 +196,37 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-219. Contains Duplicate II
-
-Given an array of integers and an integer k, find out whether there are two distinct indices i and j in the array such that nums[i] = nums[j] and the absolute difference between i and j is at most k.
-*/
-
 typedef struct {
-    int val;
-    int idx;
-} e_t;
-int cmp(void const *a, void const *b) {
-    return ((const e_t *)a)->val < ((const e_t *)b)->val ? -1 :
-           ((const e_t *)a)->val > ((const e_t *)b)->val ?  1 :
-           ((const e_t *)a)->idx < ((const e_t *)b)->idx ? -1 : 1;
+    int value;
+    int index;
+} Entry219;
+
+static int compareEntries219(const void* left, const void* right) {
+    const Entry219* a = (const Entry219*)left;
+    const Entry219* b = (const Entry219*)right;
+    if (a->value != b->value) return (a->value > b->value) - (a->value < b->value);
+    return (a->index > b->index) - (a->index < b->index);
 }
+
 bool containsNearbyDuplicate(int* nums, int numsSize, int k) {
-    e_t *p;
-    int i, f;
-    
-    p = malloc(numsSize * sizeof(e_t));
-    //assert(p);
-    for (i = 0; i < numsSize; i ++) {
-        p[i].val = nums[i];
-        p[i].idx = i;
+    Entry219* entries = (Entry219*)malloc((size_t)numsSize * sizeof(Entry219));
+    for (int i = 0; i < numsSize; ++i) {
+        entries[i].value = nums[i];
+        entries[i].index = i;
     }
-    
-    qsort(p, numsSize, sizeof(e_t), cmp);
-    
-    f = 0;
-    for (i = 1; !f && i < numsSize; i ++) {
-        if (p[i].val == p[i - 1].val &&
-            p[i].idx - p[i - 1].idx <= k) f = 1;
+    qsort(entries, (size_t)numsSize, sizeof(Entry219), compareEntries219);
+
+    for (int i = 1; i < numsSize; ++i) {
+        if (entries[i].value == entries[i - 1].value &&
+            entries[i].index - entries[i - 1].index <= k) {
+            free(entries);
+            return true;
+        }
     }
-    
-    free(p);
-    
-    return f;
+
+    free(entries);
+    return false;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:116.5K
-Total Submissions:360K
-
-
-Companies Palantir Airbnb
-Related Topics Array Hash Table
-Similar Questions 
-                
-                  
-                    Contains Duplicate
-                  
-                    Contains Duplicate III
-*/
 
 /* ---- generated tests ---- */
 int main(void){

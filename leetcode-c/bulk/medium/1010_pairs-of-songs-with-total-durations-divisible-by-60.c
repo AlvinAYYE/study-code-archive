@@ -206,32 +206,20 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-int numPairsDivisibleBy60(int* time, int timeSize)
-{
-	int set[60] = {0};
-	int ret = 0;
+/* ---- 易讀解法：用餘數計數累加每首歌的新配對 ---- */
+int numPairsDivisibleBy60(int* time, int timeSize) {
+    int remainderCount[60] = {0};
+    int pairs = 0;
+    int i;
 
-	for (int i = 0; i < timeSize; i++)
-	{
-		int tmp = time[i] % 60;
-		set[tmp] ++;
-	}
-
-	for (int x = 1; x <= 29; x++)
-	{
-		int idx1 = x;
-		int idx2 = 60-x;
-		ret += set[idx1] * set[idx2];
-	}
-	// 0 and 30 case
-	ret += (set[0]*(set[0]-1)) / 2;
-	ret += (set[30]*(set[30]-1)) / 2;
-	return ret;
+    for (i = 0; i < timeSize; ++i) {
+        int remainder = time[i] % 60;
+        int needed = (60 - remainder) % 60;
+        pairs += remainderCount[needed];
+        ++remainderCount[remainder];
+    }
+    return pairs;
 }
-
-
 
 /* ---- generated tests ---- */
 int main(void){

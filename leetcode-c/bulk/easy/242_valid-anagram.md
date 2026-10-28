@@ -1,43 +1,39 @@
-# 0242. Valid Anagram《有效的字母異位詞》
+# LeetCode 242. Valid Anagram
 
-- **Difficulty**: Easy
-- **Tags**: hash-table, string, sorting
-- **題目連結**: https://leetcode.com/problems/valid-anagram/
-- **程式碼**: [`242_valid-anagram.c`](./242_valid-anagram.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：Easy**
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定字串 s 與 t，判斷 t 是否為由 s 的字元重新排列而成的字母異位詞。輸入只含小寫英文字母，若字元及各自出現次數完全相同即回傳 true。
+給定兩個只含小寫英文字母的字串 s、t。若 t 可以重新排列字母後恰好變成 s，兩字串就是字母異位詞；請判斷是否成立。
 
-**思路**：分別以兩個長度 26 的計數陣列統計 s、t 中每個字母出現次數。先確認兩字串等長，再逐項比較計數。
+## 範例
 
-## Problem Statement (English)
+1. s = "anagram", t = "nagaram" → true
+2. s = "rat", t = "car" → false
 
-Given two strings s and t, return true if t is an anagram of s, and false otherwise.
-Example 1:
-Example 2:
-Constraints:
-Follow up: What if the inputs contain Unicode characters? How would you adapt your solution to such a case?
+## 限制
 
-## 範例 Examples
+- 1 <= s.length, t.length <= 5 × 10⁴
+- s 與 t 只含小寫英文字母
 
-```text
-Input: s = "anagram", t = "nagaram"
-Output: true
+## 解題思路
 
-Input: s = "rat", t = "car"
-Output: false
-```
+1. 若兩字串長度不同，字母數量不可能完全相同，回傳 false。
+2. 用 26 格計數表統計 s 中各字母出現次數。
+3. 掃描 t 時對應計數減一；若某格變成負數，代表 t 使用了過多該字母。
+4. 全部處理完若計數表每格都是 0，兩字串互為異位詞。
 
-## 限制 Constraints
+## 複雜度
 
-1 <= s.length, t.length <= 5 * 104
-s and t consist of lowercase English letters.
+- 時間：O(|s| + |t|)
+- 空間：O(1)，固定 26 個計數器
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-bool isAnagram(char* s, char* t) {
-    
-}
-```
+~~~c
+bool isAnagram(char* s, char* t);
+~~~
+
+## 程式如何運作
+
+提交函式依照上述步驟完成計算；程式註解標出每個關鍵動作。本地測試 harness 保留在 .c 檔尾端。

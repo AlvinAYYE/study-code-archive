@@ -14,26 +14,21 @@
  *     Return the max sliding window.
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     給定陣列與窗口大小 k，回傳窗口從左滑到右每個位置的最大值。
+ *     給定整數陣列 nums，以及一個大小為 k、起初位於陣列最左端的滑動
+ *     視窗。每次將視窗向右移動一格，期間只能看到視窗內的 k 個數字。
+ *     請回傳視窗位於每個位置時的最大值。
  *
- * Examples:
- *   Example 1:
- *     Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
- *     Output: [3,3,5,5,6,7]
- *     Explanation:
- *     Window position Max
- *     --------------- -----
- *     [1 3 -1] -3 5 3 6 7 3
- *     1 [3 -1 -3] 5 3 6 7 3
- *     1 3 [-1 -3 5] 3 6 7 5
- *     1 3 -1 [-3 5 3] 6 7 5
- *     1 3 -1 -3 [5 3 6] 7 6
- *     1 3 -1 -3 5 [3 6 7] 7
- *   Example 2:
- *     Input: nums = [1], k = 1
- *     Output: [1]
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：nums = [1,3,-1,-3,5,3,6,7], k = 3
+ *     輸出：[3,3,5,5,6,7]
+ *     說明：六個視窗依序為 [1,3,-1]、[3,-1,-3]、[-1,-3,5]、
+ *           [-3,5,3]、[5,3,6]、[3,6,7]，最大值如輸出所示。
+ *   範例 2：
+ *     輸入：nums = [1], k = 1
+ *     輸出：[1]
  *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= nums.length <= 10^5
  *   - -10^4 <= nums[i] <= 10^4
  *   - 1 <= k <= nums.length
@@ -43,7 +38,15 @@
  *   }
  *
  * [EN] Approach: Monotonic decreasing deque of indices: drop out-of-window and dominated entries from the back/front; front is the max. Time O(n).
- * [中文] 思路: 單調遞減雙端隊列存下標：過舊的與比新元素小的直接丟掉，隊首即視窗最大值。時間 O(n)。
+ * [中文] 直觀解題思路：
+ *   1. 雙端佇列 dq 存「下標」，並讓對應數值由隊首到隊尾維持非遞增；
+ *      因此隊首永遠是目前視窗最大值的下標。
+ *   2. 處理 nums[i] 前，若隊首下標 <= i-k，表示它已離開視窗，將它移除。
+ *   3. 從隊尾移除所有小於或等於 nums[i] 的元素。新元素更大、離開視窗
+ *      的時間也更晚，這些舊元素不可能再成為任何後續視窗的最大值。
+ *   4. 將 i 加入隊尾；當第一個完整視窗形成後，把隊首數值寫入答案。
+ *
+ * 複雜度：每個下標最多進出佇列各一次，時間 O(n)，額外空間 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -54,12 +57,13 @@ int *maxSlidingWindow(int *nums, int numsSize, int k, int *returnSize) {
     int *out, *dq, head = 0, tail = 0, i;
     *returnSize = numsSize - k + 1;
     out = (int *)malloc((size_t)*returnSize * sizeof(int));
-    dq  = (int *)malloc((size_t)numsSize * sizeof(int));   /* stores indices */
+    dq  = (int *)malloc((size_t)numsSize * sizeof(int));   /* 存下標而非數值 */
     for (i = 0; i < numsSize; ++i) {
-        if (head < tail && dq[head] <= i - k) head++;               /* drop expired */
-        while (head < tail && nums[dq[tail - 1]] <= nums[i]) tail--; /* drop dominated */
+        if (head < tail && dq[head] <= i - k) head++;               /* 移除過期下標 */
+        /* 較小或相等的舊值已不可能成為之後的最大值。 */
+        while (head < tail && nums[dq[tail - 1]] <= nums[i]) tail--;
         dq[tail++] = i;
-        if (i >= k - 1) out[i - k + 1] = nums[dq[head]];             /* front = max */
+        if (i >= k - 1) out[i - k + 1] = nums[dq[head]];             /* 隊首即最大值 */
     }
     free(dq);
     return out;

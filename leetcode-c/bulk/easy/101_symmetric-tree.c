@@ -236,41 +236,17 @@ Bonus points if you could solve it both recursively and iteratively.
  * Definition for a binary tree node.
  * 
  */
-#define PUSH(N) do { p[n ++] = N; } while (0)
- 
+/* 比較兩個位置是否互為鏡像：左對右、右對左。 */
+static bool isMirror101(struct TreeNode *left, struct TreeNode *right) {
+    if (!left || !right) return left == right;
+    if (left->val != right->val) return false;
+    return isMirror101(left->left, right->right) &&
+           isMirror101(left->right, right->left);
+}
+
 bool isSymmetric(struct TreeNode* root) {
-    struct TreeNode **p, **tmp;
-    int dep, n, i, j, k;
-    
-    if (!root) return true;
-    
-    dep = 0; n = 0;
-    p = malloc((1 << dep) * sizeof(struct TreeNode *));
-    //assert(p);
-    PUSH(root);
-    while (n) {
-        for (i = 0, j = n - 1; i < j; i ++, j --) {
-            if ((!p[i] && p[j]) ||
-                (!p[j] && p[i]) ||
-                ( p[i] && p[i]->val != p[j]->val)) {
-                free(p);
-                return false;
-            }
-        }
-        tmp = p; k = n;
-        dep ++; n = 0;
-        p = malloc((1 << dep) * sizeof(struct TreeNode *));
-        //assert(p);
-        for (i = 0; i < k; i ++) {
-            if (tmp[i]) {
-                PUSH(tmp[i]->left);
-                PUSH(tmp[i]->right);
-            }
-        }
-        free(tmp);
-    }
-    free(p);
-    return true;
+    /* 根節點的左右子樹若互為鏡像，整棵樹便對稱。 */
+    return !root || isMirror101(root->left, root->right);
 }
 
 

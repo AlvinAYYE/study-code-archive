@@ -209,112 +209,63 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-166. Fraction to Recurring Decimal
-
-Given two integers representing the numerator and denominator of a fraction, return the fraction in string format.
-
-If the fractional part is repeating, enclose the repeating part in parentheses.
-
-For example,
-
-Given numerator = 1, denominator = 2, return "0.5".
-Given numerator = 2, denominator = 1, return "2".
-Given numerator = 2, denominator = 3, return "0.(6)".
-
-
-
-Credits:Special thanks to @Shangrila for adding this problem and creating all test cases.
-*/
-
-char* fractionToDecimal(int numerator, int denominator) {
-    char *p;
-    int psz, n, *dec, dsz, x;
-    long long num, den, k, f;
-    int i, repeat_at;
-    int neg = 0;
-    
-    psz = dsz = 100; n = x = 0;
-    p = malloc(psz * sizeof(char));
-    //assert(p);
-    
-    neg = ((numerator > 0 && denominator < 0) ||
-           (numerator < 0 && denominator > 0)) ? 1 : 0;
-    num = numerator;
-    den = denominator;
-    num = (num < 0) ? -num : num;
-    den = (den < 0) ? -den : den;
-    
-    k = num / den;
-    f = num % den;
-    
-    if (neg && (k || f)) p[n ++] = '-';
-    
-    n += sprintf(&p[n], "%lld", k);
-    if (!f) {
-        p[n] = 0;
-        return p;
-    }
-    
-    p[n ++] = '.';
-    
-    dec = malloc(dsz * sizeof(int));
-    //assert(dec);
-    
-    repeat_at = -1;
-    if (f < 0) f = -f;
-    while (f) {
-        for (i = 0; i < x; i += 2) {
-            if (dec[i] == f) {
-                repeat_at = i;
-                goto done;
-            }
-        }
-        if (x + 1 >= dsz) {
-            dsz *= 2;
-            dec = realloc(dec, dsz * sizeof(int));
-            //assert(dec);
-        }
-        dec[x ++] = f;
-        f *= 10;
-        k = f / den;
-        dec[x ++] = k;
-        f = f % den;
-    }
-    
-done:
-    for (i = 0; i < x; i += 2) {
-        if (n + 3 > psz) {
-            psz *= 2;
-            p = realloc(p, psz * sizeof(char));
-            //assert(p);
-        }
-        if (repeat_at == i) {
-            p[n ++] = '(';
-        }
-        p[n ++] = '0' + dec[i + 1];
-    }
-    if (repeat_at != -1) p[n ++] = ')';
-    p[n ++] = 0;
-    
-    free(dec);
-    
-    return p;
+/* ---- 易讀解法：用餘數首次出現的位置辨識循環區段 ---- */
+static int remainderHash(long long remainder) {
+    return (int)(((unsigned long long)remainder * 11400714819323198485ull) & 32767ull);
 }
 
+char* fractionToDecimal(int numerator, int denominator) {
+    enum { TABLE_SIZE = 32768, RESULT_CAPACITY = 10005 };
+    long long numeratorMagnitude = numerator < 0 ? -(long long)numerator : numerator;
+    long long denominatorMagnitude = denominator < 0 ? -(long long)denominator : denominator;
+    long long remainder;
+    long long *seenRemainders = (long long*)calloc(TABLE_SIZE, sizeof(long long));
+    int *firstPositions = (int*)malloc(TABLE_SIZE * sizeof(int));
+    unsigned char *used = (unsigned char*)calloc(TABLE_SIZE, sizeof(unsigned char));
+    char *result = (char*)malloc(RESULT_CAPACITY);
+    int position = 0;
+    long long integerPart;
 
-/*
-Difficulty:Medium
-Total Accepted:53.4K
-Total Submissions:305.5K
+    if (numerator != 0 && ((numerator < 0) != (denominator < 0))) {
+        result[position++] = '-';
+    }
 
+    integerPart = numeratorMagnitude / denominatorMagnitude;
+    position += sprintf(result + position, "%lld", integerPart);
+    remainder = numeratorMagnitude % denominatorMagnitude;
 
-Companies Google
-Related Topics Hash Table Math
+    if (remainder != 0) {
+        result[position++] = '.';
+        while (remainder != 0) {
+            int slot = remainderHash(remainder);
+            while (used[slot] && seenRemainders[slot] != remainder) {
+                slot = (slot + 1) & (TABLE_SIZE - 1);
+            }
+            if (used[slot]) {
+                int repeatStart = firstPositions[slot];
+                memmove(result + repeatStart + 1, result + repeatStart,
+                        (size_t)(position - repeatStart));
+                result[repeatStart] = '(';
+                position++;
+                result[position++] = ')';
+                break;
+            }
 
-*/
+            used[slot] = 1;
+            seenRemainders[slot] = remainder;
+            firstPositions[slot] = position;
+            remainder *= 10;
+            result[position++] = (char)('0' + remainder / denominatorMagnitude);
+            remainder %= denominatorMagnitude;
+        }
+    }
+
+    result[position] = '\0';
+    free(seenRemainders);
+    free(firstPositions);
+    free(used);
+    return result;
+}
 
 /* ---- generated tests ---- */
 int main(void){

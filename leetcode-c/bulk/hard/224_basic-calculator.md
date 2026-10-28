@@ -1,52 +1,49 @@
-# 0224. Basic Calculator《基本計算機》
+# 0224. 基本計算器（Basic Calculator）
 
-- **Difficulty**: Hard
-- **Tags**: math, string, stack, recursion
-- **題目連結**: https://leetcode.com/problems/basic-calculator/
-- **程式碼**: [`224_basic-calculator.c`](./224_basic-calculator.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Hard
+- **標籤**：數學、字串、堆疊、遞迴
+- **題目連結**：[LeetCode 224](https://leetcode.com/problems/basic-calculator/)
+- **解答檔案**：[224_basic-calculator.c](./224_basic-calculator.c)
 
-## 題目說明（中文）
+## 題目完整翻譯
 
-給定合法運算式字串 s，計算只含整數、加減、括號與空白的結果。不可使用 eval 等內建字串運算功能；加號不可作一元運算，減號可以，結果保證在 32 位元有號整數範圍內。
+給定一個合法的算式字串 `s`，請計算它的值並回傳。算式包含整數、加號 `+`、減號 `-`、左括號、右括號和空格；不能使用 `eval()` 等直接執行字串算式的函式。
 
-**思路**：剖析字串後分別以動態堆疊保存運算元與運算子，並依優先序在適當時機歸約。左括號直接入堆疊，右括號會結算至對應左括號為止。
+加號不會當作一元運算子；減號可以是一元負號，例如 `-1` 或 `-(2 + 3)`。不會出現連續兩個二元運算子。
 
-## Problem Statement (English)
-
-Given a string s representing a valid expression, implement a basic calculator to evaluate it, and return the result of the evaluation.
-Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as eval().
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: s = "1 + 1"
-Output: 2
+輸入：s = "1 + 1"
+輸出：2
 
-Input: s = " 2-1 + 2 "
-Output: 3
+輸入：s = " 2-1 + 2 "
+輸出：3
 
-Input: s = "(1+(4+5+2)-3)+(6+8)"
-Output: 23
+輸入：s = "(1+(4+5+2)-3)+(6+8)"
+輸出：23
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= s.length <= 3 * 105
-s consists of digits, '+', '-', '(', ')', and ' '.
-s represents a valid expression.
-'+' is not used as a unary operation (i.e., "+1" and "+(2 + 3)" is invalid).
-'-' could be used as a unary operation (i.e., "-1" and "-(2 + 3)" is valid).
-There will be no two consecutive operators in the input.
-Every number and running calculation will fit in a signed 32-bit integer.
+- `1 <= s.length <= 3 × 10^5`
+- `s` 只包含數字、`+`、`-`、`(`、`)` 和空格。
+- `s` 一定是合法算式；每個數字及計算過程都在 32 位元有號整數範圍內。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 逐字讀取字串，遇到空格就略過，遇到連續數字就組成完整整數。
+2. 用堆疊保存尚未完成的運算值與運算子。`(` 表示開始一個新的子算式，`)` 則把括號內的結果算完。
+3. 加減運算由左至右即可計算；每次讀到下一個運算子或右括號，就先完成前一個運算。
+4. 對一元負號，把它視為數字前的正負號。實作中可用初始的 `0 - x` 方式統一處理。
+
+## 複雜度
+
+- 時間：`O(n)`，每個字元只處理常數次。
+- 額外空間：`O(n)`，最深括號或堆疊可能與字串長度相同。
+
+## C 函式介面
 
 ```c
-int calculate(char* s) {
-    
-}
+int calculate(char* s);
 ```

@@ -1,48 +1,33 @@
-# 0275. H-Index II《H 指數 II》
+# LeetCode 0275. H-Index II
 
-- **Difficulty**: Medium
-- **Tags**: array, binary-search
-- **題目連結**: https://leetcode.com/problems/h-index-ii/
-- **程式碼**: [`275_h-index-ii.c`](./275_h-index-ii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: H 指數 II
 
-## 題目說明（中文）
+## 題目
 
-給定已依非遞減順序排序的 citations，求研究者的 H 指數。H 指數是至少有 h 篇論文各自至少被引用 h 次時的最大 h，題目要求對數時間演算法。
+給定已依遞增排序的引用次數陣列 citations，計算最大的 H 指數 h：至少 h 篇論文各自被引用至少 h 次。
 
-**思路**：此程式從陣列尾端線性掃描，第 i 次檢查第 i+1 大引用數是否至少為 i+1。持續符合時更新 h，首次不符合便停止。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：citations = [0,1,3,5,6]；輸出：3。
+2. 輸入：citations = [1,2,100]；輸出：2。
 
-Given an array of integers citations where citations[i] is the number of citations a researcher received for their ith paper and citations is sorted in non-descending order, return the researcher's h-index.
-According to the definition of h-index on Wikipedia: The h-index is defined as the maximum value of h such that the given researcher has published at least h papers that have each been cited at least h times.
-You must write an algorithm that runs in logarithmic time.
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= citations.length <= 10^5
+- 0 <= citations[i] <= 1000
+- citations 已依遞增順序排序
 
-```text
-Input: citations = [0,1,3,5,6]
-Output: 3
-Explanation: [0,1,3,5,6] means the researcher has 5 papers in total and each of them had received 0, 1, 3, 5, 6 citations respectively.
-Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, their h-index is 3.
+## 解題思路
 
-Input: citations = [1,2,100]
-Output: 2
-```
+1. 若從索引 i 開始的論文共有 n-i 篇，這些論文的引用次數都至少是 citations[i]。
+2. 要讓這 n-i 篇論文符合 H 指數，需滿足 citations[i] >= n-i。
+3. 此條件在排序陣列上具有單調性，因此用二分搜尋找第一個符合的位置。
+4. 回傳 n-i；若沒有符合位置，二分搜尋會停在 n，答案就是 0。
 
-## 限制 Constraints
+## 複雜度
 
-n == citations.length
-1 <= n <= 105
-0 <= citations[i] <= 1000
-citations is sorted in ascending order.
+時間 O(log n)，額外空間 O(1)。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-int hIndex(int* citations, int citationsSize) {
-    
-}
-```
+int hIndex(int* citations, int citationsSize)

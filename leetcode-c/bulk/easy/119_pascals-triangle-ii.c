@@ -1,39 +1,10 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0119. Pascal's Triangle II
- * Difficulty: Easy
- * Tags: array, dynamic-programming
- * URL: https://leetcode.com/problems/pascals-triangle-ii/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer rowIndex, return the rowIndexth (0-indexed) row of
- *     the Pascal's triangle.
- *     In Pascal's triangle, each number is the sum of the two numbers
- *     directly above it as shown:
- *
- * [中文] 題目: 楊輝三角 II
- * [中文] 題目說明:
- *     給定從 0 開始計數的 rowIndex，回傳楊輝三角的第 rowI
- *     ndex 列。楊輝三角每個內部數字都等於上一列正上方兩個相鄰數字之和
- *     。題目進一步要求可將額外空間最佳化為 O(rowIndex)。row
- *     Index 介於 0 至 33。
- *
- * [中文] 思路:
- *     迭代產生各列，利用 tmp 保留前一列，並藉由楊輝三角的對稱性只計算
- *     一半後同步寫入兩側。
- *
- * Examples:
- *     Input: rowIndex = 3
- *     Output: [1,3,3,1]
- *     Input: rowIndex = 0
- *     Output: [1]
- *     Input: rowIndex = 1
- *     Output: [1,1]
- *
- * Constraints:
- *   - 0 <= rowIndex <= 33
- * ==========================================================================
+ * LeetCode 0119. Pascal's Triangle II《楊輝三角 II》
+ * 題意：rowIndex 從 0 起算，回傳楊輝三角第 rowIndex 列。
+ * 範例：rowIndex=3 -> [1,3,3,1]；rowIndex=0 -> [1]；rowIndex=1 -> [1,1]。
+ * 限制：0 <= rowIndex <= 33。進階要求只使用 O(rowIndex) 額外空間。
+ * 解法：只保留答案列；每次由右往左更新，避免新值覆蓋本輪稍後仍要使用的舊值。
+ * 複雜度：時間 O(rowIndex^2)，額外空間 O(rowIndex)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,56 +178,23 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/**
-119. Pascal's Triangle II [E]
-
-Given a non-negative index k where k   33, return the kth index row of the Pascal's triangle.
-Note that the row index starts from 0.
-
- */
 
 /**
- * Note: The returned array must be malloced, assume caller calls free().
+ * 回傳陣列由 LeetCode 呼叫端負責釋放。
  */
-int* getRow(int rowIndex, int* returnSize)
-{
-	int *res = calloc(rowIndex+1, sizeof(int));
-	int *tmp = calloc(rowIndex+1, sizeof(int));
-	tmp[0] = 1;
-	for (int level = 0; level <= rowIndex; level++)
-	{        
-		res[0] = res[level] = 1;
-		if (level >= 1)
-		{
-			for (int x = 1; x <= level/2; x++)
-			{
-				res[x] = res[level-x] = tmp[x-1] + tmp[x];
-			}
-		}
-		memcpy(tmp, res, sizeof(int)*(level+1));
-	}
+int* getRow(int rowIndex, int* returnSize) {
+    int* row = calloc((size_t)rowIndex + 1, sizeof(*row));
+    *returnSize = rowIndex + 1;
+    row[0] = 1;
 
-	*returnSize = rowIndex+1;
-	return res;
+    for (int level = 1; level <= rowIndex; ++level) {
+        /* 從右往左，row[col - 1] 還是上一列的舊值。 */
+        for (int col = level; col >= 1; --col) {
+            row[col] += row[col - 1];
+        }
+    }
+    return row;
 }
-#if 0
-int* getRow(int rowIndex, int* returnSize)
-{
-	int *ret = calloc((rowIndex+1), sizeof(int));
-	*returnSize = rowIndex+1;
-	ret[0] = 1;
-	for (int i = 1; i <= rowIndex; i++) 
-	{
-		for (int j = i; j >= 1; j--) 
-		{
-			ret[j] += ret[j - 1];
-		}
-	}
-
-	return ret;
-}
-#endif
 
 /* ---- generated tests ---- */
 int main(void){

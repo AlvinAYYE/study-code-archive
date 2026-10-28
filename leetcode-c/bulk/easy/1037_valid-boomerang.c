@@ -1,32 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1037. Valid Boomerang
- * Difficulty: Easy
- * Tags: array, math, geometry
- * URL: https://leetcode.com/problems/valid-boomerang/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array points where points[i] = [xi, yi] represents a point
- *     on the X-Y plane, return true if these points are a boomerang.
- *     A boomerang is a set of three points that are all distinct and not
- *     in a straight line.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 陣列 points where points[i] = [xi, yi] represents a point on
- *     the X-Y plane, 若成立回傳 true， these points are a boomerang.
+ * 【完整中文題意】給定平面上的三個點 points[i] = [xi, yi]。若三個點彼此不同，且不在同一直線上，這組點就稱為迴力鏢。請判斷給定三點是否為迴力鏢。
  *
- * Examples:
- *     Input: points = [[1,1],[2,3],[3,2]]
- *     Output: true
- *     Input: points = [[1,1],[2,2],[3,3]]
- *     Output: false
+ * 【範例】
+ * 1. points = [[1,1],[2,3],[3,2]] → true
+ * 2. points = [[1,1],[2,2],[3,3]] → false（三點共線）
  *
- * Constraints:
- *   - points.length == 3
- *   - points[i].length == 2
- *   - 0 <= xi, yi <= 100
- * ==========================================================================
+ * 【限制】
+ * - points.length == 3
+ * - points[i].length == 2
+ * - 0 <= xi, yi <= 100
+ *
+ * 【解題步驟】
+ * 1. 把第一個點當原點，分別計算指向第二、第三點的兩個位移向量。
+ * 2. 計算二維叉積 dx1 × dy2 - dy1 × dx2。
+ * 3. 叉積不為 0 表示兩向量不平行，三點不共線；若有兩點重合，叉積也會是 0，因此同樣判為 false。
+ *
+ * 【複雜度】時間 O(1)；空間 O(1)
+ *
+ * 【LeetCode C 函式】bool isBoomerang(int** points, int pointsSize, int* pointsColSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -200,32 +194,19 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-inline float slope(int *p1, int *p2) {
-  if (p2[0] == p1[0])
-    return p2[1] - p1[1];
-  return (float)(p2[1] - p1[1]) / (p2[0] - p1[0]);
+bool isBoomerang(int** points, int pointsSize, int* pointsColSize) {
+    (void)pointsSize;
+    (void)pointsColSize;
+
+    int dx1 = points[1][0] - points[0][0];
+    int dy1 = points[1][1] - points[0][1];
+    int dx2 = points[2][0] - points[0][0];
+    int dy2 = points[2][1] - points[0][1];
+
+    // 叉積為 0 代表共線，或至少有兩點重合。
+    return dx1 * dy2 - dy1 * dx2 != 0;
 }
 
-bool isBoomerang(int **points, int pointsSize, int *pointsColSize) {
-  int *a = points[0], *b = points[1], *c = points[2];
-
-  if ((a[0] == b[0] && b[0] == c[0]) || (a[1] == b[1] && b[1] == c[1])) {
-    return false;
-  }
-  // a == b?
-  if (a[0] == b[0] && a[1] == b[1])
-    return false;
-  // a == c?
-  if (a[0] == c[0] && a[1] == c[1])
-    return false;
-  // b == c?
-  if (b[0] == c[0] && b[1] == c[1])
-    return false;
-
-  float s1 = slope(a, b), s2 = slope(b, c), s3 = slope(a, c);
-  return !(s1 == s2 && s2 == s3);
-}
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

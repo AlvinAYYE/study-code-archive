@@ -14,38 +14,27 @@
  *
  * [中文] 題目: 不同的子序列
  * [中文] 題目說明:
- *     給定字串 s 與 t，求 s 中有多少個不同的子序列恰好等於 t。子
- *     序列可刪除 s 的部分字元，但必須保留其相對順序。測資保證答案可放入
- *      32 位元帶符號整數。兩字串長度各介於 1 至 1000，且只包含
- *     英文字母。
+ *     給定字串 s 與 t，求 s 中有多少個不同的子序列恰好等於 t。
+ *     子序列可刪除 s 的部分字元，但剩餘字元必須保持原本相對順序。
+ *     測試資料保證答案可放入 32 位元帶符號整數。
  *
- * [中文] 思路:
- *     使用二維 DP，dp[i][j] 記錄 s 前綴中形成 t 前綴的方
- *     式數；字元相等時加上略過與配對兩種來源，不等時只略過 s 的字元。
+ * [中文] 範例：
+ *   範例 1：輸入 s = "rabbbit", t = "rabbit"；輸出 3。
+ *     說明：三個 b 中選擇兩個，有 3 種方式形成 "rabbit"。
+ *   範例 2：輸入 s = "babgbag", t = "bag"；輸出 5。
  *
- * Examples:
- *     Input: s = "rabbbit", t = "rabbit"
- *     Output: 3
- *     Explanation:
- *     As shown below, there are 3 ways you can generate "rabbit"
- *     from s.
- *     rabbbit
- *     rabbbit
- *     rabbbit
- *     Input: s = "babgbag", t = "bag"
- *     Output: 5
- *     Explanation:
- *     As shown below, there are 5 ways you can generate "bag" from
- *     s.
- *     babgbag
- *     babgbag
- *     babgbag
- *     babgbag
- *     babgbag
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= s.length, t.length <= 1000
- *   - s and t consist of English letters.
+ *   - s 與 t 僅包含英文字母。
+ *
+ * [中文] 直觀解題思路：
+ *   1. dp[i][j] 表示使用 s[0..i] 形成 t[0..j] 的不同方式數。
+ *   2. 無論字元是否相同，都可略過 s[i]，因此先承接 dp[i-1][j]。
+ *   3. 若 s[i] == t[j]，也可使用這兩個字元配對，再加上 dp[i-1][j-1]。
+ *   4. 第一欄只需累計 t[0] 在 s 前綴中的出現次數；其餘狀態依列向後填表。
+ *   5. dp[slen-1][tlen-1] 即為完整 t 的形成方式數。
+ *
+ * 複雜度：時間 O(|s||t|)，全域 DP 表使用 O(|s||t|) 空間。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -221,33 +210,7 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 
 /* ---- community solution ---- */
 static int lc_dummy_;
-/***
-
-DP: dp[i][j] represents the number of occurrences of the substring t[0...j] in
-the subsequence of s[0...i]. (In other words, it counts how many different ways
-there are to delete some elements from s[0...i] to obtain t[0...j].)
-
-At any time, dp[i][j] can be derived from dp[i-1][j] because this problem can be
-seen as finding how many different ways there are to delete some elements from
-string s to obtain string t. We can understand this as the situation where we
-definitely delete the element at index i in string s, turning the problem into
-deleting some elements from s[0...i-1] to obtain t[0...j].
-
-- Additionally, when s[i] == t[j], dp[i][j] can also be derived from
-dp[i-1][j-1]. This means we don't delete the element at index i in string s
-(because s[i] == t[j], and the end is already matched), turning the problem into
-deleting some elements from s[0...i-1] to obtain t[0...j-1].
-
-Init: We need to initialize the first row and column of the 2D dp so that
-traversal starts from row/col index 1.
-- dp[0][0] should check if s[0] equals t[0]. If equal, set to 1; otherwise, set
-to 0.
-- Except for dp[0][0], all elements in the first row dp[0][j] should be 0
-because if s is shorter than t, it cannot satisfy the requirements anyway.
-- Except for dp[0][0], the elements dp[i][0] should be initialized to the number
-of occurrences of t[0] in the substring s[0...i].
-
-***/
+/* dp[i][j]：從 s[0..i] 選出 t[0..j] 的方式數。 */
 
 // Constraints:: 1 <= s.length, t.length <= 1000
 unsigned long long dp[1000][1000];
@@ -257,12 +220,14 @@ int numDistinct(char* s, char* t) {
     memset(dp, 0, sizeof(dp));
 
     dp[0][0] = (s[0] == t[0] ? 1 : 0);
+    /* 第一欄累計 t 的第一個字元在 s 前綴中可被選取的位置數。 */
     for (int i = 1; i < slen; i++)
         dp[i][0] = (s[i] == t[0] ? dp[i - 1][0] + 1 : dp[i - 1][0]);
 
     for (int i = 1; i < slen; i++) {
         for (int j = 1; j < tlen; j++) {
             if (s[i] == t[j])
+                /* 略過 s[i]，或用 s[i] 與 t[j] 配對。 */
                 dp[i][j] = dp[i - 1][j] + dp[i - 1][j - 1];
             else
                 dp[i][j] = dp[i - 1][j];

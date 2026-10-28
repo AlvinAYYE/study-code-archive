@@ -1,47 +1,49 @@
-# 0050. Pow(x, n)《Pow(x, n)》
+# 0050. Pow(x, n)｜Pow(x, n)
 
-- **Difficulty**: Medium
-- **Tags**: math, recursion
-- **題目連結**: https://leetcode.com/problems/powx-n/
-- **程式碼**: [`050_powx-n.c`](./050_powx-n.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：數學、遞迴、二分搜尋
+- **題目連結**：[LeetCode 0050](https://leetcode.com/problems/powx-n/)
+- **C 程式**：[050_powx-n.c](./050_powx-n.c)
 
-## 題目說明（中文）
+## 題目說明
 
-實作 pow(x, n)，計算實數 x 的整數次方 xⁿ。n 可為負數，且題目保證輸入與結果落在指定範圍內。
+實作 `pow(x, n)`，計算底數 `x` 的整數次方 `x^n`。`n` 可能是負數。
 
-**思路**：使用遞迴快速冪，每次把底數平方並將指數除以二；若指數為奇數，再額外乘上一個 x。負指數先把底數取倒數後再計算。
-
-## Problem Statement (English)
-
-Implement pow(x, n), which calculates x raised to the power n (i.e., xn).
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: x = 2.00000, n = 10
-Output: 1024.00000
+輸入：x = 2.00000, n = 10
+輸出：1024.00000
 
-Input: x = 2.10000, n = 3
-Output: 9.26100
+輸入：x = 2.10000, n = 3
+輸出：9.26100
 
-Input: x = 2.00000, n = -2
-Output: 0.25000
-Explanation: 2-2 = 1/22 = 1/4 = 0.25
+輸入：x = 2.00000, n = -2
+輸出：0.25000
+說明：2^-2 = 1 / (2 × 2) = 0.25。
 ```
 
-## 限制 Constraints
+## 限制
 
--100.0  0.
--104 <= xn <= 104
+- `-100.0 < x < 100.0`。
+- `-2^31 <= n <= 2^31 - 1`，且 `n` 是整數。
+- `x != 0` 或 `n > 0`。
+- `-10^4 <= x^n <= 10^4`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 使用二分冪：若指數是偶數，`x^n = (x × x)^(n / 2)`；若是奇數，額外乘上一個 `x`。
+2. `result` 保存目前累乘結果；每輪把 `base` 平方，並將 `exponent` 除以 2。
+3. 若指數為負，先將底數換成 `1 / x`，並把指數取正。先轉成 `long long` 再取負，才能安全處理最小的 32 位元整數 `-2^31`。
+4. 指數降到 0 時，`result` 就是答案。
+
+## 複雜度
+
+- 時間：`O(log |n|)`，每輪將指數減半。
+- 額外空間：`O(1)`。
+
+## LeetCode C 函式簽名
 
 ```c
-double myPow(double x, int n) {
-    
-}
+double myPow(double x, int n);
 ```

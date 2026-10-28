@@ -1,48 +1,33 @@
-# 0300. Longest Increasing Subsequence《最長遞增子序列》
+# LeetCode 0300. Longest Increasing Subsequence
 
-- **Difficulty**: Medium
-- **Tags**: array, binary-search, dynamic-programming
-- **題目連結**: https://leetcode.com/problems/longest-increasing-subsequence/
-- **程式碼**: [`300_longest-increasing-subsequence.c`](./300_longest-increasing-subsequence.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 最長遞增子序列
 
-## 題目說明（中文）
+## 題目
 
-給定整數陣列 nums，請回傳最長嚴格遞增子序列的長度。子序列不必連續，但必須保留原本的元素相對順序。
+給定整數陣列 nums，找出最長嚴格遞增子序列的長度。子序列可以刪除原陣列中的一些元素，但保留其餘元素的相對順序；不要求連續。
 
-**思路**：維護各長度遞增子序列可達到的最小結尾值。對每個數字以二分搜尋其第一個可替換位置，最後有效尾端陣列的長度即為答案。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：nums = [10,9,2,5,3,7,101,18]；輸出：4，例如 [2,3,7,101]。
+2. 輸入：nums = [0,1,0,3,2,3]；輸出：4。
+3. 輸入：nums = [7,7,7,7,7,7,7]；輸出：1。
 
-Given an integer array nums, return the length of the longest strictly increasing subsequence.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-Follow up: Can you come up with an algorithm that runs in O(n log(n)) time complexity?
+## 限制
 
-## 範例 Examples
+- 1 <= nums.length <= 2500
+- -10^4 <= nums[i] <= 10^4
 
-```text
-Input: nums = [10,9,2,5,3,7,101,18]
-Output: 4
-Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4.
+## 解題思路
 
-Input: nums = [0,1,0,3,2,3]
-Output: 4
+1. tails[length-1] 保存所有長度為 length 的遞增子序列中，結尾值最小的那一個。
+2. 對每個數字，用二分搜尋找到 tails 中第一個大於或等於它的位置。
+3. 用目前數字替換該位置，讓同長度序列的結尾盡量小；若位置剛好在已知長度末端，就把遞增子序列長度加一。
+4. tails 的內容不一定是一條實際子序列，但其長度就是答案。
 
-Input: nums = [7,7,7,7,7,7,7]
-Output: 1
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(n log n)，額外空間 O(n)。
 
-1 <= nums.length <= 2500
--104 <= nums[i] <= 104
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-int lengthOfLIS(int* nums, int numsSize) {
-    
-}
-```
+int lengthOfLIS(int* nums, int numsSize)

@@ -1,33 +1,27 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1232. Check If It Is a Straight Line
- * Difficulty: Easy
- * Tags: array, math, geometry
- * URL: https://leetcode.com/problems/check-if-it-is-a-straight-line/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given an array coordinates, coordinates[i] = [x, y], where
- *     [x, y] represents the coordinate of a point. Check if these points
- *     make a straight line in the XY plane.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     給定一個陣列 coordinates, coordinates[i] = [x, y], where [x, y] represents
- *     the coordinate of a point. Check if these points make a straight
- *     line in the XY plane.
+ * 【完整中文題意】給定平面上至少兩個互不相同的點 coordinates，判斷所有點是否位於同一條直線上。若共線回傳 true，否則回傳 false。
  *
- * Examples:
- *     Input: coordinates = [[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]]
- *     Output: true
- *     Input: coordinates = [[1,1],[2,2],[3,4],[4,5],[5,6],[7,7]]
- *     Output: false
+ * 【範例】
+ * 1. coordinates = [[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]] → true
+ * 2. coordinates = [[1,1],[2,2],[3,4],[4,5],[5,6],[7,7]] → false
  *
- * Constraints:
- *   - 2 <= coordinates.length <= 1000
- *   - coordinates[i].length == 2
- *   - -10^4 <= coordinates[i][0], coordinates[i][1] <= 10^4
- *   - coordinates contains no duplicate point.
- * ==========================================================================
+ * 【限制】
+ * - 2 <= coordinates.length <= 1000
+ * - 每個座標恰有 x、y 兩個整數
+ * - -10⁴ <= x, y <= 10⁴
+ * - coordinates 不含重複點
+ *
+ * 【解題步驟】
+ * 1. 取前兩個點作為基準，計算它們的方向向量 (dx, dy)。
+ * 2. 逐一計算基準第一點到其他點的向量 (x, y)。
+ * 3. 若每個向量與基準方向的叉積 dx × y - dy × x 都是 0，表示所有點共線；只要有一個不為 0 就不是直線。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】bool checkStraightLine(int** coordinates, int coordinatesSize, int* coordinatesColSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,25 +195,22 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
+bool checkStraightLine(int** coordinates, int coordinatesSize,
+                       int* coordinatesColSize) {
+    (void)coordinatesColSize;
+    long long baseDx = coordinates[1][0] - coordinates[0][0];
+    long long baseDy = coordinates[1][1] - coordinates[0][1];
 
-bool checkStraightLine(int** coordinates, int coordinatesSize, int* coordinatesColSize)
-{    
-	int x1 = coordinates[0][0], y1 = coordinates[0][1];
-	int x2 = coordinates[1][0], y2 = coordinates[1][1];
-	for (int i = 2; i < coordinatesSize; i++)
-	{
-		int x3 = coordinates[i][0];
-		int y3 = coordinates[i][1];
+    for (int i = 2; i < coordinatesSize; ++i) {
+        long long dx = coordinates[i][0] - coordinates[0][0];
+        long long dy = coordinates[i][1] - coordinates[0][1];
 
-		if ((x1-x2)*(y1-y3) != (x1-x3)*(y1-y2))
-		{
-			return false;
-		}
-	}
-	return true;
+        // 叉積為零，代表兩個方向向量平行。
+        if (baseDx * dy - baseDy * dx != 0) return false;
+    }
+
+    return true;
 }
-
 
 /* ---- generated tests ---- */
 int main(void){

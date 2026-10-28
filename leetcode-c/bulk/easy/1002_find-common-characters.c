@@ -1,31 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1002. Find Common Characters
- * Difficulty: Easy
- * Tags: array, hash-table, string
- * URL: https://leetcode.com/problems/find-common-characters/
- * Source: community solution, repo akib-islam-coder_leetcodesolutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a string array words, return an array of all characters that
- *     show up in all strings within the words (including duplicates). You
- *     may return the answer in any order.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given a 字串 陣列 words, 回傳 an 陣列 of all characters that show up in all
- *     字串 within the words (including 重複). You may 回傳 the answer （順序不限）.
+ * 【完整中文題意】給定一組只含小寫英文字母的字串，找出每個字串都共同包含的字母，並保留重複次數。答案可用任何順序回傳。例如，每個字串各有兩個 l，答案也要有兩個 l。
  *
- * Examples:
- *     Input: words = ["bella","label","roller"]
- *     Output: ["e","l","l"]
- *     Input: words = ["cool","lock","cook"]
- *     Output: ["c","o"]
+ * 【範例】
+ * 1. words = ["bella","label","roller"] → ["e","l","l"]
+ * 2. words = ["cool","lock","cook"] → ["c","o"]
  *
- * Constraints:
- *   - 1 <= words.length <= 100
- *   - 1 <= words[i].length <= 100
- *   - words[i] consists of lowercase English letters.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= words.length <= 100
+ * - 1 <= words[i].length <= 100
+ * - words[i] 只含小寫英文字母
+ *
+ * 【解題步驟】
+ * 1. 先統計第一個字串中 a 到 z 各出現幾次，作為目前的共同上限。
+ * 2. 逐一統計其他字串的 26 種字母次數，對每個字母保留目前上限和本字串次數中較小的值。
+ * 3. 依照最後的共同次數配置字串陣列；某字母共同出現幾次，就放入幾個該字母。
+ *
+ * 【複雜度】時間 O(字串總長度 + 26 × 字串數)；空間 O(1) 額外空間（26 個字母計數器；另需 O(輸出大小) 回傳資料）
+ *
+ * 【LeetCode C 函式】char** commonChars(char** words, int wordsSize, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -199,57 +194,49 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-
-
 /**
- * Note: The returned array must be malloced, assume caller calls free().
+ * 回傳的字串陣列由本函式配置，呼叫端負責釋放。
  */
-char ** commonChars(char ** words, int wordsSize, int* returnSize)
-{
-    char ** ret_arr = (char **)malloc(sizeof(char *) * 10000);
-    int ret_arr_index = 0;
-    int rows = 0;
-    int i=0;
-    int min_count = INT_MAX;
-    int cur_count = 0;
-    
-    for(i='a'; i<='z'; i++)
-    {
-        min_count = INT_MAX;
-        cur_count = 0;
-        for(rows=0; rows<wordsSize; rows++)
-        {
-            int j=0;
-            cur_count = 0;
-            while(words[rows][j] != '\0')
-            {
-                if(words[rows][j] == i)
-                {
-                    cur_count++;
-                }
-                j++;
-            }
+char** commonChars(char** words, int wordsSize, int* returnSize) {
+    int common[26] = {0};
+    int counts[26];
+    int i, j;
 
-            
-            if(cur_count <= min_count)
-            {
-                min_count = cur_count;
-            }
+    // 第一個字串提供每種字母的初始出現次數。
+    for (i = 0; words[0][i] != '\0'; ++i) {
+        ++common[words[0][i] - 'a'];
+    }
+
+    // 之後每個字串都會縮小共同次數上限。
+    for (i = 1; i < wordsSize; ++i) {
+        for (j = 0; j < 26; ++j) counts[j] = 0;
+        for (j = 0; words[i][j] != '\0'; ++j) {
+            ++counts[words[i][j] - 'a'];
         }
-        while(min_count > 0)
-        {
-            char * new_arr = (char *)malloc(sizeof(char) * 2);
-            new_arr[0] = i;
-            new_arr[1] = '\0';
-            ret_arr[ret_arr_index++] = new_arr;
-            min_count--;
+        for (j = 0; j < 26; ++j) {
+            if (counts[j] < common[j]) common[j] = counts[j];
         }
     }
-    
-    *returnSize = ret_arr_index;
-    return ret_arr;
+
+    int total = 0;
+    for (i = 0; i < 26; ++i) total += common[i];
+    char** answer = (char**)malloc((size_t)total * sizeof(char*));
+    int out = 0;
+
+    // 每一份共同字母都需要一個以 '\0' 結尾的字串。
+    for (i = 0; i < 26; ++i) {
+        for (j = 0; j < common[i]; ++j) {
+            answer[out] = (char*)malloc(2 * sizeof(char));
+            answer[out][0] = (char)('a' + i);
+            answer[out][1] = '\0';
+            ++out;
+        }
+    }
+
+    *returnSize = total;
+    return answer;
 }
+
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

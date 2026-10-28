@@ -1,49 +1,39 @@
-# 0234. Palindrome Linked List《迴文連結串列》
+# LeetCode 234. Palindrome Linked List
 
-- **Difficulty**: Easy
-- **Tags**: linked-list, two-pointers, stack, recursion
-- **題目連結**: https://leetcode.com/problems/palindrome-linked-list/
-- **程式碼**: [`234_palindrome-linked-list.c`](./234_palindrome-linked-list.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：Easy**
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定單向連結串列的頭節點，判斷其節點值序列是否為迴文。若正讀與反讀一致回傳 true，否則回傳 false。
+給定單向鏈結串列的頭節點 head，判斷從前往後讀取的節點值是否與從後往前相同。若相同則是回文串列，回傳 true；否則回傳 false。
 
-**思路**：以快慢指標找出後半段起點，原地反轉後半段連結串列。再從頭部與反轉後半段逐節點比較。
+## 範例
 
-## Problem Statement (English)
+1. head = [1,2,2,1] → true
+2. head = [1,2] → false
 
-Given the head of a singly linked list, return true if it is a palindrome or false otherwise.
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 節點數介於 1 到 10⁵
+- 0 <= Node.val <= 9
 
-```text
-Input: head = [1,2,2,1]
-Output: true
+## 解題思路
 
-Input: head = [1,2]
-Output: false
-```
+1. 用快慢指標找到串列中點；快指標一次走兩格，慢指標一次走一格。
+2. 若節點數是奇數，略過正中間節點；接著把後半段反轉。
+3. 從頭與反轉後半段的開頭同時往後比對節點值。
+4. 比對完再把後半段反轉回去，還原原串列；回傳比對結果。
 
-## 限制 Constraints
+## 複雜度
 
-The number of nodes in the list is in the range [1, 105].
-0 <= Node.val <= 9
+- 時間：O(n)
+- 空間：O(1)
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-bool isPalindrome(struct ListNode* head) {
-    
-}
-```
+~~~c
+bool isPalindrome(struct ListNode* head);
+~~~
+
+## 程式如何運作
+
+提交函式依照上述步驟完成計算；程式註解標出每個關鍵動作。本地測試 harness 保留在 .c 檔尾端。

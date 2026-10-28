@@ -1,48 +1,34 @@
-# 0209. Minimum Size Subarray Sum《長度最小的子陣列》
+# LeetCode 0209. Minimum Size Subarray Sum
 
-- **Difficulty**: Medium
-- **Tags**: array, binary-search, sliding-window, prefix-sum
-- **題目連結**: https://leetcode.com/problems/minimum-size-subarray-sum/
-- **程式碼**: [`209_minimum-size-subarray-sum.c`](./209_minimum-size-subarray-sum.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 長度最短的連續子陣列
 
-## 題目說明（中文）
+## 題目
 
-給定正整數陣列 nums 與正整數 target，找出總和大於或等於 target 的連續子陣列最小長度。若不存在符合條件的子陣列，回傳 0。
+給定正整數 target 和只含正整數的陣列 nums，找出總和至少為 target 的連續子陣列最短長度。若不存在符合條件的子陣列，回傳 0。
 
-**思路**：使用滑動視窗擴張右端累加總和；一旦總和達標，持續左移並扣除左值以縮短視窗，同時更新最小長度。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：target = 7，nums = [2,3,1,2,4,3]；輸出：2。最短解是 [4,3]。
+2. 輸入：target = 4，nums = [1,4,4]；輸出：1。
+3. 輸入：target = 11，nums = [1,1,1,1,1,1,1,1]；輸出：0。
 
-Given an array of positive integers nums and a positive integer target, return the minimal length of a subarray whose sum is greater than or equal to target. If there is no such subarray, return 0 instead.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= target <= 10^9
+- 1 <= nums.length <= 10^5
+- 1 <= nums[i] <= 10^4
 
-```text
-Input: target = 7, nums = [2,3,1,2,4,3]
-Output: 2
-Explanation: The subarray [4,3] has the minimal length under the problem constraint.
+## 解題思路
 
-Input: target = 4, nums = [1,4,4]
-Output: 1
+1. 用左右邊界維護一個連續視窗，並用 windowSum 記錄視窗總和。
+2. 右邊界每次向右擴張，加入一個數；當總和已達 target，就持續移除左端數字，縮到仍符合條件的最短視窗。
+3. 每次符合條件時更新最短長度。正整數保證縮小視窗只會讓總和下降，因此兩個邊界都只前進、不回頭。
+4. 若最短長度從未更新，代表沒有符合條件的子陣列。
 
-Input: target = 11, nums = [1,1,1,1,1,1,1,1]
-Output: 0
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(n)，額外空間 O(1)。
 
-1 <= target <= 109
-1 <= nums.length <= 105
-1 <= nums[i] <= 104
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-int minSubArrayLen(int target, int* nums, int numsSize) {
-    
-}
-```
+int minSubArrayLen(int target, int* nums, int numsSize)

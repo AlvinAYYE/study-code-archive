@@ -1,41 +1,19 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1323. Maximum 69 Number
- * Difficulty: Easy
- * Tags: math, greedy
- * URL: https://leetcode.com/problems/maximum-69-number/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given a positive integer num consisting only of digits 6 and
- *     9.
- *     Return the maximum number you can get by changing at most one digit
- *     (6 becomes 9, and 9 becomes 6).
+ * Title-CN: 最大化 6 和 9 組成的數字
+ * LeetCode 1323. Maximum 69 Number (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     給定一個正整數 num consisting only of 數位 6 and 9.
+ * 題意翻譯：給定一個只由數字 6 和 9 組成的正整數 num。最多可以把其中一位的 6
+ * 改成 9，或把 9 改成 6。請回傳能得到的最大整數；也可以選擇不修改。
  *
- * Examples:
- *     Input: num = 9669
- *     Output: 9969
- *     Explanation:
- *     Changing the first digit results in 6669.
- *     Changing the second digit results in 9969.
- *     Changing the third digit results in 9699.
- *     Changing the fourth digit results in 9666.
- *     The maximum number is 9969.
- *     Input: num = 9996
- *     Output: 9999
- *     Explanation: Changing the last digit 6 to 9 results in the
- *     maximum number.
- *     Input: num = 9999
- *     Output: 9999
- *     Explanation: It is better not to apply any change.
+ * 範例 1：num = 9669，輸出 9969；把最左邊的 6 改成 9，增加的位值最大。
+ * 範例 2：num = 9996，輸出 9999。
+ * 範例 3：num = 9999，輸出 9999，不修改即可。
  *
- * Constraints:
- *   - 1 <= num <= 10^4
- *   - num consists of only 6 and 9 digits.
- * ==========================================================================
+ * 限制：1 <= num <= 10^4；num 的每一位只能是 6 或 9。
+ *
+ * 解題思路：只需找最左邊的 6，將它改成 9。越左邊的位數代表越大的位值，因此這樣
+ * 能讓數字增加最多；若沒有 6，就直接回傳原數。用 place 表示目前檢查的十進位位值，
+ * 從最高位往個位掃描。時間 O(d)，空間 O(1)，d 是位數。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -208,32 +186,18 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-int maximum69Number (int num){
-    if ((num == 6) || (num == 9))
-        return 9;
-    if ((num == 99) || (num == 999) || (num == 9999))
-        return num;
-    
-    // Find num of digits
-    int digits = 0, temp = num, div, d = 1;
-    for(; temp; temp /= 10, digits++);
-    // Create our divisor
-    while (--digits){
-        d *= 10;
-    } 
-    d *= 9;
-    // Divide until you can then return.
-    div = num / d;
-    temp = num % d;
-    while (div == 1){
-        d /= 10;
-        div = temp / d;
-        temp = temp % d;
+int maximum69Number(int num) {
+    int place = 10000;
+
+    while (place > num) place /= 10;
+    while (place > 0) {
+        if ((num / place) % 10 == 6) {
+            num += 3 * place;
+            break;
+        }
+        place /= 10;
     }
-    return num + (d / 3);
-        
+    return num;
 }
 
 /* ---- generated tests ---- */

@@ -215,50 +215,42 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/* ---- 易讀解法：DFS 保存當前路徑，只在符合的葉節點複製答案 ---- */
+static void collectTargetPaths(struct TreeNode* node, int remaining,
+                               int* path, int depth, int** answers,
+                               int* columnSizes, int* answerCount) {
+    if (node == NULL) return;
 
+    path[depth++] = node->val;
+    remaining -= node->val;
 
-
-
-static void dfs(struct TreeNode *node, int sum, int *stack, int len, int **results, int *sizes, int *count)
-{
-    if (node == NULL) {
+    if (node->left == NULL && node->right == NULL) {
+        if (remaining == 0) {
+            answers[*answerCount] = (int*)malloc((size_t)depth * sizeof(int));
+            memcpy(answers[*answerCount], path, (size_t)depth * sizeof(int));
+            columnSizes[*answerCount] = depth;
+            ++*answerCount;
+        }
         return;
-    } else if (node->left == NULL && node->right == NULL && sum == node->val) {
-        results[*count] = malloc((len + 1) * sizeof(int));
-        memcpy(results[*count], stack, len * sizeof(int));
-        results[*count][len] = node->val;
-        sizes[*count] = len + 1;
-        (*count)++;
-    } else {
-        stack[len] = node->val;
-        dfs(node->left, sum - node->val, stack, len + 1, results, sizes, count);
-        dfs(node->right, sum - node->val, stack, len + 1, results, sizes, count);
     }
+
+    collectTargetPaths(node->left, remaining, path, depth,
+                       answers, columnSizes, answerCount);
+    collectTargetPaths(node->right, remaining, path, depth,
+                       answers, columnSizes, answerCount);
 }
 
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *returnColumnSizes array must be malloced, assume caller calls free().
- */
-int **pathSum(struct TreeNode *root, int sum, int *returnSize, int **returnColumnSizes)
-{
-    if (root == NULL) {
-        *returnSize = 0;
-        return NULL;
-    }
+int** pathSum(struct TreeNode* root, int targetSum,
+              int* returnSize, int** returnColumnSizes) {
+    int **answers = (int**)malloc(5000 * sizeof(int*));
+    int *columnSizes = (int*)malloc(5000 * sizeof(int));
+    int path[5000];
 
-    int level = 5000, cap = 1000;
-    int *stack = malloc(level * sizeof(int));
-    int **results = malloc(cap * sizeof(int *));
-    *returnColumnSizes = malloc(cap * sizeof(int));
-    dfs(root, sum, stack, 0, results, *returnColumnSizes, returnSize);
-    return results;
+    *returnSize = 0;
+    *returnColumnSizes = columnSizes;
+    collectTargetPaths(root, targetSum, path, 0,
+                       answers, columnSizes, returnSize);
+    return answers;
 }
 
 /* ---- generated tests ---- */

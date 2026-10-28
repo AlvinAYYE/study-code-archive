@@ -1,37 +1,10 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0169. Majority Element
- * Difficulty: Easy
- * Tags: array, hash-table, divide-and-conquer, sorting, counting
- * URL: https://leetcode.com/problems/majority-element/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array nums of size n, return the majority element.
- *     The majority element is the element that appears more than ⌊n / 2⌋
- *     times. You may assume that the majority element always exists in the
- *     array.
- *
- * [中文] 題目: 多數元素
- * [中文] 題目說明:
- *     給定大小為 n 的整數陣列，請回傳出現次數超過 ⌊n / 2⌋ 的元
- *     素。題目保證多數元素一定存在。
- *
- * [中文] 思路:
- *     採 Boyer-Moore 投票法，維護候選值與計數；不同值抵銷計數
- *     ，計數歸零時改選目前元素為候選者。
- *
- * Examples:
- *     Input: nums = [3,2,3]
- *     Output: 3
- *     Input: nums = [2,2,1,1,1,2,2]
- *     Output: 2
- *
- * Constraints:
- *   - n == nums.length
- *   - 1 <= n <= 5 * 10^4
- *   - -10^9 <= nums[i] <= 10^9
- * ==========================================================================
+ * LeetCode 0169. Majority Element《多數元素》
+ * 題意：回傳陣列中出現次數嚴格大於 n/2 的元素。題目保證這個元素一定存在。
+ * 範例：[3,2,3] -> 3；[2,2,1,1,1,2,2] -> 2。
+ * 限制：1 <= n <= 5 * 10^4；-10^9 <= nums[i] <= 10^9。
+ * 解法：Boyer-Moore 投票法。不同元素互相抵銷；因多數元素超過一半，最後必定勝出。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,22 +178,24 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-int majorityElement(int* nums, int numsSize)
-{
-    int maj = nums[0], repeat = 1;
-    for (int i = 1; i < numsSize; i++) {
-        if (nums[i] == maj) {
-            repeat++;
+
+int majorityElement(int* nums, int numsSize) {
+    int candidate = 0;
+    int votes = 0;
+
+    for (int i = 0; i < numsSize; ++i) {
+        /* 票數歸零時，從目前元素開始一輪新的抵銷。 */
+        if (votes == 0) {
+            candidate = nums[i];
+        }
+
+        if (nums[i] == candidate) {
+            ++votes;
         } else {
-            repeat--;
-            if (repeat == 0) {
-                maj = nums[i];
-                repeat = 1;
-            }
+            --votes;
         }
     }
-    return maj;
+    return candidate;
 }
 
 /* ---- generated tests ---- */

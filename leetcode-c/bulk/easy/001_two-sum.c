@@ -13,13 +13,27 @@
  *     you may not use the same element twice.
  *     You can return the answer in any order.
  *
- * [中文] 題目: 两数之和
- *     给定一个整数数组 nums &nbsp;和一个整数目标值 targe
- *     t ，请你在该数组中找出 和为目标值 target &nbsp; 的
- *     那&nbsp; 两个 &nbsp;整数，并返回它们的数组下标。 你可
- *     以假设每种输入只会对应一个答案，并且你不能使用两次相同的元素。 你可
- *     以按任意顺序返回答案。 &nbsp; 示例 1： 输入： nums 
- *     = [2,7,11,15], target = 9 输出： ...
+ * [中文] 題目: 兩數之和
+ * [中文] 題目說明:
+ *     給定整數陣列 nums 與整數 target，找出兩個相加等於 target
+ *     的元素並回傳索引。每筆輸入恰有一組答案，不可重複使用同一元素；
+ *     兩個索引的順序不限。
+ *
+ * [中文] 範例:
+ *     1. nums = [2,7,11,15]、target = 9，輸出 [0,1]，因為 2 + 7 = 9。
+ *     2. nums = [3,2,4]、target = 6，輸出 [1,2]。
+ *     3. nums = [3,3]、target = 6，輸出 [0,1]。
+ *
+ * [中文] 限制:
+ *     - 2 <= nums.length <= 10^4
+ *     - -10^9 <= nums[i], target <= 10^9
+ *     - 恰好存在一組有效答案。
+ *
+ * [中文] 直觀解題思路:
+ *     1. 走到 nums[i] 時，所需的另一個數是 target - nums[i]。
+ *     2. 先在雜湊表查補數；若已出現，表中索引與 i 就是答案。
+ *     3. 若未出現，再存入 nums[i] 與 i。先查再存可避免同一元素重複使用。
+ *     4. 線性探測處理碰撞；平均時間 O(n)，額外空間 O(n)。
  *
  * Examples:
  *     Input: nums = [2,7,11,15], target = 9
@@ -224,6 +238,7 @@ typedef struct __hash_table {
 
 int hash(HASH *obj, int key)
 {
+    /* C 的負數取餘數可能為負，調整成合法的陣列索引。 */
     int r = key % obj->size;
     return r < 0 ? r + obj->size : r;
 }
@@ -244,6 +259,7 @@ HASH *hash_create(int size)
 void hash_add(HASH *ht, int key, int idx)
 {
     int index = hash(ht, key);
+    /* 槽位已使用時向後找，這就是開放定址的線性探測。 */
     while (ht->arr[index]->idx != -1) {
         index++;
         index %= ht->size;
@@ -281,6 +297,7 @@ int *twoSum(int *nums, int numsSize, int target, int *returnSize)
     HASH *ht = hash_create(numsSize);
     for (int i = 0; i < numsSize; i++) {
         int complements = target - nums[i];
+        /* 必須先查補數再加入目前元素，避免把同一索引用兩次。 */
         int index = hash_find(ht, complements);
         if (index >= 0) {
             indices = (int *) malloc(sizeof(int) * 2);

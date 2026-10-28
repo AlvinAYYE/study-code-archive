@@ -14,12 +14,22 @@
  *
  * [中文] 題目: x 的平方根
  * [中文] 題目說明:
- *     給定非負整數 x，回傳其平方根向下取整後的非負整數。不得使用任何內建
- *     次方函式或運算子。
+ *     給定非負整數 x，回傳 sqrt(x) 向下取整後的非負整數。不得使用任何
+ *     內建次方函式或運算子。
  *
- * [中文] 思路:
- *     在 1 到安全上界之間進行二分搜尋，以 mid × mid 與 x 
- *     比較來調整範圍。未命中時，最終的右界就是平方根向下取整的值。
+ * [中文] 範例:
+ *     1. x = 4，輸出 2。
+ *     2. x = 8，輸出 2，因為 sqrt(8) 約為 2.828，向下取整為 2。
+ *
+ * [中文] 限制:
+ *     - 0 <= x <= 2^31 - 1
+ *
+ * [中文] 直觀解題思路:
+ *     1. x < 2 時答案就是 x；其餘答案必在 [1, x/2]。
+ *     2. 二分搜尋中，若 mid <= x / mid，代表 mid^2 <= x，可記為目前答案
+ *        並向右找更大的整數平方根；否則向左縮小。
+ *     3. 使用除法比較可避免 mid * mid 的整數溢位。
+ *        時間 O(log x)，額外空間 O(1)。
  *
  * Examples:
  *     Input: x = 4
@@ -216,30 +226,26 @@ Compute and return the square root of x.
 */
 
 int mySqrt(int x) {
-#if 1
-    int left, right, mid, k;
-    if (!x) return 0;
+    int left, right, answer = 1;
+    /* 0 與 1 的平方根向下取整仍是自己。 */
+    if (x < 2) return x;
+
+    /* x >= 2 時，整數平方根一定落在 [1, x / 2]。 */
     left = 1;
-    right = (x < 46340 * 2) ? (x + 1) / 2 : 46340;
+    right = x / 2;
     while (left <= right) {
-        mid = left + (right - left) / 2;
-        //printf("mid: %d\n", mid);
-        k = mid * mid;
-        if (k == x) return mid;
-        if (k < x) left = mid + 1;
-        else       right = mid - 1;
+        int mid = left + (right - left) / 2;
+        /* mid <= x / mid 等價於 mid * mid <= x，但不會乘法溢位。 */
+        if (mid <= x / mid) {
+            /* mid 可行；記住它，再找更大的可行值。 */
+            answer = mid;
+            left = mid + 1;
+        } else {
+            /* mid 太大，平方根只能在左側。 */
+            right = mid - 1;
+        }
     }
-    return right;
-#else
-    unsigned long long r = (x + 1) / 2;
-    if (r > 46340) r = 46340;
-    while (r * r > x) {
-        //printf("r: %lld\n", r);
-        r = (r + x / r) / 2;
-    }
- 
-    return r;
-#endif
+    return answer;
 }
 
 

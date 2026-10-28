@@ -18,22 +18,31 @@
  * [中文] 題目: K 個一組反轉連結串列
  * [中文] 題目說明:
  *     給定連結串列頭節點與正整數 k，將節點每 k 個一組反轉後回傳串列。
- *     末尾不足 k 個的節點必須維持原順序，且不得修改節點值。
+ *     若節點總數不是 k 的倍數，末尾不足 k 個的節點必須維持原順序。
+ *     不得修改節點內的值，只能重新連接節點本身。
  *
- * [中文] 思路:
- *     程式將每一組最多 k 個節點先放入指標堆疊，再以彈出順序重接，從而完
- *     成該組反轉。若最後一組不足 k 個，便不改動該組並直接回傳。
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：head = [1,2,3,4,5], k = 2
+ *     輸出：[2,1,4,3,5]
+ *   範例 2：
+ *     輸入：head = [1,2,3,4,5], k = 3
+ *     輸出：[3,2,1,4,5]
  *
- * Examples:
- *     Input: head = [1,2,3,4,5], k = 2
- *     Output: [2,1,4,3,5]
- *     Input: head = [1,2,3,4,5], k = 3
- *     Output: [3,2,1,4,5]
- *
- * Constraints:
- *   - The number of nodes in the list is n.
+ * [中文] 限制：
+ *   - 串列節點數為 n。
  *   - 1 <= k <= n <= 5000
  *   - 0 <= Node.val <= 1000
+ *
+ * [中文] 直觀解題思路：
+ *   1. dummy 節點放在串列前方，p 永遠指向已完成區段的尾端，省去更新
+ *      頭節點的特殊處理。
+ *   2. 從待處理區段依序取最多 k 個節點，將其指標壓入大小為 k 的堆疊。
+ *   3. 若不足 k 個，題目要求維持原順序；釋放堆疊後直接回傳目前串列。
+ *   4. 若湊滿 k 個，依後進先出順序把節點接回，即完成這一組的反轉，
+ *      再把組尾接到下一個尚未處理的節點。
+ *
+ * 複雜度：每個節點只進出堆疊一次，時間 O(n)，額外空間 O(k)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -253,6 +262,7 @@ struct ListNode* reverseKGroup(struct ListNode* head, int k) {
 #define PUSH(NODE) do { stack[i++] = NODE; } while (0)
 #define POP(NODE) do { NODE = stack[--i]; } while (0)
     
+    /* p 指向已完成部分的尾端；dummy 讓第一組也能用相同接法。 */
     p = &dummy;
     
     p->next = node = head;
@@ -264,12 +274,12 @@ struct ListNode* reverseKGroup(struct ListNode* head, int k) {
         }
         next = node;
         
-        if (i < k) {
+        if (i < k) {  /* 最後不足 k 個，不改變原本連接順序。 */
             free(stack);
             return dummy.next;
         }
         
-        while (i > 0) {
+        while (i > 0) {  /* 彈出順序正好是這一組的反向順序。 */
             POP(node);
             p->next = node;
             p = node;

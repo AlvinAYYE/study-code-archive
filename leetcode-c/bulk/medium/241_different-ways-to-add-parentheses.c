@@ -1,53 +1,20 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0241. Different Ways to Add Parentheses
+ * LeetCode 0241. Different Ways to Add Parentheses（為運算式加上不同括號）
  * Difficulty: Medium
- * Tags: math, string, dynamic-programming, recursion, memoization
- * URL: https://leetcode.com/problems/different-ways-to-add-parentheses/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a string expression of numbers and operators, return all
- *     possible results from computing all the different possible ways to
- *     group numbers and operators. You may return the answer in any order.
- *     The test cases are generated such that the output values fit in a
- *     32-bit integer and the number of different results does not exceed
- *     10^4.
- *
- * [中文] 題目: 為運算式設計優先序
- * [中文] 題目說明:
- *     給定僅含數字與 +、-、* 的運算式字串，列出以所有不同括號分組方式
- *     計算所能得到的結果。結果順序不限，且測資保證結果值在 32 位元整數
- *     範圍內、可能結果數不超過 10^4。
- *
- * [中文] 思路:
- *     遞迴把每一個運算子當作最後一步，分別求左右子字串的所有結果。將左右結
- *     果兩兩套用該運算子並累積。
- *
- * Examples:
- *     Input: expression = "2-1-1"
- *     Output: [0,2]
- *     Explanation:
- *     ((2-1)-1) = 0
- *     (2-(1-1)) = 2
- *     Input: expression = "2*3-4*5"
- *     Output: [-34,-14,-10,-10,10]
- *     Explanation:
- *     (2*(3-(4*5))) = -34
- *     ((2*3)-(4*5)) = -14
- *     ((2*(3-4))*5) = -10
- *     (2*((3-4)*5)) = -10
- *     (((2*3)-4)*5) = 10
- *
- * Constraints:
+ * 題意：給定只包含非負整數和 +、-、* 的運算式 expression。透過在不同位置加上括號，列出所有可能的計算結果。每一種括號分組都要保留，即使結果數值重複也不能去重。
+ * 範例：
+ *   1. 輸入：expression = 2-1-1；輸出：[0,2]。分別是 (2-1)-1 和 2-(1-1)。
+ *   2. 輸入：expression = 2*3-4*5；輸出：[-34,-14,-10,-10,10]。
+ * 限制：
  *   - 1 <= expression.length <= 20
- *   - expression consists of digits and the operator '+', '-', and
- *   '*'.
- *   - All the integer values in the input expression are in the
- *   range [0, 99].
- *   - The integer values in the input expression do not have a
- *   leading '-' or '+' denoting the sign.
- * ==========================================================================
+ *   - 字串只含數字與 +、-、*
+ *   - 每個整數介於 0 和 99，且沒有正負號
+ * 解法：
+ *   1. 每遇到一個運算子，就把它當作最後一次運算，把字串切成左、右兩段。
+ *   2. 遞迴列出左段與右段各自的所有結果，再將左右結果兩兩配對，套用中間的運算子。
+ *   3. 把所有切分位置產生的答案串接起來；相同數值也要保留，因為它們代表不同括號方式。
+ *   4. 若片段內沒有運算子，直接解析成一個整數結果。
+ * 複雜度：時間為指數級，因為必須列出所有括號結果；額外空間依結果數量成長，遞迴深度 O(k)，k 為運算子數。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -221,107 +188,92 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-241. Different Ways to Add Parentheses
-
-Given a string of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. The valid operators are +, - and *.
-
-Example 1
-Input: "2-1-1". 
-((2-1)-1) = 0
-(2-(1-1)) = 2
-Output: [0, 2]
-
-Example 2
-Input: "2*3-4*5" 
-(2*(3-(4*5))) = -34
-((2*3)-(4*5)) = -14
-((2*(3-4))*5) = -10
-(2*((3-4)*5)) = -10
-(((2*3)-4)*5) = 10
-Output: [-34, -14, -10, -10, 10] 
-
-Credits:Special thanks to @mithmatt for adding this problem and creating all test cases.
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
-typedef struct {
-    int *p;
-    int sz;
-    int n;
-} res_t;
-int str2int(char *s, int start, int end) {
-    int k = 0;
-    int i;
-    for (i = start; i <= end; i ++) {
-        k = k * 10 + s[i] - '0';
+static bool appendComputedValue(int **values, int *count,
+                               int *capacity, int value) {
+    if (*count == *capacity) {
+        int newCapacity = *capacity == 0 ? 4 : *capacity * 2;
+        int *grown = (int *)realloc(*values, sizeof(int) * (size_t)newCapacity);
+        if (grown == NULL) {
+            return false;
+        }
+        *values = grown;
+        *capacity = newCapacity;
     }
-    return k;
+    (*values)[(*count)++] = value;
+    return true;
 }
-void add2res(res_t *res, int k) {
-    if (res->sz == 0) {
-        res->sz = 10;
-        res->p = malloc(res->sz * sizeof(int));
-        //assert(res->p);
-    } else if (res->sz == res->n) {
-        res->sz *= 2;
-        res->p = realloc(res->p, res->sz * sizeof(int));
-        //assert(res->p);
-    }
-    res->p[res->n ++] = k;
-}
-res_t split_compute(char *s, int start, int end) {
-    res_t op1, op2, res = { 0 };
-    char c;
-    int i, x, y, a, b;
-    
-    for (i = start; i <= end; i ++) {
-        c = s[i];
-        if (c == '+' || c == '-' || c == '*') {
-            op1 = split_compute(s, start, i - 1);
-            op2 = split_compute(s, i + 1, end);
-            for (x = 0; x < op1.n; x ++) {
-                a = op1.p[x];
-                for (y = 0; y < op2.n; y ++) {
-                    b = op2.p[y];
-                    add2res(&res, c == '+' ? a + b :
-                                  c == '-' ? a - b :
-                                             a * b);
+
+static int* computeExpressionRange(char *expression, int start, int end,
+                                   int *returnSize) {
+    int *results = NULL;
+    int resultCount = 0;
+    int capacity = 0;
+    bool hasOperator = false;
+
+    for (int i = start; i <= end; i++) {
+        char operation = expression[i];
+        if (operation != '+' && operation != '-' && operation != '*') {
+            continue;
+        }
+        hasOperator = true;
+
+        int leftCount = 0;
+        int rightCount = 0;
+        int *leftResults = computeExpressionRange(expression, start, i - 1,
+                                                  &leftCount);
+        int *rightResults = computeExpressionRange(expression, i + 1, end,
+                                                   &rightCount);
+        if (leftResults == NULL || rightResults == NULL) {
+            free(leftResults);
+            free(rightResults);
+            free(results);
+            *returnSize = 0;
+            return NULL;
+        }
+
+        for (int left = 0; left < leftCount; left++) {
+            for (int right = 0; right < rightCount; right++) {
+                int value;
+                if (operation == '+') {
+                    value = leftResults[left] + rightResults[right];
+                } else if (operation == '-') {
+                    value = leftResults[left] - rightResults[right];
+                } else {
+                    value = leftResults[left] * rightResults[right];
+                }
+                if (!appendComputedValue(&results, &resultCount, &capacity, value)) {
+                    free(leftResults);
+                    free(rightResults);
+                    free(results);
+                    *returnSize = 0;
+                    return NULL;
                 }
             }
-            free(op1.p);
-            free(op2.p);
+        }
+        free(leftResults);
+        free(rightResults);
+    }
+
+    if (!hasOperator) {
+        int value = 0;
+        for (int i = start; i <= end; i++) {
+            value = value * 10 + (expression[i] - '0');
+        }
+        if (!appendComputedValue(&results, &resultCount, &capacity, value)) {
+            free(results);
+            *returnSize = 0;
+            return NULL;
         }
     }
-    
-    if (res.n == 0) {
-        add2res(&res, str2int(s, start, end));
-    }
-    
-    return res;
-}
-int* diffWaysToCompute(char* input, int* returnSize) {
-    res_t res;
-    res = split_compute(input, 0, strlen(input) - 1);
-    *returnSize = res.n;
-    return res.p;
+
+    *returnSize = resultCount;
+    return results;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:45.6K
-Total Submissions:103.7K
-
-
-Related Topics Divide and Conquer
-Similar Questions Unique Binary Search Trees II Basic Calculator Expression Add Operators
-
-*/
+int* diffWaysToCompute(char* expression, int* returnSize) {
+    int length = (int)strlen(expression);
+    return computeExpressionRange(expression, 0, length - 1, returnSize);
+}
 
 /* ---- generated tests ---- */
 int main(void){

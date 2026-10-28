@@ -205,71 +205,27 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-98. Validate Binary Search Tree
-
-Given a binary tree, determine if it is a valid binary search tree (BST).
-
-
-
-Assume a BST is defined as follows:
-
-The left subtree of a node contains only nodes with keys less than the node's key.
-The right subtree of a node contains only nodes with keys greater than the node's key.
-Both the left and right subtrees must also be binary search trees.
-
-
-
-Example 1:
-    2
-   / \
-  1   3
-
-Binary tree [2,1,3], return true.
-
-
-Example 2:
-    1
-   / \
-  2   3
-
-Binary tree [1,2,3], return false.
-*/
-
-/**
- * Definition for a binary tree node.
- * 
- */
-bool isValid(struct TreeNode* p, struct TreeNode** prev) {
-    if (!p) return true;
-    if (!isValid(p->left, prev)) return false;
-    if (*prev && p->val <= (*prev)->val) return false;
-    *prev = p;
-    return (isValid(p->right, prev));
-}
+/* ---- 易讀解法：中序走訪必須得到嚴格遞增序列 ---- */
 bool isValidBST(struct TreeNode* root) {
-    struct TreeNode *prev = NULL;
-    return isValid(root, &prev);
+    struct TreeNode *stack[10000];
+    int top = 0;
+    int hasPrevious = 0;
+    long long previousValue = -2147483649LL;
+
+    while (root != NULL || top > 0) {
+        while (root != NULL) {
+            stack[top++] = root;
+            root = root->left;
+        }
+
+        root = stack[--top];
+        if (hasPrevious && (long long)root->val <= previousValue) return false;
+        previousValue = root->val;
+        hasPrevious = 1;
+        root = root->right;
+    }
+    return true;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:174.5K
-Total Submissions:749K
-
-
-Companies Amazon Microsoft Bloomberg Facebook
-Related Topics Tree Depth-first Search
-Similar Questions 
-                
-                  
-                    Binary Tree Inorder Traversal
-                  
-                    Find Mode in Binary Search Tree
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,35 +1,26 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0257. Binary Tree Paths
- * Difficulty: Easy
- * Tags: string, backtracking, tree, depth-first-search, binary-tree
- * URL: https://leetcode.com/problems/binary-tree-paths/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the root of a binary tree, return all root-to-leaf paths in
- *     any order.
- *     A leaf is a node with no children.
+ * LeetCode 257. Binary Tree Paths
+ * 難度：Easy
  *
- * [中文] 題目: 二元樹路徑
- * [中文] 題目說明:
- *     給定二元樹根節點，回傳所有從根節點到葉節點的路徑，順序不限。葉節點是
- *     沒有任何子節點的節點，路徑以 "->" 串接節點值。
+ * 【完整中文題意】給定二元樹根節點 root，請回傳所有從根節點到葉節點的路徑。葉節點是沒有左、右子節點的節點。每條路徑以節點值組成，節點之間使用 -> 連接。
  *
- * [中文] 思路:
- *     以深度優先走訪並共用可擴充字串緩衝區，沿途追加節點值與箭頭。走到葉節
- *     點時複製目前路徑字串加入答案。
+ * 【範例】
+ * 1. root = [1,2,3,null,5] → ["1->2->5","1->3"]
+ * 2. root = [1] → ["1"]
  *
- * Examples:
- *     Input: root = [1,2,3,null,5]
- *     Output: ["1->2->5","1->3"]
- *     Input: root = [1]
- *     Output: ["1"]
+ * 【限制】
+ * - 節點數介於 1 到 100
+ * - -100 <= Node.val <= 100
  *
- * Constraints:
- *   - The number of nodes in the tree is in the range [1, 100].
- *   - -100 <= Node.val <= 100
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 從根節點開始做深度優先搜尋，並把目前走過的節點值依序寫入路徑字串。
+ * 2. 走到非葉節點時，在路徑後加上 ->，再遞迴走訪存在的左右子節點。
+ * 3. 走到葉節點時，複製目前路徑字串加入答案。
+ * 4. 搜尋完回傳所有路徑字串。
+ *
+ * 【複雜度】時間 O(n + 輸出字元總數)；空間 O(輸出字元總數 + h)，h 為遞迴堆疊高度
+ *
+ * 【LeetCode C 函式】char** binaryTreePaths(struct TreeNode* root, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -203,130 +194,38 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-257. Binary Tree Paths
-
-Given a binary tree, return all root-to-leaf paths.
-
-
-For example, given the following binary tree:
-
-
-   1
- /   \
-2     3
- \
-  5
-
-
-
-All root-to-leaf paths are:
-["1->2->5", "1->3"]
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
-
-/**
- * Definition for a binary tree node.
- * 
- */
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
-typedef struct {
-    char *b;
-    int sz;
-    int n;
-} buff_t;
-void buff_int(buff_t *buff, int k) {
-    int l;
-    if (buff->n + 10 + 2 + 1 >= buff->sz) {
-        buff->sz *= 2;
-        buff->sz += 10 + 2 + 1;
-        buff->b = realloc(buff->b, buff->sz * sizeof(char));
-        //assert(buff->b);
+static void collectPaths257(struct TreeNode* node, char* path, int length,
+                            char** answer, int* size) {
+    int newLength = length;
+    if (length == 0) {
+        newLength += snprintf(path + length, 1024 - length, "%d", node->val);
+    } else {
+        newLength += snprintf(path + length, 1024 - length, "->%d", node->val);
     }
-    l = sprintf(&buff->b[buff->n], "%d", k);
-    buff->n += l;
-}
-void buff_str(buff_t *buff, char *s, int len) {
-    strcpy(&buff->b[buff->n], s);
-    buff->n += len;
-}
-typedef struct {
-    char **p;
-    int sz;
-    int n;
-} res_t;
-void add2res(res_t *res, char *s) {
-    if (res->sz == res->n) {
-        res->sz *= 2;
-        res->p = realloc(res->p, res->sz * sizeof(char *));
-        //assert(res->p);
-    }
-    res->p[res->n ++] = s;
-}
-void travesal(struct TreeNode *node, buff_t *buff, int n, res_t *res) {
-    if (!node) return;
-    
-    buff->n = n;
-    
-    buff_int(buff, node->val);
-    
-    if (!node->left && !node->right) {
-        add2res(res, strdup(buff->b));
+
+    if (node->left == NULL && node->right == NULL) {
+        answer[*size] = (char*)malloc((size_t)newLength + 1);
+        memcpy(answer[*size], path, (size_t)newLength + 1);
+        ++(*size);
         return;
     }
-    
-    buff_str(buff, "->", 2);
-    
-    n = buff->n;  // tricky, save it for next recursion, it always starts from here.
-    
-    travesal(node->left, buff, n, res);
-    travesal(node->right, buff, n, res);
+
+    if (node->left != NULL) {
+        collectPaths257(node->left, path, newLength, answer, size);
+    }
+    if (node->right != NULL) {
+        collectPaths257(node->right, path, newLength, answer, size);
+    }
 }
+
 char** binaryTreePaths(struct TreeNode* root, int* returnSize) {
-    res_t res;
-    buff_t buff;
- 
+    char** answer = (char**)malloc(100 * sizeof(char*));
+    char* path = (char*)calloc(1024, sizeof(char));
     *returnSize = 0;
-    
-    res.n = 0;
-    res.sz = 100;
-    res.p = malloc(res.sz * sizeof(char *));
-    //assert(res.p);
-    
-    buff.n = 0;
-    buff.sz = 100;
-    buff.b = malloc(buff.sz * sizeof(char));
-    //assert(buff.b);
-    
-    travesal(root, &buff, 0, &res);
-    
-    free(buff.b);
-    
-    *returnSize = res.n;
-    
-    return res.p;
+    collectPaths257(root, path, 0, answer, returnSize);
+    free(path);
+    return answer;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:117.7K
-Total Submissions:306.5K
-
-
-Companies Google Apple Facebook
-Related Topics Tree Depth-first Search
-Similar Questions 
-                
-                  
-                    Path Sum II
-*/
 
 /* ---- generated tests ---- */
 int main(void){

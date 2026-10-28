@@ -215,68 +215,25 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-120. Triangle
+/* ---- 易讀解法：由底往上保存走到底的最小累積和 ---- */
+int minimumTotal(int** triangle, int triangleSize, int* triangleColSize) {
+    int best[200];
+    int row;
 
-Given a triangle, find the minimum path sum from top to bottom. Each step you may move to adjacent numbers on the row below.
+    for (row = 0; row < triangleColSize[triangleSize - 1]; ++row) {
+        best[row] = triangle[triangleSize - 1][row];
+    }
 
-
-For example, given the following triangle
-[
-     [2],
-    [3,4],
-   [6,5,7],
-  [4,1,8,3]
-]
-
-
-
-The minimum path sum from top to bottom is 11 (i.e., 2 + 3 + 5 + 1 = 11).
-
-
-
-Note:
-Bonus point if you are able to do this using only O(n) extra space, where n is the total number of rows in the triangle.
-*/
-
-int minimumTotal(int** triangle, int triangleRowSize, int *triangleColSizes) {
-    int *x;
-    int i, j, k;
-    
-    if (triangleRowSize == 1) return triangle[0][0];
-    
-    x = malloc(triangleRowSize * sizeof(int));
-    if (!x) return 0;
-    
-    for (i = triangleRowSize - 1; i >= 0 ; i --) {
-        for (j = 0; j < triangleColSizes[i]; j ++) {
-            if (i == triangleRowSize - 1) {
-                k = 0;
-            } else if (x[j] < x[j + 1]) {
-                k = x[j];
-            } else {
-                k = x[j + 1];
-            }
-            k += triangle[i][j];
-            x[j] = k;
+    for (row = triangleSize - 2; row >= 0; --row) {
+        int column;
+        for (column = 0; column < triangleColSize[row]; ++column) {
+            int nextBest = best[column] < best[column + 1]
+                         ? best[column] : best[column + 1];
+            best[column] = triangle[row][column] + nextBest;
         }
     }
-    free(x);
-    return k;
+    return best[0];
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:109.4K
-Total Submissions:323.7K
-
-
-Related Topics Array Dynamic Programming
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

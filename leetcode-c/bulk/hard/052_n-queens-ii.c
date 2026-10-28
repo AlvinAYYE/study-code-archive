@@ -17,20 +17,22 @@
  *     在 n × n 棋盤上放置 n 個皇后，使任兩個皇后都不會互相攻擊。
  *     給定 n，回傳所有不同合法擺法的數量，而非列出棋盤配置。
  *
- * [中文] 思路:
- *     逐列回溯放置皇后，棋盤緩衝區記錄各格受到行、列與對角線攻擊的次數。放
- *     置時標記受攻擊格，遞迴返回後再還原標記。
+ * [中文] 範例：
+ *   範例 1：輸入 n = 4；輸出 2。
+ *     說明：四皇后問題共有兩種不同的合法擺法。
+ *   範例 2：輸入 n = 1；輸出 1。
  *
- * Examples:
- *     Input: n = 4
- *     Output: 2
- *     Explanation: There are two distinct solutions to the 4-queens
- *     puzzle as shown.
- *     Input: n = 1
- *     Output: 1
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= n <= 9
+ *
+ * [中文] 直觀解題思路：
+ *   1. 每列恰好放一個皇后，因此從第 0 列開始，逐欄嘗試所有未受攻擊的位置。
+ *   2. buff 的 -1 代表皇后；正數代表該格被幾個已放皇后攻擊；0 才可放置。
+ *   3. 放下皇后時，set_flags 標記同行、同欄與兩條對角線；再遞迴處理下一列。
+ *   4. 遞迴返回後撤銷相同標記，讓下一個選擇能重用棋盤狀態。
+ *   5. row == n 表示成功放滿所有列，將答案數加一。
+ *
+ * 搜尋上界約 O(n!)；棋盤標記使用 O(n^2) 空間，遞迴深度 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -221,12 +223,12 @@ void set_flags(int *buff, int i, int j, int n, int flag) {
     
     buff[IDX(i, j, n)] = flag;
     
-    for (k = 0; k < n; k ++) {  // row
+    for (k = 0; k < n; k ++) {  /* 更新同一列 */
         if (k != j && buff[IDX(i, k, n)] != -1) {
             buff[IDX(i, k, n)] += flag ? 1 : -1;
         }
     }
-    for (k = 0; k < n; k ++) {  // col
+    for (k = 0; k < n; k ++) {  /* 同時更新同欄與兩條對角線 */
         if (k != i && buff[IDX(k, j, n)] != -1) {
             buff[IDX(k, j, n)] += flag ? 1 : -1;
         }
@@ -248,12 +250,13 @@ void set_flags(int *buff, int i, int j, int n, int flag) {
 void bt(int n, int *k, int *buff, int row) {
     int col;
     if (row == n) {
-        // all done
+        /* 每列都已放置一個皇后，找到一組完整解。 */
         (*k) ++;
         return;
     }
     for (col = 0; col < n; col ++) {
         if (buff[IDX(row, col, n)] == 0) {
+            /* 選擇、遞迴、撤銷：回溯的三個基本步驟。 */
             set_flags(buff, row, col, n, -1);
             bt(n, k, buff, row + 1);
             set_flags(buff, row, col, n, 0);

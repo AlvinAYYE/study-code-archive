@@ -1,53 +1,50 @@
-# 0034. Find First and Last Position of Element in Sorted Array《在排序陣列中找元素的第一個和最後一個位置》
+# 0034. Find First and Last Position of Element in Sorted Array｜在排序陣列中尋找元素的第一與最後位置
 
-- **Difficulty**: Medium
-- **Tags**: array, binary-search
-- **題目連結**: https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/
-- **程式碼**: [`034_find-first-and-last-position-of-element-in-sorted-array.c`](./034_find-first-and-last-position-of-element-in-sorted-array.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、二分搜尋
+- **題目連結**：[LeetCode 0034](https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array/)
+- **C 程式**：[034_find-first-and-last-position-of-element-in-sorted-array.c](./034_find-first-and-last-position-of-element-in-sorted-array.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定一個非遞減排序的整數陣列 nums，找出目標值 target 首次與最後一次出現的索引。若不存在目標值，回傳 [-1, -1]；演算法必須達到 O(log n) 的時間複雜度。
+給定一個由小到大排列（允許重複值）的陣列 `nums` 和目標值 `target`，回傳 `target` 第一次與最後一次出現的索引。若找不到，回傳 `[-1,-1]`。時間複雜度需為 `O(log n)`。
 
-**思路**：程式先以二分搜尋找到 target 的任一位置；命中後再向左右線性擴展，取得連續相同值的邊界。
-
-## Problem Statement (English)
-
-Given an array of integers nums sorted in non-decreasing order, find the starting and ending position of a given target value.
-If target is not found in the array, return [-1, -1].
-You must write an algorithm with O(log n) runtime complexity.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [5,7,7,8,8,10], target = 8
-Output: [3,4]
+輸入：nums = [5,7,7,8,8,10], target = 8
+輸出：[3,4]
 
-Input: nums = [5,7,7,8,8,10], target = 6
-Output: [-1,-1]
+輸入：nums = [5,7,7,8,8,10], target = 6
+輸出：[-1,-1]
 
-Input: nums = [], target = 0
-Output: [-1,-1]
+輸入：nums = [], target = 0
+輸出：[-1,-1]
 ```
 
-## 限制 Constraints
+## 限制
 
-0 <= nums.length <= 105
--109 <= nums[i] <= 109
-nums is a non-decreasing array.
--109 <= target <= 109
+- `0 <= nums.length <= 10^5`。
+- `-10^9 <= nums[i] <= 10^9`。
+- `nums` 是非遞減排序陣列。
+- `-10^9 <= target <= 10^9`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 寫一個 `lowerBound` 二分搜尋，找第一個大於或等於 `target` 的位置。
+2. 若該位置已超出陣列，或該值不等於 `target`，答案就是 `[-1,-1]`。
+3. 再找第一個大於 `target` 的位置；它前一格就是最後一次出現的位置。
+4. 回傳兩個索引。兩次二分搜尋都只保留半邊範圍。
+
+## 複雜度
+
+- 時間：`O(log n)`，做兩次二分搜尋。
+- 額外空間：`O(1)`，只配置題目要求的兩個整數答案。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* searchRange(int* nums, int numsSize, int target, int* returnSize) {
-    
-}
+int* searchRange(int* nums, int numsSize, int target, int* returnSize);
 ```
+
+回傳陣列由函式配置，`returnSize` 設為 2。

@@ -1,51 +1,39 @@
 # 0104. Maximum Depth of Binary Tree《二元樹的最大深度》
 
-- **Difficulty**: Easy
-- **Tags**: tree, depth-first-search, breadth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/maximum-depth-of-binary-tree/
-- **程式碼**: [`104_maximum-depth-of-binary-tree.c`](./104_maximum-depth-of-binary-tree.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：樹、深度優先搜尋、廣度優先搜尋、二元樹
+- **題目連結**：https://leetcode.com/problems/maximum-depth-of-binary-tree/
 
-## 題目說明（中文）
+## 題目說明
 
-給定二元樹根節點，回傳其最大深度。最大深度是從根節點到最遠葉節點的最長路徑所經過的節點數。空樹的深度為 0。
+給定二元樹的根節點，回傳樹的最大深度。最大深度是從根節點走到最遠葉節點時，路徑上包含的節點數；空樹的深度為 0。
 
-**思路**：遞迴求出左右子樹深度，回傳其中較大值再加一；空節點回傳零。
-
-## Problem Statement (English)
-
-Given the root of a binary tree, return its maximum depth.
-A binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [3,9,20,null,null,15,7]
-Output: 3
+輸入：root = [3,9,20,null,null,15,7]
+輸出：3
+說明：最長路徑為 3 → 20 → 15（或 3 → 20 → 7），共 3 個節點。
 
-Input: root = [1,null,2]
-Output: 2
+輸入：root = [1,null,2]
+輸出：2
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [0, 104].
--100 <= Node.val <= 100
+- 節點數介於 `0` 到 `10^4`。
+- `-100 <= Node.val <= 100`。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 空節點沒有任何層，因此深度是 0。
+2. 對非空節點，分別遞迴求出左子樹和右子樹的深度。
+3. 取較大的子樹深度，再加上目前節點這一層，即為目前樹的最大深度。
+
+**複雜度**：時間 `O(n)`，每個節點走訪一次；遞迴堆疊額外使用 `O(h)` 空間。
+
+## C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-int maxDepth(struct TreeNode* root) {
-    
-}
+int maxDepth(struct TreeNode* root);
 ```

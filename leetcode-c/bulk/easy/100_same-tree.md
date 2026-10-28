@@ -1,55 +1,44 @@
 # 0100. Same Tree《相同的樹》
 
-- **Difficulty**: Easy
-- **Tags**: tree, depth-first-search, breadth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/same-tree/
-- **程式碼**: [`100_same-tree.c`](./100_same-tree.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：樹、深度優先搜尋、廣度優先搜尋、二元樹
+- **題目連結**：https://leetcode.com/problems/same-tree/
 
-## 題目說明（中文）
+## 題目說明
 
-給定兩棵二元樹的根節點 p 與 q，判斷兩棵樹是否相同。兩棵樹必須結構完全一致，且對應節點的值也相同，才算相同。
+給定兩棵二元樹的根節點 `p` 和 `q`，判斷兩棵樹是否相同。只有在兩棵樹的形狀完全相同，而且每個對應位置上的節點值也相同時，答案才是 `true`。
 
-**思路**：遞迴同步比較兩棵樹：兩者皆空為真，僅一者為空或節點值不同為假，否則再比較左右子樹。
-
-## Problem Statement (English)
-
-Given the roots of two binary trees p and q, write a function to check if they are the same or not.
-Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: p = [1,2,3], q = [1,2,3]
-Output: true
+輸入：p = [1,2,3]，q = [1,2,3]
+輸出：true
 
-Input: p = [1,2], q = [1,null,2]
-Output: false
+輸入：p = [1,2]，q = [1,null,2]
+輸出：false
+說明：節點 2 位於一棵樹的左側，另一棵樹的右側，結構不同。
 
-Input: p = [1,2,1], q = [1,1,2]
-Output: false
+輸入：p = [1,2,1]，q = [1,1,2]
+輸出：false
+說明：對應位置的節點值不同。
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in both trees is in the range [0, 100].
--104 <= Node.val <= 104
+- 兩棵樹的節點數都介於 `0` 到 `100`。
+- `-10^4 <= Node.val <= 10^4`。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 若兩個目前節點都為空，代表這個位置完全相同，回傳 `true`。
+2. 若只有一個為空，表示結構不同，回傳 `false`。
+3. 若兩個節點值不同，回傳 `false`。
+4. 否則遞迴比較兩邊的左子樹和右子樹；兩邊都相同才代表整棵樹相同。
+
+**複雜度**：時間 `O(n)`，其中 `n` 是兩棵樹中實際比較的節點數；遞迴堆疊額外使用 `O(h)` 空間。
+
+## C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-bool isSameTree(struct TreeNode* p, struct TreeNode* q) {
-    
-}
+bool isSameTree(struct TreeNode* p, struct TreeNode* q);
 ```

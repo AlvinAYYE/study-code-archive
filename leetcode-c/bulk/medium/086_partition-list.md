@@ -1,51 +1,44 @@
-# 0086. Partition List《分隔串列》
+# 0086. Partition List｜分隔鏈結串列
 
-- **Difficulty**: Medium
-- **Tags**: linked-list, two-pointers
-- **題目連結**: https://leetcode.com/problems/partition-list/
-- **程式碼**: [`086_partition-list.c`](./086_partition-list.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：鏈結串列、雙指標
+- **題目連結**：[LeetCode 0086](https://leetcode.com/problems/partition-list/)
+- **C 程式**：[086_partition-list.c](./086_partition-list.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定鏈結串列頭節點與整數 x，將所有小於 x 的節點放在所有大於或等於 x 的節點之前。兩個分區內都必須保持原本節點的相對順序。回傳分隔後的串列。
+給定單向鏈結串列和數值 `x`，重新排列節點，使所有小於 `x` 的節點排在前面，所有大於或等於 `x` 的節點排在後面。兩區內都要保留節點在原串列中的相對順序。
 
-**思路**：建立小於 x 與大於等於 x 的兩條虛擬頭串列，走訪時將節點依值接到對應尾端。走訪完後串接兩串列並封住後段尾端。
-
-## Problem Statement (English)
-
-Given the head of a linked list and a value x, partition it such that all nodes less than x come before nodes greater than or equal to x.
-You should preserve the original relative order of the nodes in each of the two partitions.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: head = [1,4,3,2,5,2], x = 3
-Output: [1,2,2,4,3,5]
+輸入：head = [1,4,3,2,5,2], x = 3
+輸出：[1,2,2,4,3,5]
 
-Input: head = [2,1], x = 2
-Output: [1,2]
+輸入：head = [2,1], x = 2
+輸出：[1,2]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the list is in the range [0, 200].
--100 <= Node.val <= 100
--200 <= x <= 200
+- 節點數介於 `0` 到 `200`。
+- `-100 <= Node.val <= 100`。
+- `-200 <= x <= 200`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 建立兩條暫存串列：`less` 收集小於 `x` 的節點，`greaterOrEqual` 收集其餘節點；各自用尾指標快速接上新節點。
+2. 逐一取出原節點時，先保存它原本的 `next`，再將該節點的 `next` 清空，避免舊連結串進錯誤區段。
+3. 依節點值把它接到其中一條串列的尾端。因為是照原順序接入，兩區內的相對順序自然保留。
+4. 把小於區的尾端接到大於等於區的開頭，回傳小於區的頭節點；即使其中一區為空也能正常串接。
+
+## 複雜度
+
+- 時間：`O(n)`，每個節點處理一次。
+- 額外空間：`O(1)`，只重接既有節點。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* partition(struct ListNode* head, int x) {
-    
-}
+struct ListNode* partition(struct ListNode* head, int x);
 ```

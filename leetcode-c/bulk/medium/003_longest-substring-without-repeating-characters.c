@@ -10,30 +10,24 @@
  *     Given a string s, find the length of the longest substring without
  *     duplicate characters.
  *
- * [中文] 題目: 无重复字符的最长子串
- *     给定一个字符串 s ，请你找出其中不含有重复字符的&nbsp; 最长
- *      子串 &nbsp; 的长度。 &nbsp; 示例&nbsp;1: 
- *     输入: s = "abcabcbb" 输出: 3 解释: 因为无重复
- *     字符的最长子串是 "abc" ，所以其长度为 3。注意 "bca" 
- *     和 "cab" 也是正确答案。 示例 2: 输入: s = "bbb
- *     bb" 输出: 1 解释: 因为无重复字符的最长子串是 "b...
+ * [中文] 題目：無重複字元的最長子字串
+ *     給定字串 s，找出不含重複字元的最長連續子字串，回傳其長度。
  *
- * Examples:
- *     Input: s = "abcabcbb"
- *     Output: 3
- *     Explanation: The answer is "abc", with the length of 3.
- *     Input: s = "bbbbb"
- *     Output: 1
- *     Explanation: The answer is "b", with the length of 1.
- *     Input: s = "pwwkew"
- *     Output: 3
- *     Explanation: The answer is "wke", with the length of 3.
- *     Notice that the answer must be a substring, "pwke" is a
- *     subsequence and not a substring.
+ * [中文] 範例
+ *   範例 1：輸入 s = "abcabcbb"，輸出 3；答案可以是 "abc"。
+ *   範例 2：輸入 s = "bbbbb"，輸出 1；答案是 "b"。
+ *   範例 3：輸入 s = "pwwkew"，輸出 3；答案可以是 "wke"。
+ *           "pwke" 並不連續，只是子序列。
  *
- * Constraints:
- *   - 0 <= s.length <= 5 * 10^4
- *   - s consists of English letters, digits, symbols and spaces.
+ * [中文] 限制
+ *   - 0 <= s.length <= 5 * 10^4。
+ *   - s 由英文字母、數字、符號與空白組成。
+ *
+ * [中文] 直觀解題思路
+ *   1. start、i 分別表示目前無重複視窗的左右邊界。
+ *   2. last[c] 記錄 c 最近的位置；若仍在視窗內，將 start 移到下一格。
+ *   3. 更新 c 的位置，再用 i - start + 1 更新最大長度。
+ *   每個字元只掃描一次，時間 O(n)，固定位置表空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -207,55 +201,31 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-3. Longest Substring Without Repeating Characters
-
-Given a string, find the length of the longest substring without repeating characters.
-
-Examples:
-
-Given "abcabcbb", the answer is "abc", which the length is 3.
-
-Given "bbbbb", the answer is "b", with the length of 1.
-
-Given "pwwkew", the answer is "wke", with the length of 3. Note that the answer must be a substring, "pwke" is a subsequence and not a substring.
-*/
-
+/* ---- 易讀解法：滑動視窗 + 最後出現位置 ---- */
 int lengthOfLongestSubstring(char* s) {
-    int i, j, l, k = 0;
-    char c;
-    int pos[128] = { 0 };
-    char *p;
-    int n = 0;
-    
-    for (i = 0; s[i]; i ++) {
-        n ++;
-        c = s[i];
-        l = i - pos[c] + 1;
-        pos[c] = i + 1;
-        n = n < l ? n : l;
-        k = k > n ? k : n;
+    int lastPosition[256];
+    int start = 0;
+    int longest = 0;
+    int i;
+
+    for (i = 0; i < 256; ++i) lastPosition[i] = -1;
+
+    for (i = 0; s[i] != '\0'; ++i) {
+        unsigned char character = (unsigned char)s[i];
+
+        if (lastPosition[character] >= start) {
+            start = lastPosition[character] + 1;
+        }
+        lastPosition[character] = i;
+
+        if (i - start + 1 > longest) {
+            longest = i - start + 1;
+        }
     }
-    
-    return k;
+
+    return longest;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:330.3K
-Total Submissions:1.4M
-
-
-Companies Amazon Adobe Bloomberg Yelp
-Related Topics Hash Table Two Pointers String
-Similar Questions 
-                
-                  
-                    Longest Substring with At Most Two Distinct Characters
-*/
 
 /* ---- generated tests ---- */
 int main(void){

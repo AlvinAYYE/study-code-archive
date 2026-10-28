@@ -7,9 +7,16 @@
 
 ## 題目說明（中文）
 
-有 n 個排成一列的孩子，ratings[i] 表示第 i 個孩子的評分。每個孩子至少要拿一顆糖，且評分高於相鄰孩子者必須拿到更多糖。請回傳符合規則所需的最少糖果總數。n 介於 1 至 2×10^4，評分介於 0 至 2×10^4。
+有 `n` 個排成一列的孩子，`ratings[i]` 表示第 `i` 個孩子的評分。每個孩子至少要拿一顆糖；評分高於相鄰孩子者必須拿到更多糖。請回傳符合規則所需的最少糖果總數。
 
-**思路**：先由左到右配置以滿足左鄰居的遞增關係，再由右到左補強較高評分者的糖果數並加總。
+## 解題思路
+
+1. 每個孩子先至少分到一顆糖。
+2. 從左往右掃描；若 `ratings[i] > ratings[i-1]`，令 `candies[i]` 比左鄰居多一顆，否則維持一顆。這一趟滿足所有「高於左鄰居」的限制。
+3. 再從右往左掃描；若目前評分高於右鄰居，但糖果沒有更多，就補成右鄰居加一顆。保留較大值可避免破壞第一趟已滿足的限制。
+4. 第二趟同步累加每個孩子最後的糖果數，即得到最少總數。
+
+演算法做兩次線性掃描，時間複雜度為 `O(n)`，糖果陣列使用 `O(n)` 額外空間。
 
 ## Problem Statement (English)
 
@@ -20,24 +27,23 @@ Example 1:
 Example 2:
 Constraints:
 
-## 範例 Examples
+## 範例
 
 ```text
-Input: ratings = [1,0,2]
-Output: 5
-Explanation: You can allocate to the first, second and third child with 2, 1, 2 candies respectively.
+輸入：ratings = [1,0,2]
+輸出：5
+說明：依序分配 [2,1,2] 顆糖即可滿足規則。
 
-Input: ratings = [1,2,2]
-Output: 4
-Explanation: You can allocate to the first, second and third child with 1, 2, 1 candies respectively.
-The third child gets 1 candy because it satisfies the above two conditions.
+輸入：ratings = [1,2,2]
+輸出：4
+說明：可分配 [1,2,1]；相同評分之間不要求糖果數相同或遞增。
 ```
 
-## 限制 Constraints
+## 限制
 
-n == ratings.length
-1 <= n <= 2 * 104
-0 <= ratings[i] <= 2 * 104
+- `n == ratings.length`
+- `1 <= n <= 2 * 10^4`
+- `0 <= ratings[i] <= 2 * 10^4`
 
 ## 官方 C 函式簽名 Signature
 

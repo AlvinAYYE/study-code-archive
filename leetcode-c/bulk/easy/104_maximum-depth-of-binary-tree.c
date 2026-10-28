@@ -218,6 +218,7 @@ The maximum depth is the number of nodes along the longest path from the root no
 int maxDepth(struct TreeNode* root) {
     int l, r;
     
+    /* 空樹深度為 0；非空樹深度等於較深子樹再加根節點。 */
     if (!root) return 0;
     
     l = maxDepth(root->left) + 1;

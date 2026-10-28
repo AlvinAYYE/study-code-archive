@@ -13,13 +13,14 @@
  */
 #include <stdio.h>
 #include <math.h>
+#include <float.h>
 
 static inline double max_d(double a, double b) { return a > b ? a : b; }
 
 double calc_width(int n, const double *r) {
     double x[10];
     for (int i = 0; i < n; i++) {
-        x[i] = r[i];
+        x[i] = 0.0;
         for (int j = 0; j < i; j++) {
             double cand = x[j] + 2.0 * sqrt(r[i] * r[j]);
             x[i] = max_d(x[i], cand);
@@ -33,10 +34,75 @@ double calc_width(int n, const double *r) {
     return max_x - min_x;
 }
 
+typedef struct {
+    int n;
+    double radius[8];
+    double order[8];
+    int used[8];
+    double best;
+} SearchState;
+
+static void search_orders(SearchState *state, int depth) {
+    if (depth == state->n) {
+        double width = calc_width(state->n, state->order);
+        if (width < state->best) {
+            state->best = width;
+        }
+        return;
+    }
+
+    for (int i = 0; i < state->n; ++i) {
+        int duplicate = 0;
+
+        if (state->used[i]) {
+            continue;
+        }
+        for (int j = 0; j < i; ++j) {
+            if (!state->used[j] && fabs(state->radius[i] - state->radius[j]) < 1e-12) {
+                duplicate = 1;
+                break;
+            }
+        }
+        if (duplicate) {
+            continue;
+        }
+
+        state->used[i] = 1;
+        state->order[depth] = state->radius[i];
+        search_orders(state, depth + 1);
+        state->used[i] = 0;
+    }
+}
+
+double solve_uva10012(int n, const double *radii) {
+    SearchState state = {0};
+
+    state.n = n;
+    state.best = DBL_MAX;
+    for (int i = 0; i < n; ++i) {
+        state.radius[i] = radii[i];
+    }
+    search_orders(&state, 0);
+    return state.best;
+}
+
 int main(void) {
-    double r[3] = {2.0, 1.0, 2.0};
-    double w = calc_width(3, r);
-    int ok = (w > 0.0);
-    printf("%s: UVa 10012 - How Big Is It\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    int cases;
+
+    if (scanf("%d", &cases) != 1) {
+        return 0;
+    }
+    while (cases-- > 0) {
+        int n;
+        double radii[8];
+
+        if (scanf("%d", &n) != 1) {
+            return 0;
+        }
+        for (int i = 0; i < n; ++i) {
+            (void)scanf("%lf", &radii[i]);
+        }
+        printf("%.3f\n", solve_uva10012(n, radii));
+    }
+    return 0;
 }

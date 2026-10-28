@@ -1,49 +1,65 @@
-# 0326. Power of Three《3 的冪》
+# 326 Power of Three：3 的次方
 
-- **Difficulty**: Easy
-- **Tags**: math, recursion
-- **題目連結**: https://leetcode.com/problems/power-of-three/
-- **程式碼**: [`326_power-of-three.c`](./326_power-of-three.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定整數 n，若存在整數 x 使 n 等於 3 的 x 次方，回傳 true；否則回傳 false。n 可以是零或負數。
+給定整數 n，若存在整數 x 使得 n = 3^x，則 n 是 3 的次方，回傳 true；否則回傳 false。指數 x 可以是 0，所以 1 = 3^0 也符合。
 
-**思路**：程式利用 32 位元整數範圍內最大的 3 的冪 1162261467。當 n 為正且能整除這個常數時，n 必為 3 的冪。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given an integer n, return true if it is a power of three. Otherwise, return false.
-An integer n is a power of three, if there exists an integer x such that n == 3x.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+- 輸入：n = 27
+- 輸出：true
+- 說明：27 = 3^3。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: n = 27
-Output: true
-Explanation: 27 = 33
+- 輸入：n = 0
+- 輸出：false
+- 說明：不存在整數 x 使 3^x 等於 0。
 
-Input: n = 0
-Output: false
-Explanation: There is no x where 3x = 0.
+### 範例 3
 
-Input: n = -1
-Output: false
-Explanation: There is no x where 3x = (-1).
-```
+- 輸入：n = -1
+- 輸出：false
+- 說明：正數的 3 次方不會是負數。
 
-## 限制 Constraints
+## 限制
 
--231 <= n <= 231 - 1
+- -2^31 <= n <= 2^31 - 1
 
-## 官方 C 函式簽名 Signature
+## 解題思路
 
-```c
+1. 3 的次方必須是正數，因此 n <= 0 時直接回傳 false。
+2. 只要 n 能被 3 整除，就把 n 除以 3。
+3. 若最後剛好剩下 1，表示 n 原本是 3 的某個次方。
+
+## 複雜度
+
+- 時間：O(log_3 n)，每次迴圈都將 n 除以 3。
+- 空間：O(1)。
+
+## C 函式簽名
+
+~~~c
+bool isPowerOfThree(int n);
+~~~
+
+## 程式如何運作
+
+~~~c
 bool isPowerOfThree(int n) {
-    
+    if (n <= 0) {
+        return false;
+    }
+
+    // 逐次移除因數 3。
+    while (n % 3 == 0) {
+        n /= 3;
+    }
+
+    return n == 1;
 }
-```
+~~~

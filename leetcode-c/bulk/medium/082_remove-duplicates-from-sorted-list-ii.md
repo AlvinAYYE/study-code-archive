@@ -1,50 +1,44 @@
-# 0082. Remove Duplicates from Sorted List II《刪除排序串列中的重複元素 II》
+# 0082. Remove Duplicates from Sorted List II｜移除排序串列中的重複項 II
 
-- **Difficulty**: Medium
-- **Tags**: linked-list, two-pointers
-- **題目連結**: https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/
-- **程式碼**: [`082_remove-duplicates-from-sorted-list-ii.c`](./082_remove-duplicates-from-sorted-list-ii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：鏈結串列、雙指標
+- **題目連結**：[LeetCode 0082](https://leetcode.com/problems/remove-duplicates-from-sorted-list-ii/)
+- **C 程式**：[082_remove-duplicates-from-sorted-list-ii.c](./082_remove-duplicates-from-sorted-list-ii.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定遞增排序的鏈結串列，刪除所有出現過重複值的節點，只保留原串列中恰好出現一次的值。回傳處理後仍為排序狀態的串列。串列節點數介於 0 到 300。
+給定已遞增排序的單向鏈結串列，刪除所有值有重複的節點，只留下在原串列中只出現一次的值，並回傳新串列。若某個值出現兩次或更多次，該值的節點要全部移除。
 
-**思路**：逐段檢查相同值的節點群組；若群組只有一個節點便接到結果串列，若重複則整段跳過。最後將結果尾端設為 NULL。
-
-## Problem Statement (English)
-
-Given the head of a sorted linked list, delete all nodes that have duplicate numbers, leaving only distinct numbers from the original list. Return the linked list sorted as well.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: head = [1,2,3,3,4,4,5]
-Output: [1,2,5]
+輸入：head = [1,2,3,3,4,4,5]
+輸出：[1,2,5]
 
-Input: head = [1,1,1,2,3]
-Output: [2,3]
+輸入：head = [1,1,1,2,3]
+輸出：[2,3]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the list is in the range [0, 300].
--100 <= Node.val <= 100
-The list is guaranteed to be sorted in ascending order.
+- 節點數介於 `0` 到 `300`。
+- `-100 <= Node.val <= 100`。
+- 串列依遞增順序排序。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 建立虛擬頭節點 `dummy`，讓原本頭節點也能用相同方式刪除；`previous` 指向最後一個已確認唯一的節點。
+2. `current` 若和下一個節點值不同，表示它只出現一次，把它接到 `previous` 後面，再一起前進。
+3. 若兩者相同，記下這個重複值，將 `current` 一路跳過直到遇到不同值；`previous` 不前進，因為被跳過的整組都不能留下。
+4. 回傳 `dummy.next`。唯一節點只會依原順序接回，因此結果仍保持排序。
+
+## 複雜度
+
+- 時間：`O(n)`，每個節點最多走訪一次。
+- 額外空間：`O(1)`。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* deleteDuplicates(struct ListNode* head) {
-    
-}
+struct ListNode* deleteDuplicates(struct ListNode* head);
 ```

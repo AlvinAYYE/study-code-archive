@@ -203,66 +203,41 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
-#include <stdlib.h>
-
-
-/**
- ** Note: The returned array must be malloced, assume caller calls free().
- **/
-int* spiralOrder(int** matrix, int matrixSize, int *matrixColSize, int *returnSize)
-{
-    if (matrixSize == 0) {
-        *returnSize = 0;
-        return NULL;
-    }
-
-    int hor_top = 0;
-    int hor_bottom = matrixSize - 1;
-    int ver_left = 0;
-    int ver_right = matrixColSize[0] - 1;
-    int *nums = malloc(matrixSize * matrixColSize[0] * sizeof(int));
+/* ---- 易讀解法：四個邊界逐圈向內收縮 ---- */
+int* spiralOrder(int** matrix, int matrixSize, int* matrixColSize,
+                 int* returnSize) {
+    int rows = matrixSize;
+    int columns = rows == 0 ? 0 : matrixColSize[0];
+    int total = rows * columns;
+    int *answer = total == 0 ? NULL : (int *)malloc((size_t)total * sizeof(int));
+    int top = 0;
+    int bottom = rows - 1;
+    int left = 0;
+    int right = columns - 1;
     int count = 0;
-    int i, direction = 0;
 
-    while (hor_top <= hor_bottom && ver_left <= ver_right) {
-        switch (direction) {
-        case 0:
-            for (i = ver_left; i <= ver_right; i++) {
-                nums[count++] = matrix[hor_top][i];
-            }
-            hor_top++;
-            break;
-        case 1:
-            for (i = hor_top; i <= hor_bottom; i++) {
-                nums[count++] = matrix[i][ver_right];
-            }
-            ver_right--;
-            break;
-        case 2:
-            for (i = ver_right; i >= ver_left; i--) {
-                nums[count++] = matrix[hor_bottom][i];
-            }
-            hor_bottom--;
-            break;
-        case 3:
-            for (i = hor_bottom; i >= hor_top; i--) {
-                nums[count++] = matrix[i][ver_left];
-            }
-            ver_left++;
-            break;
-        default:
-            break;
+    while (top <= bottom && left <= right) {
+        int i;
+        for (i = left; i <= right; ++i) answer[count++] = matrix[top][i];
+        ++top;
+
+        for (i = top; i <= bottom; ++i) answer[count++] = matrix[i][right];
+        --right;
+
+        if (top <= bottom) {
+            for (i = right; i >= left; --i) answer[count++] = matrix[bottom][i];
+            --bottom;
         }
-        direction++;
-        direction %= 4;
+        if (left <= right) {
+            for (i = bottom; i >= top; --i) answer[count++] = matrix[i][left];
+            ++left;
+        }
     }
 
     *returnSize = count;
-    return nums;
+    return answer;
 }
+
 
 /* ---- generated tests ---- */
 int main(void){

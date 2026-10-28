@@ -12,41 +12,43 @@
  *     Merge all the linked-lists into one sorted linked-list and return it.
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     K 個已排序鏈表合併成一個有序鏈表。
+ *     給定一個包含 k 條鏈結串列的陣列 lists，每條串列都已按非遞減
+ *     順序排列。請將所有串列合併成一條排序後的鏈結串列並回傳。
  *
- * Examples:
- *   Example 1:
- *     Input: lists = [[1,4,5],[1,3,4],[2,6]]
- *     Output: [1,1,2,3,4,4,5,6]
- *     Explanation: The linked-lists are:
- *     [
- *     1->4->5,
- *     1->3->4,
- *     2->6
- *     ]
- *     merging them into one sorted linked list:
- *     1->1->2->3->4->4->5->6
- *   Example 2:
- *     Input: lists = []
- *     Output: []
- *   Example 3:
- *     Input: lists = [[]]
- *     Output: []
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：lists = [[1,4,5],[1,3,4],[2,6]]
+ *     輸出：[1,1,2,3,4,4,5,6]
+ *     說明：三條串列分別為 1->4->5、1->3->4、2->6；合併後為
+ *           1->1->2->3->4->4->5->6。
+ *   範例 2：
+ *     輸入：lists = []
+ *     輸出：[]
+ *   範例 3：
+ *     輸入：lists = [[]]
+ *     輸出：[]
  *
- * Constraints:
- *   - k == lists.length
- *   - 0 <= k <= 10^4
+ * [中文] 限制：
+ *   - k == lists.length，且 0 <= k <= 10^4
  *   - 0 <= lists[i].length <= 500
  *   - -10^4 <= lists[i][j] <= 10^4
- *   - lists[i] is sorted in ascending order.
- *   - The sum of lists[i].length will not exceed 10^4.
+ *   - 每條 lists[i] 都按非遞減順序排列。
+ *   - 所有串列的節點總數不超過 10^4。
  *
  * LeetCode official C stub (函式簽名):
  *   struct ListNode* mergeKLists(struct ListNode** lists, int listsSize) {
  *   }
  *
  * [EN] Approach: Divide and conquer: pairwise-merge the list array (log k rounds), reusing the two-list merge. Time O(n log k).
- * [中文] 思路: 分治：把鏈表陣列兩兩配對合併（log k 輪），底層沿用雙鏈表合併。時間 O(n log k)。
+ * [中文] 直觀解題思路：
+ *   1. 兩條已排序串列可以用兩個游標線性合併：每次接上目前值較小的
+ *      節點，直到其中一條用完，再直接接上另一條剩餘部分。
+ *   2. 將 k 條串列兩兩配對合併；第一輪由 k 條變約 k/2 條，下一輪再
+ *      減半，直到只剩一條。這就是自底向上的分治合併。
+ *   3. 每一輪每個節點最多被走訪一次，而輪數為 log k，因此若總節點數
+ *      為 N，總時間為 O(N log k)。合併直接重接原節點，不配置新資料節點。
+ *
+ * 複雜度：時間 O(N log k)，除函式呼叫與輸入陣列外的額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -59,12 +61,14 @@ typedef struct ListNode ListNode;
 /* ---------- LeetCode submission / 提交區 ---------- */
 static ListNode *merge2(ListNode *a, ListNode *b) {
     ListNode dummy, *tail = &dummy;
+    /* dummy 讓第一個節點與後續節點使用同一套接法。 */
     dummy.next = NULL;
     while (a && b) {
         ListNode *pick;
         if (a->val <= b->val) { pick = a; a = a->next; }
         else                  { pick = b; b = b->next; }
-        tail->next = pick; tail = pick;
+        tail->next = pick;
+        tail = pick;
     }
     tail->next = a ? a : b;
     return dummy.next;
@@ -72,11 +76,12 @@ static ListNode *merge2(ListNode *a, ListNode *b) {
 
 ListNode *mergeKLists(ListNode **lists, int listsSize) {
     if (listsSize == 0) return NULL;
-    while (listsSize > 1) {                       /* pairwise rounds: O(n log k) */
+    while (listsSize > 1) {                       /* 每輪兩兩合併，串列數約減半 */
         int i, newSize = 0;
         for (i = 0; i < listsSize; i += 2) {
             ListNode *a = lists[i];
             ListNode *b = (i + 1 < listsSize) ? lists[i + 1] : NULL;
+            /* 奇數條時，最後一條會與 NULL 合併並直接晉級。 */
             lists[newSize++] = merge2(a, b);
         }
         listsSize = newSize;

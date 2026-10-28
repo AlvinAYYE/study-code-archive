@@ -14,29 +14,29 @@
  *     You may assume the two numbers do not contain any leading zero,
  *     except the number 0 itself.
  *
- * [中文] 題目: 两数相加
- *     给你两个&nbsp; 非空 的链表，表示两个非负的整数。它们每位数字
- *     都是按照&nbsp; 逆序 &nbsp;的方式存储的，并且每个节点只
- *     能存储&nbsp; 一位 &nbsp;数字。 请你将两个数相加，并以
- *     相同形式返回一个表示和的链表。 你可以假设除了数字 0 之外，这两个
- *     数都不会以 0&nbsp;开头。 &nbsp; 示例 1： 输入： 
- *     l1 = [2,4,3], l2 = [5,6,4] 输出：...
+ * [中文] 題目：兩數相加
+ *     給定兩條非空鏈結串列，分別表示兩個非負整數。每個節點只存一位數，
+ *     且由個位數開始反向排列。請將兩數相加，並以同樣的反向串列格式回傳。
+ *     除了數字 0 本身，輸入不會有前導零。
  *
- * Examples:
- *     Input: l1 = [2,4,3], l2 = [5,6,4]
- *     Output: [7,0,8]
- *     Explanation: 342 + 465 = 807.
- *     Input: l1 = [0], l2 = [0]
- *     Output: [0]
- *     Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
- *     Output: [8,9,9,9,0,0,0,1]
+ * [中文] 範例
+ *   範例 1：輸入 l1 = [2,4,3], l2 = [5,6,4]
+ *           輸出 [7,0,8]，因為 342 + 465 = 807。
+ *   範例 2：輸入 l1 = [0], l2 = [0]，輸出 [0]。
+ *   範例 3：輸入 l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+ *           輸出 [8,9,9,9,0,0,0,1]。
  *
- * Constraints:
- *   - The number of nodes in each linked list is in the range [1,
- *   100].
- *   - 0 <= Node.val <= 9
- *   - It is guaranteed that the list represents a number that does
- *   not have leading zeros.
+ * [中文] 限制
+ *   - 每條串列的節點數介於 1 到 100。
+ *   - 0 <= Node.val <= 9。
+ *   - 串列表示的數字沒有前導零，數字 0 除外。
+ *
+ * [中文] 直觀解題思路
+ *   1. 串列已由個位數開始，可直接同步走訪並模擬直式加法。
+ *   2. 每輪把兩側目前數字與 carry 相加；已走完的一側視為 0。
+ *   3. 新節點存 sum % 10，sum / 10 留作下一輪進位。
+ *   4. 兩條串列結束後若仍有進位，迴圈會再建立一個節點。
+ *   時間 O(max(m,n))；回傳空間 O(max(m,n))，額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -210,59 +210,31 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
- * Definition for singly-linked list.
- * 
- */
+/* ---- 易讀解法：逐位模擬加法 ---- */
+struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
+    struct ListNode dummy = {0, NULL};
+    struct ListNode *tail = &dummy;
+    int carry = 0;
 
-int list_len(struct ListNode *root)
-{
-	int len = 0;
-	while (root) {
-		len++;
-		root = root->next;
-	}
-	return len;
+    while (l1 != NULL || l2 != NULL || carry != 0) {
+        int digit1 = l1 != NULL ? l1->val : 0;
+        int digit2 = l2 != NULL ? l2->val : 0;
+        int sum = digit1 + digit2 + carry;
+        struct ListNode *node = (struct ListNode *)malloc(sizeof(*node));
+
+        node->val = sum % 10;
+        node->next = NULL;
+        tail->next = node;
+        tail = node;
+        carry = sum / 10;
+
+        if (l1 != NULL) l1 = l1->next;
+        if (l2 != NULL) l2 = l2->next;
+    }
+
+    return dummy.next;
 }
 
-struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2)
-{
-
-	int len1 = list_len(l1);
-	int len2 = list_len(l2);
-
-	struct ListNode *root, *list1, *list2, *prev = NULL;
-	if (len1 > len2) {
-		list1 = l1;
-		list2 = l2;
-	} else {
-		list1 = l2;
-		list2 = l1;
-	}
-	root = list1;
-	int sum = 0, carry = 0;
-	while (list1 || list2) {
-		int list2_val = 0;
-		if (list2) {
-			list2_val = list2->val;
-			list2 = list2->next;
-		}
-		sum = list1->val + list2_val + carry;
-		carry = sum / 10;
-		list1->val = sum % 10;
-		prev = list1;
-		list1 = list1->next;
-	}
-
-	if (carry) {
-		prev->next = malloc(sizeof(struct ListNode));
-		prev->next->val = 1;
-		prev->next->next = NULL;
-	}
-	return root;
-}
 
 /* ---- generated tests ---- */
 int main(void){

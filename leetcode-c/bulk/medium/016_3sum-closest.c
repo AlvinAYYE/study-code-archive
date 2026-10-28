@@ -12,30 +12,26 @@
  *     Return the sum of the three integers.
  *     You may assume that each input would have exactly one solution.
  *
- * [中文] 題目: 最接近的三數之和
- * [中文] 題目說明:
- *     給定整數陣列 nums 與 target，找出三個元素，使其總和最接
- *     近 target，並回傳該總和。每筆輸入保證恰有一個答案。
+ * [中文] 題目：最接近的三數之和
+ *     給定整數陣列 nums 與整數 target，選出三個不同位置的元素，使總和
+ *     最接近 target，回傳該總和。每筆輸入保證恰有一個答案。
  *
- * [中文] 思路:
- *     程式先排序，逐一固定第一個元素，並以兩個指針在其右側逼近 targe
- *     t。每次計算目前和與 target 的差距，保存絕對值最小的差；若剛
- *     好相等則立即回傳。
+ * [中文] 範例
+ *   範例 1：輸入 nums = [-1,2,1,-4], target = 1，輸出 2。
+ *           因為 -1 + 2 + 1 = 2，與 target 的距離最小。
+ *   範例 2：輸入 nums = [0,0,0], target = 1，輸出 0。
  *
- * Examples:
- *     Input: nums = [-1,2,1,-4], target = 1
- *     Output: 2
- *     Explanation: The sum that is closest to the target is 2. (-1 +
- *     2 + 1 = 2).
- *     Input: nums = [0,0,0], target = 1
- *     Output: 0
- *     Explanation: The sum that is closest to the target is 0. (0 +
- *     0 + 0 = 0).
+ * [中文] 限制
+ *   - 3 <= nums.length <= 500。
+ *   - -1000 <= nums[i] <= 1000。
+ *   - -10^4 <= target <= 10^4。
  *
- * Constraints:
- *   - 3 <= nums.length <= 500
- *   - -1000 <= nums[i] <= 1000
- *   - -10^4 <= target <= 10^4
+ * [中文] 直觀解題思路
+ *   1. 先排序，固定第一個數 nums[i]。
+ *   2. 在右側用 left、right 夾逼；每次比較目前總和與 target 的距離。
+ *   3. 總和太小就增加 left，太大就減少 right；恰好相等可直接回傳。
+ *   4. 掃描全部固定位置後回傳最接近的總和。
+ *   時間複雜度 O(n^2)，不計排序實作所需空間為 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -209,64 +205,42 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-16. 3Sum Closest
-
-Given an array S of n integers, find three integers in S such that the sum is closest to a given number, target. Return the sum of the three integers. You may assume that each input would have exactly one solution.
-
-    For example, given array S = {-1 2 1 -4}, and target = 1.
-
-    The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
-*/
-
-int cmp(const void *a, const void *b) {
-    return *(int *)a - *(int *)b;
+/* qsort 比較器不能直接相減，以免整數溢位。 */
+static int compareInts(const void *a, const void *b) {
+    int x = *(const int *)a;
+    int y = *(const int *)b;
+    return (x > y) - (x < y);
 }
+
+/* ---- 易讀解法：排序後固定一數，以雙指標靠近目標 ---- */
 int threeSumClosest(int* nums, int numsSize, int target) {
-    int i, x, y, k, d, d1;
-    
-    qsort(nums, numsSize, sizeof(int), cmp);
-    
-    d = 0;
-    for (i = 0; i < numsSize - 2; i ++) {
-        x = i + 1;
-        y = numsSize - 1;
-        while (x < y) {
-            k = nums[i] + nums[x] + nums[y];
-            if (k == target) {
-                return k;
-            } else if (k > target) {
-                y --;
-            } else {
-                x ++;
-            }
-            d1 = k - target;
-            if (d == 0 || abs(d) > abs(d1)) {
-                d = d1;
-            }
+    long long closest;
+    int i;
+
+    qsort(nums, (size_t)numsSize, sizeof(int), compareInts);
+    closest = (long long)nums[0] + nums[1] + nums[2];
+
+    for (i = 0; i < numsSize - 2; ++i) {
+        int left = i + 1;
+        int right = numsSize - 1;
+
+        while (left < right) {
+            long long sum = (long long)nums[i] + nums[left] + nums[right];
+            long long currentDistance = sum - target;
+            long long bestDistance = closest - target;
+            if (currentDistance < 0) currentDistance = -currentDistance;
+            if (bestDistance < 0) bestDistance = -bestDistance;
+            if (currentDistance < bestDistance) closest = sum;
+
+            if (sum < target) ++left;
+            else if (sum > target) --right;
+            else return target;
         }
     }
-    return target + d;
+
+    return (int)closest;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:136.6K
-Total Submissions:439.3K
-
-
-Companies Bloomberg
-Related Topics Array Two Pointers
-Similar Questions 
-                
-                  
-                    3Sum
-                  
-                    3Sum Smaller
-*/
 
 /* ---- generated tests ---- */
 int main(void){

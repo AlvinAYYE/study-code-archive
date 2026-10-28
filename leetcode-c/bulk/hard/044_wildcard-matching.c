@@ -13,30 +13,33 @@
  *
  * [中文] 題目: 萬用字元匹配
  * [中文] 題目說明:
- *     判斷字串 s 是否能被樣式 p 完整匹配，其中 '?' 可匹配任一單
- *     一字元，'*' 可匹配任意長度的字元序列（包含空序列）。匹配必須涵蓋
- *     整個 s，而非只比對其中一段。
+ *     給定輸入字串 s 與模式 p，請實作萬用字元完整匹配：'?' 可匹配任意
+ *     單一字元，'*' 可匹配任意長度的字元序列（包含空字串）。匹配必須
+ *     涵蓋整個 s，不能只比對其中一段。
  *
- * [中文] 思路:
- *     遞迴比對一般字元與 '?'；遇到 '*' 時先跳過連續星號，接著依序
- *     嘗試讓它吞掉不同長度的字串後綴。
+ * [中文] 範例：
+ *   範例 1：輸入 s = "aa", p = "a"；輸出 false。
+ *     說明：模式 "a" 無法匹配完整字串 "aa"。
+ *   範例 2：輸入 s = "aa", p = "*"；輸出 true。
+ *     說明：'*' 可以匹配任意字元序列。
+ *   範例 3：輸入 s = "cb", p = "?a"；輸出 false。
+ *     說明：'?' 能匹配 'c'，但模式中的 'a' 無法匹配字串中的 'b'。
  *
- * Examples:
- *     Input: s = "aa", p = "a"
- *     Output: false
- *     Explanation: "a" does not match the entire string "aa".
- *     Input: s = "aa", p = "*"
- *     Output: true
- *     Explanation: '*' matches any sequence.
- *     Input: s = "cb", p = "?a"
- *     Output: false
- *     Explanation: '?' matches 'c', but the second letter is 'a',
- *     which does not match 'b'.
- *
- * Constraints:
+ * [中文] 限制：
  *   - 0 <= s.length, p.length <= 2000
- *   - s contains only lowercase English letters.
- *   - p contains only lowercase English letters, '?' or '*'.
+ *   - s 僅包含小寫英文字母。
+ *   - p 僅包含小寫英文字母、'?' 或 '*'。
+ *
+ * [中文] 直觀解題思路（目前啟用的遞迴版本）：
+ *   1. 一般字元必須相同，'?' 則可配任何非結尾字元；匹配後兩個指標都前進。
+ *   2. 遇到 '*' 時先略過連續星號，因為多個相鄰 '*' 與一個效果相同。
+ *   3. 若 '*' 已是模式尾端，它可直接吞掉 s 的所有剩餘字元，回傳 true。
+ *   4. 否則依序嘗試讓 '*' 吞掉 0、1、2……個字元；每個位置都遞迴比對
+ *      剩餘模式，任一分支成功即為成功。
+ *   5. 模式耗盡時，只有字串也同時耗盡才算完整匹配。
+ *
+ * 最壞時間為指數級，遞迴深度 O(|s|+|p|)；檔案亦保留雙指標與 DP 版本
+ * 供比較，目前由 ALG == 1 選用遞迴版本。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -244,6 +247,7 @@ bool match_recursive(char *s, char *p, int *retry) {
     if (!*p) return (*s) ? 0 : 1;
 
     if (*p == '*') {
+        /* 相鄰星號等價於單一星號，先合併可減少重複分支。 */
         do { p ++; } while (*p == '*');
         
         if (!*p) return 1;
@@ -252,9 +256,9 @@ bool match_recursive(char *s, char *p, int *retry) {
             if (match_recursive(s, p, retry)) {
                 return 1;
             }
-            s ++;  // skip one and retry
+            s ++;  /* 讓 '*' 多吞一個字元後重試 */
         }
-        *retry = 0; // s reaches the end, still not matching, no need to retry on all previous '*'
+        *retry = 0; /* s 已耗盡仍失敗，前層星號不必再嘗試更長匹配 */
         return 0;
     }
     

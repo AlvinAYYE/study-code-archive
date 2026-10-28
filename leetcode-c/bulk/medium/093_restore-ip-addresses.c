@@ -210,100 +210,53 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-93. Restore IP Addresses
+/* ---- 易讀解法：逐段嘗試 1 到 3 位並剪除不合法 IP 片段 ---- */
+static void buildIpAddresses(const char* digits, int digitCount, int start,
+                             int part, char* path, int pathLength,
+                             char** answers, int* answerCount) {
+    int remainingDigits = digitCount - start;
+    int remainingParts = 4 - part;
+    int length;
 
-Given a string containing only digits, restore it by returning all possible valid IP address combinations.
-
-
-For example:
-Given "25525511135",
-
-
-return ["255.255.11.135", "255.255.111.35"]. (Order does not matter)
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
-void gen_ip(const char *s, char *buff, int *seglen) {
-    int i, j, k;
-    for (i = 0; i < 4; i ++) {
-        strncpy(buff, s, seglen[i]);
-        s += seglen[i];
-        buff += seglen[i];
-        *buff = '.';
-        buff ++;
-    }
-    buff --;
-    *buff = 0;
-}
-int validate(const char *s, int len) {
-    int k = 0;
-    
-    if (len > 1 && *s == '0') return 0;
-    
-    while (len -- > 0) {
-        k = k * 10 + *s - '0';
-        s ++;
-    }
-    return k > 255 ? 0 : 1;
-}
-void bt(const char *s, char ***p, int *psz, int *pn, int total, int usedlen, int *seglen, int d) {
-    int i, k;
-    char buff[16];
-    if (d == 4) {
-        if (usedlen != total) return;
-        gen_ip(s, buff, seglen);
-        if (*psz == *pn) {
-            *psz *= 2;
-            *p = realloc(*p, *psz * sizeof(char *));
-            //assert(*p);
+    if (part == 4) {
+        if (start == digitCount) {
+            answers[*answerCount] = (char*)malloc((size_t)pathLength + 1);
+            memcpy(answers[*answerCount], path, (size_t)pathLength + 1);
+            ++*answerCount;
         }
-        (*p)[*pn] = malloc((total + 4) * sizeof(char));
-        //assert((*p)[*pn]);
-        strcpy((*p)[*pn], buff);
-        (*pn) ++;
         return;
     }
-    for (i = 1; i <= 3; i ++) {
-        if (validate(&s[usedlen], i)) {
-            seglen[d] = i;
-            bt(s, p, psz, pn, total, usedlen + i, seglen, d + 1);
+    if (remainingDigits < remainingParts || remainingDigits > remainingParts * 3) return;
+
+    for (length = 1; length <= 3 && start + length <= digitCount; ++length) {
+        int value = 0;
+        int i;
+        int nextLength = pathLength;
+
+        if (length > 1 && digits[start] == '0') break;
+        for (i = 0; i < length; ++i) {
+            value = value * 10 + (digits[start + i] - '0');
         }
+        if (value > 255) break;
+
+        if (part > 0) path[nextLength++] = '.';
+        memcpy(path + nextLength, digits + start, (size_t)length);
+        nextLength += length;
+        path[nextLength] = '\0';
+        buildIpAddresses(digits, digitCount, start + length, part + 1,
+                         path, nextLength, answers, answerCount);
     }
 }
+
 char** restoreIpAddresses(char* s, int* returnSize) {
-    char **p;
-    int psz, pn;
-    
-    int seglen[4] = { 0 };
-    
-    pn = 0;
-    psz = 10;
-    p = malloc(psz * sizeof(char *));
-    //assert(p);
-    
-    bt(s, &p, &psz, &pn, strlen(s), 0, seglen, 0);
-    
-    *returnSize = pn;
-    
-    return p;
+    char **answers = (char**)malloc(81 * sizeof(char*));
+    char path[16] = {0};
+    int length = (int)strlen(s);
+
+    *returnSize = 0;
+    buildIpAddresses(s, length, 0, 0, path, 0, answers, returnSize);
+    return answers;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:87.7K
-Total Submissions:321.1K
-
-
-Related Topics Backtracking String
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

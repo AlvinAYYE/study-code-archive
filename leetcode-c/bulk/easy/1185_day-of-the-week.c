@@ -1,34 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1185. Day of the Week
- * Difficulty: Easy
- * Tags: math
- * URL: https://leetcode.com/problems/day-of-the-week/
- * Source: community solution, repo ourhouchmohamed97_LeetCode_in_C (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a date, return the corresponding day of the week for that
- *     date.
- *     The input is given as three integers representing the day, month and
- *     year respectively.
- *     Return the answer as one of the following values {"Sunday",
- *     "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given a date, 回傳 the corresponding day of the week for that date.
+ * 【完整中文題意】給定有效的西曆日期 day、month、year，請回傳該日期是星期幾，英文名稱須為 Sunday、Monday、Tuesday、Wednesday、Thursday、Friday 或 Saturday。
  *
- * Examples:
- *     Input: day = 31, month = 8, year = 2019
- *     Output: "Saturday"
- *     Input: day = 18, month = 7, year = 1999
- *     Output: "Sunday"
- *     Input: day = 15, month = 8, year = 1993
- *     Output: "Sunday"
+ * 【範例】
+ * 1. day = 31, month = 8, year = 2019 → Saturday
+ * 2. day = 18, month = 7, year = 1999 → Sunday
+ * 3. day = 15, month = 8, year = 1993 → Sunday
  *
- * Constraints:
- *   - The given dates are valid dates between the years 1971 and
- *   2100.
- * ==========================================================================
+ * 【限制】
+ * - 輸入日期有效，年份介於 1971 和 2100 之間
+ *
+ * 【解題步驟】
+ * 1. 以已知的 1971 年 1 月 1 日（星期五）作為基準日。
+ * 2. 加上基準日之後完整經過的年數；每年加 365 天，閏年再多加一天。
+ * 3. 再加上當年該月份之前各月的天數，以及當月日期減一。
+ * 4. 將總天數加到星期五的索引上並對 7 取餘數，找出星期名稱。閏年需符合西曆規則。
+ *
+ * 【複雜度】時間 O(year - 1971 + month)，範圍內最多約 130 年；空間 O(1) 額外空間，另配置回傳字串
+ *
+ * 【LeetCode C 函式】char* dayOfTheWeek(int day, int month, int year)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -202,28 +194,32 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-// Day of the Week
-
-#include <stdio.h>
-#include <stdlib.h>
+static bool isLeapYear(int year) {
+    return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
+}
 
 char* dayOfTheWeek(int day, int month, int year) {
-    if (month < 3) {
-        month += 12;
-        year--;
+    static const char* names[] = {
+        "Sunday", "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday"
+    };
+    const int monthDays[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    int daysSinceReference = 0;
+
+    // 1971-01-01 是星期五，先累加之前完整年份。
+    for (int y = 1971; y < year; ++y) {
+        daysSinceReference += isLeapYear(y) ? 366 : 365;
     }
-    int q = day;
-    int m = month;
-    int K = year % 100;
-    int J = year / 100;
-    
-    int h = (q + 13*(m+1)/5 + K + K/4 + J/4 + 5*J) % 7;
-    
-    char* days[] = {"Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"};
-    char* result = malloc(10 * sizeof(char));
-    sprintf(result, "%s", days[h]);
-    return result;
+    for (int m = 1; m < month; ++m) {
+        daysSinceReference += monthDays[m - 1];
+        if (m == 2 && isLeapYear(year)) ++daysSinceReference;
+    }
+    daysSinceReference += day - 1;
+
+    int weekday = (5 + daysSinceReference) % 7;
+    char* answer = (char*)malloc(strlen(names[weekday]) + 1);
+    strcpy(answer, names[weekday]);
+    return answer;
 }
 
 /* ---- generated tests ---- */

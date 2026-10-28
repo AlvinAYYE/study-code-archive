@@ -1,51 +1,27 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0228. Summary Ranges
- * Difficulty: Easy
- * Tags: array
- * URL: https://leetcode.com/problems/summary-ranges/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given a sorted unique integer array nums.
- *     A range [a,b] is the set of all integers from a to b (inclusive).
- *     Return the smallest sorted list of ranges that cover all the numbers
- *     in the array exactly. That is, each element of nums is covered by
- *     exactly one of the ranges, and there is no integer x such that x is
- *     in one of the ranges but not in nums.
- *     Each range [a,b] in the list should be output as:
+ * LeetCode 228. Summary Ranges
+ * 難度：Easy
  *
- * [中文] 題目: 彙總區間
- * [中文] 題目說明:
- *     給定已遞增排序且元素互異的整數陣列 nums，回傳最小的區間列表以剛
- *     好涵蓋所有元素。單一數字輸出為數字字串，連續區間則輸出為 "起點->
- *     終點"，不可涵蓋陣列中不存在的數字。
+ * 【完整中文題意】給定已依遞增排序且沒有重複值的整數陣列 nums。請將連續整數合併成範圍字串：若某段只有一個數字，輸出該數字；若包含多個連續數字，輸出「起點->終點」。依原本數字順序回傳所有範圍。
  *
- * [中文] 思路:
- *     每次從目前開頭向後找出最長的連續遞增段，格式化成一個區間字串。接著對
- *     剩餘後綴遞迴重複處理。
+ * 【範例】
+ * 1. nums = [0,1,2,4,5,7] → ["0->2","4->5","7"]
+ * 2. nums = [0,2,3,4,6,8,9] → ["0","2->4","6","8->9"]
  *
- * Examples:
- *     Input: nums = [0,1,2,4,5,7]
- *     Output: ["0->2","4->5","7"]
- *     Explanation: The ranges are:
- *     [0,2] --> "0->2"
- *     [4,5] --> "4->5"
- *     [7,7] --> "7"
- *     Input: nums = [0,2,3,4,6,8,9]
- *     Output: ["0","2->4","6","8->9"]
- *     Explanation: The ranges are:
- *     [0,0] --> "0"
- *     [2,4] --> "2->4"
- *     [6,6] --> "6"
- *     [8,9] --> "8->9"
+ * 【限制】
+ * - 0 <= nums.length <= 20
+ * - -2³¹ <= nums[i] <= 2³¹ - 1
+ * - nums 中的值互不相同，且已遞增排序
  *
- * Constraints:
- *   - 0 <= nums.length <= 20
- *   - -231 <= nums[i] <= 231 - 1
- *   - All the values of nums are unique.
- *   - nums is sorted in ascending order.
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 從目前尚未處理的位置開始，把它當作一段範圍的起點。
+ * 2. 往後延伸，只要下一個數恰好比目前數大 1，就繼續延伸終點。
+ * 3. 若起點等於終點，只把起點轉成字串；否則格式化成 起點->終點。
+ * 4. 將字串加入答案，再從下一個尚未處理的數字繼續。
+ *
+ * 【複雜度】時間 O(n + 輸出字元總數)；空間 O(n + 輸出字元總數)
+ *
+ * 【LeetCode C 函式】char** summaryRanges(int* nums, int numsSize, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -219,86 +195,36 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-228. Summary Ranges
-
-Given a sorted integer array without duplicates, return the summary of its ranges.
-
-
-For example, given [0,1,2,4,5,7], return ["0->2","4->5","7"].
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
-void ranges(int *nums, int numsz, int ***pp, int *sz, int *n) {
-    int a, b;
-    int i, l;
-    char buff[64];
-    
-    if (numsz == 0) return;
-    
-    if (*n == *sz) {
-        (*sz) *= 2;
-        (*pp) = realloc(*pp, (*sz) * sizeof(char *));
-        //assert(*pp);
-    }
-    b = a = nums[0];
-    i = 1;
-    while (i < numsz && (b + 1) == nums[i]) {
-        i ++; b ++;
-    }
-    l = sprintf(buff, "%d", a);
-    if (i > 1) {
-        l += sprintf(&buff[l], "->%d", b);
-    }
-    
-    (*pp)[*n] = malloc((l + 1) * sizeof(char));
-    strcpy((*pp)[*n], buff);
-    (*n) ++;
-    
-    ranges(&nums[i], numsz - i, pp, sz, n);
-}
 char** summaryRanges(int* nums, int numsSize, int* returnSize) {
-    int sz, n;
-    char **p;
-    
     *returnSize = 0;
     if (numsSize == 0) return NULL;
-    
-    sz = 100;
-    p = malloc(sz * sizeof(char *));
-    //assert(p);
-    
-    n = 0;
-    ranges(nums, numsSize, &p, &sz, &n);
-    
-    *returnSize = n;
-    
-    return p;
+
+    char** answer = (char**)malloc((size_t)numsSize * sizeof(char*));
+    int start = 0;
+
+    while (start < numsSize) {
+        int end = start;
+        // 用 long long 避免終點為 INT_MAX 時加一發生溢位。
+        while (end + 1 < numsSize &&
+               (long long)nums[end + 1] == (long long)nums[end] + 1) {
+            ++end;
+        }
+
+        char buffer[32];
+        if (start == end) {
+            snprintf(buffer, sizeof(buffer), "%d", nums[start]);
+        } else {
+            snprintf(buffer, sizeof(buffer), "%d->%d", nums[start], nums[end]);
+        }
+
+        answer[*returnSize] = (char*)malloc(strlen(buffer) + 1);
+        strcpy(answer[*returnSize], buffer);
+        ++(*returnSize);
+        start = end + 1;
+    }
+
+    return answer;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:81.3K
-Total Submissions:273.2K
-
-
-Companies Google
-Related Topics Array
-Similar Questions 
-                
-                  
-                    Missing Ranges
-                  
-                    Data Stream as Disjoint Intervals
-*/
 
 /* ---- generated tests ---- */
 int main(void){

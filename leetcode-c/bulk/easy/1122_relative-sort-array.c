@@ -1,34 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1122. Relative Sort Array
- * Difficulty: Easy
- * Tags: array, hash-table, sorting, counting-sort
- * URL: https://leetcode.com/problems/relative-sort-array/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given two arrays arr1 and arr2, the elements of arr2 are distinct,
- *     and all elements in arr2 are also in arr1.
- *     Sort the elements of arr1 such that the relative ordering of items
- *     in arr1 are the same as in arr2. Elements that do not appear in arr2
- *     should be placed at the end of arr1 in ascending order.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given two arrays arr1 and arr2, the elements of arr2 are 不重複, and
- *     all elements in arr2 are also in arr1.
+ * 【完整中文題意】給定整數陣列 arr1、arr2。arr2 中元素都不重複，而且都出現在 arr1。請重新排列 arr1：先依照 arr2 的順序放入所有對應元素（同一元素在 arr1 出現多次時都要放入）；arr1 中不在 arr2 的元素則放在最後，並由小到大排列。
  *
- * Examples:
- *     Input: arr1 = [2,3,1,3,2,4,6,7,9,2,19], arr2 = [2,1,4,3,9,6]
- *     Output: [2,2,2,1,4,3,3,9,6,7,19]
- *     Input: arr1 = [28,6,22,8,44,17], arr2 = [22,28,8,6]
- *     Output: [22,28,8,6,17,44]
+ * 【範例】
+ * 1. arr1 = [2,3,1,3,2,4,6,7,9,2,19], arr2 = [2,1,4,3,9,6] → [2,2,2,1,4,3,3,9,6,7,19]
+ * 2. arr1 = [28,6,22,8,44,17], arr2 = [22,28,8,6] → [22,28,8,6,17,44]
  *
- * Constraints:
- *   - 1 <= arr1.length, arr2.length <= 1000
- *   - 0 <= arr1[i], arr2[i] <= 1000
- *   - All the elements of arr2 are distinct.
- *   - Each arr2[i] is in arr1.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= arr1.length, arr2.length <= 1000
+ * - 0 <= arr1[i], arr2[i] <= 1000
+ * - arr2 的元素互不相同，且每個 arr2[i] 都在 arr1 中
+ *
+ * 【解題步驟】
+ * 1. 用大小為 1001 的計數表，統計 arr1 中每個數字出現幾次。
+ * 2. 按照 arr2 的順序，把每個數值依計數次數放入結果陣列。
+ * 3. 由 0 到 1000 掃描計數表，把剩下的數值依遞增順序放入結果。
+ *
+ * 【複雜度】時間 O(n + m + 1001)；空間 O(n + 1001)（回傳陣列與固定大小計數表）
+ *
+ * 【LeetCode C 函式】int* relativeSortArray(int* arr1, int arr1Size, int* arr2, int arr2Size, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -202,56 +194,36 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/***
-
-Approach: Counting Sort
-
-Counting Sort Concept: Uses the count array to record the occurrence count of
-each element in arr1, which can be completed in O(n) time. Reconstructing
-Partial Order: According to the order in arr2, the corresponding elements are
-added to arr1 based on their occurrence count. This ensures that the relative
-order in arr1 matches arr2. Handling Remaining Elements: Elements not present in
-arr2 are appended to the end of arr1 in ascending order. This part uses simple
-sequential traversal and appending operations.
-
-
-Time Complexity: O(n + m + k), where n is the length of arr1, m is the length of
-arr2, and k is the size of the count array (fixed at 1001 here).
-Space Complexity: O(1), because the size of the count array is fixed and does 
-not grow with input size.
-
-***/
-
-static int cmp(const void* a, const void* b) { return *(int*)a - *(int*)b; }
-
 int* relativeSortArray(int* arr1, int arr1Size, int* arr2, int arr2Size,
                        int* returnSize) {
     int count[1001] = {0};
-    // Record the occurrence count of each element in arr1
-    for (int i = 0; i < arr1Size; i++)
-        count[arr1[i]]++;
-
-    int idx = 0;
-    // Reconstruct part of arr1 based on the order in arr2
-    for (int i = 0; i < arr2Size; i++) {
-        while (count[arr2[i]] > 0) {
-            arr1[idx++] = arr2[i];
-            count[arr2[i]]--;
-        }
+    for (int i = 0; i < arr1Size; ++i) {
+        ++count[arr1[i]];
     }
-    // Append the remaining elements to the rest of arr1
-    for (int i = 0; i < 1001; i++) {
-        while (count[i] > 0) {
-            arr1[idx++] = i;
-            count[i]--;
+
+    int* answer = (int*)malloc((size_t)arr1Size * sizeof(int));
+    int out = 0;
+
+    // 先依照 arr2 指定的優先順序輸出。
+    for (int i = 0; i < arr2Size; ++i) {
+        int value = arr2[i];
+        while (count[value] > 0) {
+            answer[out++] = value;
+            --count[value];
         }
     }
 
-    *returnSize = arr1Size;
-    return arr1;
+    // 剩下的數值依照計數表索引遞增輸出。
+    for (int value = 0; value <= 1000; ++value) {
+        while (count[value] > 0) {
+            answer[out++] = value;
+            --count[value];
+        }
+    }
+
+    *returnSize = out;
+    return answer;
 }
-
 
 /* ---- generated tests ---- */
 int main(void){

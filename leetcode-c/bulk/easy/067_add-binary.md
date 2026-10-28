@@ -1,43 +1,41 @@
 # 0067. Add Binary《二進位求和》
 
-- **Difficulty**: Easy
-- **Tags**: math, string, bit-manipulation, simulation
-- **題目連結**: https://leetcode.com/problems/add-binary/
-- **程式碼**: [`067_add-binary.c`](./067_add-binary.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：字串、數學、位元運算、模擬
+- **題目連結**：https://leetcode.com/problems/add-binary/
 
-## 題目說明（中文）
+## 題目說明
 
-給定兩個只由 '0' 與 '1' 組成的二進位字串 a、b，回傳它們的二進位和。除了數字零本身外，兩個輸入都不含前導零。
+給定兩個二進位字串 `a` 和 `b`，請將它們代表的數字相加，並以二進位字串回傳結果。字串只包含 `'0'` 和 `'1'`；除了字串 `"0"` 外，輸入不會有多餘的前導零。
 
-**思路**：由兩字串尾端開始逐位相加並攜帶進位，先把結果以反向順序寫入緩衝區。處理完剩餘位與最後進位後，再將字串反轉。
-
-## Problem Statement (English)
-
-Given two binary strings a and b, return their sum as a binary string.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: a = "11", b = "1"
-Output: "100"
+輸入：a = "11"，b = "1"
+輸出："100"
+說明：二進位的 11 是十進位 3，1 是十進位 1；3 + 1 = 4，而 4 的二進位表示是 100。
 
-Input: a = "1010", b = "1011"
-Output: "10101"
+輸入：a = "1010"，b = "1011"
+輸出："10101"
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= a.length, b.length <= 104
-a and b consist only of '0' or '1' characters.
-Each string does not contain leading zeros except for the zero itself.
+- `1 <= a.length, b.length <= 10^4`
+- `a` 和 `b` 只包含 `'0'` 或 `'1'`。
+- 除了 `"0"` 以外，字串不含前導零。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 從兩個字串最右邊開始，因為那裡是個位元，也就是最低位。
+2. 將兩個位元和上一位留下的進位相加。和為 0 或 1 時直接寫下；和為 2 或 3 時，寫下和的最低位，並把進位設為 1。
+3. 一個字串先用完時，另一個字串的剩餘位仍要和進位相加；全部處理完後若還有進位，再補上一個 `'1'`。
+4. 計算時由低位往高位寫入，因此最後把結果反轉。回傳字串由函式配置，呼叫端可在使用後釋放。
+
+**複雜度**：令 `L = max(a.length, b.length)`，時間 `O(L)`；結果字串需要 `O(L)` 空間，除結果外使用 `O(1)` 額外空間。
+
+## C 函式簽名
 
 ```c
-char* addBinary(char* a, char* b) {
-    
-}
+char* addBinary(char* a, char* b);
 ```

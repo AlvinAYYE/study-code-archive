@@ -213,54 +213,42 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-292. Nim Game
-
-You are playing the following Nim Game with your friend: There is a heap of stones on the table, each time one of you take turns to remove 1 to 3 stones. The one who removes the last stone will be the winner. You will take the first turn to remove the stones.
-
-
-
-Both of you are very clever and have optimal strategies for the game. Write a function to determine whether you can win the game given the number of stones in the heap.
-
-
-
-For example, if there are 4 stones in the heap, then you will never win the game: no matter 1, 2, or 3 stones you remove, the last stone will always be removed by your friend.
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
+/* 解題說明
+ * 題目：292. Nim Game（Nim 遊戲）
+ *
+ * 題意完整翻譯：
+ *     桌上有 n 顆石頭，你先拿；你與對手輪流拿石頭，每回合只能拿 1、2 或 3 顆，拿走最後一顆的人獲勝。假設雙方都採取最佳策略，給定
+ *     n，判斷你是否能獲勝。
+ *
+ * 範例：
+ *   輸入：n = 4
+ *   輸出：false
+ *   說明：你拿 1、2、3 顆後，對手都能拿走剩餘的石頭。
+ *   輸入：n = 1
+ *   輸出：true
+ *   說明：你可以一次拿走全部石頭。
+ *   輸入：n = 2
+ *   輸出：true
+ *   說明：你可以一次拿走 2 顆。
+ *
+ * 限制：
+ *   - 1 <= n <= 2^31 - 1
+ *
+ * 解題步驟：
+ *   1. 如果石頭數是 1、2 或 3，你可以一次拿完。
+ *   2. 若 n 不是 4 的倍數，拿走 n 除以 4 的餘數（1、2 或 3 顆），就會把 4 的倍數留給對手。
+ *   3. 若 n 是 4 的倍數，無論先拿 1、2 或 3 顆，都會讓對手有辦法再把 4 的倍數留回來。因此 4 的倍數是必敗局面；回傳 n %
+ *      4 != 0。
+ *
+ * 複雜度：
+ *   時間：O(1)，只做一次取餘數運算。
+ *   空間：O(1)。
+ */
 
 bool canWinNim(int n) {
-#if 0
-    int i, hewins;
-    
-    if (n <= 3) return true;
-    for (i = 1; i <= 3; i ++) {
-        hewins = canWinNim(n - i);
-        if (!hewins) return true;
-    }
-    
-    return false;
-#else
-    return (n % 4) ? true : false;
-#endif
+    // 4 的倍數是必敗局面；其餘數量都能先拿到下一個 4 的倍數。
+    return n % 4 != 0;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:140.1K
-Total Submissions:253.7K
-
-
-Companies Adobe
-Related Topics Brainteaser
-Similar Questions 
-                
-                  
-                    Flip Game II
-*/
 
 /* ---- generated tests ---- */
 int main(void){

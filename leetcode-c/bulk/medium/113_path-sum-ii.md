@@ -1,64 +1,48 @@
-# 0113. Path Sum II《路徑總和 II》
+# 0113. Path Sum II｜路徑總和 II
 
-- **Difficulty**: Medium
-- **Tags**: backtracking, tree, depth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/path-sum-ii/
-- **程式碼**: [`113_path-sum-ii.c`](./113_path-sum-ii.c) — 社群解答（repo begeekmyfriend_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：回溯、樹、深度優先搜尋、二元樹
+- **題目連結**：[LeetCode 0113](https://leetcode.com/problems/path-sum-ii/)
+- **C 程式**：[113_path-sum-ii.c](./113_path-sum-ii.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定二元樹根節點與 targetSum，回傳所有節點值總和等於 targetSum 的根到葉路徑。每條結果必須是節點值組成的串列，而非節點參考。根到葉路徑從根開始並在任一葉節點結束，葉節點沒有子節點。樹最多有 5000 個節點，節點值與 targetSum 均介於 -1000 至 1000。
+給定二元樹根節點和目標總和 `targetSum`，回傳所有從根節點走到葉節點、且節點值總和等於目標的路徑。葉節點是沒有左右子節點的節點。每條路徑以節點值陣列表示。
 
-**思路**：以 DFS 維護目前路徑與剩餘和；抵達符合剩餘和的葉節點時，複製堆疊中的路徑到結果陣列。
-
-## Problem Statement (English)
-
-Given the root of a binary tree and an integer targetSum, return all root-to-leaf paths where the sum of the node values in the path equals targetSum. Each path should be returned as a list of the node values, not node references.
-A root-to-leaf path is a path starting from the root and ending at any leaf node. A leaf is a node with no children.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
-Output: [[5,4,11,2],[5,8,4,5]]
-Explanation: There are two paths whose sum equals targetSum:
-5 + 4 + 11 + 2 = 22
-5 + 8 + 4 + 5 = 22
+輸入：root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22
+輸出：[[5,4,11,2],[5,8,4,5]]
 
-Input: root = [1,2,3], targetSum = 5
-Output: []
+輸入：root = [1,2,3], targetSum = 5
+輸出：[]
 
-Input: root = [1,2], targetSum = 0
-Output: []
+輸入：root = [1,2], targetSum = 0
+輸出：[]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [0, 5000].
--1000 <= Node.val <= 1000
--1000 <= targetSum <= 1000
+- 節點數介於 `0` 到 `5000`。
+- `-1000 <= Node.val <= 1000`。
+- `-1000 <= targetSum <= 1000`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 深度優先走訪時，用 `path` 保存從根到目前節點的值，並用 `remaining` 記錄距離目標還差多少。
+2. 進入節點時把它的值放入 `path`，並從 `remaining` 扣掉該值。
+3. 只有走到葉節點且 `remaining` 剛好為 0，才把目前路徑複製到答案；中途和為目標不算，因為路徑必須到葉節點。
+4. 分別遞迴左右子樹。共享同一個路徑陣列，回傳時不需要另外建立每層暫存陣列。
+
+## 複雜度
+
+- 時間：`O(n + 輸出元素數)`，每個節點走訪一次，符合的路徑需要複製。
+- 額外空間：`O(h)` 遞迴與路徑空間，`h` 是樹高；不含回傳結果。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** pathSum(struct TreeNode* root, int targetSum, int* returnSize, int** returnColumnSizes) {
-    
-}
+int** pathSum(struct TreeNode* root, int targetSum,
+              int* returnSize, int** returnColumnSizes);
 ```

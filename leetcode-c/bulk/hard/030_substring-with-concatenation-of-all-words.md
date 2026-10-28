@@ -7,9 +7,17 @@
 
 ## 題目說明（中文）
 
-給定字串 s 與單字陣列 words，其中所有單字長度相同；串聯字串必須恰好包含 words 的所有單字各一次、順序任意且中間沒有其他字元。回傳 s 中所有符合此條件之子字串的起始索引，順序不限。
+給定字串 `s` 與單字陣列 `words`，其中所有單字長度相同。合法的串聯字串必須恰好包含 `words` 中的每個單字一次；重複單字也須計入，單字排列順序任意，且中間不能夾雜其他字元。請回傳 `s` 中所有符合條件之子字串的起始索引，順序不限。
 
-**思路**：程式建立單字雜湊表，記錄每個相異單字的需求次數與目前視窗次數，並以單字長度逐段掃描。遇到過量單字便從左端移出單字，集滿所有單字時記錄起點並重設下一次搜尋位置。
+## 解題思路
+
+1. 因為所有單字等長，可把 `s` 依 `word_len` 為步長切成一個個候選單字。
+2. 先用雜湊表為每個相異單字編號；`counts` 記錄需求次數，`counts2` 記錄目前視窗已有的次數。
+3. `right` 每次讀取一個候選單字。若它不在 `words` 中，清空視窗並把搜尋起點向右移一個字元，改試下一種對齊位置。
+4. 若某個單字出現過量，持續從 `mid` 移出左端單字，直到次數重新合法。
+5. 視窗累計 `wordsSize` 個單字時記錄 `mid`，再從下一個可能起點繼續搜尋，因此也能找到彼此重疊的答案。
+
+平均時間約為 `O(|s| * word_len)`，額外空間為 `O(|s| + wordsSize)`。
 
 ## Problem Statement (English)
 
@@ -21,31 +29,28 @@ Example 2:
 Example 3:
 Constraints:
 
-## 範例 Examples
+## 範例
 
 ```text
-Input: s = "barfoothefoobarman", words = ["foo","bar"]
-Output: [0,9]
-Explanation:
-The substring starting at 0 is "barfoo" . It is the concatenation of ["bar","foo"] which is a permutation of words . The substring starting at 9 is "foobar" . It is the concatenation of ["foo","bar"] which is a permutation of words .
+輸入：s = "barfoothefoobarman", words = ["foo","bar"]
+輸出：[0,9]
+說明：索引 0 的 "barfoo" 與索引 9 的 "foobar" 都恰好串聯全部單字。
 
-Input: s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"]
-Output: []
-Explanation:
-There is no concatenated substring.
+輸入：s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"]
+輸出：[]
+說明：不存在符合條件的連續子字串。
 
-Input: s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
-Output: [6,9,12]
-Explanation:
-The substring starting at 6 is "foobarthe" . It is the concatenation of ["foo","bar","the"] . The substring starting at 9 is "barthefoo" . It is the concatenation of ["bar","the","foo"] . The substring starting at 12 is "thefoobar" . It is the concatenation of ["the","foo","bar"] .
+輸入：s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
+輸出：[6,9,12]
+說明：三個起點對應的子字串依序為 "foobarthe"、"barthefoo"、"thefoobar"。
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= s.length <= 104
-1 <= words.length <= 5000
-1 <= words[i].length <= 30
-s and words[i] consist of lowercase English letters.
+- `1 <= s.length <= 10^4`
+- `1 <= words.length <= 5000`
+- `1 <= words[i].length <= 30`
+- `s` 與 `words[i]` 僅包含小寫英文字母。
 
 ## 官方 C 函式簽名 Signature
 

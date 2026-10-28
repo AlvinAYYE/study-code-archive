@@ -1,50 +1,44 @@
 # 0119. Pascal's Triangle II《楊輝三角 II》
 
-- **Difficulty**: Easy
-- **Tags**: array, dynamic-programming
-- **題目連結**: https://leetcode.com/problems/pascals-triangle-ii/
-- **程式碼**: [`119_pascals-triangle-ii.c`](./119_pascals-triangle-ii.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/pascals-triangle-ii/
 
-## 題目說明（中文）
+## 題目翻譯
 
-給定從 0 開始計數的 rowIndex，回傳楊輝三角的第 rowIndex 列。楊輝三角每個內部數字都等於上一列正上方兩個相鄰數字之和。題目進一步要求可將額外空間最佳化為 O(rowIndex)。rowIndex 介於 0 至 33。
+給定從 0 開始的列索引 rowIndex，回傳楊輝三角中該列的所有數字。例如 rowIndex=0 是第一列 [1]，rowIndex=3 是 [1,3,3,1]。
 
-**思路**：迭代產生各列，利用 tmp 保留前一列，並藉由楊輝三角的對稱性只計算一半後同步寫入兩側。
+## 範例
 
-## Problem Statement (English)
+~~~text
+輸入：rowIndex = 3
+輸出：[1,3,3,1]
 
-Given an integer rowIndex, return the rowIndexth (0-indexed) row of the Pascal's triangle.
-In Pascal's triangle, each number is the sum of the two numbers directly above it as shown:
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-Follow up: Could you optimize your algorithm to use only O(rowIndex) extra space?
+輸入：rowIndex = 0
+輸出：[1]
 
-## 範例 Examples
+輸入：rowIndex = 1
+輸出：[1,1]
+~~~
 
-```text
-Input: rowIndex = 3
-Output: [1,3,3,1]
+## 限制
 
-Input: rowIndex = 0
-Output: [1]
+- 0 <= rowIndex <= 33
+- 進階要求：額外空間只使用 O(rowIndex)。
 
-Input: rowIndex = 1
-Output: [1,1]
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 配置 rowIndex + 1 個整數，先令 row[0] = 1。
+2. 依序建立第 1 列到第 rowIndex 列。
+3. 每一列從最右邊往左更新：row[col] += row[col - 1]。
+4. 必須由右往左，這樣 row[col - 1] 還是上一列的值，不會被提前改掉。
 
-0 <= rowIndex <= 33
+## 複雜度
 
-## 官方 C 函式簽名 Signature
+- 時間：O(rowIndex²)。
+- 空間：O(rowIndex)，只保存目前的一列。
 
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* getRow(int rowIndex, int* returnSize) {
-    
-}
-```
+## C 函式簽名
+
+~~~c
+int* getRow(int rowIndex, int* returnSize);
+~~~

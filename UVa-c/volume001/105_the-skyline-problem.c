@@ -13,10 +13,52 @@
  */
 #include <stdio.h>
 
-static inline int max_val(int a, int b) { return a > b ? a : b; }
+#define MAX_COORDINATE 10000
+
+void solve_uva105(FILE *in, FILE *out) {
+    int heights[MAX_COORDINATE + 1] = {0};
+    int left;
+    int height;
+    int right;
+    int maximum_right = 0;
+    int have_building = 0;
+    int previous = 0;
+    int first = 1;
+    int x;
+
+    while (fscanf(in, "%d %d %d", &left, &height, &right) == 3) {
+        if (left < 0 || right > MAX_COORDINATE || left >= right || height < 0) {
+            continue;
+        }
+        have_building = 1;
+        if (right > maximum_right) {
+            maximum_right = right;
+        }
+        for (x = left; x < right; x++) {
+            if (height > heights[x]) {
+                heights[x] = height;
+            }
+        }
+    }
+
+    if (!have_building) {
+        return;
+    }
+
+    for (x = 0; x <= maximum_right; x++) {
+        if (heights[x] != previous) {
+            if (!first) {
+                fputc(' ', out);
+            }
+            fprintf(out, "%d %d", x, heights[x]);
+            first = 0;
+            previous = heights[x];
+        }
+    }
+    fputc('\n', out);
+}
 
 int main(void) {
-    int ok = 1;
-    printf("%s: UVa 105 - The Skyline Problem\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    solve_uva105(stdin, stdout);
+    return 0;
 }

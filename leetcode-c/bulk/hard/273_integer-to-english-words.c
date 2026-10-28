@@ -232,74 +232,56 @@ const char *n2x[] = { "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", 
     f = 1; \
 } while (0)
  
+static void appendWords(char *out, int *length, const char *word) {
+    if (*length > 0) out[(*length)++] = ' ';
+    while (*word) out[(*length)++] = *word++;
+    out[*length] = '\0';
+}
+
+static void appendBelowThousand(char *out, int *length, int value) {
+    static const char *ones[] = {
+        "", "One", "Two", "Three", "Four", "Five", "Six", "Seven",
+        "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
+        "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"
+    };
+    static const char *tens[] = {
+        "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty",
+        "Seventy", "Eighty", "Ninety"
+    };
+
+    if (value >= 100) {
+        appendWords(out, length, ones[value / 100]);
+        appendWords(out, length, "Hundred");
+        value %= 100;
+    }
+    if (value >= 20) {
+        appendWords(out, length, tens[value / 10]);
+        value %= 10;
+    }
+    if (value > 0) appendWords(out, length, ones[value]);
+}
+
 char* numberToWords(int num) {
-    char *buff, *p;
-    int sz, l, total;
-    int m, k, t, d = 1000000000;
-    int f, onex;
-    
-    sz = 1000;
-    buff = calloc(sz, sizeof(char));
-    //assert(buff);
-    p = buff;
-    
-    p[0] = 0;
-    total = 0;
-    
-    k = num / d;
-    if (k) {
-        APPEND(nx[k - 1]);
-        APPEND(tms[0]);
+    static const int divisors[] = {1000000000, 1000000, 1000, 1};
+    static const char *scales[] = {"Billion", "Million", "Thousand", ""};
+    char *answer = (char*)calloc(128, sizeof(char));
+    int length = 0;
+
+    if (!answer) return NULL;
+    if (num == 0) {
+        strcpy(answer, "Zero");
+        return answer;
     }
-    
-    num = num % d;
-    d = d / 1000;
-    
-    t = 1;
-    while (num) {
-        m = num / d;
-        num = num % d;
-        d = d / 1000;
-        
-        f = onex = 0;
-        
-        k = m / 100;
-        m = m % 100;
-        if (k) {
-            APPEND(nx[k - 1]);
-            APPEND(tms[4]);
-        }
-        
-        k = m / 10;
-        m = m % 10;
-        if (k == 1) {
-            onex = 1;
-        } else if (k) {
-            APPEND(n2x[k - 2]);
-        }
-        
-        k = m;
-        if (onex) {
-            APPEND(n1x[k]);
-        } else if (k) {
-            APPEND(nx[k - 1]);
-        }
-        
-        if (f && d) {
-            APPEND(tms[t]);
-        }
-        t ++;
+
+    for (int group = 0; group < 4; ++group) {
+        int value = num / divisors[group];
+        num %= divisors[group];
+        if (value == 0) continue;
+
+        appendBelowThousand(answer, &length, value);
+        if (scales[group][0] != '\0') appendWords(answer, &length, scales[group]);
     }
-    
-    if (total == 0) {
-        strcpy(buff, "Zero");
-    } else {
-        buff[total - 1] = 0;
-    }
-    
-    //printf("%s\n", buff);
-    
-    return buff;
+    return answer;
 }
 
 
@@ -331,6 +313,14 @@ int main(void){
 {
   char *act_2 = numberToWords((1234567));
   if (!(strcmp(act_2, "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven") == 0)) { pass = 0; printf("  test 2 FAIL\n"); }
+  ntests++; }
+{
+  char *act_3 = numberToWords((0));
+  if (!(strcmp(act_3, "Zero") == 0)) { pass = 0; printf("  test 3 FAIL\n"); }
+  ntests++; }
+{
+  char *act_4 = numberToWords((2147483647));
+  if (!(strcmp(act_4, "Two Billion One Hundred Forty Seven Million Four Hundred Eighty Three Thousand Six Hundred Forty Seven") == 0)) { pass = 0; printf("  test 4 FAIL\n"); }
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 273, "numberToWords", ntests);
  return (pass&&ntests)?0:1;

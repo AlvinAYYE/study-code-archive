@@ -9,28 +9,32 @@
  * [EN] Problem (official statement, source: github mcaupybugs/leetcode-problems-db)
  *     Given a string s, return the longest palindromic substring in s.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     給定字串 s，回傳其中最長的迴文子字串。
+ * [中文] 題目說明
+ *     給定字串 s，回傳其中最長的迴文子字串。迴文是由左向右與由右向左讀
+ *     都相同的字串；子字串必須由原字串中的連續字元組成。
  *
- * Examples:
- *   Example 1:
- *     Input: s = "babad"
- *     Output: "bab"
- *     Explanation: "aba" is also a valid answer.
- *   Example 2:
- *     Input: s = "cbbd"
- *     Output: "bb"
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：s = "babad"
+ *     輸出："bab"
+ *     說明："aba" 也是正確答案。
+ *   範例 2：
+ *     輸入：s = "cbbd"
+ *     輸出："bb"
  *
- * Constraints:
- *   - 1 <= s.length <= 1000
- *   - s consist of only digits and English letters.
+ * [中文] 限制
+ *   - 1 <= s.length <= 1000。
+ *   - s 只包含數字與英文字母。
  *
  * LeetCode official C stub (函式簽名):
  *   char* longestPalindrome(char* s) {
  *   }
  *
- * [EN] Approach: Expand around 2n-1 centers (single char / pair); keep the longest span, copy it out. Time O(n^2), space O(1).
- * [中文] 思路: 由 2n-1 個中心（單字或雙字）向兩側擴展，保留最長區間後複製回傳。時間 O(n^2)、空間 O(1)。
+ * [中文] 直觀解題思路
+ *   1. 每個迴文都有中心；奇數長度以一個字元為中心，偶數長度以兩字元間隙為中心。
+ *   2. 對每個位置各做一次奇數與偶數擴展，只要左右字元相同就繼續往外走。
+ *   3. 擴展停止後比較區間長度，記下最長區間，最後複製成新字串回傳。
+ *   共檢查 2n - 1 個中心，最壞時間複雜度 O(n^2)，除回傳字串外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -39,6 +43,7 @@
 
 /* ---------- LeetCode submission / 提交區 ---------- */
 static void expand(const char *s, int n, int l, int r, int *bestL, int *bestLen) {
+    /* l == r 處理奇數長度；r == l + 1 處理偶數長度。 */
     while (l >= 0 && r < n && s[l] == s[r]) { --l; ++r; }
     ++l;
     if (r - l > *bestLen) { *bestL = l; *bestLen = r - l; }

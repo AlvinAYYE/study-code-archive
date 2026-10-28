@@ -12,37 +12,40 @@
  *     Implement the LRUCache class:
  *     The functions get and put must each run in O(1) average time complexity.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     實作容量固定的 LRU 快取，get/put 均需 O(1)。
+ * [中文] 題目說明
+ *     設計一個固定容量、遵循「最近最少使用」（LRU）規則的快取，並實作：
+ *       - LRUCache(capacity)：以正整數 capacity 初始化快取。
+ *       - get(key)：若 key 存在，回傳其值並標記為最近使用；否則回傳 -1。
+ *       - put(key, value)：若 key 已存在就更新值並標記為最近使用；若不存在則
+ *         插入。插入使容量超限時，刪除最久未使用的 key。
+ *     get 與 put 都必須達到平均 O(1) 時間複雜度。
  *
- * Examples:
- *   Example 1:
- *     Input
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：
  *     ["LRUCache", "put", "put", "get", "put", "get", "put", "get",
  *     "get", "get"]
  *     [[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]
- *     Output
+ *     輸出：
  *     [null, null, null, 1, null, -1, null, -1, 3, 4]
  *
- *     Explanation
+ *     說明：
  *     LRUCache lRUCache = new LRUCache(2);
- *     lRUCache.put(1, 1); // cache is {1=1}
- *     lRUCache.put(2, 2); // cache is {1=1, 2=2}
- *     lRUCache.get(1); // return 1
- *     lRUCache.put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1,
- *     3=3}
- *     lRUCache.get(2); // returns -1 (not found)
- *     lRUCache.put(4, 4); // LRU key was 1, evicts key 1, cache is {4=4,
- *     3=3}
- *     lRUCache.get(1); // return -1 (not found)
- *     lRUCache.get(3); // return 3
- *     lRUCache.get(4); // return 4
+ *     lRUCache.put(1, 1); // 快取為 {1=1}
+ *     lRUCache.put(2, 2); // 快取為 {1=1, 2=2}
+ *     lRUCache.get(1);    // 回傳 1，key 1 成為最近使用
+ *     lRUCache.put(3, 3); // 淘汰最久未使用的 key 2
+ *     lRUCache.get(2);    // 找不到，回傳 -1
+ *     lRUCache.put(4, 4); // 淘汰最久未使用的 key 1
+ *     lRUCache.get(1);    // 回傳 -1
+ *     lRUCache.get(3);    // 回傳 3
+ *     lRUCache.get(4);    // 回傳 4
  *
- * Constraints:
- *   - 1 <= capacity <= 3000
- *   - 0 <= key <= 10^4
- *   - 0 <= value <= 10^5
- *   - At most 2 * 10^5 calls will be made to get and put.
+ * [中文] 限制
+ *   - 1 <= capacity <= 3000。
+ *   - 0 <= key <= 10^4。
+ *   - 0 <= value <= 10^5。
+ *   - get 與 put 合計最多呼叫 2 * 10^5 次。
  *
  * LeetCode official C stub (函式簽名):
  *   typedef struct {
@@ -56,8 +59,12 @@
  *   void lRUCacheFree(LRUCache* obj) {
  *   }
  *
- * [EN] Approach: Doubly-linked list (recency order) + open-addressing hash (node index): move-to-front on touch, evict tail when full. All ops O(1).
- * [中文] 思路: 雙向鏈表維護新近度 + 開放定址雜湊表定位節點：命中即移到頭部，容量滿時淘汰尾端。全部 O(1)。
+ * [中文] 直觀解題思路
+ *   1. 用雙向鏈結串列維護使用順序：head 是最近使用，tail 是最久未使用。
+ *   2. 題目限制 key 在 0..10000，可用 loc[key] 直接找到節點槽位，省去搜尋。
+ *   3. get 命中或 put 更新時，把該節點從原位置移到 head。
+ *   4. put 新增且容量已滿時，重用 tail 槽位，清除舊 key 對應後再移到 head。
+ *   每次查找、移動、更新與淘汰都是 O(1)；儲存空間 O(capacity + 10001)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -70,9 +77,8 @@
  *                int lRUCacheGet(LRUCache* obj, int key);
  *                void lRUCachePut(LRUCache* obj, int key, int value);
  *                void lRUCacheFree(LRUCache* obj);
- * Design: array-backed doubly linked list (recency order) + direct-index
- * table loc[key] -> node index.  LeetCode constraints: 0 <= key,value <= 10^4,
- * capacity <= 3*10^4, so a flat loc[10001] is O(1) with zero hashing.
+ * 設計：以陣列模擬雙向鏈結串列，loc[key] 直接對應節點索引。
+ * 題目限制 key <= 10^4、capacity <= 3000，因此固定 loc[10001] 可直接 O(1) 查找。
  * ------------------------------------------------- */
 #define LRU_KEYMAX 10001
 
@@ -85,6 +91,7 @@ typedef struct {
 
 static void lruUnlink(LRUCache *c, int i) {
     int p = c->prv[i], n = c->nxt[i];
+    /* 連結存的是 index + 1，讓 0 能代表沒有前後節點。 */
     if (p) c->nxt[p - 1] = n; else c->head = n;
     if (n) c->prv[n - 1] = p; else c->tail = p;
     c->prv[i] = c->nxt[i] = 0;
@@ -115,6 +122,7 @@ int lRUCacheGet(LRUCache *c, int key) {
     slot = c->loc[key];
     if (!slot) return -1;
     --slot;
+    /* 被讀取的節點立刻成為最近使用。 */
     lruUnlink(c, slot);
     lruPushFront(c, slot);
     return c->v[slot];
@@ -129,9 +137,9 @@ void lRUCachePut(LRUCache *c, int key, int value) {
         lruPushFront(c, slot);
         return;
     }
-    if (c->used < c->cap) {                     /* fresh slot */
+    if (c->used < c->cap) {                     /* 尚有空槽 */
         slot = c->used++;
-    } else {                                    /* evict LRU */
+    } else {                                    /* 重用最久未使用的尾端槽位 */
         slot = c->tail - 1;
         c->loc[c->k[slot]] = 0;
         lruUnlink(c, slot);

@@ -19,17 +19,82 @@
  * ==========================================================================
  */
 #include <stdio.h>
-#include <stdlib.h>
+#include <string.h>
+
+static int find_root(int parent[26], int x) {
+    if (parent[x] != x) parent[x] = find_root(parent, parent[x]);
+    return parent[x];
+}
+
+static void unite(int parent[26], int a, int b) {
+    a = find_root(parent, a);
+    b = find_root(parent, b);
+    if (a != b) parent[b] = a;
+}
+
+static int can_order(const int in_degree[26], const int out_degree[26],
+                     int parent[26], const int used[26]) {
+    int starts = 0;
+    int ends = 0;
+    int component = -1;
+    int i;
+
+    for (i = 0; i < 26; ++i) {
+        int difference = out_degree[i] - in_degree[i];
+        if (difference == 1) {
+            ++starts;
+        } else if (difference == -1) {
+            ++ends;
+        } else if (difference != 0) {
+            return 0;
+        }
+
+        if (used[i]) {
+            int root = find_root(parent, i);
+            if (component == -1) component = root;
+            else if (component != root) return 0;
+        }
+    }
+    return (starts == 0 && ends == 0) || (starts == 1 && ends == 1);
+}
+
+int solve(FILE *in, FILE *out) {
+    int test_cases;
+    int case_number;
+
+    if (fscanf(in, "%d", &test_cases) != 1) return 0;
+    for (case_number = 0; case_number < test_cases; ++case_number) {
+        int in_degree[26] = {0};
+        int out_degree[26] = {0};
+        int used[26] = {0};
+        int parent[26];
+        int word_count;
+        int i;
+        char word[1024];
+
+        for (i = 0; i < 26; ++i) parent[i] = i;
+        if (fscanf(in, "%d", &word_count) != 1) return 1;
+        for (i = 0; i < word_count; ++i) {
+            size_t len;
+            int first;
+            int last;
+            if (fscanf(in, "%1023s", word) != 1) return 1;
+            len = strlen(word);
+            first = word[0] - 'a';
+            last = word[len - 1] - 'a';
+            ++out_degree[first];
+            ++in_degree[last];
+            used[first] = used[last] = 1;
+            unite(parent, first, last);
+        }
+
+        fprintf(out, "%s\n", can_order(in_degree, out_degree, parent, used)
+                ? "Ordering is possible."
+                : "The door cannot be opened.");
+    }
+    return 0;
+}
 
 int main(void) {
-    int in_deg[26] = {0}, out_deg[26] = {0};
-    /* "acm", "malform", "mouse" -> a->m, m->m, m->e */
-    out_deg['a'-'a']++; in_deg['m'-'a']++;
-    out_deg['m'-'a']++; in_deg['m'-'a']++;
-    out_deg['m'-'a']++; in_deg['e'-'a']++;
-    int start_cnt = (out_deg['a'-'a'] - in_deg['a'-'a'] == 1);
-    int end_cnt   = (in_deg['e'-'a'] - out_deg['e'-'a'] == 1);
-    int ok = start_cnt && end_cnt;
-    printf("%s: UVa 10129 - Play on Words\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    return solve(stdin, stdout);
 }

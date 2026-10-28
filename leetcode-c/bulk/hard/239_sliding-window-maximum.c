@@ -256,25 +256,34 @@ int getmax(int *nums, int k) {
     return max;
 }
 int* maxSlidingWindow(int* nums, int numsSize, int k, int* returnSize) {
-    int max = 0, i;
-    int *buff;
-    
-    if (!numsSize) return NULL;
-    *returnSize = numsSize - k + 1;
-    
-    buff = malloc((*returnSize) * sizeof(int));
-    //assert(buff);
-    buff[0] = getmax(&nums[0], k);
-    for (i = 1; i + k <= numsSize; i ++) {
-        if (buff[i - 1] < nums[i + k - 1]) {
-            buff[i] = nums[i + k - 1];
-        } else if (buff[i - 1] == nums[i - 1]) {
-            buff[i] = getmax(&nums[i], k);
-        } else {
-            buff[i] = buff[i - 1];
-        }
+    int *answer, *deque;
+    int front = 0, back = 0, out = 0;
+
+    *returnSize = 0;
+    if (numsSize == 0 || k <= 0 || k > numsSize) return NULL;
+
+    answer = (int*)malloc(sizeof(int) * (size_t)(numsSize - k + 1));
+    deque = (int*)malloc(sizeof(int) * (size_t)numsSize);
+    if (!answer || !deque) {
+        free(answer);
+        free(deque);
+        return NULL;
     }
-    return buff;
+
+    for (int i = 0; i < numsSize; ++i) {
+        /* 移除已經離開視窗的索引。 */
+        if (front < back && deque[front] <= i - k) ++front;
+
+        /* 尾端較小的值不可能再成為最大值，直接丟掉。 */
+        while (front < back && nums[deque[back - 1]] <= nums[i]) --back;
+        deque[back++] = i;
+
+        if (i >= k - 1) answer[out++] = nums[deque[front]];
+    }
+
+    free(deque);
+    *returnSize = out;
+    return answer;
 }
 
 
@@ -306,14 +315,21 @@ int main(void){
   static int arr0_0[] = {1,3,-1,-3,5,3,6,7};
   int *act_0 = maxSlidingWindow(arr0_0, 8,(3),&rsz_0);
   static const int exp_0[] = {3,3,5,5,6,7};
-  if (!(lc_eq_list_sorted(act_0, rsz_0, exp_0, 6))) { pass = 0; printf("  test 0 FAIL\n"); }
+  if (!(lc_eq_list(act_0, rsz_0, exp_0, 6))) { pass = 0; printf("  test 0 FAIL\n"); }
   ntests++; }
 {
   int rsz_1 = 0;
   static int arr1_0[] = {1};
   int *act_1 = maxSlidingWindow(arr1_0, 1,(1),&rsz_1);
   static const int exp_1[] = {1};
-  if (!(lc_eq_list_sorted(act_1, rsz_1, exp_1, 1))) { pass = 0; printf("  test 1 FAIL\n"); }
+  if (!(lc_eq_list(act_1, rsz_1, exp_1, 1))) { pass = 0; printf("  test 1 FAIL\n"); }
+  ntests++; }
+{
+  int rsz_2 = 0;
+  static int arr2_0[] = {1,3,1,2,0,5};
+  int *act_2 = maxSlidingWindow(arr2_0, 6,(3),&rsz_2);
+  static const int exp_2[] = {3,3,2,5};
+  if (!(lc_eq_list(act_2, rsz_2, exp_2, 4))) { pass = 0; printf("  test 2 FAIL\n"); }
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 239, "maxSlidingWindow", ntests);
  return (pass&&ntests)?0:1;

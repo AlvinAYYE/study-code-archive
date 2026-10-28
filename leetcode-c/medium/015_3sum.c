@@ -12,39 +12,39 @@
  *     nums[k] == 0.
  *     Notice that the solution set must not contain duplicate triplets.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     找出陣列中所有和為 0 且不重複的三元組。
+ * [中文] 題目說明
+ *     給定整數陣列 nums，找出所有索引互不相同且三數和為 0 的三元組
+ *     [nums[i], nums[j], nums[k]]。答案中不能出現內容相同的三元組，
+ *     三元組內與答案集合的排列順序都不限。
  *
- * Examples:
- *   Example 1:
- *     Input: nums = [-1,0,1,2,-1,-4]
- *     Output: [[-1,-1,2],[-1,0,1]]
- *     Explanation:
- *     nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0.
- *     nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0.
- *     nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0.
- *     The distinct triplets are [-1,0,1] and [-1,-1,2].
- *     Notice that the order of the output and the order of the triplets
- *     does not matter.
- *   Example 2:
- *     Input: nums = [0,1,1]
- *     Output: []
- *     Explanation: The only possible triplet does not sum up to 0.
- *   Example 3:
- *     Input: nums = [0,0,0]
- *     Output: [[0,0,0]]
- *     Explanation: The only possible triplet sums up to 0.
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：nums = [-1,0,1,2,-1,-4]
+ *     輸出：[[-1,-1,2],[-1,0,1]]
+ *     說明：可找到的兩種不同組合是 -1 + -1 + 2 = 0 與 -1 + 0 + 1 = 0。
+ *   範例 2：
+ *     輸入：nums = [0,1,1]
+ *     輸出：[]
+ *     說明：唯一可能的三元組總和不為 0。
+ *   範例 3：
+ *     輸入：nums = [0,0,0]
+ *     輸出：[[0,0,0]]
+ *     說明：唯一可能的三元組總和為 0。
  *
- * Constraints:
- *   - 3 <= nums.length <= 3000
- *   - -10^5 <= nums[i] <= 10^5
+ * [中文] 限制
+ *   - 3 <= nums.length <= 3000。
+ *   - -10^5 <= nums[i] <= 10^5。
  *
  * LeetCode official C stub (函式簽名):
  *   int** threeSum(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
  *   }
  *
- * [EN] Approach: Sort, then for each i use two pointers on the suffix; skip duplicates on all three positions. Time O(n^2), space O(1) besides output.
- * [中文] 思路: 先排序，固定 i 後在尾段用雙指針湊 -nums[i]，三個位置都跳過重複。時間 O(n^2)、除輸出外空間 O(1)。
+ * [中文] 直觀解題思路
+ *   1. 先排序，讓相同數字相鄰，也讓雙指標能依總和大小移動。
+ *   2. 依序固定第一個數 nums[i]，再用 left、right 從剩餘區間兩端往中間找。
+ *   3. 總和太小就增加 left，太大就減少 right；等於 0 時記錄答案。
+ *   4. 固定值與找到答案後的左右值都要跳過重複數字，避免重複三元組。
+ *   排序後搜尋的時間複雜度 O(n^2)；不計輸出與排序實作所需空間為 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -61,6 +61,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
     *returnSize = 0; *returnColumnSizes = NULL;
     qsort(nums, (size_t)numsSize, sizeof(int), cmpint);
     for (i = 0; i + 2 < numsSize; ++i) {
+        /* 固定數字相同會產生相同三元組，只處理第一次。 */
         if (i > 0 && nums[i] == nums[i - 1]) continue;
         if (nums[i] > 0) break;
         j = i + 1; k = numsSize - 1;
@@ -77,6 +78,7 @@ int **threeSum(int *nums, int numsSize, int *returnSize, int **returnColumnSizes
                     cols = (int *)realloc(cols, (size_t)cap * sizeof(int));
                 }
                 out[cnt] = row; cols[cnt] = 3; ++cnt;
+                /* 答案已記錄，左右兩端都跳到下一個不同數字。 */
                 do { ++j; } while (j < k && nums[j] == nums[j - 1]);
                 do { --k; } while (j < k && nums[k] == nums[k + 1]);
             }

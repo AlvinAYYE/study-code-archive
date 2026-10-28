@@ -1,47 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0274. H-Index
+ * LeetCode 0274. H-Index（H 指數）
  * Difficulty: Medium
- * Tags: array, sorting, counting-sort
- * URL: https://leetcode.com/problems/h-index/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array of integers citations where citations[i] is the
- *     number of citations a researcher received for their ith paper,
- *     return the researcher's h-index.
- *     According to the definition of h-index on Wikipedia: The h-index is
- *     defined as the maximum value of h such that the given researcher has
- *     published at least h papers that have each been cited at least h
- *     times.
- *
- * [中文] 題目: H 指數
- * [中文] 題目說明:
- *     給定 citations，其中 citations[i] 是研究者第
- *      i 篇論文的引用數，求其 H 指數。H 指數為最大的 h，使至少有
- *      h 篇論文各自至少被引用 h 次。
- *
- * [中文] 思路:
- *     建立大小為論文數加一的計數桶，將超過論文數的引用數歸入最後一桶。從高
- *     引用數往下累加論文篇數，首次滿足累計篇數不小於索引的位置即為答案。
- *
- * Examples:
- *     Input: citations = [3,0,6,1,5]
- *     Output: 3
- *     Explanation: [3,0,6,1,5] means the researcher has 5 papers in
- *     total and each of them had received 3, 0, 6, 1, 5 citations
- *     respectively.
- *     Since the researcher has 3 papers with at least 3 citations
- *     each and the remaining two with no more than 3 citations each,
- *     their h-index is 3.
- *     Input: citations = [1,3,1]
- *     Output: 1
- *
- * Constraints:
- *   - n == citations.length
- *   - 1 <= n <= 5000
+ * 題意：給定研究者每篇論文的引用次數 citations，計算 H 指數 h：至少有 h 篇論文各自被引用至少 h 次，而且其餘論文各自被引用不超過 h 次。回傳最大的 h。
+ * 範例：
+ *   1. 輸入：citations = [3,0,6,1,5]；輸出：3。至少 3 篇論文各有 3 次以上引用。
+ *   2. 輸入：citations = [1,3,1]；輸出：1。
+ * 限制：
+ *   - 1 <= citations.length <= 5000
  *   - 0 <= citations[i] <= 1000
- * ==========================================================================
+ * 解法：
+ *   1. 建立 citations.length + 1 個桶。引用次數超過論文總數的值都放進最後一桶，因為 H 指數不可能大於論文數。
+ *   2. 從最大可能的 h 往下掃描，累加引用次數至少為 h 的論文數。
+ *   3. 第一個滿足「至少 h 篇論文有至少 h 次引用」的 h，就是最大的 H 指數。
+ * 複雜度：時間 O(n)，額外空間 O(n)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -215,73 +186,29 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-274. H-Index
-
-Given an array of citations (each citation is a non-negative integer) of a researcher, write a function to compute the researcher's h-index.
-
-
-
-According to the definition of h-index on Wikipedia: "A scientist has index h if h of his/her N papers have at least h citations each, and the other N   h papers have no more than h citations each."
-
-
-
-For example, given citations = [3, 0, 6, 1, 5], which means the researcher has 5 papers in total and each of them had received 3, 0, 6, 1, 5 citations respectively. Since the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, his h-index is 3.
-
-
-
-Note: If there are several possible values for h, the maximum one is taken as the h-index.
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
-
 int hIndex(int* citations, int citationsSize) {
-    int i, j, k = 0;
-    int n;
-#if 0   // O(n^2) 39ms
-    for (i = citationsSize; i > 0; i --) { // for every possible h
-        n = 0;
-        for (j = 0; j < citationsSize; j ++) { // for every citation
-            if (citations[j] >= i) n ++;
+    int *bucket = (int *)calloc((size_t)citationsSize + 1, sizeof(int));
+    if (bucket == NULL) {
+        return 0;
+    }
+
+    for (int i = 0; i < citationsSize; i++) {
+        int count = citations[i] < citationsSize ? citations[i] : citationsSize;
+        bucket[count]++;
+    }
+
+    int papersAtLeastH = 0;
+    for (int h = citationsSize; h >= 0; h--) {
+        papersAtLeastH += bucket[h];
+        if (papersAtLeastH >= h) {
+            free(bucket);
+            return h;
         }
-        if (n >= i) {
-            return i;
-        }
     }
-#else   // O(n) 3ms
-    int *x;
-    x = calloc(citationsSize + 1, sizeof(int));
-    //assert(x);
-    for (i = 0; i < citationsSize; i ++) { // for every citation
-        j = citations[i] > citationsSize ? citationsSize : citations[i];
-        x[j] ++;
-    }
-    n = 0;
-    for (i = citationsSize; i > 0; i --) {
-        n += x[i];
-        if (n >= i) { k = i; break; }
-    }
-    free(x);
-#endif
-    return k;
+
+    free(bucket);
+    return 0;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:77.3K
-Total Submissions:233.4K
-
-
-Companies Bloomberg Google Facebook
-Related Topics Hash Table Sort
-Similar Questions 
-                
-                  
-                    H-Index II
-*/
 
 /* ---- generated tests ---- */
 int main(void){

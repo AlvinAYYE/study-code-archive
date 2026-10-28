@@ -1,60 +1,45 @@
-# 0040. Combination Sum II《組合總和 II》
+# 0040. Combination Sum II｜組合總和 II
 
-- **Difficulty**: Medium
-- **Tags**: array, backtracking
-- **題目連結**: https://leetcode.com/problems/combination-sum-ii/
-- **程式碼**: [`040_combination-sum-ii.c`](./040_combination-sum-ii.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、回溯
+- **題目連結**：[LeetCode 0040](https://leetcode.com/problems/combination-sum-ii/)
+- **C 程式**：[040_combination-sum-ii.c](./040_combination-sum-ii.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定可能含重複值的 candidates 與 target，找出所有元素總和等於 target 的不重複組合。每個陣列元素在同一組合中至多使用一次，結果不得含重複組合。
+給定可能含有重複值的正整數陣列 `candidates` 和 `target`，找出所有總和等於目標的不同組合。每個陣列元素最多只能使用一次；答案不可有內容相同的組合。
 
-**思路**：程式先排序，再由尾端回溯挑選更前面的元素，因而每個位置只會使用一次；同一層以已找到的索引略過相同數值來去重。
-
-## Problem Statement (English)
-
-Given a collection of candidate numbers (candidates) and a target number (target), find all unique combinations in candidates where the candidate numbers sum to target.
-Each number in candidates may only be used once in the combination.
-Note: The solution set must not contain duplicate combinations.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: candidates = [10,1,2,7,6,1,5], target = 8
-Output: 
-[
-[1,1,6],
-[1,2,5],
-[1,7],
-[2,6]
-]
+輸入：candidates = [10,1,2,7,6,1,5], target = 8
+輸出：[[1,1,6],[1,2,5],[1,7],[2,6]]
 
-Input: candidates = [2,5,2,1,2], target = 5
-Output: 
-[
-[1,2,2],
-[5]
-]
+輸入：candidates = [2,5,2,1,2], target = 5
+輸出：[[1,2,2],[5]]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= candidates.length <= 100
-1 <= candidates[i] <= 50
-1 <= target <= 30
+- `1 <= candidates.length <= 100`。
+- `1 <= candidates[i] <= 50`。
+- `1 <= target <= 30`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 將候選數排序，讓重複值相鄰，也方便提早停止。
+2. 回溯時用 `start` 限定可選範圍；選了索引 `i` 後，下一層從 `i + 1` 開始，因此同一個元素不會重複使用。
+3. 在同一層遞迴中，若 `candidates[i]` 和前一個值相同就略過，避免從相同值開出重複組合。
+4. `remaining == 0` 時將目前 `path` 加入答案；候選值大於 `remaining` 時，後面的值也更大，可以結束這層迴圈。
+
+## 複雜度
+
+- 時間：最壞情況為指數時間，需探索不同候選組合。
+- 額外空間：`O(n)` 儲存遞迴路徑，不含回傳答案。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** combinationSum2(int* candidates, int candidatesSize, int target, int* returnSize, int** returnColumnSizes) {
-    
-}
+int** combinationSum2(int* candidates, int candidatesSize, int target,
+                      int* returnSize, int** returnColumnSizes);
 ```

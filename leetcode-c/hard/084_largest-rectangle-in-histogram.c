@@ -12,21 +12,19 @@
  *     rectangle in the histogram.
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     給長寬皆為 1 的柱子高度，求柱狀圖中能框出的最大矩形面積。
+ *     給定整數陣列 heights，heights[i] 代表柱狀圖第 i 根柱子的高度，
+ *     每根柱子的寬度皆為 1。請回傳柱狀圖中可形成的最大矩形面積。
  *
- * Examples:
- *   Example 1:
- *     Input: heights = [2,1,5,6,2,3]
- *     Output: 10
- *     Explanation: The above is a histogram where width of each bar is
- *     1.
- *     The largest rectangle is shown in the red area, which has an area
- *     = 10 units.
- *   Example 2:
- *     Input: heights = [2,4]
- *     Output: 4
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：heights = [2,1,5,6,2,3]
+ *     輸出：10
+ *     說明：高度 5、6 的兩根相鄰柱子可形成高 5、寬 2、面積 10 的矩形。
+ *   範例 2：
+ *     輸入：heights = [2,4]
+ *     輸出：4
  *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= heights.length <= 10^5
  *   - 0 <= heights[i] <= 10^4
  *
@@ -35,7 +33,17 @@
  *   }
  *
  * [EN] Approach: Monotonic increasing stack of indices: when a bar ends a taller run, pop and compute height*(right-left-1); sentinel zeros at both ends. Time O(n).
- * [中文] 思路: 單調遞增棧存下標：新柱較矮時弹出更高的柱，面積=高×(右界-左界-1)，兩端補 0 哨兵。時間 O(n)。
+ * [中文] 直觀解題思路：
+ *   1. 對每根柱子，若能找到左右第一根比它矮的柱子，就知道以它為高度
+ *      的矩形能延伸多寬。但逐根向左右找會退化為 O(n^2)。
+ *   2. 用堆疊保存高度非遞減的柱子下標。遇到更矮的新柱時，代表堆疊頂端
+ *      那根柱子的右界已確定，可以彈出並立即計算面積。
+ *   3. 彈出後，新堆疊頂端是它左邊第一根更矮的柱子；目前下標 i 是右邊
+ *      第一根更矮的柱子，所以寬度為 i - 左界下標 - 1。若堆疊已空，
+ *      表示可一路延伸至下標 0，寬度就是 i。
+ *   4. 在陣列尾端視為補上一根高度 0 的哨兵，強制結算堆疊內所有柱子。
+ *
+ * 複雜度：每個下標最多進出堆疊各一次，時間 O(n)，額外空間 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -46,9 +54,10 @@ int largestRectangleArea(int *heights, int heightsSize) {
     int *st = (int *)malloc((size_t)(heightsSize + 1) * sizeof(int));
     int top = 0, i, best = 0;
     for (i = 0; i <= heightsSize; ++i) {
-        int h = (i == heightsSize) ? 0 : heights[i];   /* 0 sentinel flushes stack */
+        int h = (i == heightsSize) ? 0 : heights[i];   /* 尾端 0 哨兵清空堆疊 */
         while (top > 0 && h < heights[st[top - 1]]) {
             int hh = heights[st[--top]];
+            /* 彈出後的堆疊頂是左界，i 是右界；兩個邊界本身都不納入。 */
             int w = (top > 0) ? i - st[top - 1] - 1 : i;
             if (hh * w > best) best = hh * w;
         }

@@ -207,42 +207,31 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
+/* ---- 易讀解法：一維動態規劃記錄到每格的最小累積和 ---- */
+int minPathSum(int** grid, int gridSize, int* gridColSize) {
+    int columns = gridColSize[0];
+    int minSum[200];
+    int row;
+    int column;
 
-#define MIN(a, b) (a < b ? a : b)
-
-int minPathSum(int **grid, int grid_sz, int *grid_col_sz)
-{
-    /* sanity check */
-    if (grid_sz == 0)
-        return 0;
-
-    int **dp = malloc(sizeof(int *) * grid_sz);
-    int col_sz = grid_col_sz[0], sum = 0;
-    for (int i = 0; i < grid_sz; i++) {
-        dp[i] = malloc(sizeof(int) * col_sz);
-        sum += grid[i][0];
-        dp[i][0] = sum;
-    }
-    sum = 0;
-    for (int i = 0; i < col_sz; i++) {
-        sum += grid[0][i];
-        dp[0][i] = sum;
+    minSum[0] = grid[0][0];
+    for (column = 1; column < columns; ++column) {
+        minSum[column] = minSum[column - 1] + grid[0][column];
     }
 
-    for (int i = 1; i < grid_sz; i++) {
-        for (int j = 1; j < col_sz; j++)
-            dp[i][j] = MIN(dp[i - 1][j], dp[i][j - 1]) + grid[i][j];
+    for (row = 1; row < gridSize; ++row) {
+        minSum[0] += grid[row][0];
+        for (column = 1; column < columns; ++column) {
+            int fromAbove = minSum[column];
+            int fromLeft = minSum[column - 1];
+            minSum[column] = (fromAbove < fromLeft ? fromAbove : fromLeft)
+                           + grid[row][column];
+        }
     }
-
-    int ret = dp[grid_sz - 1][col_sz - 1];
-    for (int i = 0; i < grid_sz; i++)
-        free(dp[i]);
-    free(dp);
-
-    return ret;
+    return minSum[columns - 1];
 }
+
+
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

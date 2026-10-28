@@ -17,36 +17,40 @@
  * [中文] 題目說明:
  *     給定字串 s 與字典 wordDict，請在 s 中加入空格，形成每
  *     個單字都存在於字典中的所有可能句子，順序不限。切分時同一個字典單字可
- *     以重複使用。若無合法切分則回傳空陣列。s 長度至多 20，字典最多 
- *     1000 個不重複的小寫單字，每個單字長度至多 10，且答案總長度不
- *     超過 10^5。
+ *     以重複使用。若無合法切分則回傳空陣列。
  *
- * [中文] 思路:
- *     先以 DP 從每個可到達切點記錄可接上的下一個切點，再沿這些切點回溯
- *     ，逐段加入單字並組出所有句子。
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：s = "catsanddog", wordDict = ["cat","cats","and","sand","dog"]
+ *     輸出：["cats and dog","cat sand dog"]
+ *   範例 2：
+ *     輸入：s = "pineapplepenapple",
+ *           wordDict = ["apple","pen","applepen","pine","pineapple"]
+ *     輸出：["pine apple pen apple","pineapple pen apple","pine applepen apple"]
+ *     說明：同一個字典單字可以重複使用。
+ *   範例 3：
+ *     輸入：s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+ *     輸出：[]
  *
- * Examples:
- *     Input: s = "catsanddog", wordDict =
- *     ["cat","cats","and","sand","dog"]
- *     Output: ["cats and dog","cat sand dog"]
- *     Input: s = "pineapplepenapple", wordDict =
- *     ["apple","pen","applepen","pine","pineapple"]
- *     Output: ["pine apple pen apple","pineapple pen apple","pine
- *     applepen apple"]
- *     Explanation: Note that you are allowed to reuse a dictionary
- *     word.
- *     Input: s = "catsandog", wordDict =
- *     ["cats","dog","sand","and","cat"]
- *     Output: []
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= s.length <= 20
  *   - 1 <= wordDict.length <= 1000
  *   - 1 <= wordDict[i].length <= 10
- *   - s and wordDict[i] consist of only lowercase English letters.
- *   - All the strings of wordDict are unique.
- *   - Input is generated in a way that the length of the answer
- *   doesn't exceed 10^5.
+ *   - s 與 wordDict[i] 僅包含小寫英文字母。
+ *   - wordDict 中的字串互不重複。
+ *   - 測試資料保證所有答案字串的總長度不超過 10^5。
+ *
+ * [中文] 直觀解題思路：
+ *   1. 將字串位置視為切點；dp[i] 保存從切點 i 可接到哪些下一個切點。
+ *   2. 從 dp[0] 開始，只處理已可到達的切點。逐一比對所有字典單字，若
+ *      s[i..] 以該單字開頭，就在 dp[i] 記錄單字結束位置 k，並建立 dp[k]。
+ *   3. 如此先建出一張只包含合法切分的有向圖，也可提前判斷終點是否可達。
+ *   4. 若 dp[len] 存在，從位置 0 沿記錄的邊回溯；每走一條邊就把對應單字
+ *      與空格寫入暫存字串，到終點時複製成一筆答案。
+ *   5. 回溯返回後以原長度覆寫緩衝區，繼續嘗試其他切法。
+ *
+ * 建圖時間 O(|s| * D * L)，D 為字典大小、L 為單字長度；列舉階段與
+ * 輸出總量成正比。DP、路徑與回傳結果所需空間另計。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -300,6 +304,7 @@ void bt(res_t *res, buff_t *buff, char *s, int **dp, int start, int end) {
     int i, k, n, *vec;
     
     if (start == end) {
+        /* 移除最後一個空格，複製出獨立答案字串。 */
         buff->b[-- buff->n] = 0;
         add2res(res, strdup(buff->b));
         return;
@@ -342,11 +347,11 @@ char** wordBreak(char* s, char** wordDict, int wordDictSize, int* returnSize) {
     
     dp[0] = newvec();
     for (i = 0; i < len; i ++) {
-        if (dp[i]) {    // a valid point to cut
+        if (dp[i]) {    /* 只從可到達的合法切點繼續延伸 */
             for (j = 0; j < wordDictSize; j ++) {
                 if (!strncmp(&s[i], wordDict[j], wsz[j])) {
                     k = i + wsz[j];
-                    add2vec(dp[i], k);
+                    add2vec(dp[i], k);  /* 記錄一條合法切分邊 i -> k */
                     if (!dp[k]) dp[k] = newvec();
                 }
             }

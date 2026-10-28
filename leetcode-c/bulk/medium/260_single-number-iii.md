@@ -1,52 +1,34 @@
-# 0260. Single Number III《只出現一次的數字 III》
+# LeetCode 0260. Single Number III
 
-- **Difficulty**: Medium
-- **Tags**: array, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/single-number-iii/
-- **程式碼**: [`260_single-number-iii.c`](./260_single-number-iii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 只出現一次的數字 III
 
-## 題目說明（中文）
+## 題目
 
-給定整數陣列 nums，其中恰有兩個元素只出現一次，其餘元素皆剛好出現兩次，找出這兩個元素。答案順序不限，且必須使用線性時間與常數額外空間。
+整數陣列中恰好有兩個數字只出現一次，其餘每個數字都出現兩次。請找出這兩個只出現一次的數字，回傳順序不限。要求線性時間且使用常數額外空間。
 
-**思路**：先對所有數字做 XOR，得到兩個單獨數字的異或值，並取其最低位的 1 作為分組位元。依該位元分兩組各自 XOR，即可求出兩個答案。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：nums = [1,2,1,3,2,5]；輸出：[3,5]，回傳 [5,3] 也可以。
+2. 輸入：nums = [-1,0]；輸出：[-1,0]。
+3. 輸入：nums = [0,1]；輸出：[1,0]。
 
-Given an integer array nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once. You can return the answer in any order.
-You must write an algorithm that runs in linear runtime complexity and uses only constant extra space.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 2 <= nums.length <= 3 * 10^4
+- -2^31 <= nums[i] <= 2^31 - 1
+- 除了兩個只出現一次的數字外，其餘數字都恰好出現兩次
 
-```text
-Input: nums = [1,2,1,3,2,5]
-Output: [3,5]
-Explanation:  [5, 3] is also a valid answer.
+## 解題思路
 
-Input: nums = [-1,0]
-Output: [-1,0]
+1. 把所有數字 XOR 起來。成對的數字會互相抵消，留下兩個答案的 XOR。
+2. 兩個答案不同，所以 XOR 結果至少有一個位元是 1；取其中最低位的 1。
+3. 依該位元把所有數字分成兩組。成對數字一定落在同一組，兩個答案則分到不同組。
+4. 分別 XOR 兩組，就得到兩個只出現一次的數字。
 
-Input: nums = [0,1]
-Output: [1,0]
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(n)，額外空間 O(1)。
 
-2 <= nums.length <= 3 * 104
--231 <= nums[i] <= 231 - 1
-Each integer in nums will appear twice, only two integers will appear once.
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* singleNumber(int* nums, int numsSize, int* returnSize) {
-    
-}
-```
+int* singleNumber(int* nums, int numsSize, int* returnSize)

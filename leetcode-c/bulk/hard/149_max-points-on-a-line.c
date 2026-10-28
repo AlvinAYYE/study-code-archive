@@ -13,25 +13,29 @@
  *
  * [中文] 題目: 直線上的最大點數
  * [中文] 題目說明:
- *     給定平面點陣列 points，其中 points[i] = [xi,
- *      yi]，求同一直線上最多有多少點。所有點皆互不相同。點數介於 1 
- *     至 300，座標 xi、yi 介於 -10^4 至 10^4。
+ *     給定平面點陣列 points，其中 points[i] = [xi, yi]，請回傳
+ *     落在同一直線上的最多點數。所有輸入點互不相同。
  *
- * [中文] 思路:
- *     逐一固定一個點作為錨點，將其與其他點的斜率以最大公因數約分並正規化後
- *     放入雜湊表計數，取各錨點的最大值。
+ * [中文] 範例：
+ *   範例 1：輸入 points = [[1,1],[2,2],[3,3]]；輸出 3。
+ *   範例 2：
+ *     輸入 points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+ *     輸出 4。
  *
- * Examples:
- *     Input: points = [[1,1],[2,2],[3,3]]
- *     Output: 3
- *     Input: points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
- *     Output: 4
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= points.length <= 300
  *   - points[i].length == 2
  *   - -10^4 <= xi, yi <= 10^4
- *   - All the points are unique.
+ *   - 所有 points[i] 互不相同。
+ *
+ * [中文] 直觀解題思路：
+ *   1. 逐一固定 points[i] 為錨點；與它斜率相同的其他點必定和錨點共線。
+ *   2. 斜率不用浮點數，而以 (dy,dx) 表示，並用最大公因數約分，避免精度誤差。
+ *   3. 將 dx 正規化為非負，使相同方向得到唯一表示；垂直線則另外計數。
+ *   4. 把正規化斜率放進開放定址雜湊表，記錄此錨點下每種斜率的出現次數。
+ *   5. 該斜率數加上錨點本身就是共線點數；對所有錨點取最大值。
+ *
+ * 外層與內層枚舉點對，平均時間 O(n^2)，固定大小雜湊表使額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -212,7 +216,7 @@ int gcd(int a, int b) {
     return gcd(b, a % b);
 }
 
-// Hash map key for slope: (dy, dx)
+/* 用約分後的 (dy, dx) 作為斜率雜湊鍵，避免浮點誤差。 */
 typedef struct {
     int dy;
     int dx;
@@ -272,6 +276,7 @@ int maxPoints(int** points, int pointsSize, int* pointsColSize) {
     HashEntry hashMap[MAX_HASH_SIZE];
 
     for (int i = 0; i < pointsSize; i++) {
+        /* 每個錨點都重新統計一次斜率。 */
         clearHashMap(hashMap);
         int samePoint = 1;
         int sameX = 0;
@@ -286,7 +291,7 @@ int maxPoints(int** points, int pointsSize, int* pointsColSize) {
 
             if (x == x0 && y == y0) {
                 samePoint++;
-            } else if (x == x0) {
+            } else if (x == x0) {  /* 垂直線沒有有限斜率，獨立計數。 */
                 sameX++;
                 localMax = sameX > localMax ? sameX : localMax;
             } else {
@@ -296,7 +301,7 @@ int maxPoints(int** points, int pointsSize, int* pointsColSize) {
                 dx /= g;
                 dy /= g;
 
-                if (dx < 0) {
+                if (dx < 0) {  /* 統一符號，讓同一直線只對應一個鍵。 */
                     dx = -dx;
                     dy = -dy;
                 }

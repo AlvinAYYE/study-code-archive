@@ -1,29 +1,24 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1108. Defanging an IP Address
- * Difficulty: Easy
- * Tags: string
- * URL: https://leetcode.com/problems/defanging-an-ip-address/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a valid (IPv4) IP address, return a defanged version of that
- *     IP address.
- *     A defanged IP address replaces every period "." with "[.]".
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given a valid (IPv4) IP address, 回傳 a defanged version of that IP
- *     address.
+ * 【完整中文題意】給定一個有效的 IPv4 位址，請把其中每個句點 . 替換成字串 [.]，並回傳轉換後的新字串。
  *
- * Examples:
- *     Input: address = "1.1.1.1"
- *     Output: "1[.]1[.]1[.]1"
- *     Input: address = "255.100.50.0"
- *     Output: "255[.]100[.]50[.]0"
+ * 【範例】
+ * 1. address = "1.1.1.1" → "1[.]1[.]1[.]1"
+ * 2. address = "255.100.50.0" → "255[.]100[.]50[.]0"
  *
- * Constraints:
- *   - The given address is a valid IPv4 address.
- * ==========================================================================
+ * 【限制】
+ * - 輸入一定是有效的 IPv4 位址
+ *
+ * 【解題步驟】
+ * 1. 先計算位址長度，配置最多三倍長度再加結尾符號的空間。
+ * 2. 逐字讀取位址：遇到句點就依序寫入 [.]；遇到數字就原樣複製。
+ * 3. 在新字串最後補上結尾符號並回傳。
+ *
+ * 【複雜度】時間 O(n)；空間 O(n)（回傳字串）
+ *
+ * 【LeetCode C 函式】char* defangIPaddr(char* address)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -197,35 +192,23 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdlib.h>
-#include <stdio.h>
-#include <ctype.h>
-#include <string.h>
+char* defangIPaddr(char* address) {
+    int length = (int)strlen(address);
+    char* answer = (char*)malloc((size_t)length * 3 + 1);
+    int out = 0;
 
-// Max size a defanged ipv4 address can have.
-#define MAX_DEFANGED 24
-
-char * defangIPaddr(char * address){
-    char *res = (char *)malloc((MAX_DEFANGED + 1) * sizeof(char));
-    // need them after loop finishes to add '\0'
-    size_t i = 0, offset = 0;
-    size_t len = strlen(address);
-    for(; i < len; i++){
-        // add [.] based on offset and increase offset.
-        if (ispunct(address[i])) {
-            res[i + offset] = '[';
-            res[i + offset + 1] = '.';
-            res[i + offset + 2] = ']';
-            offset += 2;
+    for (int i = 0; i < length; ++i) {
+        if (address[i] == '.') {
+            answer[out++] = '[';
+            answer[out++] = '.';
+            answer[out++] = ']';
         } else {
-            // add num based on offset.
-            res[i + offset] = address[i];
+            answer[out++] = address[i];
         }
     }
-    // add trailing null terminator.
-    res[i + offset] = '\0';
-    return res;
+
+    answer[out] = '\0';
+    return answer;
 }
 
 /* ---- generated tests ---- */

@@ -1,43 +1,43 @@
-# 0179. Largest Number《最大數》
+# 0179. Largest Number｜最大數字
 
-- **Difficulty**: Medium
-- **Tags**: array, string, greedy, sorting
-- **題目連結**: https://leetcode.com/problems/largest-number/
-- **程式碼**: [`179_largest-number.c`](./179_largest-number.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、字串、貪心、排序
+- **題目連結**：[LeetCode 0179](https://leetcode.com/problems/largest-number/)
+- **C 程式**：[179_largest-number.c](./179_largest-number.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定一串非負整數，請重新排列它們，使串接後形成的數值最大。由於結果可能非常大，必須回傳字串而非整數。
+給定非負整數陣列 `nums`，重新排列數字並串接成可能的最大數字。結果可能很大，因此回傳字串而不是整數。
 
-**思路**：自訂排序比較 a+b 與 b+a 的字典序，讓較大的串接順序排在前面，再依序串接；若首項為 0，直接回傳單一 0。
-
-## Problem Statement (English)
-
-Given a list of non-negative integers nums, arrange them such that they form the largest number and return it.
-Since the result may be very large, so you need to return a string instead of an integer.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [10,2]
-Output: "210"
+輸入：nums = [10,2]
+輸出："210"
 
-Input: nums = [3,30,34,5,9]
-Output: "9534330"
+輸入：nums = [3,30,34,5,9]
+輸出："9534330"
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= nums.length <= 100
-0 <= nums[i] <= 109
+- `1 <= nums.length <= 100`。
+- `0 <= nums[i] <= 10^9`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 先把每個整數轉成十進位字串，因為最後要輸出字串，且排序規則取決於串接結果。
+2. 比較兩個字串 `a`、`b` 時，不比較數值大小，而比較 `a+b` 和 `b+a` 哪個較大。
+3. 若 `a+b` 較大，就把 `a` 排在 `b` 前面；如此依規則排序後，直接串起所有字串即可得到最大結果。
+4. 若排序後第一個字串是 `0`，代表所有輸入都是 0，回傳單一字元 `"0"`，避免輸出多個零。
+
+## 複雜度
+
+- 時間：`O(n log n × k)`，排序比較字串；`k` 是數字字串的最大長度。
+- 額外空間：`O(n × k)`，保存數字字串與結果。
+
+## LeetCode C 函式簽名
 
 ```c
-char* largestNumber(int* nums, int numsSize) {
-    
-}
+char* largestNumber(int* nums, int numsSize);
 ```

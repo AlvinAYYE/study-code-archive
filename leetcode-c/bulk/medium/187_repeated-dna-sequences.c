@@ -207,116 +207,46 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-187. Repeated DNA Sequences
-
-All DNA is composed of a series of nucleotides abbreviated as A, C, G, and T, for example: "ACGAATTCCG". When studying DNA, it is sometimes useful to identify repeated sequences within the DNA.
-
-Write a function to find all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule.
-
-
-For example,
-Given s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT",
-
-Return:
-["AAAAACCCCC", "CCCCCAAAAA"].
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
-typedef struct sn {
-    //char *s;
-    int found;
-    unsigned int c;
-    struct sn *shadow;
-} sn_t;
-#define HF 1000
-int map[26] = { 0 };
-unsigned int code(const char *s) {
-    int i, c;
-    //c = 5381;
-    c = 0;
-    for (i = 0; i < 10; i ++) {
-    //    c = c * 33 + s[i];
-        c = (c << 2) | map[s[i] - 'A'];
+/* ---- 易讀解法：將 10 個鹼基編成 20 位元滑動視窗 ---- */
+static unsigned int dnaCode(char nucleotide) {
+    switch (nucleotide) {
+        case 'A': return 0u;
+        case 'C': return 1u;
+        case 'G': return 2u;
+        default:  return 3u;
     }
-    return c;
 }
-char** findRepeatedDnaSequences(const char* s, int* returnSize) {
-    sn_t *patt[HF] = { 0 }, *e, *shadow;
-    unsigned int c;
-    char **p, *buff;
-    const char *x;
-    int sz, n, len;
-    
-    map['A' - 'A'] = 0x0;
-    map['C' - 'A'] = 0x1;
-    map['G' - 'A'] = 0x2;
-    map['T' - 'A'] = 0x3;
-    
-    sz = 10; n = 0;
-    p = malloc(sz * sizeof(char *));
-    //assert(p);
-    len = strlen(s);
-    while (*s && len >= 10) {
-        c = code(s);
-        e = patt[c % HF];
-        while (e && e->c != c) {
-            e = e->shadow;
-        }
-        if (!e) {  // not yet being searched
-            e = malloc(sizeof(sn_t));
-            //assert(e);
-            //e->s = s;
-            e->found = 0;
-            e->c = c;
-            e->shadow = patt[c % HF];  // save in searched table
-            patt[c % HF] = e;
-        } else if (!e->found) {  // this is a repeated pattern
-            e->found = 1;
-            if (n == sz) {
-                sz *= 2;
-                p = realloc(p, sz * sizeof(char *));
-                //assert(p);
+
+char** findRepeatedDnaSequences(char* s, int* returnSize) {
+    int length = (int)strlen(s);
+    unsigned char *occurrences;
+    char **answers;
+    unsigned int code = 0;
+    int answerCount = 0;
+    int i;
+
+    *returnSize = 0;
+    if (length < 10) return NULL;
+
+    occurrences = (unsigned char*)calloc(1u << 20, sizeof(unsigned char));
+    answers = (char**)malloc((size_t)(length - 9) * sizeof(char*));
+    for (i = 0; i < length; ++i) {
+        code = ((code << 2) | dnaCode(s[i])) & 0xFFFFFu;
+        if (i >= 9) {
+            if (occurrences[code] == 1) {
+                answers[answerCount] = (char*)malloc(11);
+                memcpy(answers[answerCount], s + i - 9, 10);
+                answers[answerCount][10] = '\0';
+                ++answerCount;
             }
-            buff = malloc(11 * sizeof(char));
-            //assert(buff);
-            strncpy(buff, s, 10);
-            buff[10] = 0;
-            p[n ++] = buff;
-        }
-        s ++; len --;
-    }
-    
-    *returnSize = n;
- 
-    for (n = 0; n < HF; n ++) {
-        e = patt[n];
-        while (e) {
-            shadow = e->shadow;
-            free(e);
-            e = shadow;
+            if (occurrences[code] < 2) ++occurrences[code];
         }
     }
- 
-    return p;
+
+    free(occurrences);
+    *returnSize = answerCount;
+    return answers;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:78.5K
-Total Submissions:249.6K
-
-
-Companies LinkedIn
-Related Topics Hash Table Bit Manipulation
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

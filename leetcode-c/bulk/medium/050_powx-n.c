@@ -16,8 +16,8 @@
  *     數，且題目保證輸入與結果落在指定範圍內。
  *
  * [中文] 思路:
- *     使用遞迴快速冪，每次把底數平方並將指數除以二；若指數為奇數，再額外乘
- *     上一個 x。負指數先把底數取倒數後再計算。
+ *     使用迭代二分冪，每輪將底數平方並把指數除以二；若指數為奇數，就把目前
+ *     底數乘入結果。負指數先取底數倒數，指數用 long long 安全取正。
  *
  * Examples:
  *     Input: x = 2.00000, n = 10
@@ -207,42 +207,25 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-50. Pow(x, n)
-
-Implement pow(x, n).
-*/
-
-double powx(double x, int n) {
-    double k;
-    if (n == 0) return 1;
-    k = powx(x * x, n / 2);
-    if (n % 2) k = k * x;
-    return k;
-}
+/* ---- 易讀解法：迭代二分冪，指數每輪減半 ---- */
 double myPow(double x, int n) {
-    if (n < 0) { x = 1 / x; n = 0 - n; }
-    return powx(x, n);
+    long long exponent = n;
+    double base = x;
+    double result = 1.0;
+
+    if (exponent < 0) {
+        base = 1.0 / base;
+        exponent = -exponent;
+    }
+
+    while (exponent > 0) {
+        if (exponent % 2 == 1) result *= base;
+        base *= base;
+        exponent /= 2;
+    }
+    return result;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:161.2K
-Total Submissions:612.2K
-
-
-Companies LinkedIn Google Bloomberg Facebook
-Related Topics Binary Search Math
-Similar Questions 
-                
-                  
-                    Sqrt(x)
-                  
-                    Super Pow
-*/
 
 /* ---- generated tests ---- */
 int main(void){

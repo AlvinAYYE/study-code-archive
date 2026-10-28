@@ -1,56 +1,45 @@
-# 0021. Merge Two Sorted Lists《合併兩個有序連結串列》
+# 0021. Merge Two Sorted Lists《合併兩個有序鏈結串列》
 
-- **Difficulty**: Easy
-- **Tags**: linked-list, recursion
-- **題目連結**: https://leetcode.com/problems/merge-two-sorted-lists/
-- **程式碼**: [`021_merge-two-sorted-lists.c`](./021_merge-two-sorted-lists.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：linked-list、recursion
+- **題目連結**：https://leetcode.com/problems/merge-two-sorted-lists/
+- **程式碼**：[`021_merge-two-sorted-lists.c`](./021_merge-two-sorted-lists.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定兩個已依非遞減順序排列的連結串列，將它們合併成一個有序串列。合併時應串接原本兩串列的節點，並回傳合併後的頭節點。
+給定兩個按非遞減順序排列的單向鏈結串列 `list1` 與 `list2`。重新串接兩者原有的節點，合併成一個同樣按非遞減順序排列的串列，並回傳合併後的表頭。
 
-**思路**：程式以虛擬頭節點作為輸出尾端，比較兩串列目前節點後接上較小者。任一串列耗盡時，直接接上另一串列的剩餘部分。
-
-## Problem Statement (English)
-
-You are given the heads of two sorted linked lists list1 and list2.
-Merge the two lists into one sorted list. The list should be made by splicing together the nodes of the first two lists.
-Return the head of the merged linked list.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: list1 = [1,2,4], list2 = [1,3,4]
-Output: [1,1,2,3,4,4]
+輸入：list1 = [1,2,4], list2 = [1,3,4]
+輸出：[1,1,2,3,4,4]
 
-Input: list1 = [], list2 = []
-Output: []
+輸入：list1 = [], list2 = []
+輸出：[]
 
-Input: list1 = [], list2 = [0]
-Output: [0]
+輸入：list1 = [], list2 = [0]
+輸出：[0]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in both lists is in the range [0, 50].
--100 <= Node.val <= 100
-Both list1 and list2 are sorted in non-decreasing order.
+- 兩個串列的節點總數介於 0 到 50。
+- `-100 <= Node.val <= 100`
+- `list1` 與 `list2` 都按非遞減順序排列。
 
-## 官方 C 函式簽名 Signature
+## 直觀解題思路
+
+1. 建立不存答案資料的虛擬表頭 `head`，並以 `p` 指向目前結果尾端。
+2. 當兩串列都有節點時，比較表頭值，把較小節點接到 `p` 後方。
+3. 推進被取用串列的表頭與 `p`，重複比較。
+4. 一條串列用完後，另一條剩餘部分本來就有序，可整段接上。
+
+- 時間複雜度：`O(m+n)`
+- 額外空間複雜度：`O(1)`
+
+## 官方 C 函式簽名
 
 ```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
-    
-}
+struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2);
 ```

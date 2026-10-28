@@ -1,54 +1,43 @@
 # 0110. Balanced Binary Tree《平衡二元樹》
 
-- **Difficulty**: Easy
-- **Tags**: tree, depth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/balanced-binary-tree/
-- **程式碼**: [`110_balanced-binary-tree.c`](./110_balanced-binary-tree.c) — 本專案自行撰寫並通過官方示例驗證
+- **難度**：Easy
+- **標籤**：樹、深度優先搜尋、二元樹
+- **題目連結**：https://leetcode.com/problems/balanced-binary-tree/
 
-## 題目說明（中文）
+## 題目說明
 
-給定二元樹，判斷它是否為高度平衡樹。高度平衡表示每個節點的左右子樹高度差都不超過 1。空樹也視為平衡。
+給定一棵二元樹，判斷它是否為高度平衡樹。高度平衡的定義是：對樹上的每一個節點，其左子樹和右子樹的高度差都不超過 1。空樹也算平衡。
 
-**思路**：以後序遞迴回傳子樹高度，若任何子樹已不平衡或兩側高度差超過一便回傳 -1。根節點結果非負時即為平衡。
-
-## Problem Statement (English)
-
-Given a binary tree, determine if it is height-balanced.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [3,9,20,null,null,15,7]
-Output: true
+輸入：root = [3,9,20,null,null,15,7]
+輸出：true
 
-Input: root = [1,2,2,3,3,null,null,4,4]
-Output: false
+輸入：root = [1,2,2,3,3,null,null,4,4]
+輸出：false
+說明：靠左側的子樹比另一側高太多，至少有一個節點的左右高度差大於 1。
 
-Input: root = []
-Output: true
+輸入：root = []
+輸出：true
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [0, 5000].
--104 <= Node.val <= 104
+- 節點數介於 `0` 到 `5000`。
+- `-10^4 <= Node.val <= 10^4`。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 由下往上遞迴計算左右子樹高度；空樹高度為 0。
+2. 若任一子樹已不平衡，就用特殊值 `-1` 回傳，讓上層能立刻停止計算。
+3. 若左右高度差大於 1，也回傳 `-1`；否則回傳較高一側的高度加 1。
+4. 根節點最後得到的高度不是 `-1`，整棵樹便符合平衡條件。
+
+**複雜度**：時間 `O(n)`，每個節點只計算一次；遞迴堆疊額外使用 `O(h)` 空間。
+
+## C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-bool isBalanced(struct TreeNode* root) {
-    
-}
+bool isBalanced(struct TreeNode* root);
 ```

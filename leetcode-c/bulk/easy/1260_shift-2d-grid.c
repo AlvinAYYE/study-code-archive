@@ -1,38 +1,29 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1260. Shift 2D Grid
- * Difficulty: Easy
- * Tags: array, matrix, simulation
- * URL: https://leetcode.com/problems/shift-2d-grid/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a 2D grid of size m x n and an integer k. You need to shift
- *     the grid k times.
- *     In one shift operation:
- *     Return the 2D grid after applying shift operation k times.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given a 2D 網格 of size m x n and an 整數 k. You need to shift the 網格 k
- *     times.
+ * 【完整中文題意】給定 m × n 的整數矩陣 grid 和非負整數 k。一次向右循環位移會把每一列的最後一格移到下一列開頭，最右下角則移到左上角。請執行 k 次位移並回傳新的矩陣。
  *
- * Examples:
- *     Input: grid = [[1,2,3],[4,5,6],[7,8,9]], k = 1
- *     Output: [[9,1,2],[3,4,5],[6,7,8]]
- *     Input: grid = [[3,8,1,9],[19,7,2,5],[4,6,11,10],[12,0,21,13]],
- *     k = 4
- *     Output: [[12,0,21,13],[3,8,1,9],[19,7,2,5],[4,6,11,10]]
- *     Input: grid = [[1,2,3],[4,5,6],[7,8,9]], k = 9
- *     Output: [[1,2,3],[4,5,6],[7,8,9]]
+ * 【範例】
+ * 1. grid = [[1,2,3],[4,5,6],[7,8,9]], k = 1 → [[9,1,2],[3,4,5],[6,7,8]]
+ * 2. grid = [[3,8,1,9],[19,7,2,5],[4,6,11,10],[12,0,21,13]], k = 4 → [[12,0,21,13],[3,8,1,9],[19,7,2,5],[4,6,11,10]]
+ * 3. grid = [[1,2,3],[4,5,6],[7,8,9]], k = 9 → 原矩陣不變
  *
- * Constraints:
- *   - m == grid.length
- *   - n == grid[i].length
- *   - 1 <= m <= 50
- *   - 1 <= n <= 50
- *   - -1000 <= grid[i][j] <= 1000
- *   - 0 <= k <= 100
- * ==========================================================================
+ * 【限制】
+ * - grid 有 m 列、n 欄，且每列欄數相同
+ * - 1 <= m, n <= 50
+ * - -1000 <= grid[i][j] <= 1000
+ * - 0 <= k <= 100
+ *
+ * 【解題步驟】
+ * 1. 把矩陣想成長度 m × n 的一維列序資料。
+ * 2. 每個元素原本的索引 i 位移後會到 (i + k) % (m × n)。
+ * 3. 配置新的列指標與每一列的欄位空間，把每個原值放進計算出的新列、新欄。
+ * 4. 回傳新矩陣及每列的欄數。
+ *
+ * 【複雜度】時間 O(m × n)；空間 O(m × n)（回傳的新矩陣）
+ *
+ * 【LeetCode C 函式】int** shiftGrid(int** grid, int gridSize, int* gridColSize, int k, int* returnSize, int** returnColumnSizes)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -206,74 +197,33 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdlib.h>
-#include <string.h>
+int** shiftGrid(int** grid, int gridSize, int* gridColSize, int k,
+                int* returnSize, int** returnColumnSizes) {
+    int rows = gridSize;
+    int columns = gridColSize[0];
+    int total = rows * columns;
+    k %= total;
 
-int **shiftGrid(int **grid, int gridSize, int *gridColSize, int k,
-                int *returnSize, int **returnColumnSizes) {
-  // assume non-empty grid.
-  int rows = gridSize, cols = gridColSize[0];
+    int** answer = (int**)malloc((size_t)rows * sizeof(int*));
+    int* columnSizes = (int*)malloc((size_t)rows * sizeof(int));
+    for (int row = 0; row < rows; ++row) {
+        answer[row] = (int*)malloc((size_t)columns * sizeof(int));
+        columnSizes[row] = columns;
+    }
 
-  // these are all the same regardless of case.
-  *returnColumnSizes = malloc(rows * sizeof(**returnColumnSizes));
-  for (int i = 0; i < rows; i++) {
-    (*returnColumnSizes)[i] = cols;
-  }
-  *returnSize = gridSize;
-  int d = k / cols, r = k % cols;
-  // if d is > than number of rows, mod it.
-  if (d >= rows) {
-    d %= rows;
-  }
-  if (d == 0 && r == 0) {
-    return grid;
-  }
+    // 將列序一維索引位移後，再還原成新矩陣的列、欄座標。
+    for (int index = 0; index < total; ++index) {
+        int shiftedIndex = (index + k) % total;
+        int sourceRow = index / columns;
+        int sourceColumn = index % columns;
+        int targetRow = shiftedIndex / columns;
+        int targetColumn = shiftedIndex % columns;
+        answer[targetRow][targetColumn] = grid[sourceRow][sourceColumn];
+    }
 
-  // Resulting array.
-  int **result = malloc(rows * sizeof(*result));
-  // I should really freshen up memcpy stuff.
-  if (r == 0) {
-    int j = 0;
-    for (int i = rows - d; i < rows; i++) {
-      result[j] = malloc(cols * sizeof(**result));
-      memcpy(result[j++], grid[i], cols * sizeof(int));
-    }
-    for (int i = 0; i < rows - d; i++) {
-      result[j] = malloc(cols * sizeof(**result));
-      memcpy(result[j++], grid[i], cols * sizeof(int));
-    }
-    return result;
-  }
-
-  // not muy proud of this.
-  int length = rows * cols, fl = 0;
-  int *flatgrid = malloc(length * sizeof(*flatgrid));
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      flatgrid[fl++] = grid[i][j];
-    }
-  }
-
-  int start = length - (d * cols + r), count = 0, i = 0;
-  for (int k = start; k < length; k++) {
-    if (count == cols) {
-      grid[++i][0] = flatgrid[k];
-      count = 1;
-    } else {
-      grid[i][count++] = flatgrid[k];
-    }
-  }
-  for (int k = 0; k < start; k++) {
-    if (count == cols) {
-      grid[++i][0] = flatgrid[k];
-      count = 1;
-    } else {
-      grid[i][count++] = flatgrid[k];
-    }
-  }
-  free(flatgrid);
-  return grid;
+    *returnSize = rows;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
 
 /* ---- generated tests ---- */

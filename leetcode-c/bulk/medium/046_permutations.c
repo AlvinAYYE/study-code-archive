@@ -204,85 +204,55 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-
-#if 0
-static void swap(int *a, int *b)
-{
-    int tmp = *a;
-    *a = *b;
-    *b = tmp;
-}
-
-static void dfs(int *nums, int size, int start,
-                int **results, int *count, int *col_size)
-{
+/* 深度優先搜尋：每層選一個尚未使用的輸入數字。 */
+static void buildPermutations(int *nums, int numsSize, bool *used,
+                              int *path, int depth, int **answer,
+                              int *columnSizes, int *count) {
     int i;
-    if (start == size) {
-        results[*count] = malloc(size * sizeof(int));
-        memcpy(results[*count], nums, size * sizeof(int));
-        col_size[*count] = size;
-        (*count)++;
-    } else {
-        for (i = start; i < size; i++) {
-            /* A swap can make a new permutation but not be listed in order */
-            swap(nums + start, nums + i);
-            dfs(nums, size, start + 1, results, count, col_size);
-            /* restore the array in backtrace */
-            swap(nums + start, nums + i);
-        }
-    }
-}
-#endif
-
-static void dfs(int *nums, int size, bool *used, int *stack,
-                int len, int **results, int *count, int *col_size)
-{
-    int i;
-    if (len == size) {
-        results[*count] = malloc(size * sizeof(int));
-        memcpy(results[*count], stack, size * sizeof(int));
-        col_size[*count] = size;
-        (*count)++;
+    if (depth == numsSize) {
+        answer[*count] = (int *)malloc((size_t)numsSize * sizeof(int));
+        memcpy(answer[*count], path, (size_t)numsSize * sizeof(int));
+        columnSizes[*count] = numsSize;
+        ++(*count);
         return;
     }
 
-    /* Reverse order is allowed in permutation so in each level it could
-     * select from nums[0...size-1] except from the selected[used] ones.*/
-    for (i = 0; i < size; i++) {
-        if (!used[i]) {
-            /* Used marks all the allowable remaining elements in the next DFS
-             * levels */
-            stack[len] = nums[i];
-            used[i] = true;
-            dfs(nums, size, used, stack, len + 1, results, count, col_size);
-            used[i] = false;
-        }
+    for (i = 0; i < numsSize; ++i) {
+        if (used[i]) continue;
+        used[i] = true;
+        path[depth] = nums[i];
+        buildPermutations(nums, numsSize, used, path, depth + 1,
+                          answer, columnSizes, count);
+        used[i] = false;
     }
 }
 
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *returnColumnSizes array must be malloced, assume caller calls free().
- */
-int** permute(int* nums, int numsSize, int* returnSize, int** returnColumnSizes)
-{
-    int count = 0, cap = 5000;
-    int **results = malloc(cap * sizeof(int *));
-    bool *used = malloc(numsSize * sizeof(bool));
-    int *stack = malloc(numsSize * sizeof(int));
-    *returnSize = 0;
-    *returnColumnSizes = malloc(cap * sizeof(int));
-    memset(used, false, numsSize * sizeof(bool));
-    dfs(nums, numsSize, used, stack, 0, results, returnSize, *returnColumnSizes);
-    return results;
+/* ---- 易讀解法：用 used 標記逐位建立每一種排列 ---- */
+int** permute(int* nums, int numsSize, int* returnSize,
+              int** returnColumnSizes) {
+    int capacity = 1;
+    int count = 0;
+    int i;
+    int **answer;
+    int *columnSizes;
+    int *path;
+    bool *used;
+
+    for (i = 2; i <= numsSize; ++i) capacity *= i;
+    answer = (int **)malloc((size_t)capacity * sizeof(int *));
+    columnSizes = (int *)malloc((size_t)capacity * sizeof(int));
+    path = (int *)malloc((size_t)numsSize * sizeof(int));
+    used = (bool *)calloc((size_t)numsSize, sizeof(bool));
+
+    buildPermutations(nums, numsSize, used, path, 0,
+                      answer, columnSizes, &count);
+    free(path);
+    free(used);
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
+
 
 /* ---- generated tests ---- */
 int main(void){

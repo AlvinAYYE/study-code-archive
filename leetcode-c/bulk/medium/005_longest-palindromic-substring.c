@@ -9,24 +9,23 @@
  * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
  *     Given a string s, return the longest palindromic substring in s.
  *
- * [中文] 題目: 最长回文子串
- *     给你一个字符串 s ，找到 s 中最长的 回文 子串 。 &nbsp
- *     ; 示例 1： 输入： s = "babad" 输出： "bab" 
- *     解释： "aba" 同样是符合题意的答案。 示例 2： 输入： s 
- *     = "cbbd" 输出： "bb" &nbsp; 提示： 1 &lt
- *     ;= s.length &lt;= 1000 s 仅由数字和英文字母
- *     组成
+ * [中文] 題目：最長迴文子字串
+ *     給定字串 s，回傳最長的連續迴文子字串。迴文由左向右與由右向左
+ *     讀取皆相同。
  *
- * Examples:
- *     Input: s = "babad"
- *     Output: "bab"
- *     Explanation: "aba" is also a valid answer.
- *     Input: s = "cbbd"
- *     Output: "bb"
+ * [中文] 範例
+ *   範例 1：輸入 s = "babad"，輸出 "bab"；"aba" 也是正確答案。
+ *   範例 2：輸入 s = "cbbd"，輸出 "bb"。
  *
- * Constraints:
- *   - 1 <= s.length <= 1000
- *   - s consist of only digits and English letters.
+ * [中文] 限制
+ *   - 1 <= s.length <= 1000。
+ *   - s 只包含數字與英文字母。
+ *
+ * [中文] 直觀解題思路
+ *   1. 奇數迴文以一個字元為中心，偶數迴文以兩字元間隙為中心。
+ *   2. 對每個位置做奇數與偶數擴展，左右字元相同時繼續向外。
+ *   3. 記錄最長區間，最後配置並複製結果字串。
+ *   最壞時間 O(n^2)，除回傳字串外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -200,79 +199,40 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-5. Longest Palindromic Substring
-
-Given a string s, find the longest palindromic substring in s. You may assume that the maximum length of s is 1000.
-
-Example:
-Input: "babad"
-
-Output: "bab"
-
-Note: "aba" is also a valid answer.
-
-
-
-Example:
-Input: "cbbd"
-
-Output: "bb"
-*/
-
-char* longestPalindrome(char* s) {
-    int sz;
-    int i, j, k, l;
-    int where = 0, len = 0;
-    
-    if (!s || !*s) return s;
-    
-    sz = strlen(s);
-
-    for (i = 0, j = 0, k = 0; len < (sz - k) * 2; i = k, j = k) {
-        while (j + 1 < sz && s[j] == s[j + 1]) {
-            j ++;  // skip all repeating characters
-        }
-        k = j + 1; // where to start next try
-        while (i > 0 && j + 1 < sz && s[i - 1] == s[j + 1]) {
-            i --;  // expand dual direction
-            j ++;
-        }
-        l = j - i + 1; // what we have fond so far
-        if (len < l) {
-            len = l;
-            where = i;
-        }
+/* 從指定中心向兩側擴張，更新目前最長的迴文區間。 */
+static void expandFromCenter(const char *s, int n, int left, int right,
+                             int *bestStart, int *bestLength) {
+    while (left >= 0 && right < n && s[left] == s[right]) {
+        --left;
+        ++right;
     }
-    s = s + where;
-    s[len] = 0;
-    return s;
+
+    ++left;
+    if (right - left > *bestLength) {
+        *bestStart = left;
+        *bestLength = right - left;
+    }
 }
 
+/* ---- 易讀解法：檢查每個奇數與偶數中心 ---- */
+char* longestPalindrome(char* s) {
+    int n = (int)strlen(s);
+    int bestStart = 0;
+    int bestLength = 1;
+    int center;
+    char *answer;
 
-/*
-Difficulty:Medium
-Total Accepted:222.3K
-Total Submissions:883.5K
+    for (center = 0; center < n; ++center) {
+        expandFromCenter(s, n, center, center, &bestStart, &bestLength);
+        expandFromCenter(s, n, center, center + 1, &bestStart, &bestLength);
+    }
 
+    answer = (char *)malloc((size_t)bestLength + 1);
+    memcpy(answer, s + bestStart, (size_t)bestLength);
+    answer[bestLength] = '\0';
+    return answer;
+}
 
-Companies Amazon Microsoft Bloomberg
-Related Topics String
-Similar Questions 
-                
-                  
-                    Shortest Palindrome
-                  
-                    Palindrome Permutation
-                  
-                    Palindrome Pairs
-                  
-                    Longest Palindromic Subsequence
-                  
-                    Palindromic Substrings
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,52 +1,66 @@
-# 0404. Sum of Left Leaves《左葉子之和》
+# 404 Sum of Left Leaves：左葉節點之和
 
-- **Difficulty**: Easy
-- **Tags**: tree, depth-first-search, breadth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/sum-of-left-leaves/
-- **程式碼**: [`404_sum-of-left-leaves.c`](./404_sum-of-left-leaves.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定一棵二元樹的根節點，回傳所有左葉節點數值的總和。葉節點沒有任何子節點；左葉節點則必須同時是其父節點的左子節點與葉節點。
+給定二元樹的根節點 root，回傳所有左葉節點的值總和。葉節點是沒有左、右子節點的節點；左葉節點還必須是其父節點的左子節點。
 
-**思路**：以遞迴走訪整棵樹，遞迴參數記錄目前節點是否為左子節點。若目前節點是左葉節點便累加其值。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given the root of a binary tree, return the sum of all left leaves.
-A leaf is a node with no children. A left leaf is a leaf that is the left child of another node.
-Example 1:
-Example 2:
-Constraints:
+- 輸入：root = [3,9,20,null,null,15,7]
+- 輸出：24
+- 說明：左葉節點是 9 與 15，總和為 24。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: root = [3,9,20,null,null,15,7]
-Output: 24
-Explanation: There are two left leaves in the binary tree, with values 9 and 15 respectively.
+- 輸入：root = [1]
+- 輸出：0
+- 說明：根節點不是任何節點的左子節點，因此沒有左葉。
 
-Input: root = [1]
-Output: 0
-```
+## 限制
 
-## 限制 Constraints
+- 節點數量介於 1 到 1000
+- -1000 <= Node.val <= 1000
 
-The number of nodes in the tree is in the range [1, 1000].
--1000 <= Node.val <= 1000
+## 解題思路
 
-## 官方 C 函式簽名 Signature
+1. 遞迴走訪每個節點，並記住目前節點是父節點的左子節點還是右子節點。
+2. 若目前節點沒有子節點，且它是左子節點，就回傳它的值；其他葉節點回傳 0。
+3. 非葉節點回傳左子樹與右子樹的結果相加。根節點一開始標記為非左子節點。
 
-```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-int sumOfLeftLeaves(struct TreeNode* root) {
-    
+## 複雜度
+
+- 時間：O(n)，每個節點恰好走訪一次。
+- 空間：O(h) 遞迴堆疊；h 是樹高，最壞為 O(n)。
+
+## C 函式簽名
+
+~~~c
+int sumOfLeftLeaves(struct TreeNode* root);
+~~~
+
+## 程式如何運作
+
+~~~c
+static int sumLeftLeavesHelper(struct TreeNode* node, bool isLeftChild) {
+    if (node == NULL) {
+        return 0;
+    }
+
+    // 葉節點只有在是左子節點時才計入。
+    if (node->left == NULL && node->right == NULL) {
+        return isLeftChild ? node->val : 0;
+    }
+
+    return sumLeftLeavesHelper(node->left, true) +
+           sumLeftLeavesHelper(node->right, false);
 }
-```
+
+int sumOfLeftLeaves(struct TreeNode* root) {
+    // 根節點沒有父節點，所以不算左子節點。
+    return sumLeftLeavesHelper(root, false);
+}
+~~~

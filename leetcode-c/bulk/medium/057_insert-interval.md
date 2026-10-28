@@ -1,55 +1,48 @@
-# 0057. Insert Interval《插入區間》
+# 0057. Insert Interval｜插入區間
 
-- **Difficulty**: Medium
-- **Tags**: array
-- **題目連結**: https://leetcode.com/problems/insert-interval/
-- **程式碼**: [`057_insert-interval.c`](./057_insert-interval.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列
+- **題目連結**：[LeetCode 0057](https://leetcode.com/problems/insert-interval/)
+- **C 程式**：[057_insert-interval.c](./057_insert-interval.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定已依起點排序且互不重疊的區間陣列 intervals，以及一個 newInterval，插入後仍須保持排序與不重疊。若 newInterval 與既有區間重疊，必須合併後回傳結果；不要求原地修改。
+給定依起點排序、彼此不重疊的區間陣列，以及一個 `newInterval`。將新區間插入後，合併所有與它重疊的區間，回傳仍按起點排序且彼此不重疊的結果。可以另外建立答案，不必原地修改輸入。
 
-**思路**：先複製完全位於新區間左側的區間，再找出所有重疊區間並更新新區間的兩端。加入合併後的新區間，最後接上右側其餘區間。
-
-## Problem Statement (English)
-
-You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] represent the start and the end of the ith interval and intervals is sorted in ascending order by starti. You are also given an interval newInterval = [start, end] that represents the start and end of another interval.
-Insert newInterval into intervals such that intervals is still sorted in ascending order by starti and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
-Return intervals after the insertion.
-Note that you don't need to modify intervals in-place. You can make a new array and return it.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
-Output: [[1,5],[6,9]]
+輸入：intervals = [[1,3],[6,9]], newInterval = [2,5]
+輸出：[[1,5],[6,9]]
 
-Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
-Output: [[1,2],[3,10],[12,16]]
-Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
+輸入：intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+輸出：[[1,2],[3,10],[12,16]]
+說明：[4,8] 與 [3,5]、[6,7]、[8,10] 重疊，合併後為 [3,10]。
 ```
 
-## 限制 Constraints
+## 限制
 
-0 <= intervals.length <= 104
-intervals[i].length == 2
-0 <= starti <= endi <= 105
-intervals is sorted by starti in ascending order.
-newInterval.length == 2
-0 <= start <= end <= 105
+- `0 <= intervals.length <= 10^4`。
+- `intervals[i].length == 2`，區間依起點遞增且互不重疊。
+- `0 <= starti <= endi <= 10^5`。
+- `newInterval.length == 2`，`0 <= start <= end <= 10^5`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 將所有終點早於新區間起點的區間直接複製到答案。
+2. 逐一吸收起點不晚於新區間終點的區間，更新新區間起點為兩者較小值、終點為較大值。
+3. 將合併完成的新區間加入答案。
+4. 把剩餘區間直接複製到答案；它們都位於新區間右側。
+
+## 複雜度
+
+- 時間：`O(n)`，每個輸入區間只檢查一次。
+- 額外空間：`O(n)`，回傳最多 `n + 1` 個區間。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** insert(int** intervals, int intervalsSize, int* intervalsColSize, int* newInterval, int newIntervalSize, int* returnSize, int** returnColumnSizes) {
-    
-}
+int** insert(int** intervals, int intervalsSize, int* intervalsColSize,
+             int* newInterval, int newIntervalSize, int* returnSize,
+             int** returnColumnSizes);
 ```

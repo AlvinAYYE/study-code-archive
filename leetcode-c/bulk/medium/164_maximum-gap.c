@@ -208,56 +208,54 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+/* ---- 易讀解法：用桶的最小值與最大值找跨桶間距 ---- */
+#include <limits.h>
 
-int maximumGap(int num[], int n) {
-    if (n < 2) return 0;
+int maximumGap(int* nums, int numsSize) {
+    int minimum = nums[0];
+    int maximum = nums[0];
+    int i;
+    int bucketSize;
+    int bucketCount;
+    int *bucketMinimum;
+    int *bucketMaximum;
+    int previousMaximum;
+    int largestGap = 0;
 
-    /* radix sort */
-    int *sorted_num = (int *)calloc(n, sizeof(int));
-    int *temp = (int *)calloc(n, sizeof(int));
+    if (numsSize < 2) return 0;
+    for (i = 1; i < numsSize; ++i) {
+        if (nums[i] < minimum) minimum = nums[i];
+        if (nums[i] > maximum) maximum = nums[i];
+    }
+    if (minimum == maximum) return 0;
 
-    memcpy(sorted_num, num, sizeof(int) * n);
-    
-    int i, j;
-    int shift;
-    for (shift = 0; shift < 32; shift += 8) {
-        int count[0x100] = {};
+    bucketSize = (maximum - minimum + numsSize - 2) / (numsSize - 1);
+    bucketCount = (maximum - minimum) / bucketSize + 1;
+    bucketMinimum = (int*)malloc((size_t)bucketCount * sizeof(int));
+    bucketMaximum = (int*)malloc((size_t)bucketCount * sizeof(int));
 
-        for (i = 0; i < n; i++) {
-            count[(sorted_num[i] >> shift) & 0xFF] ++;
-        }
-
-        int idx = 0, t = 0;
-        for (j = 0; j < 0x100; j++) {
-            t = count[j];
-            count[j] = idx;
-            idx += t;
-        }
-
-        for (i = 0; i < n; i++) {
-            temp[count[(sorted_num[i] >> shift) & 0xFF] ++] = sorted_num[i];
-        }
-
-        int *p = sorted_num;
-        sorted_num = temp;
-        temp = p;
+    for (i = 0; i < bucketCount; ++i) {
+        bucketMinimum[i] = INT_MAX;
+        bucketMaximum[i] = INT_MIN;
+    }
+    for (i = 0; i < numsSize; ++i) {
+        int bucket = (nums[i] - minimum) / bucketSize;
+        if (nums[i] < bucketMinimum[bucket]) bucketMinimum[bucket] = nums[i];
+        if (nums[i] > bucketMaximum[bucket]) bucketMaximum[bucket] = nums[i];
     }
 
-    int max_diff = 0;
-    for (i = 1; i < n; i++) {
-        if (sorted_num[i] - sorted_num[i - 1] > max_diff) {
-            max_diff = sorted_num[i] - sorted_num[i - 1];
+    previousMaximum = minimum;
+    for (i = 0; i < bucketCount; ++i) {
+        if (bucketMinimum[i] != INT_MAX) {
+            int gap = bucketMinimum[i] - previousMaximum;
+            if (gap > largestGap) largestGap = gap;
+            previousMaximum = bucketMaximum[i];
         }
     }
 
-    free(sorted_num);
-    free(temp);
-    return max_diff;
+    free(bucketMinimum);
+    free(bucketMaximum);
+    return largestGap;
 }
 
 /* ---- generated tests ---- */

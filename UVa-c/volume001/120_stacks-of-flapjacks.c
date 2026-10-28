@@ -12,6 +12,7 @@
  * ==========================================================================
  */
 #include <stdio.h>
+#include <stdlib.h>
 
 static void flip(int *arr, int k) {
     int l = 0, r = k;
@@ -21,11 +22,62 @@ static void flip(int *arr, int k) {
     }
 }
 
+void solve_uva120(FILE *in, FILE *out) {
+    char line[4096];
+
+    while (fgets(line, sizeof(line), in) != NULL) {
+        int pancakes[64];
+        int count = 0;
+        char *cursor = line;
+        int i;
+
+        while (*cursor != '\0') {
+            char *end;
+            long value = strtol(cursor, &end, 10);
+            if (end == cursor) {
+                cursor++;
+            } else {
+                if (count < (int)(sizeof(pancakes) / sizeof(pancakes[0]))) {
+                    pancakes[count++] = (int)value;
+                }
+                cursor = end;
+            }
+        }
+        if (count == 0) {
+            continue;
+        }
+
+        for (i = 0; i < count; i++) {
+            if (i > 0) {
+                fputc(' ', out);
+            }
+            fprintf(out, "%d", pancakes[i]);
+        }
+        fputc('\n', out);
+
+        for (i = count - 1; i > 0; i--) {
+            int maximum_index = 0;
+            int j;
+            for (j = 1; j <= i; j++) {
+                if (pancakes[j] > pancakes[maximum_index]) {
+                    maximum_index = j;
+                }
+            }
+            if (maximum_index == i) {
+                continue;
+            }
+            if (maximum_index != 0) {
+                flip(pancakes, maximum_index);
+                fprintf(out, "%d ", count - maximum_index);
+            }
+            flip(pancakes, i);
+            fprintf(out, "%d ", count - i);
+        }
+        fputs("0\n", out);
+    }
+}
+
 int main(void) {
-    int a[3] = {3, 1, 2};
-    flip(a, 0); /* max is at 0, flip to bottom */
-    flip(a, 2);
-    int ok = (a[2] == 3);
-    printf("%s: UVa 120 - Stacks of Flapjacks\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    solve_uva120(stdin, stdout);
+    return 0;
 }

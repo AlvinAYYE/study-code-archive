@@ -1,42 +1,21 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0209. Minimum Size Subarray Sum
+ * LeetCode 0209. Minimum Size Subarray Sum（長度最短的連續子陣列）
  * Difficulty: Medium
- * Tags: array, binary-search, sliding-window, prefix-sum
- * URL: https://leetcode.com/problems/minimum-size-subarray-sum/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array of positive integers nums and a positive integer
- *     target, return the minimal length of a subarray whose sum is greater
- *     than or equal to target. If there is no such subarray, return 0
- *     instead.
- *
- * [中文] 題目: 長度最小的子陣列
- * [中文] 題目說明:
- *     給定正整數陣列 nums 與正整數 target，找出總和大於或等於
- *      target 的連續子陣列最小長度。若不存在符合條件的子陣列，回傳
- *      0。
- *
- * [中文] 思路:
- *     使用滑動視窗擴張右端累加總和；一旦總和達標，持續左移並扣除左值以縮短
- *     視窗，同時更新最小長度。
- *
- * Examples:
- *     Input: target = 7, nums = [2,3,1,2,4,3]
- *     Output: 2
- *     Explanation: The subarray [4,3] has the minimal length under
- *     the problem constraint.
- *     Input: target = 4, nums = [1,4,4]
- *     Output: 1
- *     Input: target = 11, nums = [1,1,1,1,1,1,1,1]
- *     Output: 0
- *
- * Constraints:
+ * 題意：給定正整數 target 和只含正整數的陣列 nums，找出總和至少為 target 的連續子陣列最短長度。若不存在符合條件的子陣列，回傳 0。
+ * 範例：
+ *   1. 輸入：target = 7，nums = [2,3,1,2,4,3]；輸出：2。最短解是 [4,3]。
+ *   2. 輸入：target = 4，nums = [1,4,4]；輸出：1。
+ *   3. 輸入：target = 11，nums = [1,1,1,1,1,1,1,1]；輸出：0。
+ * 限制：
  *   - 1 <= target <= 10^9
  *   - 1 <= nums.length <= 10^5
  *   - 1 <= nums[i] <= 10^4
- * ==========================================================================
+ * 解法：
+ *   1. 用左右邊界維護一個連續視窗，並用 windowSum 記錄視窗總和。
+ *   2. 右邊界每次向右擴張，加入一個數；當總和已達 target，就持續移除左端數字，縮到仍符合條件的最短視窗。
+ *   3. 每次符合條件時更新最短長度。正整數保證縮小視窗只會讓總和下降，因此兩個邊界都只前進、不回頭。
+ *   4. 若最短長度從未更新，代表沒有符合條件的子陣列。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,62 +189,27 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-209. Minimum Size Subarray Sum
+int minSubArrayLen(int target, int* nums, int numsSize) {
+    int left = 0;
+    int shortest = numsSize + 1;
+    long long windowSum = 0;
 
-Given an array of n positive integers and a positive integer s, find the minimal length of a contiguous subarray of which the sum   s. If there isn't one, return 0 instead.
+    for (int right = 0; right < numsSize; right++) {
+        windowSum += nums[right];
 
-
-For example, given the array [2,3,1,2,4,3] and s = 7,
-the subarray [4,3] has the minimal length under the problem constraint.
-
-
-click to show more practice.
-
-More practice:
-
-If you have figured out the O(n) solution, try coding another solution of which the time complexity is O(n log n).
-
-
-Credits:Special thanks to @Freezen for adding this problem and creating all test cases.
-*/
-
-int minSubArrayLen(int s, int* nums, int numsSize) {
-    int i, j, k, d = 0;
-    
-    k = 0;
-    for (i = 0, j = 0; i < numsSize; i ++) {
-        k += nums[i];
-        while (k >= s) {
-            // found it
-            if (d == 0 || d > i - j + 1) {
-                d = i - j + 1;
+        // 視窗已達標時，盡量移除左側元素以縮短長度。
+        while (windowSum >= target) {
+            int length = right - left + 1;
+            if (length < shortest) {
+                shortest = length;
             }
-            // try to shrink the window from left pointer
-            k -= nums[j ++];
+            windowSum -= nums[left];
+            left++;
         }
     }
-    
-    return d;
+
+    return shortest == numsSize + 1 ? 0 : shortest;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:88.2K
-Total Submissions:288.4K
-
-
-Companies Facebook
-Related Topics Array Two Pointers Binary Search
-Similar Questions 
-                
-                  
-                    Minimum Window Substring
-                  
-                    Maximum Size Subarray Sum Equals k
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,55 +1,60 @@
-# 0282. Expression Add Operators《為運算式加上運算子》
+# 0282. 為運算式加入運算子（Expression Add Operators）
 
-- **Difficulty**: Hard
-- **Tags**: math, string, backtracking
-- **題目連結**: https://leetcode.com/problems/expression-add-operators/
-- **程式碼**: [`282_expression-add-operators.c`](./282_expression-add-operators.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Hard
+- **標籤**：字串、回溯、數學
+- **題目連結**：[LeetCode 282](https://leetcode.com/problems/expression-add-operators/)
+- **解答檔案**：[282_expression-add-operators.c](./282_expression-add-operators.c)
 
-## 題目說明（中文）
+## 題目完整翻譯
 
-給定僅含數字的字串 num 與整數 target，請在相鄰數字間插入 +、- 或 *，列出所有計算值等於 target 的運算式。運算元可由多個數字組成，但不得有前導零（單一 0 除外）。答案的排列順序不限。
+給定只包含數字的字串 `num` 和整數 `target`。請在相鄰數字之間插入二元運算子 `+`、`-` 或 `*`，找出所有計算結果等於 `target` 的運算式並回傳。
 
-**思路**：以回溯枚舉下一個運算元和三種運算子，遞迴保留目前總值與最後一項。遇到乘法時用「總值減去最後一項再加上乘積」修正運算優先序，並略過前導零與溢位的數字。
+可以把多個相鄰數字組成同一個運算元；運算元不可有前導零，例如 `05` 不合法，但單獨的 `0` 合法。回傳順序不限。
 
-## Problem Statement (English)
-
-Given a string num that contains only digits and an integer target, return all possibilities to insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant expression evaluates to the target value.
-Note that operands in the returned expressions should not contain leading zeros.
-Note that a number can contain multiple digits.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: num = "123", target = 6
-Output: ["1*2*3","1+2+3"]
-Explanation: Both "1*2*3" and "1+2+3" evaluate to 6.
+輸入：num = "123", target = 6
+輸出：["1*2*3","1+2+3"]
 
-Input: num = "232", target = 8
-Output: ["2*3+2","2+3*2"]
-Explanation: Both "2*3+2" and "2+3*2" evaluate to 8.
+輸入：num = "232", target = 8
+輸出：["2*3+2","2+3*2"]
 
-Input: num = "3456237490", target = 9191
-Output: []
-Explanation: There are no expressions that can be created from "3456237490" to evaluate to 9191.
+輸入：num = "105", target = 5
+輸出：["1*0+5","10-5"]
+
+輸入：num = "00", target = 0
+輸出：["0+0","0-0","0*0"]
+
+輸入：num = "3456237490", target = 9191
+輸出：[]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= num.length <= 10
-num consists of only digits.
--231 <= target <= 231 - 1
+- `1 <= num.length <= 10`
+- `num` 只包含數字。
+- `-2^31 <= target <= 2^31 - 1`
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 從左到右回溯，每次決定下一個運算元要取幾位；每個切分位置再嘗試加、減、乘。
+2. 若運算元長度大於 1 且第一位是 0，就停止延長，避免產生前導零。
+3. 遞迴時記錄目前算式的值，以及最後一個運算元。加減可直接更新總值。
+4. 乘法優先於加減，因此遇到乘法時，先從總值扣掉上一個運算元，再加回「上一個運算元 × 新運算元」。
+5. 用 64 位元整數保存中間值；所有數字都使用完且總值等於 `target` 時，就收集目前運算式。
+
+例如 `2+3*2`：讀到乘法時，把原本的 `+3` 撤回，再加上 `+6`，目前總值就從 5 更新為 8。
+
+## 複雜度
+
+- 時間：指數級，最多有 `O(4^(n-1))` 種切分與運算子選擇，另需複製答案字串。
+- 額外空間：`O(n)` 的遞迴深度與目前運算式，不含輸出答案。
+
+## C 函式介面
 
 ```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-char** addOperators(char* num, int target, int* returnSize) {
-    
-}
+char** addOperators(char* num, int target, int* returnSize);
 ```
+
+回傳陣列及其中的字串都由解答配置；呼叫端需負責釋放。

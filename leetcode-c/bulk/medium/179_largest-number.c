@@ -203,41 +203,52 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
+/* ---- 易讀解法：依 a+b 與 b+a 的字典序決定排列 ---- */
+static int compareLargestParts(const void* first, const void* second) {
+    const char *left = *(char* const*)first;
+    const char *right = *(char* const*)second;
+    int leftLength = (int)strlen(left);
+    int rightLength = (int)strlen(right);
+    int i;
 
-int compare(const void *a, const void *b)
-{
-	int n1 = *(int *)a;
-	int n2 = *(int *)b;
-
-	char str1[40] = {0};
-	char str2[40] = {0};
-	sprintf(str1, "%d%d", n1,n2);
-	sprintf(str2, "%d%d", n2,n1);
-	return (strcmp(str1, str2) < 0);
+    for (i = 0; i < leftLength + rightLength; ++i) {
+        char leftThenRight = i < leftLength ? left[i] : right[i - leftLength];
+        char rightThenLeft = i < rightLength ? right[i] : left[i - rightLength];
+        if (leftThenRight > rightThenLeft) return -1;
+        if (leftThenRight < rightThenLeft) return 1;
+    }
+    return 0;
 }
 
-char * largestNumber(int* nums, int numsSize)
-{
-	char *ret = calloc(12*numsSize, sizeof(char));
-	qsort(nums, numsSize, sizeof(int), compare);
+char* largestNumber(int* nums, int numsSize) {
+    char numberText[100][12];
+    char *ordered[100];
+    int totalLength = 0;
+    char *result;
+    int i;
+    int write = 0;
 
-	if (nums[0] == 0)
-	{
-		ret[0] = '0';        
-	} else
-	{
-		for (int i = 0; i < numsSize; i++)
-		{
-			char tmp[12] = {0};
-			sprintf(tmp, "%d", nums[i]);
-			strcat(ret, tmp);        
-		}
-	}
-	return ret;
+    for (i = 0; i < numsSize; ++i) {
+        sprintf(numberText[i], "%d", nums[i]);
+        ordered[i] = numberText[i];
+        totalLength += (int)strlen(numberText[i]);
+    }
+    qsort(ordered, (size_t)numsSize, sizeof(char*), compareLargestParts);
+
+    result = (char*)malloc((size_t)totalLength + 1);
+    if (ordered[0][0] == '0') {
+        result[0] = '0';
+        result[1] = '\0';
+        return result;
+    }
+    for (i = 0; i < numsSize; ++i) {
+        int partLength = (int)strlen(ordered[i]);
+        memcpy(result + write, ordered[i], (size_t)partLength);
+        write += partLength;
+    }
+    result[write] = '\0';
+    return result;
 }
-
 
 /* ---- generated tests ---- */
 int main(void){

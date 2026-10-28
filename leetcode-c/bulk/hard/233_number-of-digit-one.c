@@ -206,22 +206,25 @@ static int lc_dummy_;
 #include <assert.h>
 
 int countDigitOne(int n) {
-    if (n <= 0) return 0;
-    if (n >= 1 && n <= 9) return 1;
+    long long factor = 1;
+    long long total = 0;
 
-    int x = n; /* first digit of n */
-    int v = 1; /* first dight's weight */
-    while (x >= 10) {
-        x /= 10;
-        v *= 10;
-    }
+    /* 逐位計算：高位決定完整輪數，當前位決定本輪的額外個數。 */
+    while (factor <= n) {
+        long long lower = n % factor;
+        long long current = (n / factor) % 10;
+        long long higher = n / (factor * 10);
 
-    if (x != 1) {
-        return x * countDigitOne(v - 1) + countDigitOne(n % v) + v;
+        if (current == 0) {
+            total += higher * factor;
+        } else if (current == 1) {
+            total += higher * factor + lower + 1;
+        } else {
+            total += (higher + 1) * factor;
+        }
+        factor *= 10;
     }
-    else {
-        return countDigitOne(v - 1) + countDigitOne(n % v) + n % v + 1;
-    }
+    return (int)total;
 }
 
 /* ---- generated tests ---- */
@@ -234,6 +237,10 @@ int main(void){
 {
   long long act_1 = (long long)countDigitOne((0));
   if (!(act_1 == 0LL)) { pass = 0; printf("  test 1 FAIL\n"); }
+  ntests++; }
+{
+  long long act_2 = (long long)countDigitOne((1000000000));
+  if (!(act_2 == 900000001LL)) { pass = 0; printf("  test 2 FAIL\n"); }
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 233, "countDigitOne", ntests);
  return (pass&&ntests)?0:1;

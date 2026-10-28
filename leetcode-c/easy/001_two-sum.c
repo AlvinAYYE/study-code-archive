@@ -14,8 +14,19 @@
  *     You can return the answer in any order.
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     給定整數陣列 nums 與整數 target，找出兩數之和等於 target
- *     的兩個下標並回傳（保證恰有一組解）。
+ *     給定整數陣列 nums 與整數 target，請找出陣列中兩個相加等於
+ *     target 的元素，並回傳它們的索引。每筆輸入恰好有一組答案，
+ *     同一個元素不能重複使用；兩個索引的回傳順序不限。
+ *
+ * [中文] 範例
+ *     1. nums = [2,7,11,15]、target = 9，輸出 [0,1]，因為 2 + 7 = 9。
+ *     2. nums = [3,2,4]、target = 6，輸出 [1,2]。
+ *     3. nums = [3,3]、target = 6，輸出 [0,1]。
+ *
+ * [中文] 限制
+ *     - 2 <= nums.length <= 10^4
+ *     - -10^9 <= nums[i], target <= 10^9
+ *     - 恰好存在一組有效答案。
  *
  * Examples:
  *   Example 1:
@@ -40,7 +51,12 @@
  *   }
  *
  * [EN] Approach: One-pass hash table (open addressing): for each x look up target-x first, then insert x. Time O(n), space O(n).
- * [中文] 思路: 單遍雜湊表(開放定址)：掃描每個 x 時先查 target-x 是否已出現，再存入 x。時間 O(n)、空間 O(n)。
+ * [中文] 直觀解題思路
+ *     1. 走到 nums[i] 時，需要的另一個數是 target - nums[i]。
+ *     2. 先到雜湊表查這個數。若已出現，表中索引與 i 就是答案。
+ *     3. 若尚未出現，再把 nums[i] 與索引 i 存入表中；先查再存可避免
+ *        同一元素被使用兩次，也能正確處理 [3,3] 這類重複值。
+ *     4. 雜湊表使用線性探測處理碰撞，平均時間 O(n)，額外空間 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -57,26 +73,37 @@ static unsigned hashu(int x) {
 
 int *twoSum(int *nums, int numsSize, int target, int *returnSize) {
     int cap = 4, i, h;
-    int *keys, *pos, *ans;
+    int *keys, *pos;
+    *returnSize = 0;
+
+    /* 容量維持為 2 的次方且至少是元素數的兩倍，降低碰撞機率。 */
     while (cap < numsSize * 2) cap <<= 1;
     keys = (int *)malloc((size_t)cap * sizeof(int));
     pos  = (int *)calloc((size_t)cap, sizeof(int));   /* 0 = empty, else idx+1 */
-    ans  = (int *)malloc(2 * sizeof(int));
     for (i = 0; i < numsSize; ++i) {
         int need = target - nums[i];
+
+        /* 先尋找互補值，確保目前元素不會與自己配對。 */
         h = (int)(hashu(need) & (unsigned)(cap - 1));
         while (pos[h] && keys[h] != need) h = (h + 1) & (cap - 1);
-        if (pos[h]) {                      /* complement found */
-            *returnSize = 2; ans[0] = pos[h] - 1; ans[1] = i;
-            free(keys); free(pos); return ans;
+        if (pos[h]) {
+            int *ans = (int *)malloc(2 * sizeof(int));
+            ans[0] = pos[h] - 1;
+            ans[1] = i;
+            *returnSize = 2;
+            free(keys);
+            free(pos);
+            return ans;
         }
+
+        /* pos 存 index + 1，讓 0 可以代表此槽尚未使用。 */
         h = (int)(hashu(nums[i]) & (unsigned)(cap - 1));
         while (pos[h] && keys[h] != nums[i]) h = (h + 1) & (cap - 1);
         if (!pos[h]) { keys[h] = nums[i]; pos[h] = i + 1; }
     }
-    *returnSize = 0;
-    free(keys); free(pos);
-    return ans;
+    free(keys);
+    free(pos);
+    return NULL;  /* 題目保證有解，此分支只是讓函式行為完整。 */
 }
 /* ---------- end submission ---------- */
 

@@ -11,30 +11,37 @@
  *     respectively, return the median of the two sorted arrays.
  *     The overall run time complexity should be O(log (m+n)).
  *
- * [中文] 題目: 寻找两个正序数组的中位数
- *     给定两个大小分别为 m 和 n 的正序（从小到大）数组&nbsp; 
- *     nums1 和&nbsp; nums2 。请你找出并返回这两个正序数
- *     组的 中位数 。 算法的时间复杂度应该为 O(log (m+n)) 
- *     。 &nbsp; 示例 1： 输入： nums1 = [1,3], 
- *     nums2 = [2] 输出： 2.00000 解释： 合并数组 =
- *      [1,2,3] ，中位数 2 示例 2： 输入： nums...
+ * [中文] 題目：尋找兩個排序陣列的中位數
+ * [中文] 題目說明：
+ *     給定兩個長度分別為 m 與 n、皆依非遞減順序排列的整數陣列 nums1
+ *     與 nums2，請回傳兩個陣列合併後的中位數。演算法的整體時間複雜度
+ *     應為 O(log(m+n))。
  *
- * Examples:
- *     Input: nums1 = [1,3], nums2 = [2]
- *     Output: 2.00000
- *     Explanation: merged array = [1,2,3] and median is 2.
- *     Input: nums1 = [1,2], nums2 = [3,4]
- *     Output: 2.50000
- *     Explanation: merged array = [1,2,3,4] and median is (2 + 3) /
- *     2 = 2.5.
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：nums1 = [1,3], nums2 = [2]
+ *     輸出：2.00000
+ *     說明：合併後為 [1,2,3]，中位數是 2。
+ *   範例 2：
+ *     輸入：nums1 = [1,2], nums2 = [3,4]
+ *     輸出：2.50000
+ *     說明：合併後為 [1,2,3,4]，中位數是 (2+3)/2 = 2.5。
  *
- * Constraints:
- *   - nums1.length == m
- *   - nums2.length == n
- *   - 0 <= m <= 1000
- *   - 0 <= n <= 1000
- *   - 1 <= m + n <= 2000
+ * [中文] 限制：
+ *   - nums1.length == m，nums2.length == n
+ *   - 0 <= m, n <= 1000
+ *   - 1 <= m+n <= 2000（兩個陣列不會同時為空）
  *   - -10^6 <= nums1[i], nums2[i] <= 10^6
+ *
+ * [中文] 直觀解題思路：
+ *   1. 不必真的合併陣列；在兩個陣列各切一刀，讓左半部包含總數的一半。
+ *   2. 固定較短陣列的切口後，另一個切口也隨之確定。比較兩個切口左右
+ *      的四個邊界值，判斷較短陣列的切口應向左或向右移。
+ *   3. 當「兩邊左半最大值都不大於另一邊右半最小值」時，分割有效。
+ *   4. 總長度為奇數時取右半最小值；偶數時取左半最大與右半最小的平均。
+ *   5. 若其中一個陣列為空，可直接從另一個陣列中央取值。
+ *
+ * 本實作從中點逐格調整較短陣列的切口；時間 O(min(m,n))，額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -211,6 +218,7 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 /* ---- community solution ---- */
 static int lc_dummy_;
 
+/* 切口可能位於陣列兩端，先用此函式確認邊界下標是否存在。 */
 bool validateIndex(int idx, int size)
 {
     return (idx < 0 || idx >= size) ? false : true;  
@@ -223,7 +231,7 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
     int arr1Size = (nums1Size < nums2Size) ? nums1Size : nums2Size;
     int arr2Size = (nums1Size == arr1Size) ? nums2Size : nums1Size;
 
-    // if one of the array is empty
+    /* 較短陣列為空時，中位數完全由另一個陣列決定。 */
     if (arr1Size == 0)
     {
         if (arr2Size & 0x01)
@@ -231,7 +239,7 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
             return arr2[arr2Size/2];
         } else
         {
-            // remember to return double type result
+            /* 先轉成 double，避免整數除法截斷小數。 */
             return (double)(arr2[arr2Size/2-1]+arr2[arr2Size/2])/2;
         }
     }
@@ -243,7 +251,7 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
     int b2 = b1 + 1;
     while (1)
     {
-        // Find the answer
+        /* 交錯邊界皆有序時，表示已找到有效分割。 */
         if ((!validateIndex(b2, arr2Size) || !validateIndex(a1, arr1Size) || arr1[a1] < arr2[b2]) && 
             (!validateIndex(b1, arr2Size) || !validateIndex(a2, arr1Size) || arr2[b1] <= arr1[a2]))
         {
@@ -263,10 +271,7 @@ double findMedianSortedArrays(int* nums1, int nums1Size, int* nums2, int nums2Si
             b2--;
         } else
         {
-            // one of [a1, b2] and one of [a2, b1] are invalid, no need to check anymore.
-            //
-            // test case: arr1=[100], arr2=[101]
-            //
+            /* 切口落在端點時，缺少的一側不再需要比較，例如 [100]、[101]。 */
             break;
         }
     }

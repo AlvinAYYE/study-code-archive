@@ -207,55 +207,55 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-387. First Unique Character in a String
-
-Given a string, find the first non-repeating character in it and return it's index. If it doesn't exist, return -1.
-
-Examples:
-s = "leetcode"
-return 0.
-
-s = "loveleetcode",
-return 2.
-
-
-
-
-Note: You may assume the string contain only lowercase letters.
-*/
+/* 解題說明
+ * 題目：387. First Unique Character in a String（字串中的第一個唯一字元）
+ *
+ * 題意完整翻譯：
+ *     給定只含小寫英文字母的字串 s，找出第一個只出現一次的字元，並回傳它在字串中的索引。若沒有這種字元，回傳 -1。索引從 0 開始。
+ *
+ * 範例：
+ *   輸入：s = "leetcode"
+ *   輸出：0
+ *   說明：l 只出現一次，且它是最左邊的唯一字元。
+ *   輸入：s = "loveleetcode"
+ *   輸出：2
+ *   說明：索引 2 的 v 是第一個只出現一次的字元。
+ *   輸入：s = "aabb"
+ *   輸出：-1
+ *   說明：a 與 b 都出現兩次，沒有唯一字元。
+ *
+ * 限制：
+ *   - 1 <= s.length <= 10^5
+ *   - s 只含小寫英文字母
+ *
+ * 解題步驟：
+ *   1. 第一次掃描字串，統計 26 個字母各自出現的次數。
+ *   2. 第二次由左向右掃描，第一個計數為 1 的位置就是答案。
+ *   3. 若掃描完都沒有計數為 1 的字母，回傳 -1。
+ *
+ * 複雜度：
+ *   時間：O(n)，最多掃描字串兩次。
+ *   空間：O(1)，只使用 26 個計數欄位。
+ */
 
 int firstUniqChar(char* s) {
-    int num[26] = { 0 };
-    int idx[26];
-    int i, j;
-    
-    i = 0;
-    while (s[i]) {
-        num[s[i] - 'a'] ++;
-        idx[s[i] - 'a'] = i;
-        i ++;
+    int frequency[26] = {0};
+    int i;
+
+    // 第一遍統計每個字母出現幾次。
+    for (i = 0; s[i] != '\0'; ++i) {
+        ++frequency[s[i] - 'a'];
     }
-    j = -1;
-    for (i = 0; i < 26; i ++) {
-        if (num[i] == 1 && (j == -1 || j > idx[i])) {
-            j = idx[i];
+
+    // 第二遍找到最早只出現一次的字母。
+    for (i = 0; s[i] != '\0'; ++i) {
+        if (frequency[s[i] - 'a'] == 1) {
+            return i;
         }
     }
-    return j;
+
+    return -1;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:70.1K
-Total Submissions:150.5K
-
-
-Companies Amazon Bloomberg Microsoft
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

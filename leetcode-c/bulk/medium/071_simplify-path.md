@@ -1,63 +1,54 @@
-# 0071. Simplify Path《簡化路徑》
+# 0071. Simplify Path｜簡化路徑
 
-- **Difficulty**: Medium
-- **Tags**: string, stack
-- **題目連結**: https://leetcode.com/problems/simplify-path/
-- **程式碼**: [`071_simplify-path.c`](./071_simplify-path.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：字串、堆疊
+- **題目連結**：[LeetCode 0071](https://leetcode.com/problems/simplify-path/)
+- **C 程式**：[071_simplify-path.c](./071_simplify-path.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定一個以「/」開頭的有效 Unix 絕對路徑，將它化為規範路徑。連續斜線視為一個，單一「.」表示目前目錄，雙點「..」回到上一層且不得越過根目錄；其他名稱皆視為一般目錄。結果必須以單一「/」開頭，根目錄外不可有結尾斜線。
+給定 Unix 風格的絕對路徑 `path`，回傳它的標準化路徑。結果以單一 `/` 開頭；連續斜線視為一個；不保留結尾斜線（根目錄 `/` 除外）。`.` 表示目前目錄，`..` 表示回到上一層；根目錄沒有上一層。其他名稱照原樣保留，像 `...` 是一般目錄名稱。
 
-**思路**：以斜線切分路徑並用堆疊保存目錄名稱，遇到「..」便彈出、遇到「.」略過。最後反轉堆疊並以斜線重新串成結果。
-
-## Problem Statement (English)
-
-You are given an absolute path for a Unix-style file system, which always begins with a slash '/'. Your task is to transform this absolute path into its simplified canonical path.
-The rules of a Unix-style file system are as follows:
-The simplified canonical path should follow these rules:
-Return the simplified canonical path.
-Example 1:
-Example 2:
-Example 3:
-Example 4:
-Example 5:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: path = "/home/"
-Output: "/home"
-Explanation:
-The trailing slash should be removed.
+輸入：path = "/home/"
+輸出："/home"
 
-Input: path = "/home//foo/"
-Output: "/home/foo"
-Explanation:
-Multiple consecutive slashes are replaced by a single one.
+輸入：path = "/home//foo/"
+輸出："/home/foo"
 
-Input: path = "/home/user/Documents/../Pictures"
-Output: "/home/user/Pictures"
-Explanation:
-A double period ".." refers to the directory up a level (the parent directory).
+輸入：path = "/home/user/Documents/../Pictures"
+輸出："/home/user/Pictures"
 
-Input: path = "/../"
-Output: "/"
-Explanation:
-Going one level up from the root directory is not possible.
+輸入：path = "/../"
+輸出："/"
+
+輸入：path = "/.../a/../b/c/../d/./"
+輸出："/.../b/d"
+說明：`...` 不等於 `.` 或 `..`，所以它是合法目錄名稱。
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= path.length <= 3000
-path consists of English letters, digits, period '.', slash '/' or '_'.
-path is a valid absolute Unix path.
+- `1 <= path.length <= 3000`。
+- `path` 由英文字母、數字、句點 `.`, 斜線 `/` 或底線 `_` 組成。
+- `path` 是有效的絕對 Unix 路徑。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 逐段讀取斜線之間的目錄名稱；連續斜線只會形成空段，直接略過。
+2. 用 `components` 堆疊保存目前路徑的目錄名稱。
+3. 遇到 `.` 不改變堆疊；遇到 `..` 就移除頂端一層（若堆疊為空則留在根目錄）；其他名稱推入堆疊。
+4. 從根目錄 `/` 開始，依堆疊順序以單一斜線串起目錄名稱，形成標準路徑。
+
+## 複雜度
+
+- 時間：`O(n)`，每個路徑字元最多掃描常數次。
+- 額外空間：`O(n)`，堆疊保存目錄片段，回傳字串保存結果。
+
+## LeetCode C 函式簽名
 
 ```c
-char* simplifyPath(char* path) {
-    
-}
+char* simplifyPath(char* path);
 ```

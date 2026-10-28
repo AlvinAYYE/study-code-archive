@@ -1,47 +1,47 @@
-# 0054. Spiral Matrix《螺旋矩陣》
+# 0054. Spiral Matrix｜螺旋矩陣
 
-- **Difficulty**: Medium
-- **Tags**: array, matrix, simulation
-- **題目連結**: https://leetcode.com/problems/spiral-matrix/
-- **程式碼**: [`054_spiral-matrix.c`](./054_spiral-matrix.c) — 社群解答（repo begeekmyfriend_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、矩陣、模擬
+- **題目連結**：[LeetCode 0054](https://leetcode.com/problems/spiral-matrix/)
+- **C 程式**：[054_spiral-matrix.c](./054_spiral-matrix.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定 m × n 矩陣，依順時針螺旋順序回傳所有元素。每個元素都要恰好輸出一次。
+給定 `m × n` 矩陣，依照順時針螺旋順序讀出所有元素並回傳。每個元素都要恰好出現一次。
 
-**思路**：維護上、下、左、右四個邊界與目前方向，依序走訪上列、右行、下列、左行。每走完一側就收縮對應邊界，直到沒有可走的區域。
-
-## Problem Statement (English)
-
-Given an m x n matrix, return all elements of the matrix in spiral order.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
-Output: [1,2,3,6,9,8,7,4,5]
+輸入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+輸出：[1,2,3,6,9,8,7,4,5]
 
-Input: matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
-Output: [1,2,3,4,8,12,11,10,9,5,6,7]
+輸入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+輸出：[1,2,3,4,8,12,11,10,9,5,6,7]
 ```
 
-## 限制 Constraints
+## 限制
 
-m == matrix.length
-n == matrix[i].length
-1 <= m, n <= 10
--100 <= matrix[i][j] <= 100
+- `m == matrix.length`，`n == matrix[i].length`。
+- `1 <= m, n <= 10`。
+- `-100 <= matrix[i][j] <= 100`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 用 `top`、`bottom`、`left`、`right` 框住尚未輸出的矩形。
+2. 依序讀取上邊（左到右）、右邊（上到下）、下邊（右到左）、左邊（下到上）。
+3. 每讀完一邊，就把對應邊界向內縮一格。
+4. 讀取下邊或左邊前再次確認上下界、左右界尚未交錯，避免單列或單行被重複讀取。
+5. 所有邊界交錯時結束，回傳已填入的元素陣列。
+
+## 複雜度
+
+- 時間：`O(m × n)`，每格讀取一次。
+- 額外空間：`O(m × n)`，用於題目要求的回傳陣列。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* spiralOrder(int** matrix, int matrixSize, int* matrixColSize, int* returnSize) {
-    
-}
+int* spiralOrder(int** matrix, int matrixSize, int* matrixColSize, int* returnSize);
 ```
+
+回傳陣列由函式配置，`returnSize` 是元素數量。

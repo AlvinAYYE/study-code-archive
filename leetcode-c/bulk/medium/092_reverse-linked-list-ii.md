@@ -1,51 +1,44 @@
-# 0092. Reverse Linked List II《反轉鏈結串列 II》
+# 0092. Reverse Linked List II｜反轉鏈結串列 II
 
-- **Difficulty**: Medium
-- **Tags**: linked-list
-- **題目連結**: https://leetcode.com/problems/reverse-linked-list-ii/
-- **程式碼**: [`092_reverse-linked-list-ii.c`](./092_reverse-linked-list-ii.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：鏈結串列
+- **題目連結**：[LeetCode 0092](https://leetcode.com/problems/reverse-linked-list-ii/)
+- **C 程式**：[092_reverse-linked-list-ii.c](./092_reverse-linked-list-ii.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定單向鏈結串列頭節點，以及 1 起算的 left、right 位置，反轉從 left 到 right（含）之間的節點。其餘節點順序維持不變，並回傳結果串列。保證 1 ≤ left ≤ right ≤ 串列長度。
+給定單向鏈結串列和位置 `left`、`right`（位置從 1 開始），反轉這兩個位置之間的節點，其他節點維持原位，回傳新串列的頭節點。只反轉指定區段，不需要建立新的節點。
 
-**思路**：單次走訪到指定範圍時原地反轉節點指標，並記住反轉區段前的節點與原本區段首節點。反轉結束後把前段接到新首節點，再將原首節點接回後段。
-
-## Problem Statement (English)
-
-Given the head of a singly linked list and two integers left and right where left <= right, reverse the nodes of the list from position left to position right, and return the reversed list.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: head = [1,2,3,4,5], left = 2, right = 4
-Output: [1,4,3,2,5]
+輸入：head = [1,2,3,4,5], left = 2, right = 4
+輸出：[1,4,3,2,5]
 
-Input: head = [5], left = 1, right = 1
-Output: [5]
+輸入：head = [5], left = 1, right = 1
+輸出：[5]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the list is n.
-1 <= n <= 500
--500 <= Node.val <= 500
-1 <= left <= right <= n
+- 節點數 `n` 介於 `1` 到 `500`。
+- `-500 <= Node.val <= 500`。
+- `1 <= left <= right <= n`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 在原頭節點前放一個虛擬節點，統一處理 `left == 1` 時頭節點也要改變的情況。
+2. 讓 `before` 走到反轉區段前一個節點，`sublistHead` 指向區段目前的第一個節點。
+3. 每次把 `sublistHead` 後面的節點取下，插到 `before` 後面。這樣區段會逐步反轉，而區段外的連結保持接好。
+4. 重複 `right - left` 次，回傳虛擬節點的下一個節點。
+
+## 複雜度
+
+- 時間：`O(n)`，走到區段並逐個調整節點。
+- 額外空間：`O(1)`，只重新連接既有節點。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* reverseBetween(struct ListNode* head, int left, int right) {
-    
-}
+struct ListNode* reverseBetween(struct ListNode* head, int left, int right);
 ```

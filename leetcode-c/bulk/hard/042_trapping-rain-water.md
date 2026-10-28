@@ -7,9 +7,16 @@
 
 ## 題目說明（中文）
 
-給定代表地形高度的非負整數陣列，每根柱子的寬度皆為 1。請計算下雨後所有柱子之間可儲存的雨水總量。
+給定 `n` 個非負整數 `height`，代表每根寬度皆為 1 的柱子高度。請計算下雨後，這張高度圖總共能接住多少單位的雨水。
 
-**思路**：使用左右雙指針，每次處理較低的一端，並維護目前遇過的最高邊界。若該高度低於最高邊界，就把高度差累加為可接的水量。
+## 解題思路
+
+1. 某位置的水位由左右最高牆中較矮者決定。只要知道其中較矮的一端，就能確定該端目前位置的積水量。
+2. 左右指標 `i`、`j` 從兩端往中央移動，每次取 `height[i]`、`height[j]` 中較小者 `h`；另一端至少有一根高度不低於 `h` 的牆，因此 `h` 這側可以安全結算。
+3. `k` 記錄已結算路徑上的最高有效邊界。若 `h < k`，該格可接 `k-h` 單位的水；否則以 `h` 更新最高邊界。
+4. 每根柱子只會處理一次，直到兩個指標交錯。
+
+時間複雜度為 `O(n)`，額外空間為 `O(1)`。
 
 ## Problem Statement (English)
 
@@ -18,22 +25,22 @@ Example 1:
 Example 2:
 Constraints:
 
-## 範例 Examples
+## 範例
 
 ```text
-Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
-Output: 6
-Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6 units of rain water (blue section) are being trapped.
+輸入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+輸出：6
+說明：各凹槽累計可接住 6 單位的雨水。
 
-Input: height = [4,2,0,3,2,5]
-Output: 9
+輸入：height = [4,2,0,3,2,5]
+輸出：9
 ```
 
-## 限制 Constraints
+## 限制
 
-n == height.length
-1 <= n <= 2 * 104
-0 <= height[i] <= 105
+- `n == height.length`
+- `1 <= n <= 2 * 10^4`
+- `0 <= height[i] <= 10^5`
 
 ## 官方 C 函式簽名 Signature
 

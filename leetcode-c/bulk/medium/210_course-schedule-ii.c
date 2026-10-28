@@ -1,56 +1,22 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0210. Course Schedule II
+ * LeetCode 0210. Course Schedule II（課程表 II）
  * Difficulty: Medium
- * Tags: depth-first-search, breadth-first-search, graph, topological-sort
- * URL: https://leetcode.com/problems/course-schedule-ii/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     There are a total of numCourses courses you have to take, labeled
- *     from 0 to numCourses - 1. You are given an array prerequisites where
- *     prerequisites[i] = [ai, bi] indicates that you must take course bi
- *     first if you want to take course ai.
- *     Return the ordering of courses you should take to finish all
- *     courses. If there are many valid answers, return any of them. If it
- *     is impossible to finish all courses, return an empty array.
- *
- * [中文] 題目: 課程表 II
- * [中文] 題目說明:
- *     共有 numCourses 門編號課程，先修關係 [a, b] 表示
- *     必須先完成 b 才能修 a。請回傳任一可完成全部課程的修習順序；若存
- *     在循環而無法完成，回傳空陣列。
- *
- * [中文] 思路:
- *     程式以鄰接矩陣與入度陣列建圖，從所有入度為零的課程做 DFS，走訪時
- *     遞減後繼入度並在歸零時遞迴加入，最後僅在輸出數量等於課程數時保留結果
- *     。
- *
- * Examples:
- *     Input: numCourses = 2, prerequisites = [[1,0]]
- *     Output: [0,1]
- *     Explanation: There are a total of 2 courses to take. To take
- *     course 1 you should have finished course 0. So the correct
- *     course order is [0,1].
- *     Input: numCourses = 4, prerequisites =
- *     [[1,0],[2,0],[3,1],[3,2]]
- *     Output: [0,2,1,3]
- *     Explanation: There are a total of 4 courses to take. To take
- *     course 3 you should have finished both courses 1 and 2. Both
- *     courses 1 and 2 should be taken after you finished course 0.
- *     So one correct course order is [0,1,2,3]. Another correct
- *     ordering is [0,2,1,3].
- *     Input: numCourses = 1, prerequisites = []
- *     Output: [0]
- *
- * Constraints:
+ * 題意：共有 numCourses 門課，prerequisites[i] = [a, b] 表示必須先修完 b 才能修 a。請回傳一個能修完所有課程的順序；若無法完成（有循環），回傳空陣列。答案順序不唯一時，回傳任何一種都可以。
+ * 範例：
+ *   1. 輸入：numCourses = 2，prerequisites = [[1,0]]；輸出：[0,1]。
+ *   2. 輸入：numCourses = 4，prerequisites = [[1,0],[2,0],[3,1],[3,2]]；輸出：[0,1,2,3] 或 [0,2,1,3]。
+ *   3. 輸入：numCourses = 1，prerequisites = []；輸出：[0]。
+ * 限制：
  *   - 1 <= numCourses <= 2000
  *   - 0 <= prerequisites.length <= numCourses * (numCourses - 1)
- *   - prerequisites[i].length == 2
- *   - 0 <= ai, bi < numCourses
- *   - ai != bi
- *   - All the pairs [ai, bi] are distinct.
- * ==========================================================================
+ *   - 每列長度為 2，且 ai != bi
+ *   - 先修組合不重複
+ * 解法：
+ *   1. 把每個先修條件轉成「先修課 -> 後續課」的邊，並計算每門課的入度。
+ *   2. 先把所有入度為 0 的課放入佇列；這些課目前都可以直接修。
+ *   3. 逐一取出課程加入答案，再沿著它的邊降低後續課程入度；入度歸零就加入佇列。
+ *   4. 若答案包含所有課，回傳答案；若處理完仍有課未加入，表示有循環，釋放答案並回傳 NULL、將 returnSize 設為 0。
+ * 複雜度：時間 O(V + E)，額外空間 O(V + E)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -224,158 +190,75 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-210. Course Schedule II
+int* findOrder(int numCourses, int** prerequisites, int prerequisitesSize,
+               int* prerequisitesColSize, int* returnSize) {
+    (void)prerequisitesColSize;  // 每列固定有兩個課程編號。
+    *returnSize = 0;
 
-There are a total of n courses you have to take, labeled from 0 to n - 1.
+    int edgeCapacity = prerequisitesSize > 0 ? prerequisitesSize : 1;
+    int *head = (int *)malloc(sizeof(int) * (size_t)numCourses);
+    int *to = (int *)malloc(sizeof(int) * (size_t)edgeCapacity);
+    int *next = (int *)malloc(sizeof(int) * (size_t)edgeCapacity);
+    int *indegree = (int *)calloc((size_t)numCourses, sizeof(int));
+    int *queue = (int *)malloc(sizeof(int) * (size_t)numCourses);
+    int *order = (int *)malloc(sizeof(int) * (size_t)numCourses);
+    if (head == NULL || to == NULL || next == NULL || indegree == NULL ||
+        queue == NULL || order == NULL) {
+        free(head);
+        free(to);
+        free(next);
+        free(indegree);
+        free(queue);
+        free(order);
+        return NULL;
+    }
 
-Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+    for (int course = 0; course < numCourses; course++) {
+        head[course] = -1;
+    }
+    for (int i = 0; i < prerequisitesSize; i++) {
+        int course = prerequisites[i][0];
+        int prerequisite = prerequisites[i][1];
+        to[i] = course;
+        next[i] = head[prerequisite];
+        head[prerequisite] = i;
+        indegree[course]++;
+    }
 
-
-Given the total number of courses and a list of prerequisite pairs, return the ordering of courses you should take to finish all courses.
-
-There may be multiple correct orders, you just need to return one of them. If it is impossible to finish all courses, return an empty array.
-
-
-For example:
-2, [[1,0]]
-There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is [0,1]
-
-4, [[1,0],[2,0],[3,1],[3,2]]
-There are a total of 4 courses to take. To take course 3 you should have finished both courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0. So one correct course order is [0,1,2,3]. Another correct ordering is[0,2,1,3].
-
-Note:
-
-The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
-You may assume that there are no duplicate edges in the input prerequisites.
-
-
-
-click to show more hints.
-
-Hints:
-
-This problem is equivalent to finding the topological order in a directed graph. If a cycle exists, no topological ordering exists and therefore it will be impossible to take all courses.
-Topological Sort via DFS - A great video tutorial (21 minutes) on Coursera explaining the basic concepts of Topological Sort.
-Topological sort could also be done via BFS.
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int has_cycle(int *buff, int n, int sz, int *visited) {
-    int i, *node;
-    
-    if (visited[n] == -1) return 0;
-    if (visited[n] == 1) return 1;
-    
-    visited[n] = 1;
-    
-    node = &buff[n * sz];
-    for (i = 0; i < sz; i ++) {
-        if (node[i] != 0 && has_cycle(buff, node[i], sz, visited)) {
-            return true;
+    int front = 0;
+    int back = 0;
+    for (int course = 0; course < numCourses; course++) {
+        if (indegree[course] == 0) {
+            queue[back++] = course;
         }
     }
-    
-    visited[n] = -1;
-    
-    return false;
-}
-void dfs(int *buff, int n, int sz, int *indegree, int *visited, int *courses, int *k) {
-    int i, *node;
-    
-    visited[n] = 3;
-    
-    courses[(*k) ++] = n - 1;
-    
-    node = &buff[n * sz];
-    for (i = 0; i < sz; i ++) {
-        n = node[i];
-        if (n && visited[n] != 3) {
-            indegree[n] --;
-            if (indegree[n] == 0) {
-                dfs(buff, n, sz, indegree, visited, courses, k);
+
+    while (front < back) {
+        int prerequisite = queue[front++];
+        order[(*returnSize)++] = prerequisite;
+
+        for (int edge = head[prerequisite]; edge != -1; edge = next[edge]) {
+            int course = to[edge];
+            indegree[course]--;
+            if (indegree[course] == 0) {
+                queue[back++] = course;
             }
         }
     }
-}
-int* findOrder(int numCourses, int** prerequisites, int prerequisitesRowSize, int prerequisitesColSize, int* returnSize) {
-    int *buff, *root, *node_a;
-    int i, n, k, a, b;
-    int *visited;
-    int *indegree;
-    int *courses;
-    
-    buff = calloc((numCourses + 1) * numCourses, sizeof(int)); // each node with all possible neighbors
-    visited = calloc((numCourses + 1), sizeof(int));
-    indegree = calloc((numCourses + 1), sizeof(int));
-    courses  = calloc(numCourses, sizeof(int));
-    //assert(buff && visited && indegree && courses);
-    
-    root = &buff[0];  // root node has neighbors of all
-    for (i = 0; i < numCourses; i ++) {
-        root[i] = i + 1;
-    }
-    
-    for (i = 0; i < prerequisitesRowSize; i ++) {
-        a = prerequisites[i][1];
-        b = prerequisites[i][0];
-        node_a = &buff[(a + 1) * numCourses];
-        node_a[b] = (b + 1);    // node a has neighbor b which has id b + 1
-        indegree[(b + 1)] ++;
-    }
-    
-    k = 0;
-    
-    //if (has_cycle(buff, 0, numCourses, visited)) {
-    //    goto done;
-    //}
-    
-    // topological sort using dfs
-    for (i = 0; i < numCourses; i ++) {
-        n = root[i];
-        if (indegree[n] == 0 && visited[n] != 3) {
-            dfs(buff, n, numCourses, indegree, visited, courses, &k);
-        }
-    }
-    
-    if (k != numCourses) k = 0;
-    
-done:
-    free(buff);
-    free(visited);
+
+    free(head);
+    free(to);
+    free(next);
     free(indegree);
+    free(queue);
 
-    *returnSize = k;
-    
-    return courses;
+    if (*returnSize != numCourses) {
+        free(order);
+        *returnSize = 0;
+        return NULL;
+    }
+    return order;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:65.8K
-Total Submissions:235.5K
-
-
-Companies Facebook Zenefits
-Related Topics Depth-first Search Breadth-first Search Graph Topological Sort
-Similar Questions 
-                
-                  
-                    Course Schedule
-                  
-                    Alien Dictionary
-                  
-                    Minimum Height Trees
-                  
-                    Sequence Reconstruction
-                  
-                    Course Schedule III
-*/
 
 /* ---- generated tests ---- */
 int main(void){

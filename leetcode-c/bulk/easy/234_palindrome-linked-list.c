@@ -1,34 +1,26 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0234. Palindrome Linked List
- * Difficulty: Easy
- * Tags: linked-list, two-pointers, stack, recursion
- * URL: https://leetcode.com/problems/palindrome-linked-list/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the head of a singly linked list, return true if it is a
- *     palindrome or false otherwise.
+ * LeetCode 234. Palindrome Linked List
+ * 難度：Easy
  *
- * [中文] 題目: 迴文連結串列
- * [中文] 題目說明:
- *     給定單向連結串列的頭節點，判斷其節點值序列是否為迴文。若正讀與反讀一
- *     致回傳 true，否則回傳 false。
+ * 【完整中文題意】給定單向鏈結串列的頭節點 head，判斷從前往後讀取的節點值是否與從後往前相同。若相同則是回文串列，回傳 true；否則回傳 false。
  *
- * [中文] 思路:
- *     以快慢指標找出後半段起點，原地反轉後半段連結串列。再從頭部與反轉後半
- *     段逐節點比較。
+ * 【範例】
+ * 1. head = [1,2,2,1] → true
+ * 2. head = [1,2] → false
  *
- * Examples:
- *     Input: head = [1,2,2,1]
- *     Output: true
- *     Input: head = [1,2]
- *     Output: false
+ * 【限制】
+ * - 節點數介於 1 到 10⁵
+ * - 0 <= Node.val <= 9
  *
- * Constraints:
- *   - The number of nodes in the list is in the range [1, 10^5].
- *   - 0 <= Node.val <= 9
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 用快慢指標找到串列中點；快指標一次走兩格，慢指標一次走一格。
+ * 2. 若節點數是奇數，略過正中間節點；接著把後半段反轉。
+ * 3. 從頭與反轉後半段的開頭同時往後比對節點值。
+ * 4. 比對完再把後半段反轉回去，還原原串列；回傳比對結果。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】bool isPalindrome(struct ListNode* head)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -202,71 +194,46 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-234. Palindrome Linked List
-
-Given a singly linked list, determine if it is a palindrome.
-
-Follow up:
-Could you do it in O(n) time and O(1) space?
-*/
-
-/**
- * Definition for singly-linked list.
- * 
- */
-bool isPalindrome(struct ListNode* head) {
-    struct ListNode *fast, *slow;
-    struct ListNode *half = NULL, *tail = NULL;
-    struct ListNode *p;
-    
-    fast = slow = head;
-    while (fast && fast->next && fast->next->next) {
-        fast = fast->next->next;
-        slow = slow->next;
+static struct ListNode* reverseHalf234(struct ListNode* head) {
+    struct ListNode* previous = NULL;
+    while (head != NULL) {
+        struct ListNode* next = head->next;
+        head->next = previous;
+        previous = head;
+        head = next;
     }
-    
-    if (fast && fast->next) {
-        half = slow->next;
-    } else {
-        half = slow;
-    }
-    
-    while (half) {
-        p = half->next;
-        half->next = tail;
-        tail = half;
-        half = p;
-    }
-    
-    while (tail) {
-        if (tail->val != head->val) return false;
-        tail = tail->next;
-        head = head->next;
-    }
-    
-    return true;
+    return previous;
 }
 
+bool isPalindrome(struct ListNode* head) {
+    struct ListNode* slow = head;
+    struct ListNode* fast = head;
 
-/*
-Difficulty:Easy
-Total Accepted:113.4K
-Total Submissions:346.7K
+    // 快指標到尾端時，慢指標位於中間或後半段開頭。
+    while (fast != NULL && fast->next != NULL) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    if (fast != NULL) slow = slow->next; // 奇數長度時略過正中間節點。
 
+    struct ListNode* reversed = reverseHalf234(slow);
+    struct ListNode* left = head;
+    struct ListNode* right = reversed;
+    bool palindrome = true;
 
-Companies Amazon Facebook
-Related Topics Linked List Two Pointers
-Similar Questions 
-                
-                  
-                    Palindrome Number
-                  
-                    Valid Palindrome
-                  
-                    Reverse Linked List
-*/
+    while (right != NULL) {
+        if (left->val != right->val) {
+            palindrome = false;
+            break;
+        }
+        left = left->next;
+        right = right->next;
+    }
+
+    // 把後半段接回原方向，保留呼叫端串列內容。
+    reverseHalf234(reversed);
+    return palindrome;
+}
 
 /* ---- generated tests ---- */
 int main(void){

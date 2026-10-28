@@ -1,54 +1,49 @@
 # 0203. Remove Linked List Elements《移除鏈結串列元素》
 
-- **Difficulty**: Easy
-- **Tags**: linked-list, recursion
-- **題目連結**: https://leetcode.com/problems/remove-linked-list-elements/
-- **程式碼**: [`203_remove-linked-list-elements.c`](./203_remove-linked-list-elements.c) — 本專案自行撰寫並通過官方示例驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/remove-linked-list-elements/
 
-## 題目說明（中文）
+## 題目翻譯
 
-給定單向鏈結串列的頭節點與整數 val，請移除所有節點值等於 val 的節點，並回傳新的頭節點。串列可以是空的。
+給定單向鏈結串列的頭節點 head 和整數 val，移除所有節點值等於 val 的節點，並回傳移除後串列的新頭節點。
 
-**思路**：建立指向原頭節點的虛擬節點，從虛擬節點開始檢查下一個節點；命中 val 時直接跳過該節點，否則向前移動。
+## 範例
 
-## Problem Statement (English)
+~~~text
+輸入：head = [1,2,6,3,4,5,6], val = 6
+輸出：[1,2,3,4,5]
 
-Given the head of a linked list and an integer val, remove all the nodes of the linked list that has Node.val == val, and return the new head.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+輸入：head = [], val = 1
+輸出：[]
 
-## 範例 Examples
+輸入：head = [7,7,7,7], val = 7
+輸出：[]
+~~~
 
-```text
-Input: head = [1,2,6,3,4,5,6], val = 6
-Output: [1,2,3,4,5]
+## 限制
 
-Input: head = [], val = 1
-Output: []
+- 節點數介於 0 到 10^4。
+- 1 <= Node.val <= 50
+- 0 <= val <= 50
 
-Input: head = [7,7,7,7], val = 7
-Output: []
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 在原本串列前放一個暫時的 dummy 節點，讓刪除頭節點也能使用相同流程。
+2. current 指向目前保留的節點，檢查 current->next。
+3. 若下一個節點的值等於 val，就把 current->next 改成再下一個節點。
+4. 若不是目標值，就將 current 前進一格。
+5. 回傳 dummy.next，這就是更新後的串列頭。
 
-The number of nodes in the list is in the range [0, 104].
-1 <= Node.val <= 50
-0 <= val <= 50
+## 複雜度
 
-## 官方 C 函式簽名 Signature
+- 時間：O(n)，每個節點最多檢查一次。
+- 空間：O(1)，只使用虛擬節點與指標。
 
-```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* removeElements(struct ListNode* head, int val) {
-    
-}
-```
+## C 函式簽名
+
+~~~c
+struct ListNode* removeElements(struct ListNode* head, int val);
+~~~
+
+LeetCode 已提供 struct ListNode 型別定義。
+~~~

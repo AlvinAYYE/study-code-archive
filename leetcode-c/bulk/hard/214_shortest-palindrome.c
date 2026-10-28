@@ -15,21 +15,27 @@
  * [中文] 題目: 最短迴文
  * [中文] 題目說明:
  *     給定字串 s，只能在字串前方加入字元，使結果成為迴文。請回傳可得到的
- *     最短迴文字串。字串只含小寫英文字母，長度最多為 5 × 10^4。
+ *     最短迴文字串。
  *
- * [中文] 思路:
- *     先建立原字串的 KMP 失配表，再以反轉字串去匹配原字串前綴，求出最
- *     長迴文前綴；保留反轉字串並接上尚未匹配的原字串後綴。
+ * [中文] 範例：
+ *   範例 1：輸入 s = "aacecaaa"；輸出 "aaacecaaa"。
+ *   範例 2：輸入 s = "abcd"；輸出 "dcbabcd"。
  *
- * Examples:
- *     Input: s = "aacecaaa"
- *     Output: "aaacecaaa"
- *     Input: s = "abcd"
- *     Output: "dcbabcd"
- *
- * Constraints:
+ * [中文] 限制：
  *   - 0 <= s.length <= 5 * 10^4
- *   - s consists of lowercase English letters only.
+ *   - s 僅包含小寫英文字母。
+ *
+ * [中文] 直觀解題思路：
+ *   1. 要在前方補最少字元，等價於找出 s 最長的迴文前綴；前綴保留不動，
+ *      只需把剩餘後綴反轉後加到最前方。
+ *   2. 先建立原字串 needle 的 KMP 失配表 next。
+ *   3. 將 s 反轉得到 haystack，再以 KMP 用 haystack 匹配 needle 的前綴。
+ *      最後匹配長度 j 就是原字串最長迴文前綴的長度。
+ *   4. haystack 原本已放好需補到前方的反向字元；從位置 nl 起接上
+ *      needle[j..]，便得到最短迴文。
+ *   5. 回傳配置的新字串，由呼叫端負責釋放。
+ *
+ * 建表與匹配皆為線性，時間 O(n)，反轉結果與失配表使用 O(n) 空間。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -205,52 +211,43 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 
 /* ---- community solution ---- */
 static int lc_dummy_;
-char* shortestPalindrome(char* needle) {
-    if (needle == NULL) return NULL;
-    int nl = strlen(needle);
-    char *haystack = (char*)malloc(sizeof(char)*(nl+nl));
-    int *next = (int*)malloc(sizeof(int)*nl);
-    next[0] = -1;
-    int i, j, k;
-    for (i = 0; i < nl; i++)
-    {
-        haystack[i] = needle[nl-1-i];
+char* shortestPalindrome(char* s) {
+    int n = (int)strlen(s);
+    int *prefix = (int*)calloc((size_t)(2 * n + 1), sizeof(int));
+    char *combined = (char*)malloc((size_t)(2 * n + 2));
+    char *answer = (char*)malloc((size_t)(2 * n + 1));
+    int i, matched;
+    int j = 0;
+
+    if (!prefix || !combined || !answer) {
+        free(prefix);
+        free(combined);
+        free(answer);
+        return NULL;
     }
-    j = 0;
-    k = -1;
-    while (j < nl-1)
-    {
-        if (k == -1 || needle[j] == needle[k])
-        {
-            j++;
-            k++;
-            next[j] = k;
-        }
-        else
-        {
-            k = next[k];
-        }
+
+    /* s + 分隔符 + reverse(s)；分隔符不會出現在題目允許的字母中。 */
+    memcpy(combined, s, (size_t)n);
+    combined[n] = '#';
+    for (i = 0; i < n; ++i) combined[n + 1 + i] = s[n - 1 - i];
+    combined[2 * n + 1] = '\0';
+
+    /* KMP 前綴表最後一格，就是 s 的最長回文前綴長度。 */
+    for (i = 1; i < 2 * n + 1; ++i) {
+        while (j > 0 && combined[i] != combined[j]) j = prefix[j - 1];
+        if (combined[i] == combined[j]) ++j;
+        prefix[i] = j;
     }
-    i = j = 0;
-    while (i < nl)
-    {
-        if (j == -1 || haystack[i] == needle[j])
-        {
-            i++;
-            j++;
-            if (j == nl) break;
-        }
-        else
-        {
-            j = next[j];
-        }
-    }
-    for (i = nl; j < nl; i++, j++)
-    {
-        haystack[i] = needle[j];
-    }
-    haystack[i] = '\0';
-    return haystack;
+    matched = prefix[2 * n];
+
+    /* 把尚未納入回文前綴的尾端反轉後加到 s 前面。 */
+    for (i = 0; i < n - matched; ++i) answer[i] = s[n - 1 - i];
+    memcpy(answer + (n - matched), s, (size_t)n);
+    answer[2 * n - matched] = '\0';
+
+    free(prefix);
+    free(combined);
+    return answer;
 }
 
 /* ---- generated tests ---- */
@@ -265,6 +262,11 @@ int main(void){
   char s_1[] = "abcd";
   char *act_1 = shortestPalindrome(s_1);
   if (!(strcmp(act_1, "dcbabcd") == 0)) { pass = 0; printf("  test 1 FAIL\n"); }
+  ntests++; }
+{
+  char s_2[] = "";
+  char *act_2 = shortestPalindrome(s_2);
+  if (!(strcmp(act_2, "") == 0)) { pass = 0; printf("  test 2 FAIL\n"); }
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 214, "shortestPalindrome", ntests);
  return (pass&&ntests)?0:1;

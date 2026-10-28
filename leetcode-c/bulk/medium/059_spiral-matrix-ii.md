@@ -1,46 +1,44 @@
-# 0059. Spiral Matrix II《螺旋矩陣 II》
+# 0059. Spiral Matrix II｜螺旋矩陣 II
 
-- **Difficulty**: Medium
-- **Tags**: array, matrix, simulation
-- **題目連結**: https://leetcode.com/problems/spiral-matrix-ii/
-- **程式碼**: [`059_spiral-matrix-ii.c`](./059_spiral-matrix-ii.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、矩陣、模擬
+- **題目連結**：[LeetCode 0059](https://leetcode.com/problems/spiral-matrix-ii/)
+- **C 程式**：[059_spiral-matrix-ii.c](./059_spiral-matrix-ii.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定正整數 n，建立一個 n × n 矩陣。將 1 到 n² 依順時針螺旋順序填入並回傳該矩陣。
+給定正整數 `n`，建立一個 `n × n` 矩陣，將 `1` 到 `n²` 依順時針螺旋順序填入並回傳。
 
-**思路**：依右、下、左、上的方向逐格填入遞增數字，並在碰到各層邊界時轉向與收縮邊界。直到填完 n² 個位置為止。
-
-## Problem Statement (English)
-
-Given a positive integer n, generate an n x n matrix filled with elements from 1 to n2 in spiral order.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: n = 3
-Output: [[1,2,3],[8,9,4],[7,6,5]]
+輸入：n = 3
+輸出：[[1,2,3],[8,9,4],[7,6,5]]
 
-Input: n = 1
-Output: [[1]]
+輸入：n = 1
+輸出：[[1]]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= n <= 20
+- `1 <= n <= 20`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 用 `top`、`bottom`、`left`、`right` 設定目前尚未填入的矩形邊界。
+2. 依序沿上邊向右、右邊向下、下邊向左、左邊向上填入遞增數字。
+3. 每完成一邊就把該邊界向內縮一格；下邊與左邊開始前先確認範圍仍有效。
+4. 重複直到所有邊界交錯，矩陣就填滿了。
+
+## 複雜度
+
+- 時間：`O(n²)`，每格填入一次。
+- 額外空間：`O(n²)`，用於回傳矩陣。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** generateMatrix(int n, int* returnSize, int** returnColumnSizes) {
-    
-}
+int** generateMatrix(int n, int* returnSize, int** returnColumnSizes);
 ```
+
+`returnSize` 是矩陣列數，`returnColumnSizes` 記錄每列長度。

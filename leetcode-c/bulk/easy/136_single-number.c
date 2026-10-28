@@ -1,42 +1,11 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0136. Single Number
- * Difficulty: Easy
- * Tags: array, bit-manipulation
- * URL: https://leetcode.com/problems/single-number/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a non-empty array of integers nums, every element appears
- *     twice except for one. Find that single one.
- *     You must implement a solution with a linear runtime complexity and
- *     use only constant extra space.
- *
- * [中文] 題目: 只出現一次的數字
- * [中文] 題目說明:
- *     給定非空整數陣列 nums，除了某一個元素只出現一次外，其餘每個元素
- *     都恰好出現兩次。請找出並回傳該唯一元素。解法必須為線性時間且只使用常
- *     數額外空間。nums 長度介於 1 至 3×10^4，元素值介於 -
- *     3×10^4 至 3×10^4。
- *
- * [中文] 思路:
- *     將所有元素逐一做 XOR；成對元素會互相消去，最後保留只出現一次的數
- *     字。
- *
- * Examples:
- *     Input: nums = [2,2,1]
- *     Output: 1
- *     Input: nums = [4,1,2,1,2]
- *     Output: 4
- *     Input: nums = [1]
- *     Output: 1
- *
- * Constraints:
- *   - 1 <= nums.length <= 3 * 10^4
- *   - -3 * 10^4 <= nums[i] <= 3 * 10^4
- *   - Each element in the array appears twice except for one element
- *   which appears only once.
- * ==========================================================================
+ * LeetCode 0136. Single Number《只出現一次的數字》
+ * 題意：非空整數陣列中，只有一個數字出現一次，其餘每個數字都出現兩次；
+ *       找出只出現一次的數字。要求線性時間及常數額外空間。
+ * 範例：[2,2,1] -> 1；[4,1,2,1,2] -> 4；[1] -> 1。
+ * 限制：1 <= nums.length <= 3 * 10^4；-3 * 10^4 <= nums[i] <= 3 * 10^4。
+ * 解法：將所有數字做 XOR；相同數字兩兩抵銷，最後留下單獨的數字。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,47 +179,16 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-136. Single Number
-
-Given an array of integers, every element appears twice except for one. Find that single one.
-
-
-Note:
-Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?
-*/
 
 int singleNumber(int* nums, int numsSize) {
-    int i, k = 0;
-    for (i = 0; i < numsSize; i ++) {
-        k = k ^ nums[i];  // a ^ a equals to 0; 0 ^ a equals to a
+    int answer = 0;
+
+    for (int i = 0; i < numsSize; ++i) {
+        /* a ^ a = 0，且 0 ^ a = a。 */
+        answer ^= nums[i];
     }
-    return k;
+    return answer;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:231K
-Total Submissions:424.5K
-
-
-Companies Palantir Airbnb
-Related Topics Hash Table Bit Manipulation
-Similar Questions 
-                
-                  
-                    Single Number II
-                  
-                    Single Number III
-                  
-                    Missing Number
-                  
-                    Find the Duplicate Number
-                  
-                    Find the Difference
-*/
 
 /* ---- generated tests ---- */
 int main(void){

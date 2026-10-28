@@ -1,36 +1,27 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0206. Reverse Linked List
- * Difficulty: Easy
- * Tags: linked-list, recursion
- * URL: https://leetcode.com/problems/reverse-linked-list/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the head of a singly linked list, reverse the list, and return
- *     the reversed list.
+ * LeetCode 206. Reverse Linked List
+ * 難度：Easy
  *
- * [中文] 題目: 反轉鏈結串列
- * [中文] 題目說明:
- *     給定單向鏈結串列的頭節點，請將整個串列反轉並回傳反轉後的頭節點。串列
- *     節點數可為 0。
+ * 【完整中文題意】給定單向鏈結串列的頭節點 head，請將串列方向反轉，並回傳新的頭節點。反轉時應直接改變節點的 next 指標，不必建立新的節點。
  *
- * [中文] 思路:
- *     迭代維護前一節點、目前節點與下一節點，逐一將目前節點的 next 指
- *     回前一節點，最後回傳前一節點。
+ * 【範例】
+ * 1. head = [1,2,3,4,5] → [5,4,3,2,1]
+ * 2. head = [1,2] → [2,1]
+ * 3. head = [] → []
  *
- * Examples:
- *     Input: head = [1,2,3,4,5]
- *     Output: [5,4,3,2,1]
- *     Input: head = [1,2]
- *     Output: [2,1]
- *     Input: head = []
- *     Output: []
+ * 【限制】
+ * - 節點數介於 0 到 5000
+ * - -5000 <= Node.val <= 5000
  *
- * Constraints:
- *   - The number of nodes in the list is the range [0, 5000].
- *   - -5000 <= Node.val <= 5000
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 用 previous 記錄已反轉部分的頭，初始為空；current 從 head 開始。
+ * 2. 每次先暫存 current->next，再把 current->next 指向 previous。
+ * 3. previous 和 current 都往前移一格，直到 current 為空。
+ * 4. 此時 previous 就是反轉後的新頭節點。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】struct ListNode* reverseList(struct ListNode* head)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -204,11 +195,19 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
 struct ListNode* reverseList(struct ListNode* head) {
-    struct ListNode *prev = NULL, *cur = head, *nx;
-    while (cur) { nx = cur->next; cur->next = prev; prev = cur; cur = nx; }
-    return prev;
+    struct ListNode* previous = NULL;
+    struct ListNode* current = head;
+
+    while (current != NULL) {
+        // 先保存下一個節點，避免改指標後失去剩餘串列。
+        struct ListNode* next = current->next;
+        current->next = previous;
+        previous = current;
+        current = next;
+    }
+
+    return previous;
 }
 
 /* ---- generated tests ---- */

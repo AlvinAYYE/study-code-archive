@@ -1,34 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1290. Convert Binary Number in a Linked List to Integer
- * Difficulty: Easy
- * Tags: linked-list, math
- * URL: https://leetcode.com/problems/convert-binary-number-in-a-linked-list-to-integer/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given head which is a reference node to a singly-linked list. The
- *     value of each node in the linked list is either 0 or 1. The linked
- *     list holds the binary representation of a number.
- *     Return the decimal value of the number in the linked list.
- *     The most significant bit is at the head of the linked list.
+ * Title-CN: 將鏈結串列中的二進位數轉成整數
+ * LeetCode 1290. Convert Binary Number in a Linked List to Integer (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given head which is a reference 節點 to a singly-鏈表. The value of each
- *     節點 in the 鏈表 is either 0 or 1.
+ * 題意翻譯：給定一條非空單向鏈結串列，每個節點的值都是 0 或 1。從頭節點到尾節點
+ * 依序構成一個二進位數，頭節點是最高位，請回傳這個數的十進位值。
  *
- * Examples:
- *     Input: head = [1,0,1]
- *     Output: 5
- *     Explanation: (10^1) in base 2 = (5) in base 10
- *     Input: head = [0]
- *     Output: 0
+ * 範例 1：head = [1,0,1]，二進位 101 等於十進位 5，因此輸出 5。
+ * 範例 2：head = [0]，輸出 0。
  *
- * Constraints:
- *   - The Linked List is not empty.
- *   - Number of nodes will not exceed 30.
- *   - Each node's value is either 0 or 1.
- * ==========================================================================
+ * 限制：鏈結串列至少有一個節點，最多 30 個節點；每個節點值是 0 或 1。
+ *
+ * 解題思路：從頭到尾讀取每個位元。每讀到一個新位元，就先把目前結果乘以 2，
+ * 再加上新位元。例如 10 讀到 1 變成 10*2+1=101。掃描一次即可，時間 O(n)，
+ * 空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,26 +185,14 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
+int getDecimalValue(struct ListNode *head) {
+    int decimalValue = 0;
 
-
-int getDecimalValue(struct ListNode* head){
-    unsigned sum = head->val;
-    struct ListNode* next = head->next;
-    while (next != NULL){
-        sum <<= 1;
-        sum |= next->val;
-        next = next->next;
+    while (head != NULL) {
+        decimalValue = decimalValue * 2 + head->val;
+        head = head->next;
     }
-    return sum;
-}
-
-// Equivalent for loop.
-int getDecimalValue2(struct ListNode* head){
-    int sum;
-    for(sum = head->val; head->next; sum <<= 1, head=head->next, sum |= head->val);
-    return sum;
+    return decimalValue;
 }
 
 /* ---- generated tests ---- */

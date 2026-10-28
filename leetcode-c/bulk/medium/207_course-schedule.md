@@ -1,50 +1,34 @@
-# 0207. Course Schedule《課程表》
+# LeetCode 0207. Course Schedule
 
-- **Difficulty**: Medium
-- **Tags**: depth-first-search, breadth-first-search, graph, topological-sort
-- **題目連結**: https://leetcode.com/problems/course-schedule/
-- **程式碼**: [`207_course-schedule.c`](./207_course-schedule.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 課程表
 
-## 題目說明（中文）
+## 題目
 
-共有編號 0 至 numCourses - 1 的課程，prerequisites 中的 [a, b] 表示修習 a 前必須先修 b。請判斷是否能完成所有課程。若先修關係形成循環，則無法完成。
+共有 numCourses 門課，課號為 0 到 numCourses-1。prerequisites[i] = [a, b] 表示必須先修完課程 b，才能修課程 a。判斷是否能修完所有課程；若先修關係形成循環，就無法完成。
 
-**思路**：以鄰接矩陣表示有向圖，並進行 DFS；節點在目前遞迴路徑中標記為造訪中，若再次走到此類節點即偵測到環。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：numCourses = 2，prerequisites = [[1,0]]；輸出：true。先修 0 再修 1 即可。
+2. 輸入：numCourses = 2，prerequisites = [[1,0],[0,1]]；輸出：false。兩門課互相要求先修，形成循環。
 
-There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
-Return true if you can finish all courses. Otherwise, return false.
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= numCourses <= 2000
+- 0 <= prerequisites.length <= 5000
+- 每列長度為 2；課號介於 0 和 numCourses-1 之間
+- 先修組合不重複
 
-```text
-Input: numCourses = 2, prerequisites = [[1,0]]
-Output: true
-Explanation: There are a total of 2 courses to take. 
-To take course 1 you should have finished course 0. So it is possible.
+## 解題思路
 
-Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
-Output: false
-Explanation: There are a total of 2 courses to take. 
-To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
-```
+1. 把課程視為圖上的節點；每個 [課程, 先修課] 轉成先修課指向課程的一條有向邊。
+2. 記錄每門課還有幾個先修條件（入度），把入度為 0 的課放進佇列。
+3. 每修完一門課，就沿著它的邊減少後續課程入度；入度降到 0 時即可入列。
+4. 若最後處理的課數等於 numCourses，代表沒有循環，可以修完；否則有課仍被循環卡住。
 
-## 限制 Constraints
+## 複雜度
 
-1 <= numCourses <= 2000
-0 <= prerequisites.length <= 5000
-prerequisites[i].length == 2
-0 <= ai, bi < numCourses
-All the pairs prerequisites[i] are unique.
+時間 O(V + E)，額外空間 O(V + E)；V 是課程數，E 是先修關係數。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize) {
-    
-}
-```
+bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize)

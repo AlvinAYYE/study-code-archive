@@ -1,54 +1,47 @@
-# 0148. Sort List《排序鏈結串列》
+# 0148. Sort List｜排序鏈結串列
 
-- **Difficulty**: Medium
-- **Tags**: linked-list, two-pointers, divide-and-conquer, sorting, merge-sort
-- **題目連結**: https://leetcode.com/problems/sort-list/
-- **程式碼**: [`148_sort-list.c`](./148_sort-list.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：鏈結串列、雙指標、分治、排序、合併排序
+- **題目連結**：[LeetCode 0148](https://leetcode.com/problems/sort-list/)
+- **C 程式**：[148_sort-list.c](./148_sort-list.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定鏈結串列頭節點，將串列依遞增順序排序後回傳頭節點。題目進一步要求可在 O(n log n) 時間與 O(1) 額外空間內完成。串列節點數介於 0 至 5×10^4，節點值介於 -10^5 至 10^5。
+給定單向鏈結串列，請將節點依遞增順序排序並回傳排序後的頭節點。進階要求可在 `O(n log n)` 時間和常數額外空間內完成。
 
-**思路**：以快慢指針將串列切成兩半，遞迴排序兩半後，再將兩個已排序串列合併，形成合併排序。
-
-## Problem Statement (English)
-
-Given the head of a linked list, return the list after sorting it in ascending order.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-Follow up: Can you sort the linked list in O(n logn) time and O(1) memory (i.e. constant space)?
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: head = [4,2,1,3]
-Output: [1,2,3,4]
+輸入：head = [4,2,1,3]
+輸出：[1,2,3,4]
 
-Input: head = [-1,5,3,4,0]
-Output: [-1,0,3,4,5]
+輸入：head = [-1,5,3,4,0]
+輸出：[-1,0,3,4,5]
 
-Input: head = []
-Output: []
+輸入：head = []
+輸出：[]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the list is in the range [0, 5 * 104].
--105 <= Node.val <= 105
+- 節點數介於 `0` 到 `5 × 10^4`。
+- `-10^5 <= Node.val <= 10^5`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 先計算節點數，接著以自底向上的合併排序處理；每輪把串列切成長度為 `width` 的相鄰小段。
+2. 將每一對小段逐節點比較，較小的節點先接到本輪輸出串列，並前進該段指標。
+3. 一對小段合併完成後接回尚未處理的節點；一輪結束後串列已排序成長度 `2 × width` 的段。
+4. 將 `width` 加倍，重複合併，直到段長涵蓋整條串列。
+5. 全程只改變節點指標，不建立額外節點，也不使用遞迴堆疊。
+
+## 複雜度
+
+- 時間：`O(n log n)`，合併排序需要對數輪，每輪走訪整條串列。
+- 額外空間：`O(1)`，使用固定數量的指標。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* sortList(struct ListNode* head) {
-    
-}
+struct ListNode* sortList(struct ListNode* head);
 ```

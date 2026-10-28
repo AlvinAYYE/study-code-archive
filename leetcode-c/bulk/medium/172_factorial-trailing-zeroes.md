@@ -1,49 +1,46 @@
-# 0172. Factorial Trailing Zeroes《階乘後的零》
+# 0172. Factorial Trailing Zeroes｜階乘後綴零
 
-- **Difficulty**: Medium
-- **Tags**: math
-- **題目連結**: https://leetcode.com/problems/factorial-trailing-zeroes/
-- **程式碼**: [`172_factorial-trailing-zeroes.c`](./172_factorial-trailing-zeroes.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：數學
+- **題目連結**：[LeetCode 0172](https://leetcode.com/problems/factorial-trailing-zeroes/)
+- **C 程式**：[172_factorial-trailing-zeroes.c](./172_factorial-trailing-zeroes.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定整數 n，請回傳 n! 十進位表示中結尾連續 0 的個數。階乘中的尾零由 2 與 5 的因子配對產生，且 5 是較稀少的因子。題目追問能否以對數時間完成。
+給定非負整數 `n`，計算 `n!` 十進位表示法末尾有幾個連續的零。`n!` 是從 1 到 `n` 所有整數的乘積；不需要真的算出階乘。
 
-**思路**：程式列舉不超過 n 的各個 5 次冪，累加 n 除以每個 5 次冪的商，以計入所有 5 因子。
-
-## Problem Statement (English)
-
-Given an integer n, return the number of trailing zeroes in n!.
-Note that n! = n * (n - 1) * (n - 2) * ... * 3 * 2 * 1.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-Follow up: Could you write a solution that works in logarithmic time complexity?
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: n = 3
-Output: 0
-Explanation: 3! = 6, no trailing zero.
+輸入：n = 3
+輸出：0
+說明：3! = 6，末尾沒有零。
 
-Input: n = 5
-Output: 1
-Explanation: 5! = 120, one trailing zero.
+輸入：n = 5
+輸出：1
+說明：5! = 120，末尾有一個零。
 
-Input: n = 0
-Output: 0
+輸入：n = 0
+輸出：0
 ```
 
-## 限制 Constraints
+## 限制
 
-0 <= n <= 104
+- `0 <= n <= 10^4`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 每個末尾的 0 都來自一組因數 `2 × 5`；階乘中的 2 比 5 多，所以只需計算因數 5 的數量。
+2. `n`、`n/5`、`n/25` 等整除結果，分別計算因數中至少含一個、兩個、三個 5 的數字。
+3. 反覆令 `n = n / 5` 並累加商，直到商為 0。
+
+## 複雜度
+
+- 時間：`O(log_5 n)`。
+- 額外空間：`O(1)`。
+
+## LeetCode C 函式簽名
 
 ```c
-int trailingZeroes(int n) {
-    
-}
+int trailingZeroes(int n);
 ```

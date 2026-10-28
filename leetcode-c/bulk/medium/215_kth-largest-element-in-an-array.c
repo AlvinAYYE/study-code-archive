@@ -1,38 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0215. Kth Largest Element in an Array
+ * LeetCode 0215. Kth Largest Element in an Array（陣列中的第 K 大元素）
  * Difficulty: Medium
- * Tags: array, divide-and-conquer, sorting, heap-(priority-queue, quickselect
- * URL: https://leetcode.com/problems/kth-largest-element-in-an-array/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array nums and an integer k, return the kth largest
- *     element in the array.
- *     Note that it is the kth largest element in the sorted order, not the
- *     kth distinct element.
- *     Can you solve it without sorting?
- *
- * [中文] 題目: 陣列中的第 K 大元素
- * [中文] 題目說明:
- *     給定整數陣列 nums 與整數 k，找出陣列排序後的第 k 大元素，
- *     而非第 k 個相異元素。題目進一步要求嘗試在不完整排序陣列的情況下完
- *     成。
- *
- * [中文] 思路:
- *     以首元素為樞紐進行由大到小的快速選擇分割，讓樞紐歸位。遞迴只進入包含
- *     目標索引 k - 1 的那一側。
- *
- * Examples:
- *     Input: nums = [3,2,1,5,6,4], k = 2
- *     Output: 5
- *     Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
- *     Output: 4
- *
- * Constraints:
+ * 題意：給定整數陣列 nums 和整數 k，請找出排序後的第 k 大元素。這裡的第 k 大是按位置計算，重複值也會各自占一個位置。
+ * 範例：
+ *   1. 輸入：nums = [3,2,1,5,6,4]，k = 2；輸出：5。
+ *   2. 輸入：nums = [3,2,3,1,2,4,5,5,6]，k = 4；輸出：4。
+ * 限制：
  *   - 1 <= k <= nums.length <= 10^5
  *   - -10^4 <= nums[i] <= 10^4
- * ==========================================================================
+ * 解法：
+ *   1. 將陣列由大到小排序。
+ *   2. 排序後索引 0 是最大值，所以第 k 大位於索引 k-1。
+ *   3. 直接回傳該位置的值。
+ * 複雜度：時間 O(n log n)，額外空間依 qsort 實作而定；排序會改動輸入陣列。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -206,80 +186,16 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-215. Kth Largest Element in an Array
-
-Find the kth largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.
-
-For example,
-Given [3,2,1,5,6,4] and k = 2, return 5.
-
-
-Note: 
-You may assume k is always valid, 1 ? k ? array's length.
-
-Credits:Special thanks to @mithmatt for adding this problem and creating all test cases.
-*/
-
-int comp(const void *a, const void *b) {
-    return *(int *)b - *(int *)a;
+static int compareDescending(const void *left, const void *right) {
+    int a = *(const int *)left;
+    int b = *(const int *)right;
+    return (a < b) - (a > b);
 }
-int msort(int *nums, int left, int right, int m) {
-    int i, j, k;
-    i = left;
-    j = right;
-    k = nums[i];
-    while (i < j) {
-        while (i < j && nums[j] <= k) {
-            j --;
-        }
-        if (i < j) {
-            nums[i] = nums[j];
-            i ++;
-        }
-        while (i < j && nums[i] >= k) {
-            i ++;
-        }
-        if (i < j) {
-            nums[j] = nums[i];
-            j --;
-        }
-    }
-    if (i > left) {
-        nums[i] = k;
-    }
-    if (i == m) return nums[i];
-    else if (i < m) return msort(nums, i + 1, right, m);
-    else return msort(nums, left, i - 1, m);
-}
+
 int findKthLargest(int* nums, int numsSize, int k) {
-#if 0  // 6ms
-    qsort(nums, numsSize, sizeof(int), comp);
+    qsort(nums, (size_t)numsSize, sizeof(int), compareDescending);
     return nums[k - 1];
-#else  // 13ms
-    return msort(nums, 0, numsSize - 1, k - 1);
-#endif
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:143K
-Total Submissions:365.2K
-
-
-Companies Facebook Amazon Microsoft Apple Bloomberg Pocket Gems
-Related Topics Heap Divide and Conquer
-Similar Questions 
-                
-                  
-                    Wiggle Sort II
-                  
-                    Top K Frequent Elements
-                  
-                    Third Maximum Number
-*/
 
 /* ---- generated tests ---- */
 int main(void){

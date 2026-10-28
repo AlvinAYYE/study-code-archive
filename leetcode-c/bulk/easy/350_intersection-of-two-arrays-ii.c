@@ -205,141 +205,62 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-350. Intersection of Two Arrays II
-
-Given two arrays, write a function to compute their intersection.
-
-
-Example:
-Given nums1 = [1, 2, 2, 1], nums2 = [2, 2], return [2, 2].
-
-
-Note:
-
-Each element in the result should appear as many times as it shows in both arrays.
-The result can be in any order.
-
-
-
-Follow up:
-
-What if the given array is already sorted? How would you optimize your algorithm?
-What if nums1's size is small compared to nums2's size? Which algorithm is better?
-What if elements of nums2 are stored on disk, and the memory is limited such that you cannot load all elements into the memory at once?
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
+/* 解題說明
+ * 題目：350. Intersection of Two Arrays II（兩個陣列的交集 II）
+ *
+ * 題意完整翻譯：
+ *     給定整數陣列 nums1 與 nums2，回傳它們的交集。每個數字在結果中出現的次數，必須等於它在兩個陣列中較少的出現次數；結果順序不限
+ *     。延伸思考：若陣列已排序、其中一個很小，或較大的陣列放在磁碟中而記憶體有限，可以如何調整作法？
+ *
+ * 範例：
+ *   輸入：nums1 = [1,2,2,1], nums2 = [2,2]
+ *   輸出：[2,2]
+ *   說明：2 在兩個陣列都出現兩次，因此結果有兩個 2。
+ *   輸入：nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+ *   輸出：[4,9]
+ *   說明：[9,4] 也符合；4 與 9 在兩邊共同出現的次數都只有一次。
+ *
+ * 限制：
+ *   - 1 <= nums1.length, nums2.length <= 1000
+ *   - 0 <= nums1[i], nums2[i] <= 1000
+ *
+ * 解題步驟：
+ *   1. 用長度 1001 的陣列，先統計 nums1 中每個值出現幾次。
+ *   2. 逐一掃描 nums2；若目前值的剩餘次數大於 0，就把它加入答案，再將次數減 1。
+ *   3. 每次配對都消耗一個出現次數，因此答案次數就是兩邊出現次數的較小值。
+ *
+ * 複雜度：
+ *   時間：O(n1 + n2)，另有固定大小 1001 的初始化。
+ *   空間：O(1) 額外空間（值域固定為 0 到 1000）；回傳陣列另需 O(min(n1,n2))。
  */
-#if 1
-typedef struct e_s {
-    int val;
-    int cnt;
-    struct e_s *shadow;
-} e_t;
-#define HF  1021
-e_t *lookup(e_t **ht, int v) {
-    int hc = v % HF;
-    e_t *e = ht[hc];
-    while (e && e->val != v) e = e->shadow;
-    return e;
-}
-void insert(e_t **ht, e_t *e) {
-    int hc = e->val % HF;
-    e->shadow = ht[hc];
-    ht[hc] = e;
-}
-int* intersect(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
-    e_t *e, *buff, *ht[HF] = { 0 };
-    int i, v;
-    int k, *result;
-    
+
+int* intersect(int* nums1, int nums1Size,
+                int* nums2, int nums2Size, int* returnSize) {
+    int frequency[1001] = {0};
+    int capacity = nums1Size < nums2Size ? nums1Size : nums2Size;
+    int* answer = (int*)malloc(sizeof(int) * (size_t)capacity);
+    int i;
+
     *returnSize = 0;
-    if (!nums1Size || !nums2Size) {
-        return NULL;
+
+    // 記錄第一個陣列中各數字的可配對次數。
+    for (i = 0; i < nums1Size; ++i) {
+        ++frequency[nums1[i]];
     }
-    
-    buff = malloc(nums2Size * sizeof(e_t));
-    //assert(buff);
-    for (i = 0; i < nums2Size; i ++) {
-        v = nums2[i];
-        e = lookup(ht, v);
-        if (e) e->cnt ++;
-        else {
-            e = &buff[i];
-            e->val = v;
-            e->cnt = 1;
-            insert(ht, e);
+
+    // 每成功配對一次，就消耗一次出現次數。
+    for (i = 0; i < nums2Size; ++i) {
+        int value = nums2[i];
+
+        if (frequency[value] > 0) {
+            answer[*returnSize] = value;
+            ++(*returnSize);
+            --frequency[value];
         }
     }
-    
-    k = 0;
-    result = malloc(nums1Size * sizeof(int));
-    //assert(result);
-    
-    for (i = 0; i < nums1Size; i ++) {
-        v = nums1[i];
-        e = lookup(ht, v);
-        if (e && e->cnt > 0) {
-            result[k ++] = v;
-            e->cnt --;
-        }
-    }
-    
-    free(buff);
-    
-    *returnSize = k;
-    return result;
+
+    return answer;
 }
-#else
-int* intersect(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
-    int i, j, k;
-    int *result, *flags;
-    
-    if (nums1Size > nums2Size) {
-        return intersect(nums2, nums2Size, nums1, nums1Size, returnSize);
-    }
-    
-    *returnSize = 0;
-    if (!nums1Size || !nums2Size) {
-        return NULL;
-    }
-    
-    result = malloc(nums1Size * sizeof(int));
-    flags  = calloc(nums2Size, sizeof(int));
-    //assert(result && flags);
-    
-    k = 0;
-    for (i = 0; i < nums1Size; i ++) {
-        for (j = 0; j < nums2Size; j ++) {
-            if (!flags[j] && nums1[i] == nums2[j]) {
-                result[k++] = nums1[i];
-                flags[j] = 1;
-                break;
-            }
-        }
-    }
-    
-    *returnSize = k;
-    free(flags);
-    return result;
-}
-#endif
-
-
-/*
-Difficulty:Easy
-Total Accepted:72K
-Total Submissions:161.4K
-
-
-Related Topics Binary Search Hash Table Two Pointers Sort
-Similar Questions Intersection of Two Arrays
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

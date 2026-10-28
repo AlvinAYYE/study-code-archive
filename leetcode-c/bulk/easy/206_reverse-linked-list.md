@@ -1,54 +1,40 @@
-# 0206. Reverse Linked List《反轉鏈結串列》
+# LeetCode 206. Reverse Linked List
 
-- **Difficulty**: Easy
-- **Tags**: linked-list, recursion
-- **題目連結**: https://leetcode.com/problems/reverse-linked-list/
-- **程式碼**: [`206_reverse-linked-list.c`](./206_reverse-linked-list.c) — 本專案自行撰寫並通過官方示例驗證
+**難度：Easy**
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定單向鏈結串列的頭節點，請將整個串列反轉並回傳反轉後的頭節點。串列節點數可為 0。
+給定單向鏈結串列的頭節點 head，請將串列方向反轉，並回傳新的頭節點。反轉時應直接改變節點的 next 指標，不必建立新的節點。
 
-**思路**：迭代維護前一節點、目前節點與下一節點，逐一將目前節點的 next 指回前一節點，最後回傳前一節點。
+## 範例
 
-## Problem Statement (English)
+1. head = [1,2,3,4,5] → [5,4,3,2,1]
+2. head = [1,2] → [2,1]
+3. head = [] → []
 
-Given the head of a singly linked list, reverse the list, and return the reversed list.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-Follow up: A linked list can be reversed either iteratively or recursively. Could you implement both?
+## 限制
 
-## 範例 Examples
+- 節點數介於 0 到 5000
+- -5000 <= Node.val <= 5000
 
-```text
-Input: head = [1,2,3,4,5]
-Output: [5,4,3,2,1]
+## 解題思路
 
-Input: head = [1,2]
-Output: [2,1]
+1. 用 previous 記錄已反轉部分的頭，初始為空；current 從 head 開始。
+2. 每次先暫存 current->next，再把 current->next 指向 previous。
+3. previous 和 current 都往前移一格，直到 current 為空。
+4. 此時 previous 就是反轉後的新頭節點。
 
-Input: head = []
-Output: []
-```
+## 複雜度
 
-## 限制 Constraints
+- 時間：O(n)
+- 空間：O(1)
 
-The number of nodes in the list is the range [0, 5000].
--5000 <= Node.val <= 5000
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
+~~~c
+struct ListNode* reverseList(struct ListNode* head);
+~~~
 
-```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* reverseList(struct ListNode* head) {
-    
-}
-```
+## 程式如何運作
+
+提交函式依照上述步驟完成計算；程式註解標出每個關鍵動作。本地測試 harness 保留在 .c 檔尾端。

@@ -1,32 +1,19 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1346. Check If N and Its Double Exist
- * Difficulty: Easy
- * Tags: array, hash-table, two-pointers, binary-search, sorting
- * URL: https://leetcode.com/problems/check-if-n-and-its-double-exist/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array arr of integers, check if there exist two indices i
- *     and j such that :
+ * Title-CN: 檢查是否存在一個數是另一個數的兩倍
+ * LeetCode 1346. Check If N and Its Double Exist (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 陣列 arr of integers, check if there exist two 下標 i and j
- *     such that :
+ * 題意翻譯：給定整數陣列 arr。請判斷是否存在兩個不同索引 i、j，使得 arr[i] 等於
+ * arr[j] 的兩倍。回傳 true 或 false。兩個數可以相同，但索引必須不同；例如 [0,0]
+ * 符合條件。
  *
- * Examples:
- *     Input: arr = [10,2,5,3]
- *     Output: true
- *     Explanation: For i = 0 and j = 2, arr[i] == 10 == 2 * 5 == 2 *
- *     arr[j]
- *     Input: arr = [3,1,7,11]
- *     Output: false
- *     Explanation: There is no i and j that satisfy the conditions.
+ * 範例 1：arr = [10,2,5,3]，輸出 true，因為 10 = 2 * 5。
+ * 範例 2：arr = [3,1,7,11]，輸出 false。
  *
- * Constraints:
- *   - 2 <= arr.length <= 500
- *   - -10^3 <= arr[i] <= 10^3
- * ==========================================================================
+ * 限制：2 <= arr.length <= 500；-1000 <= arr[i] <= 1000。
+ *
+ * 解題思路：陣列最多只有 500 個數，直接枚舉所有索引配對即可。對每個 i、j，略過
+ * i == j，再檢查 arr[i] == 2 * arr[j]。一旦找到就回傳 true；全部配對都檢查完仍
+ * 沒找到則回傳 false。時間 O(n^2)，空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -199,69 +186,19 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-typedef struct {
-    int used;
-    int data;
-} BUCKET;
+bool checkIfExist(int *arr, int arrSize) {
+    int firstIndex;
+    int secondIndex;
 
-#define MIN_VAL 1000*2
-
-static inline int hash(int val, int size)
-{
-    return (val + MIN_VAL) % size;
-}
-
-static inline void hash_add(BUCKET *h, int size, int val)
-{
-    bool ret = false;
-    int idx = hash(val, size);
-    while (h[idx].used) {
-        idx = (idx + 1) % size;
-    }
-
-    h[idx].used = 1;
-    h[idx].data = val;
-}
-
-static inline bool hash_find(BUCKET *h, int size, int val)
-{
-    bool ret = false;
-    int idx = hash(val, size);
-    while (h[idx].used) {
-        if (h[idx].data == val) {
-            ret = true;
-            break;
+    for (firstIndex = 0; firstIndex < arrSize; ++firstIndex) {
+        for (secondIndex = 0; secondIndex < arrSize; ++secondIndex) {
+            if (firstIndex != secondIndex &&
+                arr[firstIndex] == 2 * arr[secondIndex]) {
+                return true;
+            }
         }
-        idx = (idx + 1) % size;
     }
-
-    return ret;
-}
-
-/* Constraints: -10^3 <= arr[i] <= 10^3 */
-bool checkIfExist(int *arr, int arrSize)
-{
-    BUCKET *h_set = calloc(arrSize + 1, sizeof(BUCKET));
-    bool ret = false;
-    for (int i = 0; i < arrSize; i++) {
-        if (hash_find(h_set, arrSize + 1, ((unsigned int)arr[i] << 1))) {
-            ret = true;
-            break;
-        }
-
-        if ((arr[i] & 0x1) == 0x0 &&
-            hash_find(h_set, arrSize + 1, (arr[i] >> 1))) {
-            ret = true;
-            break;
-        }
-
-        hash_add(h_set, arrSize + 1, arr[i]);
-    }
-
-    free(h_set);
-    return ret;
+    return false;
 }
 
 /* ---- generated tests ---- */
@@ -276,6 +213,11 @@ int main(void){
   static int arr1_0[] = {3,1,7,11};
   bool act_1 = checkIfExist(arr1_0, 4);
   if (!(act_1 == false)) { pass = 0; printf("  test 1 FAIL\n"); }
+  ntests++; }
+{
+  static int zeros[] = {0,0};
+  bool actual = checkIfExist(zeros, 2);
+  if (!(actual == true)) { pass = 0; printf("  zero pair test FAIL\n"); }
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 1346, "checkIfExist", ntests);
  return (pass&&ntests)?0:1;

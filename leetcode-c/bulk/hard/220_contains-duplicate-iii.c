@@ -14,33 +14,32 @@
  *
  * [中文] 題目: 存在重複元素 III
  * [中文] 題目說明:
- *     給定 nums、indexDiff 與 valueDiff，找出兩個
- *     不同索引 i、j。其索引差絕對值須不大於 indexDiff，且對應
- *     數值差絕對值須不大於 valueDiff；存在即回傳 true。
+ *     給定 nums、indexDiff 與 valueDiff，判斷是否存在兩個不同索引
+ *     i、j，使 |i-j| <= indexDiff，且 |nums[i]-nums[j]| <= valueDiff。
  *
- * [中文] 思路:
- *     將數值與索引配對並按數值排序，對每個元素向後枚舉仍在 valueDi
- *     ff 範圍內的元素。若其中任何一對的索引差不超過 k，便回傳 tru
- *     e。
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入 nums = [1,2,3,1], indexDiff = 3, valueDiff = 0
+ *     輸出 true。
+ *     說明：可選 i=0、j=3；索引差為 3，數值差為 0。
+ *   範例 2：
+ *     輸入 nums = [1,5,9,1,5,9], indexDiff = 2, valueDiff = 3
+ *     輸出 false。
  *
- * Examples:
- *     Input: nums = [1,2,3,1], indexDiff = 3, valueDiff = 0
- *     Output: true
- *     Explanation: We can choose (i, j) = (0, 3).
- *     We satisfy the three conditions:
- *     i != j --> 0 != 3
- *     abs(i - j) <= indexDiff --> abs(0 - 3) <= 3
- *     abs(nums[i] - nums[j]) <= valueDiff --> abs(1 - 1) <= 0
- *     Input: nums = [1,5,9,1,5,9], indexDiff = 2, valueDiff = 3
- *     Output: false
- *     Explanation: After trying all the possible pairs (i, j), we
- *     cannot satisfy the three conditions, so we return false.
- *
- * Constraints:
+ * [中文] 限制：
  *   - 2 <= nums.length <= 10^5
  *   - -10^9 <= nums[i] <= 10^9
  *   - 1 <= indexDiff <= nums.length
  *   - 0 <= valueDiff <= 10^9
+ *
+ * [中文] 直觀解題思路（目前實作的參數 k、t 分別對應 indexDiff、valueDiff）：
+ *   1. 將每個數值與原索引包成 (val,idx)，再依 val 由小到大排序。
+ *   2. 固定排序後位置 i，只需向後檢查與 p[i].val 的差不超過 t 的元素；
+ *      一旦數值差過大，後面更大的值也不可能符合。
+ *   3. 對每個仍符合數值差的候選，計算原索引差；若不超過 k，立即回傳 true。
+ *   4. 掃描結束仍找不到即回傳 false。條件式分支避免整數相加時溢位。
+ *
+ * 排序時間 O(n log n)；候選值密集時雙層枚舉最壞 O(n^2)，額外空間 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -231,38 +230,87 @@ int cmp(void const *a, void const *b) {
            ((const e_t *)a)->val > ((const e_t *)b)->val ?  1 :
            ((const e_t *)a)->idx < ((const e_t *)b)->idx ? -1 : 1;
 }
+typedef struct {
+    long long key;
+    int index;
+    unsigned char state; /* 0 空槽、1 使用中、2 已刪除 */
+} BucketSlot;
+
+static int findBucket(BucketSlot *table, int capacity, long long key) {
+    unsigned long long x = (unsigned long long)key;
+    int slot;
+    x ^= x >> 33;
+    x *= 0xff51afd7ed558ccdULL;
+    x ^= x >> 33;
+    slot = (int)(x & (unsigned long long)(capacity - 1));
+    while (table[slot].state != 0) {
+        if (table[slot].state == 1 && table[slot].key == key) return slot;
+        slot = (slot + 1) & (capacity - 1);
+    }
+    return -1;
+}
+
+static void insertBucket(BucketSlot *table, int capacity,
+                         long long key, int index) {
+    unsigned long long x = (unsigned long long)key;
+    int slot, firstDeleted = -1;
+    x ^= x >> 33;
+    x *= 0xff51afd7ed558ccdULL;
+    x ^= x >> 33;
+    slot = (int)(x & (unsigned long long)(capacity - 1));
+    while (table[slot].state != 0) {
+        if (table[slot].state == 2 && firstDeleted < 0) firstDeleted = slot;
+        slot = (slot + 1) & (capacity - 1);
+    }
+    if (firstDeleted >= 0) slot = firstDeleted;
+    table[slot].key = key;
+    table[slot].index = index;
+    table[slot].state = 1;
+}
+
 bool containsNearbyAlmostDuplicate(int* nums, int numsSize, int k, int t) {
-    e_t *p;
-    int i, j, d, f;
-    
-    p = malloc(numsSize * sizeof(e_t));
-    //assert(p);
-    for (i = 0; i < numsSize; i ++) {
-        p[i].val = nums[i];
-        p[i].idx = i;
-    }
-    
-    qsort(p, numsSize, sizeof(e_t), cmp);
-    
-    f = 0;
-    for (i = 0; !f && i < numsSize - 1; i ++) {
-        //printf("\n%d: %d\n", p[i].idx, p[i].val);
-        for (j = i + 1;
-             !f &&
-             j < numsSize &&
-              ((p[i].val > 0 && p[j].val - p[i].val <= t) ||
-                p[j].val <= t + p[i].val);
-             j ++) {
-            //printf("%d: %d\n", p[j].idx, p[j].val);
-            d = p[j].idx - p[i].idx;
-            if (d < 0) d = -d;
-            if (d <= k) f = 1;
+    int capacity = 1;
+    BucketSlot *table;
+    long long width = (long long)t + 1;
+
+    while (capacity < numsSize * 4) capacity <<= 1;
+    table = (BucketSlot*)calloc((size_t)capacity, sizeof(BucketSlot));
+    if (!table) return false;
+
+    for (int i = 0; i < numsSize; ++i) {
+        /* 保留的舊索引需與 i 相差不超過 k。 */
+        int expired = i - k - 1;
+        if (expired >= 0) {
+            long long oldBucket = (long long)nums[expired] / width;
+            if (nums[expired] < 0 && nums[expired] % width != 0) --oldBucket;
+            int oldSlot = findBucket(table, capacity, oldBucket);
+            if (oldSlot >= 0) table[oldSlot].state = 2;
         }
+
+        long long bucket = (long long)nums[i] / width;
+        if (nums[i] < 0 && nums[i] % width != 0) --bucket;
+
+        /* 同桶差距一定小於 width；相鄰桶只需再確認實際差值。 */
+        if (findBucket(table, capacity, bucket) >= 0) {
+            free(table);
+            return true;
+        }
+        for (int offset = -1; offset <= 1; offset += 2) {
+            int neighbor = findBucket(table, capacity, bucket + offset);
+            if (neighbor >= 0) {
+                long long difference = (long long)nums[i] - nums[table[neighbor].index];
+                if (difference < 0) difference = -difference;
+                if (difference <= t) {
+                    free(table);
+                    return true;
+                }
+            }
+        }
+        insertBucket(table, capacity, bucket, i);
     }
-    
-    free(p);
-    
-    return f;
+
+    free(table);
+    return false;
 }
 
 
@@ -294,6 +342,16 @@ int main(void){
   static int arr1_0[] = {1,5,9,1,5,9};
   bool act_1 = containsNearbyAlmostDuplicate(arr1_0, 6,(2),(3));
   if (!(act_1 == false)) { pass = 0; printf("  test 1 FAIL\n"); }
+  ntests++; }
+{
+  static int arr2_0[] = {-1,1};
+  bool act_2 = containsNearbyAlmostDuplicate(arr2_0, 2,(1),(2));
+  if (!(act_2 == true)) { pass = 0; printf("  test 2 FAIL\n"); }
+  ntests++; }
+{
+  static int arr3_0[] = {-1000000000,1000000000};
+  bool act_3 = containsNearbyAlmostDuplicate(arr3_0, 2,(1),(1000000000));
+  if (!(act_3 == false)) { pass = 0; printf("  test 3 FAIL\n"); }
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 220, "containsNearbyAlmostDuplicate", ntests);
  return (pass&&ntests)?0:1;

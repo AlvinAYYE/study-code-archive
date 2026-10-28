@@ -1,46 +1,31 @@
-# 0204. Count Primes《計數質數》
+# LeetCode 0204. Count Primes
 
-- **Difficulty**: Medium
-- **Tags**: array, math, enumeration, number-theory
-- **題目連結**: https://leetcode.com/problems/count-primes/
-- **程式碼**: [`204_count-primes.c`](./204_count-primes.c) — 社群解答（repo lennylxx_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 計算小於 n 的質數數量
 
-## 題目說明（中文）
+## 題目
 
-給定整數 n，請回傳所有嚴格小於 n 的質數數量。n 可為 0，最大可達 5 × 10^6。
+給定整數 n，回傳嚴格小於 n 的質數個數。質數是大於 1 且只有 1 和自己兩個正因數的整數。
 
-**思路**：採線性篩法維護已發現的質數與合數標記；每個數以現有質數標記乘積，遇到其最小質因數後停止，避免重複篩除。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：n = 10；輸出：4。小於 10 的質數是 2、3、5、7。
+2. 輸入：n = 0；輸出：0。
+3. 輸入：n = 1；輸出：0。
 
-Given an integer n, return the number of prime numbers that are strictly less than n.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 0 <= n <= 5 * 10^6
 
-```text
-Input: n = 10
-Output: 4
-Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+## 解題思路
 
-Input: n = 0
-Output: 0
+1. 建立長度 n 的標記表，先假設每個數都還可能是質數。
+2. 從 2 開始，遇到尚未被標記的 p，就把 p 的倍數標成合數。從 p*p 開始即可，因為更小的倍數已由較小因數處理。
+3. 只需枚舉到 p*p < n；最後統計 2 到 n-1 中仍未標記的數。
 
-Input: n = 1
-Output: 0
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(n log log n)，額外空間 O(n)。
 
-0 <= n <= 5 * 106
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-int countPrimes(int n) {
-    
-}
-```
+int countPrimes(int n)

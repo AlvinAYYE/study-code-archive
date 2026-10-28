@@ -7,9 +7,17 @@
 
 ## 題目說明（中文）
 
-給定 beginWord、endWord 與字典 wordList，轉換序列中每一步只能改變一個字母，且每個轉換後的單字都必須在字典中。請回傳從 beginWord 到 endWord 的最短轉換序列所含單字數；若不存在則回傳 0。所有單字等長且由小寫英文字母組成，beginWord 與 endWord 不同，字典單字不重複。單字長度至多 10，wordList 長度至多 5000。
+給定 `beginWord`、`endWord` 與字典 `wordList`。轉換序列每一步只能改變一個字母，且轉換後的每個單字都必須在 `wordList` 中。請回傳從 `beginWord` 到 `endWord` 的最短轉換序列所含單字數；若不存在則回傳 0。
 
-**思路**：從 beginWord 做廣度優先搜尋，以兩個佇列分層處理；對每個未拜訪字典單字檢查是否只差一個字母，首次到達 endWord 即得到最短層數。
+## 解題思路
+
+1. 把每個單字視為圖上的節點；兩個單字只差一個字母時，兩者之間存在一條邊。
+2. 從 `beginWord` 做廣度優先搜尋。`q1` 保存目前層，`q2` 收集下一層，`d` 記錄已走的邊數。
+3. 對目前層的每個單字，掃描尚未拜訪的字典單字，用 `one_diff` 判斷是否恰好只差一個字母；符合者標記並加入下一層。
+4. 第一次遇到 `endWord` 時一定走的是最短路徑，立即回傳層數。
+5. 佇列耗盡仍未找到時回傳 0。
+
+若字典有 `N` 個單字、每個長度為 `L`，時間複雜度為 `O(N^2 L)`；`visited` 與佇列使用 `O(N)` 空間。
 
 ## Problem Statement (English)
 
@@ -19,27 +27,27 @@ Example 1:
 Example 2:
 Constraints:
 
-## 範例 Examples
+## 範例
 
 ```text
-Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
-Output: 5
-Explanation: One shortest transformation sequence is "hit" -> "hot" -> "dot" -> "dog" -> cog", which is 5 words long.
+輸入：beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log","cog"]
+輸出：5
+說明：最短序列之一為 hit -> hot -> dot -> dog -> cog，共 5 個單字。
 
-Input: beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
-Output: 0
-Explanation: The endWord "cog" is not in wordList, therefore there is no valid transformation sequence.
+輸入：beginWord = "hit", endWord = "cog", wordList = ["hot","dot","dog","lot","log"]
+輸出：0
+說明：`endWord` 不在字典中，因此不存在合法轉換序列。
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= beginWord.length <= 10
-endWord.length == beginWord.length
-1 <= wordList.length <= 5000
-wordList[i].length == beginWord.length
-beginWord, endWord, and wordList[i] consist of lowercase English letters.
-beginWord != endWord
-All the words in wordList are unique.
+- `1 <= beginWord.length <= 10`
+- `endWord.length == beginWord.length`
+- `1 <= wordList.length <= 5000`
+- `wordList[i].length == beginWord.length`
+- `beginWord`、`endWord` 與 `wordList[i]` 僅包含小寫英文字母。
+- `beginWord != endWord`
+- `wordList` 中的單字互不重複。
 
 ## 官方 C 函式簽名 Signature
 

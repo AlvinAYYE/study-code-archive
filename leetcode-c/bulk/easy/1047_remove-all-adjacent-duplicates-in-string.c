@@ -1,39 +1,26 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1047. Remove All Adjacent Duplicates In String
- * Difficulty: Easy
- * Tags: string, stack
- * URL: https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given a string s consisting of lowercase English letters. A
- *     duplicate removal consists of choosing two adjacent and equal
- *     letters and removing them.
- *     We repeatedly make duplicate removals on s until we no longer can.
- *     Return the final string after all such duplicate removals have been
- *     made. It can be proven that the answer is unique.
+ * LeetCode 1047. Remove All Adjacent Duplicates in String
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     給定一個字串 s consisting of lowercase English letters. A 重複 removal
- *     consists of choosing two adjacent and equal letters and removing
- *     them.
+ * 【完整中文題意】給定只含小寫英文字母的字串 s。一次移除操作是刪掉一對相鄰且相同的字母。請不斷移除直到字串中沒有這種相鄰字母對，回傳最後結果；題目保證結果唯一。
  *
- * Examples:
- *     Input: s = "abbaca"
- *     Output: "ca"
- *     Explanation:
- *     For example, in "abbaca" we could remove "bb" since the
- *     letters are adjacent and equal, and this is the only possible
- *     move. The result of this move is that the string is "aaca", of
- *     which only "aa" is possible, so the final string is "ca".
- *     Input: s = "azxxzy"
- *     Output: "ay"
+ * 【範例】
+ * 1. s = "abbaca" → "ca"（先刪 bb，再刪 aa）
+ * 2. s = "azxxzy" → "ay"（刪除 xx 後，新形成的 xx 也會被刪除）
  *
- * Constraints:
- *   - 1 <= s.length <= 10^5
- *   - s consists of lowercase English letters.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= s.length <= 10⁵
+ * - s[i] 只含小寫英文字母
+ *
+ * 【解題步驟】
+ * 1. 把輸入字串前段當作堆疊，top 表示目前結果的長度。
+ * 2. 逐字讀取 s：若新字母和堆疊頂端相同，就把頂端移除；否則把新字母推入堆疊。
+ * 3. 被移除後的新頂端會自然與下一個字母比較，因此也能處理連鎖消除。
+ * 4. 最後在堆疊尾端補上字串結尾符號並回傳原字串。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1) 額外空間（直接把輸入字串當作堆疊使用）
+ *
+ * 【LeetCode C 函式】char* removeDuplicates(char* s)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,23 +194,19 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
 char* removeDuplicates(char* s) {
-    int slen = strlen(s);
-    char* stack = malloc(sizeof(char) * slen);
-    int stack_ctr = 0;
-    for (int i = 0; i < slen; i++) {
-        if (stack_ctr == 0 || stack[stack_ctr - 1] != s[i])
-            stack[stack_ctr++] = s[i];
-        else
-            stack_ctr--;
+    int top = 0;
+
+    // 用 s 的前段當堆疊；讀到相同字母時將堆疊頂端彈出。
+    for (int read = 0; s[read] != '\0'; ++read) {
+        if (top > 0 && s[top - 1] == s[read]) {
+            --top;
+        } else {
+            s[top++] = s[read];
+        }
     }
 
-    for (int i = 0; i < stack_ctr; i++)
-        s[i] = stack[i];
-
-    s[stack_ctr] = 0;
-    free(stack);
+    s[top] = '\0';
     return s;
 }
 

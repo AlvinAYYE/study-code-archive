@@ -1,44 +1,31 @@
-# 0215. Kth Largest Element in an Array《陣列中的第 K 大元素》
+# LeetCode 0215. Kth Largest Element in an Array
 
-- **Difficulty**: Medium
-- **Tags**: array, divide-and-conquer, sorting, heap-(priority-queue, quickselect
-- **題目連結**: https://leetcode.com/problems/kth-largest-element-in-an-array/
-- **程式碼**: [`215_kth-largest-element-in-an-array.c`](./215_kth-largest-element-in-an-array.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 陣列中的第 K 大元素
 
-## 題目說明（中文）
+## 題目
 
-給定整數陣列 nums 與整數 k，找出陣列排序後的第 k 大元素，而非第 k 個相異元素。題目進一步要求嘗試在不完整排序陣列的情況下完成。
+給定整數陣列 nums 和整數 k，請找出排序後的第 k 大元素。這裡的第 k 大是按位置計算，重複值也會各自占一個位置。
 
-**思路**：以首元素為樞紐進行由大到小的快速選擇分割，讓樞紐歸位。遞迴只進入包含目標索引 k - 1 的那一側。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：nums = [3,2,1,5,6,4]，k = 2；輸出：5。
+2. 輸入：nums = [3,2,3,1,2,4,5,5,6]，k = 4；輸出：4。
 
-Given an integer array nums and an integer k, return the kth largest element in the array.
-Note that it is the kth largest element in the sorted order, not the kth distinct element.
-Can you solve it without sorting?
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= k <= nums.length <= 10^5
+- -10^4 <= nums[i] <= 10^4
 
-```text
-Input: nums = [3,2,1,5,6,4], k = 2
-Output: 5
+## 解題思路
 
-Input: nums = [3,2,3,1,2,4,5,5,6], k = 4
-Output: 4
-```
+1. 將陣列由大到小排序。
+2. 排序後索引 0 是最大值，所以第 k 大位於索引 k-1。
+3. 直接回傳該位置的值。
 
-## 限制 Constraints
+## 複雜度
 
-1 <= k <= nums.length <= 105
--104 <= nums[i] <= 104
+時間 O(n log n)，額外空間依 qsort 實作而定；排序會改動輸入陣列。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-int findKthLargest(int* nums, int numsSize, int k) {
-    
-}
-```
+int findKthLargest(int* nums, int numsSize, int k)

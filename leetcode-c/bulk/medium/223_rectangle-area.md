@@ -1,46 +1,34 @@
-# 0223. Rectangle Area《矩形面積》
+# LeetCode 0223. Rectangle Area
 
-- **Difficulty**: Medium
-- **Tags**: math, geometry
-- **題目連結**: https://leetcode.com/problems/rectangle-area/
-- **程式碼**: [`223_rectangle-area.c`](./223_rectangle-area.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 矩形面積
 
-## 題目說明（中文）
+## 題目
 
-給定平面上兩個軸對齊矩形的左下與右上座標，計算兩矩形覆蓋的總面積。重疊區域只能計算一次。
+給定兩個與座標軸平行的矩形左下角和右上角座標，請計算兩個矩形合併後覆蓋的總面積。重疊部分只能計算一次。
 
-**思路**：先計算兩矩形面積總和，再依座標判斷是否有交集。若有交集，計算其寬高並從總和扣除重疊面積。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：第一個矩形 (-3,0) 到 (3,4)，第二個矩形 (0,-1) 到 (9,2)；輸出：45。
+2. 輸入：兩個矩形都是 (-2,-2) 到 (2,2)；輸出：16。
 
-Given the coordinates of two rectilinear rectangles in a 2D plane, return the total area covered by the two rectangles.
-The first rectangle is defined by its bottom-left corner (ax1, ay1) and its top-right corner (ax2, ay2).
-The second rectangle is defined by its bottom-left corner (bx1, by1) and its top-right corner (bx2, by2).
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- -10^4 <= ax1 <= ax2 <= 10^4
+- -10^4 <= ay1 <= ay2 <= 10^4
+- -10^4 <= bx1 <= bx2 <= 10^4
+- -10^4 <= by1 <= by2 <= 10^4
 
-```text
-Input: ax1 = -3, ay1 = 0, ax2 = 3, ay2 = 4, bx1 = 0, by1 = -1, bx2 = 9, by2 = 2
-Output: 45
+## 解題思路
 
-Input: ax1 = -2, ay1 = -2, ax2 = 2, ay2 = 2, bx1 = -2, by1 = -2, bx2 = 2, by2 = 2
-Output: 16
-```
+1. 分別算出兩個矩形的寬、高與面積。
+2. 重疊區域的左邊界取兩個左邊界較大者，右邊界取兩個右邊界較小者；上下邊界也同理。
+3. 若重疊寬或高為負數，代表該方向沒有重疊，將它設為 0。
+4. 總面積 = 第一個面積 + 第二個面積 - 重疊面積。
 
-## 限制 Constraints
+## 複雜度
 
--104 <= ax1 <= ax2 <= 104
--104 <= ay1 <= ay2 <= 104
--104 <= bx1 <= bx2 <= 104
--104 <= by1 <= by2 <= 104
+時間 O(1)，額外空間 O(1)。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-int computeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2) {
-    
-}
-```
+int computeArea(int ax1, int ay1, int ax2, int ay2, int bx1, int by1, int bx2, int by2)

@@ -1,43 +1,10 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0191. Number of 1 Bits
- * Difficulty: Easy
- * Tags: divide-and-conquer, bit-manipulation
- * URL: https://leetcode.com/problems/number-of-1-bits/
- * Source: community solution, repo lennylxx_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a positive integer n, write a function that returns the number
- *     of set bits in its binary representation (also known as the Hamming
- *     weight).
- *
- * [中文] 題目: 1 的個數
- * [中文] 題目說明:
- *     給定一個正整數 n，請回傳其二進位表示中設定位元（1）的數量，也就是
- *     漢明重量。n 的範圍在 32 位元正整數內。
- *
- * [中文] 思路:
- *     實際函式使用平行位元計數：反覆以遮罩在各個 4 位元區塊累加位元數，
- *     再合併位元組總和並取出最高位元組。
- *
- * Examples:
- *     Input: n = 11
- *     Output: 3
- *     Explanation:
- *     The input binary string 1011 has a total of three set bits.
- *     Input: n = 128
- *     Output: 1
- *     Explanation:
- *     The input binary string 10000000 has a total of one set bit.
- *     Input: n = 2147483645
- *     Output: 30
- *     Explanation:
- *     The input binary string 111111111111111111111111111110^1 has a
- *     total of thirty set bits.
- *
- * Constraints:
- *   - 1 <= n <= 231 - 1
- * ==========================================================================
+ * LeetCode 0191. Number of 1 Bits《1 位元數量》
+ * 題意：計算正整數 n 的二進位表示中有幾個 1（Hamming weight）。
+ * 範例：11（二進位 1011）有 3 個 1；128（二進位 10000000）有 1 個 1。
+ * 限制：1 <= n <= 2^31 - 1。
+ * 解法：每次執行 n &= n-1，清除 n 最右邊的 1；清除幾次就是 1 的總數。
+ * 複雜度：時間 O(k)，k 為 1 的個數；額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -211,112 +178,16 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
-#include <stdint.h>
 
-/*
-    1. https://graphics.stanford.edu/~seander/bithacks.html
-    2. Hacker's Delight 2nd Edition, Chapter 5. Counting Bits
-*/
+int hammingWeight(int n) {
+    int count = 0;
 
-void print_bits(uint32_t n) {
-    int i = 32;
-    while(i--){
-        if ((n >> i) & 1)
-            printf("1");
-        else
-            printf("0");
+    while (n != 0) {
+        /* n-1 會把最右邊的 1 變成 0；AND 後便清除了它。 */
+        n &= n - 1;
+        ++count;
     }
-    printf("\n");
-}
-
-/* O(logn) */
-int hammingWeight_1(uint32_t n) {
-    int ret = 0;
-    while (n) {
-        ret += n & 0x01;
-        n >>= 1;
-    }
-    return ret;
-}
-
-/* O(m) */
-int hammingWeight_2(uint32_t n) {
-    int ret = 0;
-    while (n) {
-        n = n & (n - 1);
-        ret ++;
-    }
-    return ret;
-}
-
-/*****************************
- Code to count 0 bits
-
-    while (n != 0xFFFFFFFF) {
-       n = n | (n + 1);
-       ret++;
-    }
-
-Or,
-
-    n = ~n;
-    count1Bits(n);
-
-******************************/
-
-/* 5 steps */
-int hammingWeight_3(uint32_t n) {
-    uint32_t t = n;
-    /* add up odd and even bits  1 bit */
-    t = ((t & 0xAAAAAAAA) >> 1) + (t & 0x55555555);
-    /* 2 bits */
-    t = ((t & 0xCCCCCCCC) >> 2) + (t & 0x33333333);
-    /* 4 bits */
-    t = ((t & 0xF0F0F0F0) >> 4) + (t & 0x0F0F0F0F);
-    /* 8 bits */
-    t = ((t & 0xFF00FF00) >> 8) + (t & 0x00FF00FF);
-    /* 16 bits */
-    t = ((t & 0xFFFF0000) >> 16) + (t & 0x0000FFFF);
-    
-    return t;
-}
-
-/* simplification of hammingWeight_3 */
-int hammingWeight_4(uint32_t n) {
-    n = n - ((n >> 1) & 0x55555555);
-    n = (n & 0x33333333) + ((n >> 2) & 0x33333333);
-    n = (n + (n >> 4)) & 0x0F0F0F0F;
-    n = n + (n >> 8);
-    n = n + (n >> 16);
-    return n & 0x0000003F;
-}
-
-/* HAKMEM */
-int hammingWeight_5(uint32_t n) {
-    uint32_t t;
-    t = (n >> 1) & 033333333333;        // Count bits in
-    n = n - t;                          // each 3-bit
-    t = (t >> 1) & 033333333333;        // field.
-    n = n - t;
-    n = (n + (n >> 3)) & 030707070707;
-    return n % 63;                      // Add 6-bit sums.
-                                        //((n * 0404040404) >> 26) + (n >> 30)
-}
-
-/* variation of HAKMEM */
-int hammingWeight(uint32_t n) {
-    uint32_t t;
-    t = (n >> 1) & 0x77777777;       // Count bits in
-    n = n - t;                       // each 4-bit
-    t = (t >> 1) & 0x77777777;       // field.
-    n = n - t;
-    t = (t >> 1) & 0x77777777;
-    n = n - t;
-    n = (n + (n >> 4)) & 0x0F0F0F0F; // Get byte sums.
-    n = n * 0x01010101;              // Add the bytes.
-    return n >> 24;
+    return count;
 }
 
 /* ---- generated tests ---- */

@@ -13,39 +13,45 @@
  *     lands horizontally or vertically. You may assume all four edges of the
  *     grid are all surrounded by water.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     由 '1'(陸) 與 '0'(海) 組成的網格中數互不相連的島嶼數量（四相連）。
+ * [中文] 題目說明
+ *     給定 m x n 的二元網格 grid，其中 '1' 表示陸地、'0' 表示水域，
+ *     回傳島嶼數量。上下或左右相鄰的陸地屬於同一座島；斜角相鄰不算連接。
+ *     每座島都被水包圍，且可假設網格外圍也是水。
  *
- * Examples:
- *   Example 1:
- *     Input: grid = [
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：grid = [
  *     ["1","1","1","1","0"],
  *     ["1","1","0","1","0"],
  *     ["1","1","0","0","0"],
  *     ["0","0","0","0","0"]
  *     ]
- *     Output: 1
- *   Example 2:
- *     Input: grid = [
+ *     輸出：1
+ *   範例 2：
+ *     輸入：grid = [
  *     ["1","1","0","0","0"],
  *     ["1","1","0","0","0"],
  *     ["0","0","1","0","0"],
  *     ["0","0","0","1","1"]
  *     ]
- *     Output: 3
+ *     輸出：3
  *
- * Constraints:
- *   - m == grid.length
- *   - n == grid[i].length
- *   - 1 <= m, n <= 300
- *   - grid[i][j] is '0' or '1'.
+ * [中文] 限制
+ *   - m == grid.length。
+ *   - n == grid[i].length。
+ *   - 1 <= m, n <= 300。
+ *   - grid[i][j] 只會是 '0' 或 '1'。
  *
  * LeetCode official C stub (函式簽名):
  *   int numIslands(char** grid, int gridSize, int* gridColSize) {
  *   }
  *
- * [EN] Approach: Flood fill: from every unseen '1' run iterative BFS/DFS sinking its whole island; counter += 1. Time O(m*n).
- * [中文] 思路: 洪水填充：每遇到未訪問的 1 就用堆疊把整座島沉下去並計數一次。時間 O(m*n)。
+ * [中文] 直觀解題思路
+ *   1. 逐格掃描網格；遇到 '0' 直接略過。
+ *   2. 每次遇到 '1' 就找到一座尚未計數的島，計數加一，並從該格開始深度優先搜尋。
+ *   3. 用堆疊走訪上下左右相連的陸地；加入堆疊時立刻改成 '0'，避免重複加入。
+ *   4. 整座島沉沒後繼續掃描，下一個仍為 '1' 的格子必屬於另一座島。
+ *   每格最多處理一次，時間複雜度 O(m * n)，堆疊最壞空間 O(m * n)。此作法會修改 grid。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -59,8 +65,9 @@ int numIslands(char **grid, int gridSize, int *gridColSize) {
         for (c = 0; c < cols; ++c) {
             int top = 0;
             if (grid[r][c] != '1') continue;
+            /* 入堆疊時就標記為水，保證每格最多只入堆疊一次。 */
             stack[top++] = r * cols + c;
-            grid[r][c] = '0';                       /* sink while exploring */
+            grid[r][c] = '0';
             while (top) {
                 int cur = stack[--top];
                 int cr = cur / cols, cc = cur % cols;

@@ -1,46 +1,11 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0168. Excel Sheet Column Title
- * Difficulty: Easy
- * Tags: math, string
- * URL: https://leetcode.com/problems/excel-sheet-column-title/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer columnNumber, return its corresponding column title
- *     as it appears in an Excel sheet.
- *     For example:
- *
- * [中文] 題目: Excel 欄名稱
- * [中文] 題目說明:
- *     給定正整數 columnNumber，請回傳它在 Excel 欄位系
- *     統中對應的英文字母欄名。例如 1 對應 A、26 對應 Z、27 對
- *     應 AA。columnNumber 的範圍不超過 32 位元有號整數
- *     。
- *
- * [中文] 思路:
- *     將數字視為沒有 0 的 26 進位制，每次以 (n - 1) 取餘取
- *     得末位字母並更新 n，最後反轉累積的字元。
- *
- * Examples:
- *     A -> 1
- *     B -> 2
- *     C -> 3
- *     ...
- *     Z -> 26
- *     AA -> 27
- *     AB -> 28
- *     ...
- *     Input: columnNumber = 1
- *     Output: "A"
- *     Input: columnNumber = 28
- *     Output: "AB"
- *     Input: columnNumber = 701
- *     Output: "ZY"
- *
- * Constraints:
- *   - 1 <= columnNumber <= 231 - 1
- * ==========================================================================
+ * LeetCode 0168. Excel Sheet Column Title《Excel 欄位標題》
+ * 題意：給定正整數欄號，轉成 Excel 欄位標題。A 到 Z 對應 1 到 26；
+ *       接著是 AA、AB 等，這是沒有 0 的 26 進位表示法。
+ * 範例：1 -> "A"；28 -> "AB"；701 -> "ZY"。
+ * 限制：1 <= columnNumber <= 2^31 - 1。
+ * 解法：先減 1 再除以 26 取餘數，從個位數開始建立字母，最後反轉字串。
+ * 複雜度：時間 O(log26 n)，額外空間 O(log26 n)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -214,66 +179,26 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-168. Excel Sheet Column Title
 
-Given a positive integer, return its corresponding column title as appear in an Excel sheet.
+char* convertToTitle(int columnNumber) {
+    char reversed[16];
+    int length = 0;
+    int number = columnNumber;
 
-For example:
-    1 -> A
-    2 -> B
-    3 -> C
-    ...
-    26 -> Z
-    27 -> AA
-    28 -> AB 
-
-Credits:Special thanks to @ifanchu for adding this problem and creating all test cases.
-*/
-
-char* convertToTitle(int n) {
-    char *s;
-    int sz, l, k;
-    int i, j;
-    
-    sz = 100;
-    s = malloc(sz * sizeof(char));
-    //assert(s);
-    l = 0;
-    while (n) {
-        if (sz == l) {
-            sz *= 2;
-            s = realloc(s, sz * sizeof(char));
-            //assert(s);
-        }
-        k = (n - 1) % 26;
-        s[l ++] = 'A' + k;
-        n = (n - 1) / 26;
+    while (number > 0) {
+        /* 先減 1，將 1..26 對應成 0..25。 */
+        --number;
+        reversed[length++] = (char)('A' + number % 26);
+        number /= 26;
     }
-    s[l] = 0;
-    for (i = 0, j = l - 1; i < j; i ++, j --) {
-        k = s[i];
-        s[i] = s[j];
-        s[j] = k;
+
+    char* title = malloc((size_t)length + 1);
+    for (int i = 0; i < length; ++i) {
+        title[i] = reversed[length - 1 - i];
     }
-    return s;
+    title[length] = '\0';
+    return title;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:107.7K
-Total Submissions:414.9K
-
-
-Companies Microsoft Facebook Zenefits
-Related Topics Math
-Similar Questions 
-                
-                  
-                    Excel Sheet Column Number
-*/
 
 /* ---- generated tests ---- */
 int main(void){

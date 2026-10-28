@@ -13,8 +13,56 @@
  */
 #include <stdio.h>
 
+#define BASE 1000000000U
+#define MAX_LIMBS 300
+
+typedef struct {
+    unsigned int limb[MAX_LIMBS];
+    int length;
+} BigInteger;
+
+static void multiply_small(BigInteger *number, unsigned int factor) {
+    unsigned long long carry = 0;
+
+    for (int i = 0; i < number->length; ++i) {
+        unsigned long long product =
+            (unsigned long long)number->limb[i] * factor + carry;
+        number->limb[i] = (unsigned int)(product % BASE);
+        carry = product / BASE;
+    }
+    while (carry != 0) {
+        number->limb[number->length++] = (unsigned int)(carry % BASE);
+        carry /= BASE;
+    }
+}
+
+static void print_big_integer(FILE *output, const BigInteger *number) {
+    int i = number->length - 1;
+
+    fprintf(output, "%u", number->limb[i]);
+    for (--i; i >= 0; --i) {
+        fprintf(output, "%09u", number->limb[i]);
+    }
+    fputc('\n', output);
+}
+
+void solve_uva623(FILE *input, FILE *output) {
+    int n;
+
+    while (fscanf(input, "%d", &n) == 1) {
+        BigInteger factorial = {{0}, 1};
+        factorial.limb[0] = 1;
+
+        for (int factor = 2; factor <= n; ++factor) {
+            multiply_small(&factorial, (unsigned int)factor);
+        }
+
+        fprintf(output, "%d!\n", n);
+        print_big_integer(output, &factorial);
+    }
+}
+
 int main(void) {
-    int ok = 1;
-    printf("%s: UVa 623 - 500!\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    solve_uva623(stdin, stdout);
+    return 0;
 }

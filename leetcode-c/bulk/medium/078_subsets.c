@@ -205,34 +205,32 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-static void dfs_handler(int* nums, int cur, int num_sz, int *tmp, int tmp_ctr, int **ret, int *ret_sz, int *ret_col_sz)
-{
-    if (cur == num_sz) {
-        int *res = malloc(sizeof(int)*tmp_ctr);
-        memcpy(res, tmp, sizeof(int)*tmp_ctr);
-        ret[*ret_sz] = res;
-        ret_col_sz[*ret_sz] = tmp_ctr;
-        (*ret_sz)++;
-        return;
+/* ---- 易讀解法：用 bitmask 列舉每種選取狀態 ---- */
+int** subsets(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
+    int subsetCount = 1 << numsSize;
+    int **answers = (int**)malloc((size_t)subsetCount * sizeof(int*));
+    int *columnSizes = (int*)malloc((size_t)subsetCount * sizeof(int));
+    int mask;
+
+    for (mask = 0; mask < subsetCount; ++mask) {
+        int subsetSize = 0;
+        int bit;
+        int write = 0;
+
+        for (bit = 0; bit < numsSize; ++bit) {
+            if (mask & (1 << bit)) ++subsetSize;
+        }
+
+        answers[mask] = (int*)malloc(sizeof(int) * (size_t)(subsetSize > 0 ? subsetSize : 1));
+        for (bit = 0; bit < numsSize; ++bit) {
+            if (mask & (1 << bit)) answers[mask][write++] = nums[bit];
+        }
+        columnSizes[mask] = subsetSize;
     }
 
-    dfs_handler(nums, cur + 1, num_sz, tmp, tmp_ctr, ret, ret_sz, ret_col_sz);
-    tmp[tmp_ctr] = nums[cur];
-    dfs_handler(nums, cur + 1, num_sz, tmp, tmp_ctr + 1, ret, ret_sz, ret_col_sz);
-}
-
-int** subsets(int* nums, int num_sz, int* ret_sz, int** ret_col_sz)
-{
-    int *tmp = malloc(sizeof(int)*num_sz);
-    int **ret = malloc(sizeof(int*)*(1 << num_sz));
-    *ret_col_sz = malloc(sizeof(int)*(1 << num_sz));
-    *ret_sz = 0;
-    dfs_handler(nums, 0, num_sz, tmp, 0, ret, ret_sz, *ret_col_sz);
-
-    free(tmp);
-    return ret;
+    *returnSize = subsetCount;
+    *returnColumnSizes = columnSizes;
+    return answers;
 }
 
 /* ---- generated tests ---- */

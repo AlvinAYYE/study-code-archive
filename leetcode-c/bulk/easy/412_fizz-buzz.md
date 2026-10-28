@@ -1,48 +1,75 @@
-# 0412. Fizz Buzz《Fizz Buzz》
+# 412 Fizz Buzz：Fizz Buzz
 
-- **Difficulty**: Easy
-- **Tags**: math, string, simulation
-- **題目連結**: https://leetcode.com/problems/fizz-buzz/
-- **程式碼**: [`412_fizz-buzz.c`](./412_fizz-buzz.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定整數 n，回傳從 1 到 n 的字串陣列。能被 3 整除的位置放入 "Fizz"，能被 5 整除的位置放入 "Buzz"，同時符合兩者則放入 "FizzBuzz"；其餘位置放入該數字的字串。
+給定整數 n，回傳長度為 n 的字串陣列，依序對應數字 1 到 n：若數字能被 3 整除，寫 Fizz；能被 5 整除，寫 Buzz；同時能被 3 與 5 整除，寫 FizzBuzz；其他數字則以十進位字串表示。
 
-**思路**：依序處理 1 到 n，分別檢查是否可被 3 與 5 整除並串接對應字串。兩者皆不整除時，將目前數字格式化為字串。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given an integer n, return a string array answer (1-indexed) where:
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+- 輸入：n = 3
+- 輸出：["1","2","Fizz"]
+- 說明：3 能被 3 整除，所以第三個字串是 Fizz。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: n = 3
-Output: ["1","2","Fizz"]
+- 輸入：n = 5
+- 輸出：["1","2","Fizz","4","Buzz"]
+- 說明：5 能被 5 整除，所以第五個字串是 Buzz。
 
-Input: n = 5
-Output: ["1","2","Fizz","4","Buzz"]
+### 範例 3
 
-Input: n = 15
-Output: ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]
-```
+- 輸入：n = 15
+- 輸出：["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]
+- 說明：15 同時能被 3 與 5 整除，因此最後一項是 FizzBuzz。
 
-## 限制 Constraints
+## 限制
 
-1 <= n <= 104
+- 1 <= n <= 10^4
 
-## 官方 C 函式簽名 Signature
+## 解題思路
 
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
+1. 為答案配置 n 個字串位置。
+2. 依序處理 1 到 n；先檢查能否同時被 3 和 5 整除，再分別檢查 3、5。
+3. 以上條件都不符合時，將數字格式化成十進位字串。
+
+## 複雜度
+
+- 時間：O(n)，每個數字只檢查一次。
+- 空間：O(n)，回傳 n 個字串及其內容。
+
+## C 函式簽名
+
+~~~c
+char** fizzBuzz(int n, int* returnSize);
+~~~
+
+## 程式如何運作
+
+~~~c
 char** fizzBuzz(int n, int* returnSize) {
-    
+    char** answer = (char**)malloc(sizeof(char*) * (size_t)n);
+    int i;
+
+    *returnSize = n;
+
+    for (i = 1; i <= n; ++i) {
+        answer[i - 1] = (char*)malloc(9); /* FizzBuzz 最多 8 個字元。 */
+
+        if (i % 15 == 0) {
+            strcpy(answer[i - 1], "FizzBuzz");
+        } else if (i % 3 == 0) {
+            strcpy(answer[i - 1], "Fizz");
+        } else if (i % 5 == 0) {
+            strcpy(answer[i - 1], "Buzz");
+        } else {
+            sprintf(answer[i - 1], "%d", i);
+        }
+    }
+
+    return answer;
 }
-```
+~~~

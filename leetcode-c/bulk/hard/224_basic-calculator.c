@@ -18,29 +18,28 @@
  *     用 eval 等內建字串運算功能；加號不可作一元運算，減號可以，結果
  *     保證在 32 位元有號整數範圍內。
  *
- * [中文] 思路:
- *     剖析字串後分別以動態堆疊保存運算元與運算子，並依優先序在適當時機歸約
- *     。左括號直接入堆疊，右括號會結算至對應左括號為止。
+ * [中文] 範例：
+ *   範例 1：輸入 s = "1 + 1"；輸出 2。
+ *   範例 2：輸入 s = " 2-1 + 2 "；輸出 3。
+ *   範例 3：輸入 s = "(1+(4+5+2)-3)+(6+8)"；輸出 23。
  *
- * Examples:
- *     Input: s = "1 + 1"
- *     Output: 2
- *     Input: s = " 2-1 + 2 "
- *     Output: 3
- *     Input: s = "(1+(4+5+2)-3)+(6+8)"
- *     Output: 23
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= s.length <= 3 * 10^5
- *   - s consists of digits, '+', '-', '(', ')', and ' '.
- *   - s represents a valid expression.
- *   - '+' is not used as a unary operation (i.e., "+1" and "+(2 +
- *   3)" is invalid).
- *   - '-' could be used as a unary operation (i.e., "-1" and "-(2 +
- *   3)" is valid).
- *   - There will be no two consecutive operators in the input.
- *   - Every number and running calculation will fit in a signed
- *   32-bit integer.
+ *   - s 僅包含數字、'+'、'-'、'('、')' 與空白，且一定是合法運算式。
+ *   - '+' 不會作一元運算；'-' 可以作一元運算。
+ *   - 輸入不會有兩個連續運算子。
+ *   - 每個數字與中間計算結果都在 32 位元帶符號整數範圍內。
+ *
+ * [中文] 直觀解題思路：
+ *   1. parse 每次略過空白，讀出一個完整整數或一個運算子/括號 token。
+ *   2. 整數放入 data 運算元堆疊；左括號直接放入 ops 運算子堆疊。
+ *   3. 遇到運算子、右括號或輸入結尾時，只要 ops 頂端優先序不低於目前 token，
+ *      就彈出兩個運算元進行計算，再把結果推回 data。
+ *   4. 遇到左括號時停止歸約；右括號本身不入堆疊，正好移除配對括號。
+ *   5. 開頭先放入數字 0，使最前方的一元負號可視為 0-x；結束時 data 頂端
+ *      就是完整運算結果。
+ *
+ * 每個 token 進出堆疊至多一次，時間 O(n)，兩個堆疊合計使用 O(n) 空間。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -276,7 +275,7 @@ void push(s_t *stack, int k) {
     stack->p[stack->n ++] = k;
 }
 int low_op(s_t *ops, int k) {
-    const int priority[] = { 0, 2, 2, 3, 3, 1, 1 }; // null, +, -, *, /, (, )
+    const int priority[] = { 0, 2, 2, 3, 3, 1, 1 }; /* 結尾、+、-、*、/、(、) */
     return (priority[ops->p[ops->n - 1]] >= priority[k]) ? 1 : 0;
 }
 int calculate(char* s) {
@@ -288,19 +287,19 @@ int calculate(char* s) {
     data.p = malloc(data.sz * sizeof(int));
     ops.p = malloc(ops.sz * sizeof(int));
     
-    push(&data, 0); // put a zero in case of with a null input
-    push(&ops, 0);  // put a null operator on top of operator stack
+    push(&data, 0); /* 讓開頭的一元負號可視為 0-x */
+    push(&ops, 0);  /* 結尾哨兵運算子 */
     
     do {
         x = parse(&s, &k);
-        if (x == 2) {   // data, push to stack
+        if (x == 2) {   /* 整數直接進運算元堆疊 */
             push(&data, k);
-        } else if (k == 5) {  // left parenthese, always push
+        } else if (k == 5) {  /* 左括號直接入堆疊，暫停外層運算 */
             push(&ops, k);
         } else {        // operator
             while (low_op(&ops, k)) {
                 o = ops.p[-- ops.n];
-                if (o == 0 || o == 5) break; // end of input or left parenthese
+                if (o == 0 || o == 5) break; /* 遇結尾哨兵或配對左括號即停止 */
                 d2 = data.p[-- data.n];
                 d1 = data.p[-- data.n];
                 switch (o) {

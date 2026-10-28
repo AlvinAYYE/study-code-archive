@@ -1,46 +1,47 @@
-# 0007. Reverse Integer《整数反转》
+# 0007. Reverse Integer｜整數反轉
 
-- **Difficulty**: Medium
-- **Tags**: math
-- **題目連結**: https://leetcode.com/problems/reverse-integer/
-- **程式碼**: [`007_reverse-integer.c`](./007_reverse-integer.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：數學
+- **題目連結**：[LeetCode 0007](https://leetcode.com/problems/reverse-integer/)
+- **C 程式**：[007_reverse-integer.c](./007_reverse-integer.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定一個有號 32 位元整數 x，回傳其十進位數字反轉後的值。若反轉結果超出 [-2^31, 2^31-1]，則回傳 0，且不可依賴儲存 64 位元整數。
+給定 32 位元有號整數 `x`，將它的十進位數字順序反轉並回傳。負號仍保留在前面。若反轉後超出 32 位元有號整數範圍 `[-2^31, 2^31 - 1]`，回傳 `0`。解法不能用 64 位元整數保存中間結果。
 
-**思路**：程式反覆取出末位數字並累積到反轉結果。每次乘以 10 前，會依正負號以 32 位元邊界檢查是否溢位，若會溢位即回傳 0。
-
-## Problem Statement (English)
-
-Given a signed 32-bit integer x, return x with its digits reversed. If reversing x causes the value to go outside the signed 32-bit integer range [-231, 231 - 1], then return 0.
-Assume the environment does not allow you to store 64-bit integers (signed or unsigned).
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: x = 123
-Output: 321
+輸入：x = 123
+輸出：321
 
-Input: x = -123
-Output: -321
+輸入：x = -123
+輸出：-321
 
-Input: x = 120
-Output: 21
+輸入：x = 120
+輸出：21
+說明：反轉後的前導零不需要保留。
 ```
 
-## 限制 Constraints
+## 限制
 
--231 <= x <= 231 - 1
+- `-2^31 <= x <= 2^31 - 1`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. `reversed` 保存目前已反轉的數字；每輪用 `digit = x % 10` 取出原數最右一位。
+2. 在執行 `reversed * 10 + digit` 前先檢查上界與下界，避免運算本身溢位。
+3. 檢查邊界時，最後一位的可用範圍分別是 `7`（正數）和 `-8`（負數）。
+4. 安全時將 `digit` 接到 `reversed` 後面，再用整數除以 10 移除 `x` 最右一位。
+5. 若任一輪可能超出範圍，立即回傳 `0`。
+
+## 複雜度
+
+- 時間：`O(log |x|)`，每輪處理一位數。
+- 額外空間：`O(1)`，不使用較寬的整數型別。
+
+## LeetCode C 函式簽名
 
 ```c
-int reverse(int x){
-
-}
+int reverse(int x);
 ```

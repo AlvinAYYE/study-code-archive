@@ -13,14 +13,23 @@
  *
  * [中文] 題目: 找出字串中第一個符合項的下標
  * [中文] 題目說明:
- *     給定字串 haystack 與 needle，回傳 needle 在
- *      haystack 中首次出現的起始索引。若 needle 不是 h
- *     aystack 的子字串，則回傳 -1。
+ *     給定字串 haystack 與 needle，回傳 needle 在 haystack 中第一次
+ *     出現的起始索引；若 needle 不是 haystack 的子字串，回傳 -1。
  *
- * [中文] 思路:
- *     程式逐一枚舉 haystack 中可能的起始位置，並以內層迴圈逐字元
- *     比較 needle。若整個 needle 都相符便立即回傳該位置，否
- *     則最終回傳 -1。
+ * [中文] 範例:
+ *     1. haystack = "sadbutsad"、needle = "sad"，輸出 0；"sad" 出現在
+ *        索引 0 與 6，第一次是 0。
+ *     2. haystack = "leetcode"、needle = "leeto"，輸出 -1。
+ *
+ * [中文] 限制:
+ *     - 1 <= haystack.length, needle.length <= 10^4
+ *     - haystack 與 needle 只包含小寫英文字母。
+ *
+ * [中文] 直觀解題思路:
+ *     1. needle 長度為 l2，因此起點最多只需枚舉到 l1 - l2。
+ *     2. 對每個可能起點 i，從 needle[0] 開始逐字元比較。
+ *     3. 若 l2 個字元全部相同，立即回傳 i；所有位置都失敗則回傳 -1。
+ *     4. 最壞時間 O((l1-l2+1) * l2)，額外空間 O(1)。
  *
  * Examples:
  *     Input: haystack = "sadbutsad", needle = "sad"
@@ -230,10 +239,11 @@ int strStr(char* haystack, char* needle) {
     
     l1 = strlen(haystack);
     
+    /* 超過 l1-l2 後剩餘字元不足，不可能容納 needle。 */
     for (i = 0; i <= l1 - l2; i ++) {
         for (j = 0; j < l2 && haystack[i + j] == needle[j]; j ++) {
         }
-        if (j == l2) return i;
+        if (j == l2) return i;  /* 全部相符，且這是由左至右遇到的第一個。 */
     }
     
     return -1;

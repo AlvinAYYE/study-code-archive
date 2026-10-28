@@ -10,35 +10,37 @@
  *     Given a string s, find the length of the longest substring without
  *     duplicate characters.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     找出不含重複字元的最長子字串的長度。
+ * [中文] 題目說明
+ *     給定字串 s，找出其中不含重複字元的最長「連續子字串」，並回傳長度。
  *
- * Examples:
- *   Example 1:
- *     Input: s = "abcabcbb"
- *     Output: 3
- *     Explanation: The answer is "abc", with the length of 3.
- *   Example 2:
- *     Input: s = "bbbbb"
- *     Output: 1
- *     Explanation: The answer is "b", with the length of 1.
- *   Example 3:
- *     Input: s = "pwwkew"
- *     Output: 3
- *     Explanation: The answer is "wke", with the length of 3.
- *     Notice that the answer must be a substring, "pwke" is a
- *     subsequence and not a substring.
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：s = "abcabcbb"
+ *     輸出：3
+ *     說明：答案可以是 "abc"，長度為 3。
+ *   範例 2：
+ *     輸入：s = "bbbbb"
+ *     輸出：1
+ *     說明：答案是 "b"，長度為 1。
+ *   範例 3：
+ *     輸入：s = "pwwkew"
+ *     輸出：3
+ *     說明：答案可以是 "wke"。"pwke" 並非連續，只是子序列，因此不符合題意。
  *
- * Constraints:
- *   - 0 <= s.length <= 5 * 10^4
- *   - s consists of English letters, digits, symbols and spaces.
+ * [中文] 限制
+ *   - 0 <= s.length <= 5 * 10^4。
+ *   - s 由英文字母、數字、符號與空白組成。
  *
  * LeetCode official C stub (函式簽名):
  *   int lengthOfLongestSubstring(char* s) {
  *   }
  *
- * [EN] Approach: Sliding window + last-seen table: move left bound past the previous occurrence, remember max width. Time O(n), space O(min(n,Σ)).
- * [中文] 思路: 滑動視窗 + 最近出現位置表：左界跳到重複字元上次位置之後，隨時記錄最大寬度。時間 O(n)、空間 O(min(n,Σ))。
+ * [中文] 直觀解題思路
+ *   1. 用 start 表示目前無重複視窗的左界，i 表示右界。
+ *   2. last[c] 記錄字元 c 最近出現的位置；若該位置仍在視窗內，就把 start
+ *      直接移到該位置的下一格。
+ *   3. 更新字元的最新位置，再用 i - start + 1 更新最大長度。
+ *   每個字元只被右界掃過一次，時間複雜度 O(n)，位置表空間 O(1)（固定 256 格）。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -50,6 +52,7 @@ int lengthOfLongestSubstring(char *s) {
     for (i = 0; i < 256; ++i) last[i] = -1;
     for (i = 0; s[i]; ++i) {
         unsigned char c = (unsigned char)s[i];
+        /* 只向右移動左界，避免把已排除的舊重複位置重新納入。 */
         if (last[c] >= start) start = last[c] + 1;
         last[c] = i;
         if (i - start + 1 > best) best = i - start + 1;

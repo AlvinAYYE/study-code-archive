@@ -1,51 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1051. Height Checker
- * Difficulty: Easy
- * Tags: array, sorting, counting-sort
- * URL: https://leetcode.com/problems/height-checker/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     A school is trying to take an annual photo of all the students. The
- *     students are asked to stand in a single file line in non-decreasing
- *     order by height. Let this ordering be represented by the integer
- *     array expected where expected[i] is the expected height of the ith
- *     student in line.
- *     You are given an integer array heights representing the current
- *     order that the students are standing in. Each heights[i] is the
- *     height of the ith student in line (0-indexed).
- *     Return the number of indices where heights[i] != expected[i].
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     A school is trying to take an annual photo of all the students. The
- *     students are asked to stand in a single file line in 非遞減 order by
- *     height.
+ * 【完整中文題意】學校要替學生拍年度合照，學生應按身高由矮到高排成一列。給定目前順序 heights，請先想像依身高升冪排序後的正確順序 expected，再回傳目前陣列與正確順序在多少個索引位置不同。
  *
- * Examples:
- *     Input: heights = [1,1,4,2,1,3]
- *     Output: 3
- *     Explanation:
- *     heights: [1,1,4,2,1,3]
- *     expected: [1,1,1,2,3,4]
- *     Indices 2, 4, and 5 do not match.
- *     Input: heights = [5,1,2,3,4]
- *     Output: 5
- *     Explanation:
- *     heights: [5,1,2,3,4]
- *     expected: [1,2,3,4,5]
- *     All indices do not match.
- *     Input: heights = [1,2,3,4,5]
- *     Output: 0
- *     Explanation:
- *     heights: [1,2,3,4,5]
- *     expected: [1,2,3,4,5]
- *     All indices match.
+ * 【範例】
+ * 1. heights = [1,1,4,2,1,3] → 3（排序後為 [1,1,1,2,3,4]，索引 2、4、5 不同）
+ * 2. heights = [5,1,2,3,4] → 5
+ * 3. heights = [1,2,3,4,5] → 0
  *
- * Constraints:
- *   - 1 <= heights.length <= 100
- *   - 1 <= heights[i] <= 100
- * ==========================================================================
+ * 【限制】
+ * - 1 <= heights.length <= 100
+ * - 1 <= heights[i] <= 100
+ *
+ * 【解題步驟】
+ * 1. 複製 heights，避免改動題目提供的目前順序。
+ * 2. 將複製陣列由小到大排序，這就是 expected。
+ * 3. 逐一比較兩個陣列相同索引的值，每次不同就把答案加一。
+ *
+ * 【複雜度】時間 O(n log n)；空間 O(n)（排序用的複製陣列）
+ *
+ * 【LeetCode C 函式】int heightChecker(int* heights, int heightsSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -219,27 +194,27 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-static int compare(const void *a, const void *b)
-{
-    return *(int *) a - *(int *) b;
+static int compareHeight(const void* left, const void* right) {
+    int a = *(const int*)left;
+    int b = *(const int*)right;
+    return (a > b) - (a < b);
 }
 
-int heightChecker(int *heights, int heights_sz)
-{
-    int *cpy = malloc(sizeof(int) * heights_sz);
-    memcpy(cpy, heights, sizeof(int) * heights_sz);
-    qsort(cpy, heights_sz, sizeof(int), compare);
+int heightChecker(int* heights, int heightsSize) {
+    int* expected = (int*)malloc((size_t)heightsSize * sizeof(int));
+    memcpy(expected, heights, (size_t)heightsSize * sizeof(int));
+    qsort(expected, (size_t)heightsSize, sizeof(int), compareHeight);
 
-    int ret = 0;
-    for (int i = 0; i < heights_sz; i++) {
-        if (cpy[i] != heights[i])
-            ret++;
+    int mismatches = 0;
+    // 每一個位置都要和排序後應有的身高比較。
+    for (int i = 0; i < heightsSize; ++i) {
+        if (heights[i] != expected[i]) ++mismatches;
     }
 
-    free(cpy);
-    return ret;
+    free(expected);
+    return mismatches;
 }
+
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

@@ -1,34 +1,24 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1175. Prime Arrangements
- * Difficulty: Easy
- * Tags: math
- * URL: https://leetcode.com/problems/prime-arrangements/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Return the number of permutations of 1 to n so that prime numbers
- *     are at prime indices (1-indexed.)
- *     (Recall that an integer is prime if and only if it is greater than
- *     1, and cannot be written as a product of two positive integers both
- *     smaller than it.)
- *     Since the answer may be large, return the answer modulo 10^9 + 7.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     回傳⋯⋯的數量 排列 of 1 to n so that 質數 numbers are at 質數 下標 (1-indexed.)
+ * 【完整中文題意】計算 1 到 n 的數字排列數量，使所有質數都放在質數編號的位置上（位置從 1 開始編號）。例如，位置 2、3、5 是質數位置。答案可能很大，請回傳它除以 1,000,000,007 的餘數。質數是大於 1 且不能寫成兩個比它小的正整數相乘的數。
  *
- * Examples:
- *     Input: n = 5
- *     Output: 12
- *     Explanation: For example [1,2,5,4,3] is a valid permutation,
- *     but [5,2,3,4,1] is not because the prime number 5 is at index
- *     1.
- *     Input: n = 100
- *     Output: 682289015
+ * 【範例】
+ * 1. n = 5 → 12（有 3 個質數，可在質數位置互換排列 3! 種；其餘 2 個數字可排列 2! 種，所以共 3! × 2! = 12）
+ * 2. n = 100 → 682289015
  *
- * Constraints:
- *   - 1 <= n <= 100
- * ==========================================================================
+ * 【限制】
+ * - 1 <= n <= 100
+ *
+ * 【解題步驟】
+ * 1. 逐一檢查 2 到 n 的數字，統計質數個數 p。
+ * 2. 質數要放進 p 個質數位置，可排列 p! 種；其餘 n-p 個數字放進剩下位置，可排列 (n-p)! 種。
+ * 3. 將兩個階乘相乘，計算過程每次都對 1,000,000,007 取餘數，避免數值過大。
+ *
+ * 【複雜度】時間 O(n√n)（檢查質數；階乘計算 O(n)）；空間 O(1)
+ *
+ * 【LeetCode C 函式】int numPrimeArrangements(int n)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -202,13 +192,32 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
 int numPrimeArrangements(int n) {
-    int primes = 0, i, j, isp; long long res = 1; const int MOD = 1000000007;
-    for (i = 2; i <= n; ++i) { isp = 1; for (j = 2; j * j <= i; ++j) if (i % j == 0) { isp = 0; break; } if (isp) ++primes; }
-    for (i = 2; i <= primes; ++i) res = res * i % MOD;
-    for (i = 2; i <= n - primes; ++i) res = res * i % MOD;
-    return (int)res;
+    const long long MOD = 1000000007LL;
+    int primeCount = 0;
+
+    // 依定義測試每個候選數是否有小於或等於平方根的因數。
+    for (int value = 2; value <= n; ++value) {
+        bool isPrime = true;
+        for (int divisor = 2; divisor * divisor <= value; ++divisor) {
+            if (value % divisor == 0) {
+                isPrime = false;
+                break;
+            }
+        }
+        if (isPrime) ++primeCount;
+    }
+
+    long long arrangements = 1;
+    // 質數填入質數位置，非質數（包含 1）填入其他位置。
+    for (int i = 2; i <= primeCount; ++i) {
+        arrangements = arrangements * i % MOD;
+    }
+    for (int i = 2; i <= n - primeCount; ++i) {
+        arrangements = arrangements * i % MOD;
+    }
+
+    return (int)arrangements;
 }
 
 /* ---- generated tests ---- */

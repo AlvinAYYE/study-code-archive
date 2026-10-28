@@ -1,38 +1,11 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0203. Remove Linked List Elements
- * Difficulty: Easy
- * Tags: linked-list, recursion
- * URL: https://leetcode.com/problems/remove-linked-list-elements/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the head of a linked list and an integer val, remove all the
- *     nodes of the linked list that has Node.val == val, and return the
- *     new head.
- *
- * [中文] 題目: 移除鏈結串列元素
- * [中文] 題目說明:
- *     給定單向鏈結串列的頭節點與整數 val，請移除所有節點值等於 val
- *      的節點，並回傳新的頭節點。串列可以是空的。
- *
- * [中文] 思路:
- *     建立指向原頭節點的虛擬節點，從虛擬節點開始檢查下一個節點；命中 va
- *     l 時直接跳過該節點，否則向前移動。
- *
- * Examples:
- *     Input: head = [1,2,6,3,4,5,6], val = 6
- *     Output: [1,2,3,4,5]
- *     Input: head = [], val = 1
- *     Output: []
- *     Input: head = [7,7,7,7], val = 7
- *     Output: []
- *
- * Constraints:
- *   - The number of nodes in the list is in the range [0, 10^4].
- *   - 1 <= Node.val <= 50
- *   - 0 <= val <= 50
- * ==========================================================================
+ * LeetCode 0203. Remove Linked List Elements《移除鏈結串列元素》
+ * 題意：給定鏈結串列 head 與整數 val，移除所有值等於 val 的節點並回傳新串列的頭節點。
+ * 範例：[1,2,6,3,4,5,6], val=6 -> [1,2,3,4,5]；
+ *       空串列仍回傳空串列；[7,7,7,7], val=7 -> 空串列。
+ * 限制：節點數 0 到 10^4；Node.val 為 1 到 50；0 <= val <= 50。
+ * 解法：在原串列前放一個虛擬頭節點，逐一檢查下一個節點；命中就跳過它。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -206,13 +179,20 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
+
 struct ListNode* removeElements(struct ListNode* head, int val) {
-    struct ListNode dummy, *cur = &dummy;
+    /* 虛擬節點讓「刪除原本的第一個節點」也能用同一套流程。 */
+    struct ListNode dummy;
     dummy.next = head;
-    while (cur->next) {
-        if (cur->next->val == val) cur->next = cur->next->next;
-        else cur = cur->next;
+    struct ListNode* current = &dummy;
+
+    while (current->next != NULL) {
+        if (current->next->val == val) {
+            /* 把目標節點從串列連結中略過。 */
+            current->next = current->next->next;
+        } else {
+            current = current->next;
+        }
     }
     return dummy.next;
 }

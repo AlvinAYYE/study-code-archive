@@ -1,50 +1,41 @@
 # 0101. Symmetric Tree《對稱二元樹》
 
-- **Difficulty**: Easy
-- **Tags**: tree, depth-first-search, breadth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/symmetric-tree/
-- **程式碼**: [`101_symmetric-tree.c`](./101_symmetric-tree.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：樹、深度優先搜尋、廣度優先搜尋、二元樹
+- **題目連結**：https://leetcode.com/problems/symmetric-tree/
 
-## 題目說明（中文）
+## 題目說明
 
-給定二元樹根節點，判斷它是否以中心為軸左右鏡像對稱。空樹可視為對稱。樹的節點數最多為 1000。
+給定一棵二元樹，判斷它是否以根節點為中心左右鏡像對稱。鏡像的意思是：左側某個節點在右側必須有對應節點，而且位置相反、值相同；相對應位置也都必須同時有節點或同時為空。
 
-**思路**：以逐層陣列保存節點（包含空位置），每層從兩端向中間比對鏡像位置的空值與節點值。每輪再依序建立下一層的左右子節點。
-
-## Problem Statement (English)
-
-Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [1,2,2,3,4,4,3]
-Output: true
+輸入：root = [1,2,2,3,4,4,3]
+輸出：true
+說明：根的左右子節點值相同；左子樹外側的 3 對應右子樹外側的 3，內側的 4 也彼此對應。
 
-Input: root = [1,2,2,null,3,null,3]
-Output: false
+輸入：root = [1,2,2,null,3,null,3]
+輸出：false
+說明：兩個 3 都在各自子樹的右側，彼此不是鏡像位置。
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [1, 1000].
--100 <= Node.val <= 100
+- 節點數介於 `1` 到 `1000`。
+- `-100 <= Node.val <= 100`。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 將根節點的左子樹和右子樹當成一對來比較。
+2. 若兩個位置都是空，這一對相同；若只有一個位置為空，或兩節點值不同，就不是鏡像。
+3. 比較左側節點的左子樹與右側節點的右子樹，再比較左側節點的右子樹與右側節點的左子樹。
+4. 這兩組都相同時，兩棵子樹互為鏡像，整棵樹便對稱。
+
+**複雜度**：時間 `O(n)`，每個節點最多比較一次；遞迴堆疊額外使用 `O(h)` 空間。
+
+## C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-bool isSymmetric(struct TreeNode* root) {
-    
-}
+bool isSymmetric(struct TreeNode* root);
 ```

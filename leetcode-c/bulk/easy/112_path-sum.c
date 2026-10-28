@@ -221,8 +221,10 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 /* ---- community solution ---- */
 static int lc_dummy_;
 bool hasPathSum(struct TreeNode* root, int targetSum) {
+    /* 空節點不是一條有效路徑；只有抵達葉節點才能確認總和。 */
     if (!root) return false;
     if (!root->left && !root->right) return root->val == targetSum;
+    /* 把目前節點值從目標扣除，分別檢查左、右子樹是否有解。 */
     return hasPathSum(root->left, targetSum - root->val) || hasPathSum(root->right, targetSum - root->val);
 }
 

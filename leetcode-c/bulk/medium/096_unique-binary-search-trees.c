@@ -201,59 +201,21 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-96. Unique Binary Search Trees
-
-Given n, how many structurally unique BST's (binary search trees) that store values 1...n?
-
-
-For example,
-Given n = 3, there are a total of 5 unique BST's.
-
-   1         3     3      2      1
-    \       /     /      / \      \
-     3     2     1      1   3      2
-    /     /       \                 \
-   2     1         2                 3
-*/
-
+/* ---- 易讀解法：枚舉根節點並相乘左右子樹的形狀數 ---- */
 int numTrees(int n) {
-    int *dp;
-    int i, j;
-    
-    dp = calloc((n + 1), sizeof(int));
-    //assert(dp);
-    
-    dp[0] = dp[1] = 1;
-    
-    for (i = 2; i <= n; i ++) {
-        for (j = 1; j <= i; j ++) {
-            dp[i] += dp[j - 1] * dp[i - j];
+    int dp[20] = {0};
+    int nodeCount;
+
+    dp[0] = 1;
+    for (nodeCount = 1; nodeCount <= n; ++nodeCount) {
+        int leftCount;
+        for (leftCount = 0; leftCount < nodeCount; ++leftCount) {
+            int rightCount = nodeCount - 1 - leftCount;
+            dp[nodeCount] += dp[leftCount] * dp[rightCount];
         }
     }
-    
-    i = dp[n];
-    free(dp);
-    
-    return i;
+    return dp[n];
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:125.7K
-Total Submissions:307K
-
-
-Companies Snapchat
-Related Topics Tree Dynamic Programming
-Similar Questions 
-                
-                  
-                    Unique Binary Search Trees II
-*/
 
 /* ---- generated tests ---- */
 int main(void){

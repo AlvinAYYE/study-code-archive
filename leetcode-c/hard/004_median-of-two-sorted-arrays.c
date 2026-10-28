@@ -12,25 +12,24 @@
  *     The overall run time complexity should be O(log (m+n)).
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     兩個已排序陣列，找合併後的中位數，要求 O(log(m+n))。
+ *     給定兩個長度分別為 m 與 n、皆依非遞減順序排列的整數陣列 nums1
+ *     與 nums2，請回傳兩個陣列合併後的中位數。演算法的整體時間複雜度
+ *     必須是 O(log(m+n))。
  *
- * Examples:
- *   Example 1:
- *     Input: nums1 = [1,3], nums2 = [2]
- *     Output: 2.00000
- *     Explanation: merged array = [1,2,3] and median is 2.
- *   Example 2:
- *     Input: nums1 = [1,2], nums2 = [3,4]
- *     Output: 2.50000
- *     Explanation: merged array = [1,2,3,4] and median is (2 + 3) / 2 =
- *     2.5.
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：nums1 = [1,3], nums2 = [2]
+ *     輸出：2.00000
+ *     說明：合併後為 [1,2,3]，中位數是 2。
+ *   範例 2：
+ *     輸入：nums1 = [1,2], nums2 = [3,4]
+ *     輸出：2.50000
+ *     說明：合併後為 [1,2,3,4]，中位數是 (2 + 3) / 2 = 2.5。
  *
- * Constraints:
- *   - nums1.length == m
- *   - nums2.length == n
- *   - 0 <= m <= 1000
- *   - 0 <= n <= 1000
- *   - 1 <= m + n <= 2000
+ * [中文] 限制：
+ *   - nums1.length == m，nums2.length == n
+ *   - 0 <= m, n <= 1000
+ *   - 1 <= m + n <= 2000（兩個陣列不會同時為空）
  *   - -10^6 <= nums1[i], nums2[i] <= 10^6
  *
  * LeetCode official C stub (函式簽名):
@@ -38,7 +37,18 @@
  *   }
  *
  * [EN] Approach: Binary search on the cut position of the shorter array: find the split where left halves cover half the elements and maxLeft<=minRight. Time O(log min(m,n)).
- * [中文] 思路: 對較短陣列的切分位置做二分搜：左半共佔 (m+n+1)/2 個元素且 maxLeft<=minRight 時取中位數。時間 O(log min(m,n))。
+ * [中文] 直觀解題思路：
+ *   1. 不必真的合併陣列；只要在兩個陣列各切一刀，讓左半部恰好包含
+ *      (m+n+1)/2 個元素，就能直接由切口旁的數字決定中位數。
+ *   2. 固定 nums1 的切口 cutA 後，nums2 的切口 cutB 也隨之確定。
+ *      為了縮小搜尋範圍，永遠在較短的陣列上二分搜尋 cutA。
+ *   3. 若 nums1 左側最大值大於 nums2 右側最小值，代表 cutA 太靠右；
+ *      反之若 nums2 左側最大值大於 nums1 右側最小值，cutA 太靠左。
+ *   4. 當兩側都沒有交錯錯序時，分割有效。總長度為奇數時答案是左半
+ *      最大值；為偶數時是「左半最大值」與「右半最小值」的平均。
+ *   5. 切在陣列端點時，以 INT_MIN／INT_MAX 當虛擬邊界，避免額外分支。
+ *
+ * 複雜度：時間 O(log min(m,n))，額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -50,18 +60,20 @@ static int imax(int a, int b) { return a > b ? a : b; }
 
 double findMedianSortedArrays(int *a, int m, int *b, int n) {
     int half, lo, hi, cutA, cutB, L1, L2, R1, R2;
-    if (m > n) return findMedianSortedArrays(b, n, a, m);   /* cut the shorter one */
+    /* 只在較短陣列上二分，並保證由 half 算出的 cutB 一定合法。 */
+    if (m > n) return findMedianSortedArrays(b, n, a, m);
     half = (m + n + 1) / 2;
     lo = 0; hi = m;
     while (1) {
         cutA = (lo + hi) / 2;
         cutB = half - cutA;
+        /* 切口在端點時，用正負無限大的概念表示「沒有元素」。 */
         L1 = (cutA == 0) ? INT_MIN : a[cutA - 1];
         R1 = (cutA == m) ? INT_MAX : a[cutA];
         L2 = (cutB == 0) ? INT_MIN : b[cutB - 1];
         R2 = (cutB == n) ? INT_MAX : b[cutB];
-        if (L1 > R2) { hi = cutA - 1; }              /* too many from a */
-        else if (L2 > R1) { lo = cutA + 1; }         /* too few from a */
+        if (L1 > R2) { hi = cutA - 1; }              /* a 的切口太靠右 */
+        else if (L2 > R1) { lo = cutA + 1; }         /* a 的切口太靠左 */
         else {
             int leftMax = imax(L1, L2);
             if ((m + n) % 2 == 1) return (double)leftMax;

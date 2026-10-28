@@ -1,42 +1,21 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0223. Rectangle Area
+ * LeetCode 0223. Rectangle Area（矩形面積）
  * Difficulty: Medium
- * Tags: math, geometry
- * URL: https://leetcode.com/problems/rectangle-area/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the coordinates of two rectilinear rectangles in a 2D plane,
- *     return the total area covered by the two rectangles.
- *     The first rectangle is defined by its bottom-left corner (ax1, ay1)
- *     and its top-right corner (ax2, ay2).
- *     The second rectangle is defined by its bottom-left corner (bx1, by1)
- *     and its top-right corner (bx2, by2).
- *
- * [中文] 題目: 矩形面積
- * [中文] 題目說明:
- *     給定平面上兩個軸對齊矩形的左下與右上座標，計算兩矩形覆蓋的總面積。重
- *     疊區域只能計算一次。
- *
- * [中文] 思路:
- *     先計算兩矩形面積總和，再依座標判斷是否有交集。若有交集，計算其寬高並
- *     從總和扣除重疊面積。
- *
- * Examples:
- *     Input: ax1 = -3, ay1 = 0, ax2 = 3, ay2 = 4, bx1 = 0, by1 = -1,
- *     bx2 = 9, by2 = 2
- *     Output: 45
- *     Input: ax1 = -2, ay1 = -2, ax2 = 2, ay2 = 2, bx1 = -2, by1 =
- *     -2, bx2 = 2, by2 = 2
- *     Output: 16
- *
- * Constraints:
+ * 題意：給定兩個與座標軸平行的矩形左下角和右上角座標，請計算兩個矩形合併後覆蓋的總面積。重疊部分只能計算一次。
+ * 範例：
+ *   1. 輸入：第一個矩形 (-3,0) 到 (3,4)，第二個矩形 (0,-1) 到 (9,2)；輸出：45。
+ *   2. 輸入：兩個矩形都是 (-2,-2) 到 (2,2)；輸出：16。
+ * 限制：
  *   - -10^4 <= ax1 <= ax2 <= 10^4
  *   - -10^4 <= ay1 <= ay2 <= 10^4
  *   - -10^4 <= bx1 <= bx2 <= 10^4
  *   - -10^4 <= by1 <= by2 <= 10^4
- * ==========================================================================
+ * 解法：
+ *   1. 分別算出兩個矩形的寬、高與面積。
+ *   2. 重疊區域的左邊界取兩個左邊界較大者，右邊界取兩個右邊界較小者；上下邊界也同理。
+ *   3. 若重疊寬或高為負數，代表該方向沒有重疊，將它設為 0。
+ *   4. 總面積 = 第一個面積 + 第二個面積 - 重疊面積。
+ * 複雜度：時間 O(1)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,53 +189,25 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-223. Rectangle Area
+int computeArea(int ax1, int ay1, int ax2, int ay2,
+               int bx1, int by1, int bx2, int by2) {
+    int areaA = (ax2 - ax1) * (ay2 - ay1);
+    int areaB = (bx2 - bx1) * (by2 - by1);
 
-Find the total area covered by two rectilinear rectangles in a 2D plane.
-Each rectangle is defined by its bottom left corner and top right corner as shown in the figure.
-
-
-
-
-Assume that the total area is never beyond the maximum possible value of int.
-
-
-Credits:Special thanks to @mithmatt for adding this problem, creating the above image and all test cases.
-*/
-
-int computeArea(int A, int B, int C, int D, int E, int F, int G, int H) {
-    int a, b, c, d, e, f, g, h;
-    int dup;
-    int x, y;
-    if (A < E) {
-        a = A; b = B; c = C; d = D;
-        e = E; f = F; g = G; h = H;
-    } else {
-        a = E; b = F; c = G; d = H;
-        e = A; f = B; g = C; h = D;
+    int overlapWidth = (ax2 < bx2 ? ax2 : bx2) -
+                       (ax1 > bx1 ? ax1 : bx1);
+    int overlapHeight = (ay2 < by2 ? ay2 : by2) -
+                        (ay1 > by1 ? ay1 : by1);
+    if (overlapWidth < 0) {
+        overlapWidth = 0;
     }
-    if (h < b || f > d || e > c) {
-        dup = 0;
-    } else {
-        x = c < g ? c - e : g - e;
-        y = d < h ? d - (b > f ? b : f) : h - (b > f ? b : f);
-        dup = x * y;
+    if (overlapHeight < 0) {
+        overlapHeight = 0;
     }
-    return (c - a) * (d - b) + (g - e) * (h - f) - dup;
+
+    int overlapArea = overlapWidth * overlapHeight;
+    return areaA + areaB - overlapArea;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:63.1K
-Total Submissions:191.8K
-
-
-Related Topics Math
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

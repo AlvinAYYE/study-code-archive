@@ -14,33 +14,38 @@
  *     You may assume the two numbers do not contain any leading zero, except
  *     the number 0 itself.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     兩個鏈表以逆序存放非負整數的每一位，求兩數之和並用同樣的逆序鏈表回傳。
+ * [中文] 題目說明
+ *     給定兩條非空鏈結串列，分別表示兩個非負整數。每個節點只存一位數，
+ *     而且數字由個位數開始反向存放。請將兩數相加，並用相同的反向串列格式
+ *     回傳總和。除了數字 0 本身以外，輸入不會有前導零。
  *
- * Examples:
- *   Example 1:
- *     Input: l1 = [2,4,3], l2 = [5,6,4]
- *     Output: [7,0,8]
- *     Explanation: 342 + 465 = 807.
- *   Example 2:
- *     Input: l1 = [0], l2 = [0]
- *     Output: [0]
- *   Example 3:
- *     Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
- *     Output: [8,9,9,9,0,0,0,1]
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：l1 = [2,4,3], l2 = [5,6,4]
+ *     輸出：[7,0,8]
+ *     說明：兩條串列分別表示 342 與 465，342 + 465 = 807。
+ *   範例 2：
+ *     輸入：l1 = [0], l2 = [0]
+ *     輸出：[0]
+ *   範例 3：
+ *     輸入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+ *     輸出：[8,9,9,9,0,0,0,1]
  *
- * Constraints:
- *   - The number of nodes in each linked list is in the range [1, 100].
- *   - 0 <= Node.val <= 9
- *   - It is guaranteed that the list represents a number that does not
- *   have leading zeros.
+ * [中文] 限制
+ *   - 每條串列的節點數介於 1 到 100。
+ *   - 0 <= Node.val <= 9。
+ *   - 串列表示的數字沒有前導零，數字 0 除外。
  *
  * LeetCode official C stub (函式簽名):
  *   struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
  *   }
  *
- * [EN] Approach: School addition with a carry: walk both lists, emit (sum%10) per node, keep the final carry. Time O(max(m,n)), space O(1) extra.
- * [中文] 思路: 直式加法帶進位：同時走兩個鏈表，每節點存 sum%10，最後進位補一新節點。時間 O(max(m,n))、額外空間 O(1)。
+ * [中文] 直觀解題思路
+ *   1. 因為串列已從個位數開始排列，可以像直式加法一樣同步往後走。
+ *   2. 每一輪把 l1、l2 的目前數字與上一輪進位相加；缺少節點時視為 0。
+ *   3. 新節點存 sum % 10，並把 sum / 10 留給下一輪。
+ *   4. 兩條串列都走完後，若仍有進位，再建立最後一個節點。
+ *   時間複雜度 O(max(m, n))；回傳串列需 O(max(m, n)) 空間，除此之外為 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -55,6 +60,7 @@ ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
     ListNode dummy; ListNode *tail = &dummy; int carry = 0;
     dummy.next = NULL;
     while (l1 || l2 || carry) {
+        /* 串列長度不同時，已走完的一側視為 0。 */
         int s = carry + (l1 ? l1->val : 0) + (l2 ? l2->val : 0);
         ListNode *nd;
         carry = s / 10;

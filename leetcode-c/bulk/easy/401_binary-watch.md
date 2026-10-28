@@ -1,47 +1,79 @@
-# 0401. Binary Watch《二進位手錶》
+# 401 Binary Watch：二進位手錶
 
-- **Difficulty**: Easy
-- **Tags**: backtracking, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/binary-watch/
-- **程式碼**: [`401_binary-watch.c`](./401_binary-watch.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-二進位手錶以 4 顆 LED 表示小時 0 至 11，以 6 顆 LED 表示分鐘 0 至 59；給定目前亮起的 LED 數 turnedOn，回傳所有可能時間。小時不可有前導零，分鐘必須為兩位數且可有前導零，輸出順序不限。
+二進位手錶上方有 4 個 LED 表示小時（0 到 11），下方有 6 個 LED 表示分鐘（0 到 59）；亮起的 LED 代表二進位中的 1，最右邊是最低位。給定亮著的 LED 數量 turnedOn，回傳手錶可能顯示的所有時間，順序不限。小時不能有前導零；分鐘固定兩位，必要時在前面補 0。
 
-**思路**：預先計算每個合法小時與分鐘的 1 位元數，枚舉 12 x 60 種時間並保留兩者總和等於 turnedOn 的格式化結果。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-A binary watch has 4 LEDs on the top to represent the hours (0-11), and 6 LEDs on the bottom to represent the minutes (0-59). Each LED represents a zero or one, with the least significant bit on the right.
-Given an integer turnedOn which represents the number of LEDs that are currently on (ignoring the PM), return all possible times the watch could represent. You may return the answer in any order.
-The hour must not contain a leading zero.
-The minute must consist of two digits and may contain a leading zero.
-Example 1:
-Example 2:
-Constraints:
+- 輸入：turnedOn = 1
+- 輸出：["0:01","0:02","0:04","0:08","0:16","0:32","1:00","2:00","4:00","8:00"]
+- 說明：只有一個燈亮時，可能是分鐘的六個位元之一，或小時的四個位元之一。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: turnedOn = 1
-Output: ["0:01","0:02","0:04","0:08","0:16","0:32","1:00","2:00","4:00","8:00"]
+- 輸入：turnedOn = 9
+- 輸出：[]
+- 說明：手錶總共只有 10 個 LED，且小時和分鐘的有效範圍無法讓 9 個燈同時亮起。
 
-Input: turnedOn = 9
-Output: []
-```
+## 限制
 
-## 限制 Constraints
+- 0 <= turnedOn <= 10
 
-0 <= turnedOn <= 10
+## 解題思路
 
-## 官方 C 函式簽名 Signature
+1. 列舉所有合法小時 0 到 11，以及分鐘 0 到 59。
+2. 分別計算小時與分鐘的二進位 1 數量；兩者相加等於 turnedOn 時，這個時間就是答案。
+3. 用小時不補零、分鐘補成兩位數的格式建立時間字串。
 
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-char** readBinaryWatch(int turnedOn, int* returnSize) {
-    
+## 複雜度
+
+- 時間：O(12 × 60 × 6)，範圍固定；也可視為 O(1)。
+- 空間：O(1) 額外空間；回傳的時間清單另需 O(k) 空間。
+
+## C 函式簽名
+
+~~~c
+char** readBinaryWatch(int turnedOn, int* returnSize);
+~~~
+
+## 程式如何運作
+
+~~~c
+static int countOnBits(int value) {
+    int count = 0;
+
+    while (value > 0) {
+        count += value & 1;
+        value >>= 1;
+    }
+
+    return count;
 }
-```
+
+char** readBinaryWatch(int turnedOn, int* returnSize) {
+    char** times = (char**)malloc(sizeof(char*) * 720);
+    int hour;
+    int minute;
+
+    *returnSize = 0;
+
+    // 手錶只有 12 個合法小時與 60 個合法分鐘，逐一檢查即可。
+    for (hour = 0; hour < 12; ++hour) {
+        for (minute = 0; minute < 60; ++minute) {
+            if (countOnBits(hour) + countOnBits(minute) == turnedOn) {
+                char* time = (char*)malloc(6);
+                sprintf(time, "%d:%02d", hour, minute);
+                times[*returnSize] = time;
+                ++(*returnSize);
+            }
+        }
+    }
+
+    return times;
+}
+~~~

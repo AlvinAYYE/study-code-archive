@@ -1,40 +1,27 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0144. Binary Tree Preorder Traversal
- * Difficulty: Easy
- * Tags: stack, tree, depth-first-search, binary-tree
- * URL: https://leetcode.com/problems/binary-tree-preorder-traversal/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the root of a binary tree, return the preorder traversal of
- *     its nodes' values.
+ * LeetCode 144. Binary Tree Preorder Traversal
+ * 難度：Easy
  *
- * [中文] 題目: 二元樹的前序走訪
- * [中文] 題目說明:
- *     給定二元樹根節點，回傳節點值的前序走訪結果。前序走訪順序為根節點、左
- *     子樹、右子樹。題目進一步詢問能否使用迭代方式完成。樹的節點數介於 0
- *      至 100，節點值介於 -100 至 100。
+ * 【完整中文題意】給定二元樹的根節點 root，請回傳前序走訪結果。前序走訪的順序是：先處理目前節點，再走訪左子樹，最後走訪右子樹。
  *
- * [中文] 思路:
- *     依根、左、右的順序遞迴 DFS，造訪節點時立刻將其值寫入輸出陣列。
+ * 【範例】
+ * 1. root = [1,null,2,3] → [1,2,3]
+ * 2. root = [1,2,3,4,5,null,8,null,null,6,7,9] → [1,2,4,5,6,7,3,8,9]
+ * 3. root = [] → []
+ * 4. root = [1] → [1]
  *
- * Examples:
- *     Input: root = [1,null,2,3]
- *     Output: [1,2,3]
- *     Explanation:
- *     Input: root = [1,2,3,4,5,null,8,null,null,6,7,9]
- *     Output: [1,2,4,5,6,7,3,8,9]
- *     Explanation:
- *     Input: root = []
- *     Output: []
- *     Input: root = [1]
- *     Output: [1]
+ * 【限制】
+ * - 節點數介於 0 到 100
+ * - -100 <= Node.val <= 100
  *
- * Constraints:
- *   - The number of nodes in the tree is in the range [0, 100].
- *   - -100 <= Node.val <= 100
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 建立一個結果陣列和目前寫入位置。
+ * 2. 遞迴遇到節點時，先把它的值放進結果。
+ * 3. 接著依序遞迴左子樹、右子樹；空節點不需處理。
+ *
+ * 【複雜度】時間 O(n)，每個節點走訪一次；空間 O(n) 回傳陣列，另有 O(h) 遞迴堆疊
+ *
+ * 【LeetCode C 函式】int* preorderTraversal(struct TreeNode* root, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -208,17 +195,20 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-void pre144(struct TreeNode *t, int *out, int *n) {
-    if (!t) return;
-    out[(*n)++] = t->val;
-    pre144(t->left, out, n);
-    pre144(t->right, out, n);
+static void fillPreorder144(struct TreeNode* node, int* values, int* size) {
+    if (node == NULL) return;
+
+    // 前序順序：先記錄根節點，再走左、右子樹。
+    values[(*size)++] = node->val;
+    fillPreorder144(node->left, values, size);
+    fillPreorder144(node->right, values, size);
 }
+
 int* preorderTraversal(struct TreeNode* root, int* returnSize) {
-    int *out = (int*)malloc(601 * sizeof(int)); int n = 0;
-    pre144(root, out, &n);
-    *returnSize = n; return out;
+    int* values = (int*)malloc(100 * sizeof(int));
+    *returnSize = 0;
+    fillPreorder144(root, values, returnSize);
+    return values;
 }
 
 /* ---- generated tests ---- */

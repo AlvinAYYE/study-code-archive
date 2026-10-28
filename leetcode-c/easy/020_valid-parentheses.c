@@ -12,8 +12,20 @@
  *     An input string is valid if:
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     判斷只含 (){}[]
- *     的字串是否有效：同種括號閉合、順序正確、每個右括號都有對應左括號。
+ *     給定只包含小括號 ()、中括號 []、大括號 {} 的字串 s，判斷括號是否
+ *     有效。有效字串必須同種類配對、依正確順序閉合，而且每個右括號都要
+ *     對應到先前尚未閉合的左括號。
+ *
+ * [中文] 範例
+ *     1. s = "()"，輸出 true。
+ *     2. s = "()[]{}"，輸出 true。
+ *     3. s = "(]"，輸出 false，因為括號種類不相符。
+ *     4. s = "([])"，輸出 true。
+ *     5. s = "([)]"，輸出 false，因為閉合順序錯誤。
+ *
+ * [中文] 限制
+ *     - 1 <= s.length <= 10^4
+ *     - s 只包含 ()[]{}。
  *
  * Examples:
  *   Example 1:
@@ -41,7 +53,12 @@
  *   }
  *
  * [EN] Approach: Stack: push openings; on a closing bracket pop and require the matching pair; valid iff stack empty at end. Time O(n), space O(n).
- * [中文] 思路: 堆疊：左括號入疊；右括號時弹出棧頂檢查配對；結束時疊空才算有效。時間 O(n)、空間 O(n)。
+ * [中文] 直觀解題思路
+ *     1. 由左往右掃描；遇到左括號就壓入堆疊，表示它尚未閉合。
+ *     2. 遇到右括號時，它只能與堆疊頂端（最近出現）的左括號配對。
+ *        若堆疊為空或種類不符，立即回傳 false。
+ *     3. 全部掃描後，堆疊必須為空；若仍有左括號便表示尚未閉合。
+ *        時間 O(n)，額外空間 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -59,12 +76,13 @@ bool isValid(char *s) {
             case ')': match = '('; break;
             case ']': match = '['; break;
             case '}': match = '{'; break;
-            default:  st[t++] = s[i]; continue;
+            default:  st[t++] = s[i]; continue;  /* 左括號入疊 */
         }
+        /* 右括號必須與最近一個尚未閉合的左括號相符。 */
         if (t == 0 || st[--t] != match) { free(st); return false; }
     }
     free(st);
-    return t == 0;
+    return t == 0;  /* 堆疊非空代表仍有左括號未閉合。 */
 }
 /* ---------- end submission ---------- */
 

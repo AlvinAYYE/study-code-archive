@@ -10,31 +10,36 @@
  *     Given an array nums of distinct integers, return all the possible
  *     permutations. You can return the answer in any order.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     回傳一個不含重複數字陣列的所有排列。
+ * [中文] 題目說明
+ *     給定一個元素互不相同的整數陣列 nums，回傳其所有可能的排列。
+ *     答案順序不限。
  *
- * Examples:
- *   Example 1:
- *     Input: nums = [1,2,3]
- *     Output: [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
- *   Example 2:
- *     Input: nums = [0,1]
- *     Output: [[0,1],[1,0]]
- *   Example 3:
- *     Input: nums = [1]
- *     Output: [[1]]
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：nums = [1,2,3]
+ *     輸出：[[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]
+ *   範例 2：
+ *     輸入：nums = [0,1]
+ *     輸出：[[0,1],[1,0]]
+ *   範例 3：
+ *     輸入：nums = [1]
+ *     輸出：[[1]]
  *
- * Constraints:
- *   - 1 <= nums.length <= 6
- *   - -10 <= nums[i] <= 10
- *   - All the integers of nums are unique.
+ * [中文] 限制
+ *   - 1 <= nums.length <= 6。
+ *   - -10 <= nums[i] <= 10。
+ *   - nums 中的所有整數互不相同。
  *
  * LeetCode official C stub (函式簽名):
  *   int** permute(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
  *   }
  *
- * [EN] Approach: Backtracking with a used[] bitmap, swapping into position or appending unused elements recursively. n! outputs, O(n*n!).
- * [中文] 思路: 回溯：維護 used[] 布林陣列依序選元素；共 n! 個排列，時間 O(n·n!)。
+ * [中文] 直觀解題思路
+ *   1. cur[0..pos-1] 表示目前已選好的排列前綴，used[i] 表示 nums[i] 是否已使用。
+ *   2. 在位置 pos 逐一嘗試每個尚未使用的數字，標記後遞迴處理下一格。
+ *   3. 遞迴返回時取消標記，讓同一數字能出現在其他排列的不同位置。
+ *   4. pos == n 時複製完整排列到答案。
+ *   共輸出 n! 個長度 n 的排列，時間與輸出空間皆為 O(n * n!)；遞迴額外空間 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -45,6 +50,7 @@
 static void bt(int *nums, int n, int *cur, int pos, char *used, int **out, int *cnt) {
     int i;
     if (pos == n) {
+        /* cur 會繼續被回溯改寫，所以完整排列必須複製保存。 */
         int *row = (int *)malloc((size_t)n * sizeof(int));
         memcpy(row, cur, (size_t)n * sizeof(int));
         out[(*cnt)++] = row;
@@ -54,6 +60,7 @@ static void bt(int *nums, int n, int *cur, int pos, char *used, int **out, int *
         if (used[i]) continue;
         used[i] = 1; cur[pos] = nums[i];
         bt(nums, n, cur, pos + 1, used, out, cnt);
+        /* 回復選擇，讓 nums[i] 能被其他分支使用。 */
         used[i] = 0;
     }
 }

@@ -7,9 +7,16 @@
 
 ## 題目說明（中文）
 
-給定陣列 heights，其中每個元素代表寬度為 1 的直方圖柱高，求直方圖內最大矩形的面積。柱高可為 0，陣列長度至多為 10^5。
+給定整數陣列 `heights`，`heights[i]` 代表直方圖第 `i` 根柱子的高度，每根柱子的寬度皆為 1。請回傳直方圖中可形成的最大矩形面積。
 
-**思路**：逐一將每根柱子視為矩形高度，向左右擴張到遇到較低柱為止並計算可涵蓋的寬度與面積。程式以標記略過已包含在目前最大矩形中的相同高度位置。
+## 解題思路
+
+1. 將每根尚未略過的柱子 `heights[x]` 當成候選矩形高度。
+2. 往左右擴張，直到遇到第一根比它矮的柱子；途中每根柱都能支撐 `heights[x]`，所以走過的總根數就是矩形寬度。
+3. 同高度且落在此區間的位置記入暫存標記。若本次面積成為新最大值，保存這些標記，之後可略過會得到相同候選矩形的位置。
+4. 比較所有未略過候選的 `heights[x] * width`，回傳最大值。
+
+目前實作的最壞時間複雜度為 `O(n^2)`，標記陣列使用 `O(n)` 額外空間。
 
 ## Problem Statement (English)
 
@@ -18,22 +25,21 @@ Example 1:
 Example 2:
 Constraints:
 
-## 範例 Examples
+## 範例
 
 ```text
-Input: heights = [2,1,5,6,2,3]
-Output: 10
-Explanation: The above is a histogram where width of each bar is 1.
-The largest rectangle is shown in the red area, which has an area = 10 units.
+輸入：heights = [2,1,5,6,2,3]
+輸出：10
+說明：高度 5、6 的相鄰柱可形成高 5、寬 2、面積 10 的矩形。
 
-Input: heights = [2,4]
-Output: 4
+輸入：heights = [2,4]
+輸出：4
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= heights.length <= 105
-0 <= heights[i] <= 104
+- `1 <= heights.length <= 10^5`
+- `0 <= heights[i] <= 10^4`
 
 ## 官方 C 函式簽名 Signature
 

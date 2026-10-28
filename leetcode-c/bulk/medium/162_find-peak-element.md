@@ -1,48 +1,46 @@
-# 0162. Find Peak Element《尋找峰值元素》
+# 0162. Find Peak Element｜尋找峰值
 
-- **Difficulty**: Medium
-- **Tags**: array, binary-search
-- **題目連結**: https://leetcode.com/problems/find-peak-element/
-- **程式碼**: [`162_find-peak-element.c`](./162_find-peak-element.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、二分搜尋
+- **題目連結**：[LeetCode 0162](https://leetcode.com/problems/find-peak-element/)
+- **C 程式**：[162_find-peak-element.c](./162_find-peak-element.c)
 
-## 題目說明（中文）
+## 題目說明
 
-峰值元素嚴格大於左右相鄰元素；陣列外側的值視為負無限大。給定相鄰元素不相等的整數陣列，請回傳任一峰值的索引。演算法必須使用 O(log n) 時間。
+峰值是嚴格大於相鄰元素的元素。給定整數陣列 `nums`，回傳任一個峰值的索引。可以把陣列外的兩個值想成負無限大，因此首尾元素也可能是峰值。題目保證相鄰元素不相等，並要求 `O(log n)` 時間。
 
-**思路**：以二分搜尋比較 nums[mid] 與 nums[mid + 1]；若正在上坡便往右找，否則往左側（含 mid）找，最後收斂到一個峰值。
-
-## Problem Statement (English)
-
-A peak element is an element that is strictly greater than its neighbors.
-Given a 0-indexed integer array nums, find a peak element, and return its index. If the array contains multiple peaks, return the index to any of the peaks.
-You may imagine that nums[-1] = nums[n] = -∞. In other words, an element is always considered to be strictly greater than a neighbor that is outside the array.
-You must write an algorithm that runs in O(log n) time.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [1,2,3,1]
-Output: 2
-Explanation: 3 is a peak element and your function should return the index number 2.
+輸入：nums = [1,2,3,1]
+輸出：2
+說明：索引 2 的值 3 大於左右相鄰值。
 
-Input: nums = [1,2,1,3,5,6,4]
-Output: 5
-Explanation: Your function can return either index number 1 where the peak element is 2, or index number 5 where the peak element is 6.
+輸入：nums = [1,2,1,3,5,6,4]
+輸出：1 或 5
+說明：值 2 和值 6 都是峰值。
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= nums.length <= 1000
--231 <= nums[i] <= 231 - 1
-nums[i] != nums[i + 1] for all valid i.
+- `1 <= nums.length <= 1000`。
+- `-2^31 <= nums[i] <= 2^31 - 1`。
+- 相鄰元素不相等。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 在 `left` 到 `right` 範圍內二分搜尋，查看中間元素與右邊元素的斜率。
+2. 若 `nums[mid] > nums[mid + 1]`，表示往右已在下坡；左側一定有峰值，保留 `mid` 到左半部。
+3. 若 `nums[mid] < nums[mid + 1]`，表示往右上坡；右側一定有峰值，搜尋 `mid + 1` 到 `right`。
+4. 範圍縮到一個索引時，它就是峰值。陣列邊界依題意視為相鄰負無限大。
+
+## 複雜度
+
+- 時間：`O(log n)`。
+- 額外空間：`O(1)`。
+
+## LeetCode C 函式簽名
 
 ```c
-int findPeakElement(int* nums, int numsSize) {
-    
-}
+int findPeakElement(int* nums, int numsSize);
 ```

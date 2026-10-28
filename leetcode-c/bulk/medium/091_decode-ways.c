@@ -231,81 +231,29 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-91. Decode Ways
-
-A message containing letters from A-Z is being encoded to numbers using the following mapping:
-
-
-'A' -> 1
-'B' -> 2
-...
-'Z' -> 26
-
-
-
-Given an encoded message containing digits, determine the total number of ways to decode it.
-
-
-
-For example,
-Given encoded message "12",
-it could be decoded as "AB" (1 2) or "L" (12).
-
-
-
-The number of ways decoding "12" is 2.
-*/
-
+/* ---- 易讀解法：只保存前兩個前綴的解碼數 ---- */
 int numDecodings(char* s) {
-    int a, b, c;
-    char p, t;
-    
-    /* a b c
-           2267312
-       0 1 
-    */
-    a = 0;
-    b = 1;
-    c = 0;
-    p = 'x';    // anything other than '1' or '2'
-    
-    while (t = *s ++) {
-        if (t == '0') {
-            if (p != '1' && p != '2') {
-                return 0;
-            }
-            c = a;
-        } else {
-            c = b;
-            if (p == '1' || (p == '2' && t <= '6')) {
-                c += a;
-            }
-        }
-        a = b;
-        b = c;
-        p = t;
+    int length = (int)strlen(s);
+    int previousWays;
+    int currentWays;
+    int i;
+
+    if (s[0] == '0') return 0;
+    previousWays = 1;
+    currentWays = 1;
+
+    for (i = 1; i < length; ++i) {
+        int ways = 0;
+        int twoDigits = (s[i - 1] - '0') * 10 + (s[i] - '0');
+
+        if (s[i] != '0') ways += currentWays;
+        if (twoDigits >= 10 && twoDigits <= 26) ways += previousWays;
+
+        previousWays = currentWays;
+        currentWays = ways;
     }
-
-    return c;
+    return currentWays;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:128.3K
-Total Submissions:654.3K
-
-
-Companies Microsoft Uber Facebook
-Related Topics Dynamic Programming String
-Similar Questions 
-                
-                  
-                    Decode Ways II
-*/
 
 /* ---- generated tests ---- */
 int main(void){

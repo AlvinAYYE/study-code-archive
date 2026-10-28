@@ -15,29 +15,26 @@
  *     Return the maximum amount of water a container can store.
  *     Notice that you may not slant the container.
  *
- * [中文] 題目: 盛最多水的容器
- * [中文] 題目說明:
- *     給定陣列 height，索引 i 對應從 (i,0) 到 (i,he
- *     ight[i]) 的垂直線。選出兩條線與 x 軸形成不能傾斜的容器，
- *     回傳可盛水的最大容量。
+ * [中文] 題目：盛最多水的容器
+ *     給定長度 n 的整數陣列 height。第 i 條垂直線從 (i, 0) 延伸到
+ *     (i, height[i])。選兩條線與 x 軸形成不能傾斜的容器，回傳最大容量。
  *
- * [中文] 思路:
- *     程式以左右雙指針從陣列兩端夾逼，每次用較短邊乘上寬度更新最大面積。由
- *     於較短邊限制容量，之後只移動較短的一側。
+ * [中文] 範例
+ *   範例 1：輸入 height = [1,8,6,2,5,4,8,3,7]，輸出 49。
+ *           選索引 1 與 8，寬度 7、短邊高度 7，面積為 49。
+ *   範例 2：輸入 height = [1,1]，輸出 1。
  *
- * Examples:
- *     Input: height = [1,8,6,2,5,4,8,3,7]
- *     Output: 49
- *     Explanation: The above vertical lines are represented by array
- *     [1,8,6,2,5,4,8,3,7]. In this case, the max area of water (blue
- *     section) the container can contain is 49.
- *     Input: height = [1,1]
- *     Output: 1
+ * [中文] 限制
+ *   - n == height.length。
+ *   - 2 <= n <= 10^5。
+ *   - 0 <= height[i] <= 10^4。
  *
- * Constraints:
- *   - n == height.length
- *   - 2 <= n <= 10^5
- *   - 0 <= height[i] <= 10^4
+ * [中文] 直觀解題思路
+ *   1. 左右指標從陣列兩端開始，容量是寬度乘上兩邊較短高度。
+ *   2. 每輪計算容量並更新最大值。
+ *   3. 容量由短邊限制；保留短邊再縮小寬度不可能變好，因此移動短邊。
+ *   4. 指標相遇後即檢查完所有可能改善答案的組合。
+ *   時間複雜度 O(n)，空間複雜度 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -211,61 +208,28 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-11. Container With Most Water
-
-Given n non-negative integers a1, a2, ..., an, where each represents a point at coordinate (i, ai). n vertical lines are drawn such that the two endpoints of line i is at (i, ai) and (i, 0). Find two lines, which together with x-axis forms a container, such that the container contains the most water.
-
-Note: You may not slant the container and n is at least 2.
-*/
-
+/* ---- 易讀解法：雙指標由外往內縮小範圍 ---- */
 int maxArea(int* height, int heightSize) {
-    int l, r, x, water, max = 0;
-    int i, j;
-#if 0
-    for (i = 0; i < heightSize - 1; i ++) {
-        if (i == 0 || height[i] > l) {
-            l = height[i];
-            for (j = i + 1; j < heightSize; j ++) {
-                r = height[j];
-                x = l < r ? l : r;
-                water = x * (j - i);
-                if (max < water) max = water;
-            }
-        }
+    int left = 0;
+    int right = heightSize - 1;
+    int bestArea = 0;
+
+    while (left < right) {
+        int width = right - left;
+        int limitingHeight = height[left] < height[right]
+                           ? height[left] : height[right];
+        int area = width * limitingHeight;
+
+        if (area > bestArea) bestArea = area;
+
+        /* 水位由短邊限制，因此移動短邊才可能找到更高水位。 */
+        if (height[left] < height[right]) ++left;
+        else --right;
     }
-#else
-    i = 0;
-    j = heightSize - 1;
-    while (i < j) {
-        l = height[i];
-        r = height[j];
-        x = l < r ? l : r;
-        water = x * (j - i);
-        if (max < water) max = water;
-        if (l < r) i ++;
-        else j --;
-    }
-#endif
-    return max;
+
+    return bestArea;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:144.5K
-Total Submissions:395.2K
-
-
-Companies Bloomberg
-Related Topics Array Two Pointers
-Similar Questions 
-                
-                  
-                    Trapping Rain Water
-*/
 
 /* ---- generated tests ---- */
 int main(void){

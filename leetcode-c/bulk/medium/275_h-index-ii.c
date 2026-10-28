@@ -1,50 +1,20 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0275. H-Index II
+ * LeetCode 0275. H-Index II（H 指數 II）
  * Difficulty: Medium
- * Tags: array, binary-search
- * URL: https://leetcode.com/problems/h-index-ii/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array of integers citations where citations[i] is the
- *     number of citations a researcher received for their ith paper and
- *     citations is sorted in non-descending order, return the researcher's
- *     h-index.
- *     According to the definition of h-index on Wikipedia: The h-index is
- *     defined as the maximum value of h such that the given researcher has
- *     published at least h papers that have each been cited at least h
- *     times.
- *     You must write an algorithm that runs in logarithmic time.
- *
- * [中文] 題目: H 指數 II
- * [中文] 題目說明:
- *     給定已依非遞減順序排序的 citations，求研究者的 H 指數。
- *     H 指數是至少有 h 篇論文各自至少被引用 h 次時的最大 h，題目
- *     要求對數時間演算法。
- *
- * [中文] 思路:
- *     此程式從陣列尾端線性掃描，第 i 次檢查第 i+1 大引用數是否至少
- *     為 i+1。持續符合時更新 h，首次不符合便停止。
- *
- * Examples:
- *     Input: citations = [0,1,3,5,6]
- *     Output: 3
- *     Explanation: [0,1,3,5,6] means the researcher has 5 papers in
- *     total and each of them had received 0, 1, 3, 5, 6 citations
- *     respectively.
- *     Since the researcher has 3 papers with at least 3 citations
- *     each and the remaining two with no more than 3 citations each,
- *     their h-index is 3.
- *     Input: citations = [1,2,100]
- *     Output: 2
- *
- * Constraints:
- *   - n == citations.length
- *   - 1 <= n <= 10^5
+ * 題意：給定已依遞增排序的引用次數陣列 citations，計算最大的 H 指數 h：至少 h 篇論文各自被引用至少 h 次。
+ * 範例：
+ *   1. 輸入：citations = [0,1,3,5,6]；輸出：3。
+ *   2. 輸入：citations = [1,2,100]；輸出：2。
+ * 限制：
+ *   - 1 <= citations.length <= 10^5
  *   - 0 <= citations[i] <= 1000
- *   - citations is sorted in ascending order.
- * ==========================================================================
+ *   - citations 已依遞增順序排序
+ * 解法：
+ *   1. 若從索引 i 開始的論文共有 n-i 篇，這些論文的引用次數都至少是 citations[i]。
+ *   2. 要讓這 n-i 篇論文符合 H 指數，需滿足 citations[i] >= n-i。
+ *   3. 此條件在排序陣列上具有單調性，因此用二分搜尋找第一個符合的位置。
+ *   4. 回傳 n-i；若沒有符合位置，二分搜尋會停在 n，答案就是 0。
+ * 複雜度：時間 O(log n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -218,39 +188,22 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-275. H-Index II
-
-Follow up for H-Index: What if the citations array is sorted in ascending order? Could you optimize your algorithm?
-*/
-
 int hIndex(int* citations, int citationsSize) {
-    int i, h = 0;
-    for (i = 0; i < citationsSize; i ++) {
-        if (citations[citationsSize - 1 - i] >= i + 1) {
-            h = i + 1;
+    int left = 0;
+    int right = citationsSize;
+
+    // 找到第一個 citations[i] 至少等於右側論文數 n-i 的位置。
+    while (left < right) {
+        int middle = left + (right - left) / 2;
+        int papersFromHere = citationsSize - middle;
+        if (citations[middle] >= papersFromHere) {
+            right = middle;
         } else {
-            break;
+            left = middle + 1;
         }
     }
-    return h;
+    return citationsSize - left;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:50.2K
-Total Submissions:146.3K
-
-
-Companies Facebook
-Related Topics Binary Search
-Similar Questions 
-                
-                  
-                    H-Index
-*/
 
 /* ---- generated tests ---- */
 int main(void){

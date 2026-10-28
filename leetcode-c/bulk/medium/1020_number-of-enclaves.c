@@ -206,39 +206,60 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-
-static void dfs(int** grid, int cur_x, int cur_y, int row_sz, int col_sz) {
-    if (cur_x < 0 || cur_y < 0 || cur_x == row_sz || cur_y == col_sz ||
-        !grid[cur_x][cur_y])
-        return;
-
-    grid[cur_x][cur_y] = 0;
-    int dir[4][2] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    for (int i = 0; i < 4; i++)
-        dfs(grid, cur_x + dir[i][0], cur_y + dir[i][1], row_sz, col_sz);
+/* ---- 易讀解法：從邊界淹沒所有連通陸地，再計算剩餘格 ---- */
+static void pushBorderLand(int** grid, int row, int column, int columns,
+                           int* stack, int* top) {
+    if (grid[row][column] == 1) {
+        grid[row][column] = 0;
+        stack[(*top)++] = row * columns + column;
+    }
 }
 
 int numEnclaves(int** grid, int gridSize, int* gridColSize) {
-    for (int i = 0; i < gridSize; i++) {
-        dfs(grid, i, 0, gridSize, gridColSize[0]);
-        dfs(grid, i, gridColSize[0] - 1, gridSize, gridColSize[0]);
+    int rows = gridSize;
+    int columns = gridColSize[0];
+    int capacity = rows * columns;
+    int *stack = (int*)malloc((size_t)capacity * sizeof(int));
+    int top = 0;
+    int row;
+    int column;
+    int enclaves = 0;
+
+    for (row = 0; row < rows; ++row) {
+        pushBorderLand(grid, row, 0, columns, stack, &top);
+        pushBorderLand(grid, row, columns - 1, columns, stack, &top);
     }
-    for (int j = 1; j < gridColSize[0] - 1; j++) {
-        dfs(grid, 0, j, gridSize, gridColSize[0]);
-        dfs(grid, gridSize - 1, j, gridSize, gridColSize[0]);
+    for (column = 0; column < columns; ++column) {
+        pushBorderLand(grid, 0, column, columns, stack, &top);
+        pushBorderLand(grid, rows - 1, column, columns, stack, &top);
     }
 
-    int ret = 0;
-    for (int i = 0; i < gridSize; i++) {
-        for (int j = 0; j < gridColSize[0]; j++) {
-            if (grid[i][j])
-                ret++;
+    while (top > 0) {
+        int position = stack[--top];
+        int currentRow = position / columns;
+        int currentColumn = position % columns;
+
+        if (currentRow > 0) {
+            pushBorderLand(grid, currentRow - 1, currentColumn, columns, stack, &top);
+        }
+        if (currentRow + 1 < rows) {
+            pushBorderLand(grid, currentRow + 1, currentColumn, columns, stack, &top);
+        }
+        if (currentColumn > 0) {
+            pushBorderLand(grid, currentRow, currentColumn - 1, columns, stack, &top);
+        }
+        if (currentColumn + 1 < columns) {
+            pushBorderLand(grid, currentRow, currentColumn + 1, columns, stack, &top);
         }
     }
 
-    return ret;
+    for (row = 0; row < rows; ++row) {
+        for (column = 0; column < columns; ++column) {
+            if (grid[row][column] == 1) ++enclaves;
+        }
+    }
+    free(stack);
+    return enclaves;
 }
 
 /* ---- generated tests ---- */

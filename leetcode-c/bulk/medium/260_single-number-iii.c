@@ -1,44 +1,21 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0260. Single Number III
+ * LeetCode 0260. Single Number III（只出現一次的數字 III）
  * Difficulty: Medium
- * Tags: array, bit-manipulation
- * URL: https://leetcode.com/problems/single-number-iii/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array nums, in which exactly two elements appear
- *     only once and all the other elements appear exactly twice. Find the
- *     two elements that appear only once. You can return the answer in any
- *     order.
- *     You must write an algorithm that runs in linear runtime complexity
- *     and uses only constant extra space.
- *
- * [中文] 題目: 只出現一次的數字 III
- * [中文] 題目說明:
- *     給定整數陣列 nums，其中恰有兩個元素只出現一次，其餘元素皆剛好出
- *     現兩次，找出這兩個元素。答案順序不限，且必須使用線性時間與常數額外空
- *     間。
- *
- * [中文] 思路:
- *     先對所有數字做 XOR，得到兩個單獨數字的異或值，並取其最低位的 1
- *      作為分組位元。依該位元分兩組各自 XOR，即可求出兩個答案。
- *
- * Examples:
- *     Input: nums = [1,2,1,3,2,5]
- *     Output: [3,5]
- *     Explanation: [5, 3] is also a valid answer.
- *     Input: nums = [-1,0]
- *     Output: [-1,0]
- *     Input: nums = [0,1]
- *     Output: [1,0]
- *
- * Constraints:
+ * 題意：整數陣列中恰好有兩個數字只出現一次，其餘每個數字都出現兩次。請找出這兩個只出現一次的數字，回傳順序不限。要求線性時間且使用常數額外空間。
+ * 範例：
+ *   1. 輸入：nums = [1,2,1,3,2,5]；輸出：[3,5]，回傳 [5,3] 也可以。
+ *   2. 輸入：nums = [-1,0]；輸出：[-1,0]。
+ *   3. 輸入：nums = [0,1]；輸出：[1,0]。
+ * 限制：
  *   - 2 <= nums.length <= 3 * 10^4
- *   - -231 <= nums[i] <= 231 - 1
- *   - Each integer in nums will appear twice, only two integers will
- *   appear once.
- * ==========================================================================
+ *   - -2^31 <= nums[i] <= 2^31 - 1
+ *   - 除了兩個只出現一次的數字外，其餘數字都恰好出現兩次
+ * 解法：
+ *   1. 把所有數字 XOR 起來。成對的數字會互相抵消，留下兩個答案的 XOR。
+ *   2. 兩個答案不同，所以 XOR 結果至少有一個位元是 1；取其中最低位的 1。
+ *   3. 依該位元把所有數字分成兩組。成對數字一定落在同一組，兩個答案則分到不同組。
+ *   4. 分別 XOR 兩組，就得到兩個只出現一次的數字。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -212,69 +189,36 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-260. Single Number III
-
-Given an array of numbers nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once.
-
-
-For example:
-
-
-Given nums = [1, 2, 1, 3, 2, 5], return [3, 5].
-
-
-Note:
-
-The order of the result is not important. So in the above example, [5, 3] is also correct.
-Your algorithm should run in linear runtime complexity. Could you implement it using only constant space complexity?
-
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
 int* singleNumber(int* nums, int numsSize, int* returnSize) {
-    int i, k, a, b, *p;
-    
-    k = 0;
-    for (i = 0; i < numsSize; i ++) {
-        k ^= nums[i];
+    unsigned int combinedXor = 0;
+    for (int i = 0; i < numsSize; i++) {
+        combinedXor ^= (unsigned int)nums[i];
     }
-    
-    k = k & ~(k - 1);
-    a = b = 0;
-    for (i = 0; i < numsSize; i ++) {
-        if (nums[i] & k) {
-            a ^= nums[i];
+
+    // 無號運算可安全取出最低位的 1，即使 XOR 位元在符號位也不溢位。
+    unsigned int separatingBit = combinedXor & (0u - combinedXor);
+    unsigned int first = 0;
+    unsigned int second = 0;
+
+    for (int i = 0; i < numsSize; i++) {
+        unsigned int value = (unsigned int)nums[i];
+        if (value & separatingBit) {
+            first ^= value;
         } else {
-            b ^= nums[i];
+            second ^= value;
         }
     }
-    
-    p = malloc(2 * sizeof(int));
-    p[0] = a;
-    p[1] = b;
+
+    int *answer = (int *)malloc(sizeof(int) * 2);
+    if (answer == NULL) {
+        *returnSize = 0;
+        return NULL;
+    }
+    answer[0] = (int)first;
+    answer[1] = (int)second;
     *returnSize = 2;
-    return p;
+    return answer;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:69.2K
-Total Submissions:134.3K
-
-
-Related Topics Bit Manipulation
-Similar Questions Single Number Single Number II
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

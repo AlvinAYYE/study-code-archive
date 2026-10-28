@@ -1,47 +1,40 @@
 # 0118. Pascal's Triangle《楊輝三角》
 
-- **Difficulty**: Easy
-- **Tags**: array, dynamic-programming
-- **題目連結**: https://leetcode.com/problems/pascals-triangle/
-- **程式碼**: [`118_pascals-triangle.c`](./118_pascals-triangle.c) — 社群解答（repo begeekmyfriend_leetcode），已通過編譯+官方示例執行驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/pascals-triangle/
 
-## 題目說明（中文）
+## 題目翻譯
 
-給定整數 numRows，回傳楊輝三角的前 numRows 列。每列兩端皆為 1，內部每個數字等於上一列正上方兩個相鄰數字之和。numRows 介於 1 至 30。
+給定整數 numRows，回傳楊輝三角的前 numRows 列。每一列的第一個與最後一個數字都是 1；其餘位置的數字，是上一列正上方左右兩個數字的總和。
 
-**思路**：逐列配置陣列，先將首尾設為 1，再以前一列相鄰兩數之和填入中間位置。
+## 範例
 
-## Problem Statement (English)
+~~~text
+輸入：numRows = 5
+輸出：[[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
 
-Given an integer numRows, return the first numRows of Pascal's triangle.
-In Pascal's triangle, each number is the sum of the two numbers directly above it as shown:
-Example 1:
-Example 2:
-Constraints:
+輸入：numRows = 1
+輸出：[[1]]
+~~~
 
-## 範例 Examples
+## 限制
 
-```text
-Input: numRows = 5
-Output: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+- 1 <= numRows <= 30
 
-Input: numRows = 1
-Output: [[1]]
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 配置 numRows 個列陣列，第 row 列的長度是 row + 1。
+2. 將每列最左和最右設為 1。
+3. 對中間位置 col，將上一列第 col-1 與第 col 個數字相加。
+4. 回傳二維陣列、總列數，以及每列長度。
 
-1 <= numRows <= 30
+## 複雜度
 
-## 官方 C 函式簽名 Signature
+- 時間：O(numRows²)，需填入三角形內所有數字。
+- 空間：O(numRows²)，回傳的三角形本身需要這些空間。
 
-```c
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** generate(int numRows, int* returnSize, int** returnColumnSizes) {
-    
-}
-```
+## C 函式簽名
+
+~~~c
+int** generate(int numRows, int* returnSize, int** returnColumnSizes);
+~~~

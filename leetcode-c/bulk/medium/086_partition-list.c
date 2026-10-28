@@ -206,37 +206,32 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
- * Definition for singly-linked list.
- * 
- */
+/* ---- 易讀解法：穩定分接小於 x 與大於等於 x 的節點 ---- */
+struct ListNode* partition(struct ListNode* head, int x) {
+    struct ListNode lessDummy = {0, NULL};
+    struct ListNode greaterOrEqualDummy = {0, NULL};
+    struct ListNode *lessTail = &lessDummy;
+    struct ListNode *greaterOrEqualTail = &greaterOrEqualDummy;
+    struct ListNode *current = head;
 
-typedef struct ListNode list_t;
-struct ListNode *partition(struct ListNode *head, int x)
-{
-    list_t *lt_head = calloc(1, sizeof(list_t));
-    list_t *ge_head = calloc(1, sizeof(list_t));
-    list_t *cur = head, *lt_cur = lt_head, *ge_cur = ge_head;
-    while (cur) {
-        if (cur->val < x) {
-            lt_cur->next = cur;
-            lt_cur = cur;
+    while (current != NULL) {
+        struct ListNode *next = current->next;
+        current->next = NULL;
+
+        if (current->val < x) {
+            lessTail->next = current;
+            lessTail = current;
         } else {
-            ge_cur->next = cur;
-            ge_cur = cur;
+            greaterOrEqualTail->next = current;
+            greaterOrEqualTail = current;
         }
-        cur = cur->next;
+        current = next;
     }
 
-    lt_cur->next = ge_head->next;
-    ge_cur->next = NULL;
-    head = lt_head->next;
-    free(lt_head);
-    free(ge_head);
-    return head;
+    lessTail->next = greaterOrEqualDummy.next;
+    return lessDummy.next;
 }
+
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

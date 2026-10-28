@@ -1,43 +1,66 @@
-# 0283. Move Zeroes《移動零》
+# 283 Move Zeroes：移動零
 
-- **Difficulty**: Easy
-- **Tags**: array, two-pointers
-- **題目連結**: https://leetcode.com/problems/move-zeroes/
-- **程式碼**: [`283_move-zeroes.c`](./283_move-zeroes.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定整數陣列 nums，請把所有 0 移到陣列尾端，同時維持所有非零元素原本的相對順序。必須原地完成，不能建立陣列副本。
+給定整數陣列 nums，請把所有 0 移到陣列尾端，並保持非零數字原本的相對順序。必須直接修改原陣列，不可另外複製一份陣列。
 
-**思路**：以寫入指標由左至右覆寫所有非零元素，讓它們緊密排在前方。掃描結束後，將剩餘位置全部設為 0。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given an integer array nums, move all 0's to the end of it while maintaining the relative order of the non-zero elements.
-Note that you must do this in-place without making a copy of the array.
-Example 1:
-Example 2:
-Constraints:
+- 輸入：nums = [0,1,0,3,12]
+- 輸出：[1,3,12,0,0]
+- 說明：非零數字依序保留為 1、3、12，再把兩個 0 放到尾端。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: nums = [0,1,0,3,12]
-Output: [1,3,12,0,0]
+- 輸入：nums = [0]
+- 輸出：[0]
+- 說明：陣列只有一個 0，移動後仍相同。
 
-Input: nums = [0]
-Output: [0]
-```
+## 限制
 
-## 限制 Constraints
+- 1 <= nums.length <= 10^4
+- -2^31 <= nums[i] <= 2^31 - 1
 
-1 <= nums.length <= 104
--231 <= nums[i] <= 231 - 1
+## 解題思路
 
-## 官方 C 函式簽名 Signature
+1. 用 writeIndex 記錄下一個非零值該放的位置。
+2. 從左到右掃描，把每個非零值依序寫到 writeIndex，然後增加 writeIndex。
+3. 掃描完後，從 writeIndex 到陣列尾端全部填 0。
 
-```c
+## 複雜度
+
+- 時間：O(n)，最多掃描並填寫陣列各一次。
+- 空間：O(1)，直接修改原陣列。
+
+## C 函式簽名
+
+~~~c
+void moveZeroes(int* nums, int numsSize);
+~~~
+
+## 程式如何運作
+
+~~~c
 void moveZeroes(int* nums, int numsSize) {
-    
+    int writeIndex = 0;
+    int i;
+
+    // 先依序把非零值集中到陣列前方。
+    for (i = 0; i < numsSize; ++i) {
+        if (nums[i] != 0) {
+            nums[writeIndex] = nums[i];
+            ++writeIndex;
+        }
+    }
+
+    // 剩餘位置全部補零。
+    while (writeIndex < numsSize) {
+        nums[writeIndex] = 0;
+        ++writeIndex;
+    }
 }
-```
+~~~

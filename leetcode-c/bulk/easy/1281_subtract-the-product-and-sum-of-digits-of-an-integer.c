@@ -1,33 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1281. Subtract the Product and Sum of Digits of an Integer
- * Difficulty: Easy
- * Tags: math
- * URL: https://leetcode.com/problems/subtract-the-product-and-sum-of-digits-of-an-integer/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
+ * Title-CN: 整數各位數字的乘積與總和之差
+ * LeetCode 1281. Subtract the Product and Sum of Digits of an Integer (Easy)
  *
+ * 題意翻譯：給定一個正整數 n，請計算它每一位數字的乘積，再減去每一位數字的
+ * 總和，並回傳結果。例：234 的數字乘積是 2*3*4=24，數字總和是 2+3+4=9，答案為 15。
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Example 1:
+ * 範例 1：n = 234，輸出 15。
+ * 範例 2：n = 4421，輸出 21（乘積 32 減去總和 11）。
  *
- * Examples:
- *     Input: n = 234
- *     Output: 15
- *     Explanation:
- *     Product of digits = 2 * 3 * 4 = 24
- *     Sum of digits = 2 + 3 + 4 = 9
- *     Result = 24 - 9 = 15
- *     Input: n = 4421
- *     Output: 21
- *     Explanation:
- *     Product of digits = 4 * 4 * 2 * 1 = 32
- *     Sum of digits = 4 + 4 + 2 + 1 = 11
- *     Result = 32 - 11 = 21
+ * 限制：1 <= n <= 10^5。
  *
- * Constraints:
- *   - 1 <= n <= 10^5
+ * 解題思路：反覆取 n 的個位數 n % 10，同時累加到總和並乘進乘積；再用 n / 10
+ * 移除已處理的個位數。當 n 變成 0 時，回傳乘積減總和。最多處理 6 位數，時間
+ * O(d)、額外空間 O(1)，d 是 n 的位數。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -201,21 +186,17 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdlib.h>
+int subtractProductAndSum(int n) {
+    int digitProduct = 1;
+    int digitSum = 0;
 
-int subtractProductAndSum(int n){
-    int p = 1;
-    int s = 0;
-    int rem = 0;
     while (n > 0) {
-        rem = n % 10;
-        p = p * rem;
-        s += rem;
+        int digit = n % 10;
+        digitProduct *= digit;
+        digitSum += digit;
         n /= 10;
     }
-    return p - s;
+    return digitProduct - digitSum;
 }
 
 /* ---- generated tests ---- */

@@ -1,34 +1,24 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1025. Divisor Game
- * Difficulty: Easy
- * Tags: math, dynamic-programming, brainteaser, game-theory
- * URL: https://leetcode.com/problems/divisor-game/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Alice and Bob take turns playing a game, with Alice starting first.
- *     Initially, there is a number n on the chalkboard. On each player's
- *     turn, that player makes a move consisting of:
- *     Also, if a player cannot make a move, they lose the game.
- *     Return true if and only if Alice wins the game, assuming both
- *     players play optimally.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Alice and Bob take turns playing a game, with Alice starting first.
+ * 【完整中文題意】Alice 和 Bob 輪流玩遊戲，由 Alice 先手。黑板上開始寫著正整數 n。每回合玩家要選擇一個正整數 x，滿足 x < n 且 x 能整除 n，然後把 n 改成 n - x。不能操作的人輸掉。假設雙方都採取最佳策略，判斷 Alice 是否會獲勝。
  *
- * Examples:
- *     Input: n = 2
- *     Output: true
- *     Explanation: Alice chooses 1, and Bob has no more moves.
- *     Input: n = 3
- *     Output: false
- *     Explanation: Alice chooses 1, Bob chooses 1, and Alice has no
- *     more moves.
+ * 【範例】
+ * 1. n = 2 → true（Alice 選 1，接著 Bob 面對 1 無法操作）
+ * 2. n = 3 → false（Alice 只能選 1，讓 Bob 面對 2；Bob 選 1 後 Alice 無法操作）
  *
- * Constraints:
- *   - 1 <= n <= 1000
- * ==========================================================================
+ * 【限制】
+ * - 1 <= n <= 1000
+ *
+ * 【解題步驟】
+ * 1. 若 n 是奇數，n 的所有正因數也都是奇數；先手不論選哪個因數，留下的數都會變成偶數，因此把局面交給對手。
+ * 2. 若 n 是偶數，1 一定是合法因數；選 1 後會留下奇數，把奇數局面交給對手。
+ * 3. 因此奇數局面必敗、偶數局面必勝，答案只需檢查 n 是否為偶數。
+ *
+ * 【複雜度】時間 O(1)；空間 O(1)
+ *
+ * 【LeetCode C 函式】bool divisorGame(int n)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -202,36 +192,10 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-
-bool divisorGame(int N)
-{
-	char *dp = calloc(N+1, sizeof(char));
-
-	if (N == 1)
-	{
-		return false;
-	}
-
-	dp[1] = 0;
-	for (int i = 2; i <= N; i++)
-	{
-		for (int num = 1; num < i; num++)
-		{
-			if (i % num == 0 &&
-					dp[i-num] == 0)
-			{             
-				dp[i] = 1;
-				break;
-			}
-		}
-	}
-
-	bool ret = (dp[N] == 1 ? true : false);
-	free(dp);
-	return ret;
+bool divisorGame(int n) {
+    // 偶數時先手選 1，留下奇數給對手；奇數局面則是必敗局面。
+    return n % 2 == 0;
 }
-
 
 /* ---- generated tests ---- */
 int main(void){

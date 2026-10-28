@@ -14,7 +14,7 @@
  *
  * [中文] 題目: 3 的冪
  * [中文] 題目說明:
- *     給定整數 n，若存在整數 x 使 n 等於 3 的 x 次方，回傳 
+ *     給定整數 n，若存在整數 x 使 n 等於 3 的 x 次方，回傳
  *     true；否則回傳 false。n 可以是零或負數。
  *
  * [中文] 思路:
@@ -208,46 +208,49 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-326. Power of Three
-
-Given an integer, write a function to determine if it is a power of three.
-
-
-    Follow up:
-    Could you do it without using any loop / recursion?
-
-
-Credits:Special thanks to @dietpepsi for adding this problem and creating all test cases.
-*/
+/* 解題說明
+ * 題目：326. Power of Three（3 的次方）
+ *
+ * 題意完整翻譯：
+ *     給定整數 n，若存在整數 x 使得 n = 3^x，則 n 是 3 的次方，回傳 true；否則回傳 false。指數 x 可以是
+ *     0，所以 1 = 3^0 也符合。
+ *
+ * 範例：
+ *   輸入：n = 27
+ *   輸出：true
+ *   說明：27 = 3^3。
+ *   輸入：n = 0
+ *   輸出：false
+ *   說明：不存在整數 x 使 3^x 等於 0。
+ *   輸入：n = -1
+ *   輸出：false
+ *   說明：正數的 3 次方不會是負數。
+ *
+ * 限制：
+ *   - -2^31 <= n <= 2^31 - 1
+ *
+ * 解題步驟：
+ *   1. 3 的次方必須是正數，因此 n <= 0 時直接回傳 false。
+ *   2. 只要 n 能被 3 整除，就把 n 除以 3。
+ *   3. 若最後剛好剩下 1，表示 n 原本是 3 的某個次方。
+ *
+ * 複雜度：
+ *   時間：O(log_3 n)，每次迴圈都將 n 除以 3。
+ *   空間：O(1)。
+ */
 
 bool isPowerOfThree(int n) {
-#if 0
-    if (n == 1) return true;
-    if (n == 0 || n % 3) return false;
-    return isPowerOfThree(n / 3);
-#else
-    return (n > 0 && (1162261467 % n) == 0);
-#endif
+    if (n <= 0) {
+        return false;
+    }
+
+    // 逐次移除因數 3。
+    while (n % 3 == 0) {
+        n /= 3;
+    }
+
+    return n == 1;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:99.4K
-Total Submissions:247.2K
-
-
-Companies Google
-Related Topics Math
-Similar Questions 
-                
-                  
-                    Power of Two
-                  
-                    Power of Four
-*/
 
 /* ---- generated tests ---- */
 int main(void){

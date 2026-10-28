@@ -219,48 +219,63 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-
-#define MAX_COMBINATIONS (150)
-static bool backtrack(int target, int cur_idx, int* candidates,
-                      int candidatesSize, int*** ret, int* returnSize,
-                      int** returnColumnSizes, int sum, int* tmp, int tmp_ctr) {
-    if (sum >= target) {
-        if (sum == target) {
-            (*ret)[*returnSize] = malloc(sizeof(int) * tmp_ctr);
-            (*returnColumnSizes)[*returnSize] = tmp_ctr;
-            memcpy((*ret)[*returnSize], tmp, sizeof(int) * tmp_ctr);
-            *returnSize += 1;
-        }
-        // Return true to indicade that we don't need to add later element
-        // because sum is already >= target.
-        return true;
+/* 儲存一個答案，並在需要時擴大答案陣列。 */
+static void saveCombination(int *path, int pathLength,
+                            int ***answer, int **columnSizes,
+                            int *count, int *capacity) {
+    if (*count == *capacity) {
+        *capacity = *capacity == 0 ? 16 : *capacity * 2;
+        *answer = (int **)realloc(*answer, (size_t)*capacity * sizeof(int *));
+        *columnSizes = (int *)realloc(*columnSizes, (size_t)*capacity * sizeof(int));
     }
-
-    for (int i = cur_idx; i < candidatesSize; i++) {
-        tmp[tmp_ctr] = candidates[i];
-        if (backtrack(target, i, candidates, candidatesSize, ret, returnSize,
-                      returnColumnSizes, sum + candidates[i], tmp, tmp_ctr + 1))
-            break;
-    }
-    return false;
+    (*answer)[*count] = (int *)malloc((size_t)pathLength * sizeof(int));
+    memcpy((*answer)[*count], path, (size_t)pathLength * sizeof(int));
+    (*columnSizes)[*count] = pathLength;
+    ++(*count);
 }
 
-static int compare(const void* a, const void* b) { return *(int*)a - *(int*)b; }
+static void searchCombinations(int *candidates, int candidatesSize, int start,
+                               int remaining, int *path, int pathLength,
+                               int ***answer, int **columnSizes,
+                               int *count, int *capacity) {
+    int i;
+    if (remaining == 0) {
+        saveCombination(path, pathLength, answer, columnSizes, count, capacity);
+        return;
+    }
 
+    for (i = start; i < candidatesSize && candidates[i] <= remaining; ++i) {
+        path[pathLength] = candidates[i];
+        /* 傳回 i 允許再次選到同一個候選數。 */
+        searchCombinations(candidates, candidatesSize, i,
+                           remaining - candidates[i], path, pathLength + 1,
+                           answer, columnSizes, count, capacity);
+    }
+}
+
+static int compareCandidates(const void *a, const void *b) {
+    int x = *(const int *)a;
+    int y = *(const int *)b;
+    return (x > y) - (x < y);
+}
+
+/* ---- 易讀解法：排序後回溯列舉可重複使用的候選數 ---- */
 int** combinationSum(int* candidates, int candidatesSize, int target,
                      int* returnSize, int** returnColumnSizes) {
-    qsort(candidates, candidatesSize, sizeof(int), compare);
-    int max_sz = target / candidates[0] + 1;
-    int* tmp = malloc(sizeof(int) * max_sz);
-    int** ret = malloc(sizeof(int*) * MAX_COMBINATIONS);
-    *returnColumnSizes = malloc(sizeof(int) * MAX_COMBINATIONS);
-    *returnSize = 0;
-    backtrack(target, 0, candidates, candidatesSize, &ret, returnSize,
-              returnColumnSizes, 0, tmp, 0);
-    free(tmp);
-    return ret;
+    int **answer = NULL;
+    int *columnSizes = NULL;
+    int *path = (int *)malloc((size_t)(target + 1) * sizeof(int));
+    int count = 0;
+    int capacity = 0;
+
+    qsort(candidates, (size_t)candidatesSize, sizeof(int), compareCandidates);
+    searchCombinations(candidates, candidatesSize, 0, target, path, 0,
+                       &answer, &columnSizes, &count, &capacity);
+    free(path);
+
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
 
 

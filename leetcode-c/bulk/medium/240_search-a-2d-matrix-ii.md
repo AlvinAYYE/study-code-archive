@@ -1,47 +1,34 @@
-# 0240. Search a 2D Matrix II《搜尋二維矩陣 II》
+# LeetCode 0240. Search a 2D Matrix II
 
-- **Difficulty**: Medium
-- **Tags**: array, binary-search, divide-and-conquer, matrix
-- **題目連結**: https://leetcode.com/problems/search-a-2d-matrix-ii/
-- **程式碼**: [`240_search-a-2d-matrix-ii.c`](./240_search-a-2d-matrix-ii.c) — 社群解答（repo lightmen_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 搜尋二維矩陣 II
 
-## 題目說明（中文）
+## 題目
 
-在 m×n 整數矩陣中搜尋 target；每一列由左至右遞增，每一欄由上至下遞增。存在 target 時回傳 true，否則回傳 false。
+給定一個矩陣 matrix 和整數 target。每一列由左至右遞增、每一欄由上至下遞增。若 target 出現在矩陣中，回傳 true，否則回傳 false。
 
-**思路**：從左下角開始比較目標值；目前值過大就往上移，過小就往右移。每一步都能排除一整列或一整欄。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]]，target = 5；輸出：true。
+2. 輸入：matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]]，target = 20；輸出：false。
 
-Write an efficient algorithm that searches for a value target in an m x n integer matrix matrix. This matrix has the following properties:
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 矩陣列數 m、欄數 n 均介於 1 和 300
+- -10^9 <= matrix[i][j] <= 10^9
+- 每列與每欄都依遞增順序排列
+- -10^9 <= target <= 10^9
 
-```text
-Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 5
-Output: true
+## 解題思路
 
-Input: matrix = [[1,4,7,11,15],[2,5,8,12,19],[3,6,9,16,22],[10,13,14,17,24],[18,21,23,26,30]], target = 20
-Output: false
-```
+1. 從右上角開始。該位置是目前這一列的最大值，也是目前這一欄的最小值。
+2. 若目前值等於 target，立刻找到。
+3. 若目前值大於 target，整欄下方都更大，所以往左移一欄。
+4. 若目前值小於 target，整列左側都更小，所以往下移一列。每一步都排除一整列或一整欄。
 
-## 限制 Constraints
+## 複雜度
 
-m == matrix.length
-n == matrix[i].length
-1 <= n, m <= 300
--109 <= matrix[i][j] <= 109
-All the integers in each row are sorted in ascending order.
-All the integers in each column are sorted in ascending order.
--109 <= target <= 109
+時間 O(m + n)，額外空間 O(1)。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-bool searchMatrix(int** matrix, int matrixSize, int* matrixColSize, int target){
-
-}
-```
+bool searchMatrix(int** matrix, int matrixSize, int* matrixColSize, int target)

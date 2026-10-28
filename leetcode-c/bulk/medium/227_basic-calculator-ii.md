@@ -1,52 +1,35 @@
-# 0227. Basic Calculator II《基本計算機 II》
+# LeetCode 0227. Basic Calculator II
 
-- **Difficulty**: Medium
-- **Tags**: math, string, stack
-- **題目連結**: https://leetcode.com/problems/basic-calculator-ii/
-- **程式碼**: [`227_basic-calculator-ii.c`](./227_basic-calculator-ii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 基本計算機 II
 
-## 題目說明（中文）
+## 題目
 
-計算合法字串運算式的值，式中含非負整數、加減乘除與空白。整數除法須朝零截斷，且不得使用 eval 等內建字串運算功能。
+給定只包含非負整數、加減乘除運算子和空格的有效算式字串 s，請計算算式結果。乘除優先於加減；同一優先級由左至右計算；除法採向 0 截斷。
 
-**思路**：將數字與運算子分別推入兩個堆疊，遇到同等或較低優先序的運算子時先結算。乘除優先於加減，掃描結束時透過結尾哨兵完成所有歸約。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：s = 3+2*2；輸出：7。
+2. 輸入：s = 3/2；輸出：1。
+3. 輸入：s = 3+5/2；輸出：5。
 
-Given a string s which represents an expression, evaluate this expression and return its value.
-The integer division should truncate toward zero.
-You may assume that the given expression is always valid. All intermediate results will be in the range of [-231, 231 - 1].
-Note: You are not allowed to use any built-in function which evaluates strings as mathematical expressions, such as eval().
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= s.length <= 3 * 10^5
+- 字串只含非負整數、+、-、*、/ 與空格，且算式有效
+- 每個整數介於 0 和 2^31-1
+- 最後答案可用 32 位元有號整數表示
 
-```text
-Input: s = "3+2*2"
-Output: 7
+## 解題思路
 
-Input: s = " 3/2 "
-Output: 1
+1. 逐字掃描，把連續數字組成目前的 number；空格直接略過。
+2. 遇到運算子或字串結尾時，依前一個運算子處理 number。乘除立即套用到目前項目；加減則先把前一項加進 total，再以正號或負號保存新項目。
+3. 因為乘除已在同一項中先算完，最後 total 加上尚未結算的項目就是結果。
+4. 使用 long long 暫存中間值，最後依題目保證轉成 int 回傳。
 
-Input: s = " 3+5 / 2 "
-Output: 5
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(n)，額外空間 O(1)。
 
-1 <= s.length <= 3 * 105
-s consists of integers and operators ('+', '-', '*', '/') separated by some number of spaces.
-s represents a valid expression.
-All the integers in the expression are non-negative integers in the range [0, 231 - 1].
-The answer is guaranteed to fit in a 32-bit integer.
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-int calculate(char* s) {
-    
-}
-```
+int calculate(char* s)

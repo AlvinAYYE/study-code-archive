@@ -1,56 +1,48 @@
-# 0239. Sliding Window Maximum《滑動視窗最大值》
+# 0239. 滑動視窗最大值（Sliding Window Maximum）
 
-- **Difficulty**: Hard
-- **Tags**: array, queue, sliding-window, heap-(priority-queue, monotonic-queue
-- **題目連結**: https://leetcode.com/problems/sliding-window-maximum/
-- **程式碼**: [`239_sliding-window-maximum.c`](./239_sliding-window-maximum.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Hard
+- **標籤**：陣列、佇列、滑動視窗、單調佇列
+- **題目連結**：[LeetCode 239](https://leetcode.com/problems/sliding-window-maximum/)
+- **解答檔案**：[239_sliding-window-maximum.c](./239_sliding-window-maximum.c)
 
-## 題目說明（中文）
+## 題目完整翻譯
 
-給定整數陣列 nums 與大小為 k 的滑動視窗，視窗每次向右移動一格。回傳每個視窗中的最大值。
+給定整數陣列 `nums` 和大小為 `k` 的滑動視窗。視窗從陣列最左側開始，每次向右移動一格，直到最右側。請回傳每個位置的視窗最大值。
 
-**思路**：先計算第一個視窗最大值；之後若新進元素更大便直接更新。若離開元素正是前一最大值則重新掃描該視窗，否則沿用前一最大值。
-
-## Problem Statement (English)
-
-You are given an array of integers nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position.
-Return the max sliding window.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
-Output: [3,3,5,5,6,7]
-Explanation: 
-Window position                Max
----------------               -----
-[1  3  -1] -3  5  3  6  7       3
- 1 [3  -1  -3] 5  3  6  7       3
- 1  3 [-1  -3  5] 3  6  7       5
- 1  3  -1 [-3  5  3] 6  7       5
- 1  3  -1  -3 [5  3  6] 7       6
- 1  3  -1  -3  5 [3  6  7]      7
+輸入：nums = [1,3,-1,-3,5,3,6,7], k = 3
+輸出：[3,3,5,5,6,7]
 
-Input: nums = [1], k = 1
-Output: [1]
+輸入：nums = [1], k = 1
+輸出：[1]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= nums.length <= 105
--104 <= nums[i] <= 104
-1 <= k <= nums.length
+- `1 <= nums.length <= 10^5`
+- `-10^4 <= nums[i] <= 10^4`
+- `1 <= k <= nums.length`
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 用雙端佇列存放「索引」，並讓索引對應的數值由大到小排列。
+2. 每加入新元素，先移除已滑出視窗的隊首索引。
+3. 從隊尾移除所有數值小於或等於新元素的索引。這些元素較小又較舊，之後不可能成為最大值。
+4. 把新索引放到隊尾。當視窗已有 `k` 個元素時，隊首就是最大值。
+
+每個索引最多進出佇列一次，所以不必為每個視窗重新掃描全部 `k` 個元素。
+
+## 複雜度
+
+- 時間：`O(n)`。
+- 額外空間：`O(n)`，存放佇列索引；輸出另需 `O(n-k+1)`。
+
+## C 函式介面
 
 ```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* maxSlidingWindow(int* nums, int numsSize, int k, int* returnSize) {
-    
-}
+int* maxSlidingWindow(int* nums, int numsSize, int k, int* returnSize);
 ```
+
+回傳陣列由解答配置，呼叫端需負責釋放。

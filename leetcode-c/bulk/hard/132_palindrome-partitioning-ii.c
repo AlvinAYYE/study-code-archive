@@ -14,26 +14,28 @@
  * [中文] 題目: 回文分割 II
  * [中文] 題目說明:
  *     將字串 s 分割成多個子字串，使每個子字串都是回文。請回傳完成這種回
- *     文分割所需的最少切割次數。s 長度介於 1 至 2000，且只包含小
- *     寫英文字母。
+ *     文分割所需的最少切割次數。
  *
- * [中文] 思路:
- *     以 dp 記錄各前綴的最少切割數，並以每個位置為中心向兩側擴展奇數與
- *     偶數長度的回文，同步更新其右端前綴的答案。
+ * [中文] 範例：
+ *   範例 1：輸入 s = "aab"；輸出 1。
+ *     說明：切成 ["aa","b"]，只需切一次且兩段皆為回文。
+ *   範例 2：輸入 s = "a"；輸出 0。
+ *   範例 3：輸入 s = "ab"；輸出 1。
  *
- * Examples:
- *     Input: s = "aab"
- *     Output: 1
- *     Explanation: The palindrome partitioning ["aa","b"] could be
- *     produced using 1 cut.
- *     Input: s = "a"
- *     Output: 0
- *     Input: s = "ab"
- *     Output: 1
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= s.length <= 2000
- *   - s consists of lowercase English letters only.
+ *   - s 僅包含小寫英文字母。
+ *
+ * [中文] 直觀解題思路：
+ *   1. dp[len] 表示前 len 個字元分割成回文片段所需的最少切割次數。
+ *      設 dp[0] = -1，讓整段前綴本身是回文時可自然得到 0 次切割。
+ *   2. 先用逐字切割初始化 dp[i+1] = dp[i]+1，作為一定可行的上界。
+ *   3. 依序把每個 i 當作回文中心，向外擴展奇數長度回文 s[i-k..i+k]。
+ *      若成立，用左側前綴答案 dp[i-k]+1 更新右端前綴。
+ *   4. 再擴展中心位於 i 與 i+1 之間的偶數長度回文，使用相同方式更新。
+ *   5. 所有中心處理完後，dp[n] 即為完整字串的最少切割數。
+ *
+ * 最壞會從每個中心擴展 O(n)，時間 O(n^2)，DP 陣列空間 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -230,10 +232,10 @@ int minCut(char* s) {
     
     n = strlen(s);
     
-    dp = malloc((n + 1) * sizeof(int));     // number of cuts on length
+    dp = malloc((n + 1) * sizeof(int));     /* dp[len]：此長度前綴的最少切割 */
     //assert(dp);
     
-    dp[0] = -1;
+    dp[0] = -1;  /* 讓第一段回文只需 dp[0]+1 == 0 次切割 */
     for (i = 0; i < n; i ++) {
         dp[i + 1] = dp[i] + 1;
     }
@@ -241,7 +243,7 @@ int minCut(char* s) {
     for (i = 0; i < n; i ++) {
         dp[i + 1] = _min(dp[i + 1], dp[i] + 1);
         
-        for (k = 1;                 // "aba"
+        for (k = 1;                 /* 以 i 為中心擴展奇數長度回文，例如 "aba" */
              i - k >= 0 &&
              i + k < n &&
              s[i - k] == s[i + k];
@@ -249,7 +251,7 @@ int minCut(char* s) {
             dp[i + k + 1] = _min(dp[i + k + 1], dp[i - k] + 1);
         }
         
-        for (k = 1;                 // "aaaa"
+        for (k = 1;                 /* 以 i、i+1 間隙為中心擴展偶數回文 */
              i - k + 1 >= 0 &&
              i + k < n &&
              s[i - k + 1] == s[i + k];

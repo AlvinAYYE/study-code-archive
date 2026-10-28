@@ -1,35 +1,26 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0242. Valid Anagram
- * Difficulty: Easy
- * Tags: hash-table, string, sorting
- * URL: https://leetcode.com/problems/valid-anagram/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given two strings s and t, return true if t is an anagram of s, and
- *     false otherwise.
+ * LeetCode 242. Valid Anagram
+ * 難度：Easy
  *
- * [中文] 題目: 有效的字母異位詞
- * [中文] 題目說明:
- *     給定字串 s 與 t，判斷 t 是否為由 s 的字元重新排列而成的字
- *     母異位詞。輸入只含小寫英文字母，若字元及各自出現次數完全相同即回傳 
- *     true。
+ * 【完整中文題意】給定兩個只含小寫英文字母的字串 s、t。若 t 可以重新排列字母後恰好變成 s，兩字串就是字母異位詞；請判斷是否成立。
  *
- * [中文] 思路:
- *     分別以兩個長度 26 的計數陣列統計 s、t 中每個字母出現次數。先
- *     確認兩字串等長，再逐項比較計數。
+ * 【範例】
+ * 1. s = "anagram", t = "nagaram" → true
+ * 2. s = "rat", t = "car" → false
  *
- * Examples:
- *     Input: s = "anagram", t = "nagaram"
- *     Output: true
- *     Input: s = "rat", t = "car"
- *     Output: false
+ * 【限制】
+ * - 1 <= s.length, t.length <= 5 × 10⁴
+ * - s 與 t 只含小寫英文字母
  *
- * Constraints:
- *   - 1 <= s.length, t.length <= 5 * 10^4
- *   - s and t consist of lowercase English letters.
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 若兩字串長度不同，字母數量不可能完全相同，回傳 false。
+ * 2. 用 26 格計數表統計 s 中各字母出現次數。
+ * 3. 掃描 t 時對應計數減一；若某格變成負數，代表 t 使用了過多該字母。
+ * 4. 全部處理完若計數表每格都是 0，兩字串互為異位詞。
+ *
+ * 【複雜度】時間 O(|s| + |t|)；空間 O(1)，固定 26 個計數器
+ *
+ * 【LeetCode C 函式】bool isAnagram(char* s, char* t)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -203,64 +194,23 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-242. Valid Anagram
-
-Given two strings s and t, write a function to determine if t is an anagram of s. 
-
-For example,
-s = "anagram", t = "nagaram", return true.
-s = "rat", t = "car", return false.
-
-
-Note:
-You may assume the string contains only lowercase alphabets.
-
-Follow up:
-What if the inputs contain unicode characters? How would you adapt your solution to such case?
-*/
-
 bool isAnagram(char* s, char* t) {
-    int n1[26] = { 0 }, n2[26] = { 0 };
-    int i, j;
-    
-    while (*s && *t) {
-        i = *s - 'a';
-        j = *t - 'a';
-        n1[i] ++;
-        n2[j] ++;
-        s ++;
-        t ++;
+    if (strlen(s) != strlen(t)) return false;
+
+    int count[26] = {0};
+    for (int i = 0; s[i] != '\0'; ++i) {
+        ++count[s[i] - 'a'];
     }
-    
-    if (*s || *t) return false;
-    
-    for (i = 0; i < 26; i ++) {
-        if (n1[i] != n2[i]) return false;
+    for (int i = 0; t[i] != '\0'; ++i) {
+        --count[t[i] - 'a'];
+        if (count[t[i] - 'a'] < 0) return false;
     }
-    
+
+    for (int letter = 0; letter < 26; ++letter) {
+        if (count[letter] != 0) return false;
+    }
     return true;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:165.9K
-Total Submissions:357.7K
-
-
-Companies Amazon Uber Yelp
-Related Topics Hash Table Sort
-Similar Questions 
-                
-                  
-                    Group Anagrams
-                  
-                    Palindrome Permutation
-                  
-                    Find All Anagrams in a String
-*/
 
 /* ---- generated tests ---- */
 int main(void){

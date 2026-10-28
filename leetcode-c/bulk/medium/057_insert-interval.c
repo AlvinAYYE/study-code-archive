@@ -219,52 +219,53 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#define MIN(a, b) (a < b ? a : b)
-#define MAX(a, b) (a > b ? a : b)
-
-int** insert(int** intervals, int intervalsSize, int* intervalsColSize, int* newInterval, int newIntervalSize, int* returnSize, int** returnColumnSizes) 
-{
-    int **ret = malloc(sizeof(int *)*(intervalsSize + 1));
-    *returnColumnSizes = malloc(sizeof(int)*(intervalsSize + 1));
-    int ret_ctr = 0, idx = 0;
-
-    // Handle the non-opverlap partition
-    while (idx < intervalsSize && newInterval[0] > intervals[idx][1]) {
-        ret[ret_ctr] = intervals[idx]; // use original ptr to ignore mem alloc
-        (*returnColumnSizes)[ret_ctr] = 2;
-        ret_ctr++;
-        idx++;
-    }
-
-    // Use tmp to detect the overlapping, it will occur if tmp != idx
-    int tmp = idx;
-    while (idx < intervalsSize &&  newInterval[1] >= intervals[idx][0])
-        idx++;
-
-    if (tmp != idx) {
-        // update opverlapping interval
-        newInterval[0] = MIN(intervals[tmp][0], newInterval[0]);
-        newInterval[1] = MAX(intervals[idx-1][1], newInterval[1]);
-    }
-    ret[ret_ctr] = (int *)calloc(2, sizeof(int));
-    ret[ret_ctr][0] = newInterval[0];
-    ret[ret_ctr][1] = newInterval[1];
-    (*returnColumnSizes)[ret_ctr] = 2;
-    ret_ctr++;
-
-    // Handle the rest of non-opverlap partition
-    while (idx < intervalsSize) {
-        ret[ret_ctr] = intervals[idx];
-        (*returnColumnSizes)[ret_ctr] = 2;
-        ret_ctr++;
-        idx++;
-    }
-
-    *returnSize = ret_ctr;
-    return ret;
+/* 將一組端點複製到新配置的答案列。 */
+static void appendInterval(int **answer, int *columnSizes, int *count,
+                           int start, int end) {
+    answer[*count] = (int *)malloc(2 * sizeof(int));
+    answer[*count][0] = start;
+    answer[*count][1] = end;
+    columnSizes[*count] = 2;
+    ++(*count);
 }
+
+/* ---- 易讀解法：先複製左側，再合併重疊區，最後複製右側 ---- */
+int** insert(int** intervals, int intervalsSize, int* intervalsColSize,
+             int* newInterval, int newIntervalSize, int* returnSize,
+             int** returnColumnSizes) {
+    int capacity = intervalsSize + 1;
+    int **answer = (int **)malloc((size_t)capacity * sizeof(int *));
+    int *columnSizes = (int *)malloc((size_t)capacity * sizeof(int));
+    int start = newInterval[0];
+    int end = newInterval[1];
+    int count = 0;
+    int i = 0;
+    (void)intervalsColSize;
+    (void)newIntervalSize;
+
+    while (i < intervalsSize && intervals[i][1] < start) {
+        appendInterval(answer, columnSizes, &count,
+                       intervals[i][0], intervals[i][1]);
+        ++i;
+    }
+    while (i < intervalsSize && intervals[i][0] <= end) {
+        if (intervals[i][0] < start) start = intervals[i][0];
+        if (intervals[i][1] > end) end = intervals[i][1];
+        ++i;
+    }
+    appendInterval(answer, columnSizes, &count, start, end);
+
+    while (i < intervalsSize) {
+        appendInterval(answer, columnSizes, &count,
+                       intervals[i][0], intervals[i][1]);
+        ++i;
+    }
+
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
+}
+
 
 /* ---- generated tests ---- */
 int main(void){

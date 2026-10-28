@@ -216,59 +216,35 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-33. Search in Rotated Sorted Array
-
-Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.
-
-(i.e., 0 1 2 4 5 6 7 might become 4 5 6 7 0 1 2).
-
-You are given a target value to search. If found in the array return its index, otherwise return -1.
-
-You may assume no duplicate exists in the array.
-*/
-
+/* ---- 易讀解法：每輪辨認哪一半仍是遞增排序 ---- */
 int search(int* nums, int numsSize, int target) {
-    int start, end, mid;
-    start = 0; end = numsSize - 1;
-    while (start <= end) {
-        mid = start + (end - start) / 2;
-        if (nums[mid] == target) return mid;
-        if (nums[start] <= nums[mid]) { // first half are sorted
-            if (target  >  nums[mid] || target < nums[start]) {
-                start = mid + 1;
+    int left = 0;
+    int right = numsSize - 1;
+
+    while (left <= right) {
+        int middle = left + (right - left) / 2;
+        if (nums[middle] == target) return middle;
+
+        if (nums[left] <= nums[middle]) {
+            /* 左半段有序；判斷 target 是否落在這段的值域。 */
+            if (nums[left] <= target && target < nums[middle]) {
+                right = middle - 1;
             } else {
-                end = mid - 1;
+                left = middle + 1;
             }
-        } else { // second half are sorted
-            if (target < nums[mid] || target > nums[end]) {
-                end = mid - 1;
+        } else {
+            /* 否則右半段有序，改檢查 target 是否在右半段。 */
+            if (nums[middle] < target && target <= nums[right]) {
+                left = middle + 1;
             } else {
-                start = mid + 1;
+                right = middle - 1;
             }
         }
     }
+
     return -1;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:184.4K
-Total Submissions:574K
-
-
-Companies LinkedIn Bloomberg Uber Facebook Microsoft
-Related Topics Binary Search Array
-Similar Questions 
-                
-                  
-                    Search in Rotated Sorted Array II
-                  
-                    Find Minimum in Rotated Sorted Array
-*/
 
 /* ---- generated tests ---- */
 int main(void){

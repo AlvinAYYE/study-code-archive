@@ -219,85 +219,76 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-typedef struct {
-    int *arr;
-    int size;
-} HEAP;
+/* 解題說明
+ * 題目：414. Third Maximum Number（第三大的不同數字）
+ *
+ * 題意完整翻譯：
+ *     給定整數陣列 nums，回傳其中第三大的不同數字；若不同數字不足三個，則回傳最大值。相同數字只計算一次。
+ *
+ * 範例：
+ *   輸入：nums = [3,2,1]
+ *   輸出：1
+ *   說明：第一、第二、第三大的不同數字依序是 3、2、1。
+ *   輸入：nums = [1,2]
+ *   輸出：2
+ *   說明：不同數字只有 2 和 1，因此回傳最大值 2。
+ *   輸入：nums = [2,2,3,1]
+ *   輸出：1
+ *   說明：不同數字由大到小是 3、2、1，重複的 2 只算一次。
+ *
+ * 限制：
+ *   - 1 <= nums.length <= 10^4
+ *   - -2^31 <= nums[i] <= 2^31 - 1
+ *
+ * 解題步驟：
+ *   1. 用 first、second、third 保存目前前三大的不同數字，並用布林值標記各位置是否已有數字。
+ *   2. 逐一讀取陣列；若數字已在前三名中就跳過，避免重複計算。
+ *   3. 依大小插入前三名，並將原本較小名次往後移。
+ *   4. 最後若有第三名就回傳 third，否則回傳 first。
+ *
+ * 複雜度：
+ *   時間：O(n)，只掃描陣列一次。
+ *   空間：O(1)，只保存前三個候選值與三個旗標。
+ */
 
-static void swap(int *a, int *b)
-{
-    int tmp = *a;
-    *a = *b;
-    *b = tmp;
-}
+int thirdMax(int* nums, int numsSize) {
+    long long first = 0;
+    long long second = 0;
+    long long third = 0;
+    bool hasFirst = false;
+    bool hasSecond = false;
+    bool hasThird = false;
+    int i;
 
-static inline bool heap_is_empty(HEAP *obj)
-{
-    return (obj->size == 0);
-}
+    for (i = 0; i < numsSize; ++i) {
+        long long value = nums[i];
 
-void heapify(HEAP *obj, int cur_idx)
-{
-    int max_idx = cur_idx;
-    int l_idx = (cur_idx << 1) + 1;
-    int r_idx = (cur_idx << 1) + 2;
+        // 只取不同的數字。
+        if ((hasFirst && value == first) ||
+            (hasSecond && value == second) ||
+            (hasThird && value == third)) {
+            continue;
+        }
 
-    if (l_idx < obj->size && obj->arr[max_idx] < obj->arr[l_idx])
-        max_idx = l_idx;
-    if (r_idx < obj->size && obj->arr[max_idx] < obj->arr[r_idx])
-        max_idx = r_idx;
-    /* The max is left child or right child */
-    if (max_idx != cur_idx) {
-        swap(&(obj->arr[max_idx]), &(obj->arr[cur_idx]));
-        heapify(obj, max_idx);
-    }
-}
-
-int heap_del(HEAP *obj)
-{
-    int ret = obj->arr[0];
-    obj->arr[0] = obj->arr[obj->size - 1];
-    obj->size -= 1;
-    heapify(obj, 0);
-
-    return ret;
-}
-
-static inline HEAP *heap_create(int *n, int size)
-{
-    HEAP *obj = malloc(sizeof(HEAP));
-    obj->arr = n;
-    obj->size = size;
-
-    for (int i = (size - 1) / 2; i >= 0; i--)
-        heapify(obj, i);
-    return obj;
-}
-
-static inline void heap_release(HEAP *obj)
-{
-    free(obj);
-}
-
-int thirdMax(int *nums, int numsSize)
-{
-    HEAP *h = heap_create(nums, numsSize);
-    int ret, pre, tmp, del_num = 1;
-    ret = heap_del(h);
-    pre = ret;
-    while (!heap_is_empty(h)) {
-        tmp = heap_del(h);
-        del_num = (tmp == pre ? del_num : del_num + 1);
-        pre = tmp;
-        if (del_num == 3) {
-            ret = tmp;
-            break;
+        if (!hasFirst || value > first) {
+            third = second;
+            hasThird = hasSecond;
+            second = first;
+            hasSecond = hasFirst;
+            first = value;
+            hasFirst = true;
+        } else if (!hasSecond || value > second) {
+            third = second;
+            hasThird = hasSecond;
+            second = value;
+            hasSecond = true;
+        } else if (!hasThird || value > third) {
+            third = value;
+            hasThird = true;
         }
     }
 
-    heap_release(h);
-    return ret;
+    return (int)(hasThird ? third : first);
 }
 
 /* ---- generated tests ---- */

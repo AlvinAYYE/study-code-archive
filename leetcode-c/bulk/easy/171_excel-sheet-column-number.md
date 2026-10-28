@@ -1,57 +1,48 @@
-# 0171. Excel Sheet Column Number《Excel 欄編號》
+# 0171. Excel Sheet Column Number《Excel 欄位序號》
 
-- **Difficulty**: Easy
-- **Tags**: math, string
-- **題目連結**: https://leetcode.com/problems/excel-sheet-column-number/
-- **程式碼**: [`171_excel-sheet-column-number.c`](./171_excel-sheet-column-number.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/excel-sheet-column-number/
 
-## 題目說明（中文）
+## 題目翻譯
 
-給定 Excel 格式的大寫字母欄名 columnTitle，請回傳其對應的欄位編號。例如 A 為 1、Z 為 26、AA 為 27。輸入只含大寫英文字母，且長度最多為 7。
+給定 Excel 欄位名稱 columnTitle，回傳對應的欄號。字母 A 到 Z 代表 1 到 26，因此 AA 是 27、AB 是 28。
 
-**思路**：由左至右累積 26 進位值，將目前結果乘 26 後加上字母對應的 1 至 26。
+## 範例
 
-## Problem Statement (English)
+~~~text
+A -> 1, B -> 2, ..., Z -> 26, AA -> 27, AB -> 28
 
-Given a string columnTitle that represents the column title as appears in an Excel sheet, return its corresponding column number.
-For example:
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+輸入：columnTitle = "A"
+輸出：1
 
-## 範例 Examples
+輸入：columnTitle = "AB"
+輸出：28
 
-```text
-A -> 1
-B -> 2
-C -> 3
-...
-Z -> 26
-AA -> 27
-AB -> 28 
-...
+輸入：columnTitle = "ZY"
+輸出：701
+~~~
 
-Input: columnTitle = "A"
-Output: 1
+## 限制
 
-Input: columnTitle = "AB"
-Output: 28
+- 1 <= columnTitle.length <= 7
+- 只包含大寫英文字母 A-Z。
+- columnTitle 的範圍是 A 到 FXSHRXW。
 
-Input: columnTitle = "ZY"
-Output: 701
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 從左到右讀取每個字母。
+2. 將已累積的欄號乘 26，為新字母空出一位。
+3. 把新字母的值加上去：A=1、B=2，依此類推。
 
-1 <= columnTitle.length <= 7
-columnTitle consists only of uppercase English letters.
-columnTitle is in the range ["A", "FXSHRXW"].
+例如 AB：先得到 A 的值 1，再計算 1*26+2，答案為 28。
 
-## 官方 C 函式簽名 Signature
+## 複雜度
 
-```c
-int titleToNumber(char* columnTitle) {
-    
-}
-```
+- 時間：O(n)，每個字母處理一次。
+- 空間：O(1)。
+
+## C 函式簽名
+
+~~~c
+int titleToNumber(char* columnTitle);
+~~~

@@ -1,43 +1,27 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1252. Cells with Odd Values in a Matrix
- * Difficulty: Easy
- * Tags: array, math, simulation
- * URL: https://leetcode.com/problems/cells-with-odd-values-in-a-matrix/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     There is an m x n matrix that is initialized to all 0's. There is
- *     also a 2D array indices where each indices[i] = [ri, ci] represents
- *     a 0-indexed location to perform some increment operations on the
- *     matrix.
- *     For each location indices[i], do both of the following:
- *     Given m, n, and indices, return the number of odd-valued cells in
- *     the matrix after applying the increment to all locations in indices.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     There is an m x n 矩陣 that is initialized to all 0's. There is also a
- *     2D 陣列 下標 where each 下標[i] = [ri, ci] represents a 0-indexed location
- *     to perform some increment operations on the 矩陣.
+ * 【完整中文題意】有一個 m 列、n 欄的零矩陣。每個 indices[i] = [ri, ci] 表示一次操作：第 ri 列的每個格子都加 1，且第 ci 欄的每個格子也都加 1。所有操作完成後，請回傳值為奇數的格子總數。
  *
- * Examples:
- *     Input: m = 2, n = 3, indices = [[0,1],[1,1]]
- *     Output: 6
- *     Explanation: Initial matrix = [[0,0,0],[0,0,0]].
- *     After applying first increment it becomes [[1,2,1],[0,1,0]].
- *     The final matrix is [[1,3,1],[1,3,1]], which contains 6 odd
- *     numbers.
- *     Input: m = 2, n = 2, indices = [[1,1],[0,0]]
- *     Output: 0
- *     Explanation: Final matrix = [[2,2],[2,2]]. There are no odd
- *     numbers in the final matrix.
+ * 【範例】
+ * 1. m = 2, n = 3, indices = [[0,1],[1,1]] → 6
+ * 2. m = 2, n = 2, indices = [[1,1],[0,0]] → 0
  *
- * Constraints:
- *   - 1 <= m, n <= 50
- *   - 1 <= indices.length <= 100
- *   - 0 <= ri < m
- *   - 0 <= ci < n
- * ==========================================================================
+ * 【限制】
+ * - 1 <= m, n <= 50
+ * - 1 <= indices.length <= 100
+ * - 0 <= ri < m
+ * - 0 <= ci < n
+ *
+ * 【解題步驟】
+ * 1. 每一列、每一欄只需記錄目前被加了奇數次還是偶數次；再被操作一次就切換奇偶狀態。
+ * 2. 統計奇數次被加的列數 oddRows，以及奇數次被加的欄數 oddCols。
+ * 3. 一個格子在列、欄兩邊被加的總次數為奇數時才是奇數值，因此答案是 oddRows × (n - oddCols) + (m - oddRows) × oddCols。
+ *
+ * 【複雜度】時間 O(indices.length + m + n)；空間 O(m + n)
+ *
+ * 【LeetCode C 函式】int oddCells(int m, int n, int** indices, int indicesSize, int* indicesColSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -211,46 +195,31 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-int oddCells(int n, int m, int** indices, int indicesSize, int* indicesColSize){
-    // Handle 1 x 1 case. (Basically #num of flips)
-    if ((n == 1) && (m == 1)){
-        return 0;
+int oddCells(int m, int n, int** indices, int indicesSize,
+             int* indicesColSize) {
+    (void)indicesColSize;
+    bool oddRow[50] = {false};
+    bool oddColumn[50] = {false};
+
+    for (int i = 0; i < indicesSize; ++i) {
+        int row = indices[i][0];
+        int column = indices[i][1];
+        oddRow[row] = !oddRow[row];
+        oddColumn[column] = !oddColumn[column];
     }
-    
-    // Need 64 bits at least.
-    long long rows = 0, cols = 0;
-    // Fill in rows/columns
-    for(int i = 0; i < indicesSize; i++){
-        rows ^= (1ll << indices[i][0]);
-        cols ^= (1ll << indices[i][1]);
+
+    int oddRows = 0;
+    int oddColumns = 0;
+    for (int row = 0; row < m; ++row) {
+        if (oddRow[row]) ++oddRows;
     }
-    // Count bits set:
-    int lr = 0, lc = 0;
-    for(; rows > 0; rows >>= 1)
-        lr += rows & 1; 
-    for(; cols > 0; cols >>= 1)
-        lc += cols & 1;
-    
-    // Handle edge cases 2 x 1 and 1 x 2
-    if (((n == 1) && (m == 2)) || ((n == 2) && (m == 1))){
-        return lr >= lc ? lr: lc;
+    for (int column = 0; column < n; ++column) {
+        if (oddColumn[column]) ++oddColumns;
     }
-    // Handle edge case 2 x 2 matrix.
-    if((n == 2) && (m == 2)){
-        if (((lr == 2) && (lc == 2)) || ((lr == 0) && (lc == 0))){
-            return 0;
-        }else if (((lr == 0) && (lc == 2)) || ((lr == 2) && (lc == 0))){
-            return 4;
-        }
-        return 2;
-    }
-    // Handle edge case where either m or n is 2.
-    if ((n == 2) || (m == 2)){
-        return n == 2? (m - lc) * lr : (n - lr) * lc;
-    }
-    // Sum according to # of odd rows/cols
-    return (m - lc) * lr + (n - lr) * lc;
+
+    // 格子的奇偶性是所在列與所在欄的奇偶狀態 XOR。
+    return oddRows * (n - oddColumns)
+         + (m - oddRows) * oddColumns;
 }
 
 /* ---- generated tests ---- */

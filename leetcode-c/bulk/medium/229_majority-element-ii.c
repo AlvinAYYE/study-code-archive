@@ -1,37 +1,20 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0229. Majority Element II
+ * LeetCode 0229. Majority Element II（多數元素 II）
  * Difficulty: Medium
- * Tags: array, hash-table, sorting, counting
- * URL: https://leetcode.com/problems/majority-element-ii/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array of size n, find all elements that appear more
- *     than ⌊ n/3 ⌋ times.
- *
- * [中文] 題目: 多數元素 II
- * [中文] 題目說明:
- *     給定長度為 n 的整數陣列，找出所有出現次數超過 ⌊n/3⌋ 的元素
- *     。答案最多只有兩個，追問要求以線性時間與 O(1) 額外空間完成。
- *
- * [中文] 思路:
- *     使用兩個候選值與計數器進行 Boyer-Moore 投票：新值填補空
- *     候選，否則同時抵銷。最後再次掃描陣列，驗證候選的實際次數是否超過 n
- *     /3。
- *
- * Examples:
- *     Input: nums = [3,2,3]
- *     Output: [3]
- *     Input: nums = [1]
- *     Output: [1]
- *     Input: nums = [1,2]
- *     Output: [1,2]
- *
- * Constraints:
+ * 題意：給定整數陣列 nums，找出所有出現次數嚴格大於 n/3 的元素。答案最多只有兩個，回傳順序不限。
+ * 範例：
+ *   1. 輸入：nums = [3,2,3]；輸出：[3]。
+ *   2. 輸入：nums = [1]；輸出：[1]。
+ *   3. 輸入：nums = [1,2]；輸出：[1,2]。
+ * 限制：
  *   - 1 <= nums.length <= 5 * 10^4
  *   - -10^9 <= nums[i] <= 10^9
- * ==========================================================================
+ * 解法：
+ *   1. 若有三個不同元素都超過 n/3 次，出現次數總和會超過 n，因此答案最多兩個。
+ *   2. 用兩個候選值和兩個計數器做 Boyer-Moore 投票：遇到候選值就加票；有空候選就收下新值；兩個候選都不同時就讓兩票一起抵消。
+ *   3. 抵消後留下的候選只是可能答案，第二次掃描要重新計數。
+ *   4. 只把實際出現次數大於 n/3 的候選放入結果。
+ * 複雜度：時間 O(n)，額外空間 O(1)（不計回傳陣列）。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,85 +188,56 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-229. Majority Element II
-
-Given an integer array of size n, find all elements that appear more than   n/3   times. The algorithm should run in linear time and in O(1) space.
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
 int* majorityElement(int* nums, int numsSize, int* returnSize) {
-    int *r;
-    int m[2] = { 0 };
-    int c[2] = { 0 };
-    int f = 1;
-    int i, j, x;
-    
-    *returnSize = 0;
-    r = malloc(2 * sizeof(int));
-    if (!r) return NULL;
-    
-    i = 0;
-    while (i < numsSize) {
-        if (m[0] == nums[i]) {
-            c[0] ++;
-        } else if (m[1] == nums[i]) {
-            c[1] ++;
-            f = 2;
-        } else if (c[0] == 0) {
-            m[0] = nums[i];
-            c[0] = 1;
-        } else if (c[1] == 0) {
-            m[1] = nums[i];
-            c[1] = 1;
-            f = 2;
+    int candidateA = 0;
+    int candidateB = 0;
+    int countA = 0;
+    int countB = 0;
+
+    // 第一輪找出最多兩個可能超過 n/3 的候選值。
+    for (int i = 0; i < numsSize; i++) {
+        int value = nums[i];
+        if (countA > 0 && value == candidateA) {
+            countA++;
+        } else if (countB > 0 && value == candidateB) {
+            countB++;
+        } else if (countA == 0) {
+            candidateA = value;
+            countA = 1;
+        } else if (countB == 0) {
+            candidateB = value;
+            countB = 1;
         } else {
-            c[0] --;
-            c[1] --;
-        }
-        
-        i ++;
-    }
-    
-    j = 0;
-    while (f > 0) {
-        f --;
-        x = 0;
-        i = 0;
-        while (i < numsSize) {
-            if (m[f] == nums[i]) {
-                x ++;
-            }
-            i ++;
-        }
-        if (x > numsSize / 3) {
-            *returnSize += 1;
-            r[j] = m[f];
-            j ++;
+            countA--;
+            countB--;
         }
     }
-    
-    return r;
+
+    int actualA = 0;
+    int actualB = 0;
+    for (int i = 0; i < numsSize; i++) {
+        if (countA > 0 && nums[i] == candidateA) {
+            actualA++;
+        } else if (countB > 0 && nums[i] == candidateB) {
+            actualB++;
+        }
+    }
+
+    int *result = (int *)malloc(sizeof(int) * 2);
+    if (result == NULL) {
+        *returnSize = 0;
+        return NULL;
+    }
+
+    *returnSize = 0;
+    if (actualA > numsSize / 3) {
+        result[(*returnSize)++] = candidateA;
+    }
+    if (actualB > numsSize / 3 && candidateB != candidateA) {
+        result[(*returnSize)++] = candidateB;
+    }
+    return result;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:57.4K
-Total Submissions:200.9K
-
-
-Companies Zenefits
-Related Topics Array
-Similar Questions 
-                
-                  
-                    Majority Element
-*/
 
 /* ---- generated tests ---- */
 int main(void){

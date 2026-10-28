@@ -1,53 +1,50 @@
-# 0139. Word Break《單字拆分》
+# 0139. Word Break｜單字拆分
 
-- **Difficulty**: Medium
-- **Tags**: array, hash-table, string, dynamic-programming, trie, memoization
-- **題目連結**: https://leetcode.com/problems/word-break/
-- **程式碼**: [`139_word-break.c`](./139_word-break.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、雜湊表、字串、動態規劃
+- **題目連結**：[LeetCode 0139](https://leetcode.com/problems/word-break/)
+- **C 程式**：[139_word-break.c](./139_word-break.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定字串 s 與字典 wordDict，判斷 s 能否被切分為一個或多個字典單字並以空格分隔的序列。切分時同一個字典單字可以重複使用。可行時回傳 true，否則回傳 false。s 長度至多 300，字典最多 1000 個不重複的小寫單字，且每個單字長度至多 20。
+給定字串 `s` 和字典 `wordDict`，判斷 `s` 是否能切成一個或多個字典中的單字。字典中的同一個單字可以重複使用；切分後所有字元都必須剛好用完。
 
-**思路**：以布林 DP 記錄各前綴能否切分，對每個結尾位置倒查可能起點，若前一前綴可行且目前片段在字典中便標記可行。
-
-## Problem Statement (English)
-
-Given a string s and a dictionary of strings wordDict, return true if s can be segmented into a space-separated sequence of one or more dictionary words.
-Note that the same word in the dictionary may be reused multiple times in the segmentation.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: s = "leetcode", wordDict = ["leet","code"]
-Output: true
-Explanation: Return true because "leetcode" can be segmented as "leet code".
+輸入：s = "leetcode", wordDict = ["leet","code"]
+輸出：true
+說明：可切成 "leet code"。
 
-Input: s = "applepenapple", wordDict = ["apple","pen"]
-Output: true
-Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
-Note that you are allowed to reuse a dictionary word.
+輸入：s = "applepenapple", wordDict = ["apple","pen"]
+輸出：true
+說明：可重複使用 "apple"，切成 "apple pen apple"。
 
-Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
-Output: false
+輸入：s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+輸出：false
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= s.length <= 300
-1 <= wordDict.length <= 1000
-1 <= wordDict[i].length <= 20
-s and wordDict[i] consist of only lowercase English letters.
-All the strings of wordDict are unique.
+- `1 <= s.length <= 300`。
+- `1 <= wordDict.length <= 1000`。
+- `1 <= wordDict[i].length <= 20`。
+- `s` 和字典單字只包含小寫英文字母；字典中的字串互不相同。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. `dp[i]` 表示 `s` 的前 `i` 個字元能否被字典單字完整切分，先令 `dp[0] = true`，代表空前綴可以作為切分起點。
+2. 對每個結尾位置 `end`，逐一檢查字典單字 `word`。
+3. 若單字長度不超過 `end`、其前方前綴 `dp[end - length]` 可達，且 `s` 對應片段與單字相同，就令 `dp[end] = true`。
+4. 所有位置都檢查後，`dp[s.length]` 就是整個字串能否拆分的答案。
+
+## 複雜度
+
+- 時間：`O(n × d × L)`，`n` 是字串長度、`d` 是字典大小、`L` 是單字最大長度。
+- 額外空間：`O(n)`，保存每個前綴的可拆分狀態。
+
+## LeetCode C 函式簽名
 
 ```c
-bool wordBreak(char* s, char** wordDict, int wordDictSize) {
-    
-}
+bool wordBreak(char* s, char** wordDict, int wordDictSize);
 ```

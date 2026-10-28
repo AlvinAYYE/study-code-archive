@@ -1,44 +1,47 @@
-# 0149. Max Points on a Line《直線上的最大點數》
+# 0149. 直線上最多的點數（Max Points on a Line）
 
-- **Difficulty**: Hard
-- **Tags**: array, hash-table, math, geometry
-- **題目連結**: https://leetcode.com/problems/max-points-on-a-line/
-- **程式碼**: [`149_max-points-on-a-line.c`](./149_max-points-on-a-line.c) — 社群解答（repo Senthil455_Leetcode-Code），已通過編譯+官方示例執行驗證
+- **難度**：Hard
+- **標籤**：陣列、雜湊表、數學、幾何
+- **題目連結**：[LeetCode 149](https://leetcode.com/problems/max-points-on-a-line/)
+- **解答檔案**：[149_max-points-on-a-line.c](./149_max-points-on-a-line.c)
 
-## 題目說明（中文）
+## 題目完整翻譯
 
-給定平面點陣列 points，其中 points[i] = [xi, yi]，求同一直線上最多有多少點。所有點皆互不相同。點數介於 1 至 300，座標 xi、yi 介於 -10^4 至 10^4。
+給定平面上的點陣列 `points`，其中 `points[i] = [xi, yi]` 表示座標 `(xi, yi)`。請找出同一條直線上最多有幾個點，並回傳這個數量。
 
-**思路**：逐一固定一個點作為錨點，將其與其他點的斜率以最大公因數約分並正規化後放入雜湊表計數，取各錨點的最大值。
-
-## Problem Statement (English)
-
-Given an array of points where points[i] = [xi, yi] represents a point on the X-Y plane, return the maximum number of points that lie on the same straight line.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: points = [[1,1],[2,2],[3,3]]
-Output: 3
+輸入：points = [[1,1],[2,2],[3,3]]
+輸出：3
 
-Input: points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
-Output: 4
+輸入：points = [[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]
+輸出：4
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= points.length <= 300
-points[i].length == 2
--104 <= xi, yi <= 104
-All the points are unique.
+- `1 <= points.length <= 300`
+- 每個點都恰有兩個座標。
+- `-10^4 <= xi, yi <= 10^4`
+- 所有點互不相同。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 依序把每個點當作固定錨點，計算它和其他點形成的斜率。
+2. 相同斜率代表這些點與錨點共線。用最大公因數約分斜率的分子、分母，讓例如 `2/4` 和 `1/2` 變成相同表示。
+3. 統一斜率的正負號，避免同一條線被記成兩種方向。垂直線另外計數，因為它的斜率分母為 0。
+4. 每個錨點統計各斜率的點數，取最大值；再把與錨點重合的點一併加回來。
+
+限制中點數最多 300，因此固定一個錨點、掃描其他點的 `O(n²)` 解法足夠直接。
+
+## 複雜度
+
+- 時間：平均 `O(n²)`。
+- 額外空間：`O(n)`，用來記錄固定錨點對應的斜率數量。
+
+## C 函式介面
 
 ```c
-int maxPoints(int** points, int pointsSize, int* pointsColSize) {
-    
-}
+int maxPoints(int** points, int pointsSize, int* pointsColSize);
 ```

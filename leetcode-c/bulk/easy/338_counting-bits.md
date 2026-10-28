@@ -1,56 +1,61 @@
-# 0338. Counting Bits《位元計數》
+# 338 Counting Bits：位元 1 的個數
 
-- **Difficulty**: Easy
-- **Tags**: dynamic-programming, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/counting-bits/
-- **程式碼**: [`338_counting-bits.c`](./338_counting-bits.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定整數 n，回傳長度為 n + 1 的陣列 ans。對每個 0 到 n 的整數 i，ans[i] 必須是 i 的二進位表示中 1 的個數。
+給定非負整數 n，請回傳長度為 n + 1 的陣列 ans。對每個 i（0 <= i <= n），ans[i] 是 i 的二進位表示中 1 的個數。目標是在線性時間內完成，且不要呼叫內建的位元計數函式。
 
-**思路**：建立動態規劃陣列，利用 i & (i - 1) 會清除最低位 1 的性質，令 dp[i] = dp[i & (i - 1)] + 1。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.
-Example 1:
-Example 2:
-Constraints:
-Follow up:
+- 輸入：n = 2
+- 輸出：[0,1,1]
+- 說明：0 的二進位是 0，1 是 1，2 是 10，因此 1 的個數依序是 0、1、1。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: n = 2
-Output: [0,1,1]
-Explanation:
-0 --> 0
-1 --> 1
-2 --> 10
+- 輸入：n = 5
+- 輸出：[0,1,1,2,1,2]
+- 說明：0 到 5 的二進位表示分別為 0、1、10、11、100、101。
 
-Input: n = 5
-Output: [0,1,1,2,1,2]
-Explanation:
-0 --> 0
-1 --> 1
-2 --> 10
-3 --> 11
-4 --> 100
-5 --> 101
-```
+## 限制
 
-## 限制 Constraints
+- 0 <= n <= 10^5
 
-0 <= n <= 105
+## 解題思路
 
-## 官方 C 函式簽名 Signature
+1. 建立長度 n + 1 的答案陣列，並令 ans[0] = 0。
+2. 對每個 i >= 1，先看 i 除以 2 的商：它的二進位就是 i 去掉最右邊一位，因此 1 的數量為 ans[i / 2]。
+3. 若 i 是奇數，最右位是 1，再加 1；所以 ans[i] = ans[i / 2] + (i % 2)。
 
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
+## 複雜度
+
+- 時間：O(n)，每個答案只計算一次。
+- 空間：O(n)，需要回傳 n + 1 個整數；除回傳陣列外只用 O(1) 額外空間。
+
+## C 函式簽名
+
+~~~c
+int* countBits(int n, int* returnSize);
+~~~
+
+## 程式如何運作
+
+~~~c
 int* countBits(int n, int* returnSize) {
-    
+    int* answer = (int*)malloc(sizeof(int) * (size_t)(n + 1));
+    int i;
+
+    *returnSize = n + 1;
+    answer[0] = 0;
+
+    for (i = 1; i <= n; ++i) {
+        // i / 2 去掉 i 的最右位；若 i 為奇數，該位是 1。
+        answer[i] = answer[i / 2] + (i % 2);
+    }
+
+    return answer;
 }
-```
+~~~

@@ -2,7 +2,7 @@
  * ==========================================================================
  * LeetCode 0022. Generate Parentheses
  * Difficulty: Medium
- * Tags: string, dynamic-programming, backtracking
+ * Tags: string, backtracking
  * URL: https://leetcode.com/problems/generate-parentheses/
  * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
  * ==========================================================================
@@ -16,9 +16,11 @@
  *     8。
  *
  * [中文] 思路:
- *     啟用的程式以動態規劃建立各對數的答案，利用 f(n) = '(' +
- *      f(j) + ')' + f(n-j-1) 的分解來組合結果。每個
- *     新組合都配置並複製到對應的答案集合。
+ *     以回溯逐字建立答案。左括號未達 n 時可以繼續放左括號；只有已放的
+ *     左括號多於右括號時才能放右括號。字串長度到 2n 時，複製成一個答案。
+ * [中文] 範例：n = 3 時輸出 ["((()))","(()())","(())()","()(())","()()()"]；
+ *     n = 1 時輸出 ["()"]。
+ * [中文] 限制：1 <= n <= 8。令 C_n 為答案數量，時間與答案空間為 O(C_n * n)。
  *
  * Examples:
  *     Input: n = 3
@@ -201,145 +203,49 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-22. Generate Parentheses
-
-Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
-
-
-
-For example, given n = 3, a solution set is:
-
-[
-  "((()))",
-  "(()())",
-  "(())()",
-  "()(())",
-  "()()()"
-]
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
-void bt(char ***p, int *sz, int *k, int n, char *buff, int l, int open, int close) {
-    if (open == n && close == n) {
-        if (*sz == *k) {
-            (*sz) *= 2;
-            *p = realloc(*p, (*sz) * sizeof(char *));
-            //assert(*p);
+/* 逐步建立合法括號；只在左括號數較多時才放右括號。 */
+static void buildParentheses(int n, int openCount, int closeCount,
+                             int position, char *buffer,
+                             char ***answer, int *count, int *capacity) {
+    if (position == 2 * n) {
+        if (*count == *capacity) {
+            *capacity = *capacity == 0 ? 16 : *capacity * 2;
+            *answer = (char **)realloc(*answer, (size_t)*capacity * sizeof(char *));
         }
-        (*p)[(*k) ++] = strdup(buff);
+        (*answer)[*count] = (char *)malloc((size_t)(2 * n) + 1);
+        memcpy((*answer)[*count], buffer, (size_t)(2 * n) + 1);
+        ++(*count);
         return;
     }
-    if (open < n) {
-        buff[l] = '(';
-        bt(p, sz, k, n, buff, l + 1, open + 1, close);
+
+    if (openCount < n) {
+        buffer[position] = '(';
+        buildParentheses(n, openCount + 1, closeCount, position + 1,
+                         buffer, answer, count, capacity);
     }
-    if (close < open) {
-        buff[l] = ')';
-        bt(p, sz, k, n, buff, l + 1, open, close + 1);
+    if (closeCount < openCount) {
+        buffer[position] = ')';
+        buildParentheses(n, openCount, closeCount + 1, position + 1,
+                         buffer, answer, count, capacity);
     }
 }
+
+/* ---- 易讀解法：回溯生成所有合法括號字串 ---- */
 char** generateParenthesis(int n, int* returnSize) {
-#if 0
-    char **p, *buff;
-    int i, k, sz;
-    
-    sz = 100;
-    p = malloc(sz * sizeof(char *));
-    //assert(p);
-    
-    buff = malloc(n * 2 + 1);
-    //assert(buff);
-    buff[n * 2] = 0;
-    
-    k = 0;
-    bt(&p, &sz, &k, n, buff, 0, 0, 0);
-    
-    *returnSize = k;
-    
-    free(buff);
-#else  // Because of memory allocation/freeing, this is much slower than above!!!
-    int *sz, *nn;
-    char ***pp, **p, **p1, **p2, *buff;
-    int i, j, a, b, x, y, l, k, h;
-    
-    buff = calloc(n * 2 + 1, sizeof(char));
-    //assert(buff);
- 
-    sz = calloc(n + 1, sizeof(int));
-    nn = calloc(n + 1, sizeof(int));
-    pp = malloc((n + 1) * sizeof(char **));
-    //assert(sz && nn && pp);
-    
-    sz[0] = 1;
-    pp[0] = calloc(sz[0], sizeof(char *));
-    pp[0][nn[0] ++] = strdup(buff);
- 
-    for (i = 1; i <= n; i ++) {     // f(n) = '('f(0)')'f(n-1), '('f(1)')'f(n-2), ...'('f(n-1)')'f(0)
-        for (j = 0; j < i; j ++) {
-            a = nn[j];
-            p1 = pp[j];
-            
-            b = nn[i - j - 1];
-            p2 = pp[i - j - 1];
-            
-            l = 0;
-            buff[l ++] = '(';
-            for (x = 0; x < a; x ++) {
-                k = l + sprintf(&buff[l], "%s", p1[x]);
-                buff[k ++] = ')';
-                for (y = 0; y < b; y ++) {
-                    h = k + sprintf(&buff[k], "%s", p2[y]);
-                    buff[h] = 0;
-                    if (sz[i] == 0) {
-                        sz[i] = 10;
-                        pp[i] = malloc(sz[i] * sizeof(char *));
-                        //assert(pp[i]);
-                    } else if (nn[i] == sz[i]) {
-                        sz[i] *= 2;
-                        pp[i] = realloc(pp[i], sz[i] * sizeof(char *));
-                        //assert(pp[i]);
-                    }
-                    pp[i][nn[i] ++] = strdup(buff);
-                }
-            }
-        }
-    }
-    k = nn[n];
-    *returnSize = k;
-    p = malloc(k * sizeof(char *));
-    memcpy(p, pp[n], k * sizeof(char *));
-    
-    for (i = 0; i <= n; i ++) {
-        free(pp[i]);
-    }
-    free(sz); free(nn); free(pp);
-#endif
- 
-    return p;
+    char **answer = NULL;
+    char *buffer = (char *)malloc((size_t)(2 * n) + 1);
+    int count = 0;
+    int capacity = 0;
+
+    *returnSize = 0;
+    buffer[2 * n] = '\0';
+    buildParentheses(n, 0, 0, 0, buffer, &answer, &count, &capacity);
+    free(buffer);
+
+    *returnSize = count;
+    return answer;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:157.4K
-Total Submissions:349.7K
-
-
-Companies Google Uber Zenefits
-Related Topics Backtracking String
-Similar Questions 
-                
-                  
-                    Letter Combinations of a Phone Number
-                  
-                    Valid Parentheses
-*/
 
 /* ---- generated tests ---- */
 int main(void){

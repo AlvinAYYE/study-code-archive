@@ -1,50 +1,33 @@
-# 0213. House Robber II《打家劫舍 II》
+# LeetCode 0213. House Robber II
 
-- **Difficulty**: Medium
-- **Tags**: array, dynamic-programming
-- **題目連結**: https://leetcode.com/problems/house-robber-ii/
-- **程式碼**: [`213_house-robber-ii.c`](./213_house-robber-ii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 打家劫舍 II
 
-## 題目說明（中文）
+## 題目
 
-房屋排列成環狀，因此第一間與最後一間也相鄰，不能在同一晚同時偷取相鄰房屋。給定各房屋金額，請回傳不觸發警報時可取得的最大金額。
+房屋沿著圓形街道排列，每間房都有金額 nums[i]。相鄰房屋不能同時偷，且第一間與最後一間也相鄰。請計算不觸發警報時最多能取得多少金額。
 
-**思路**：將環拆成兩種互斥情況：排除最後一間或排除第一間；各自以記憶化遞迴求線性房屋的最佳結果，再取較大值。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：nums = [2,3,2]；輸出：3。第一間和最後一間相鄰，不能一起偷。
+2. 輸入：nums = [1,2,3,1]；輸出：4。可偷第 1 間和第 3 間，總額為 1 + 3。
+3. 輸入：nums = [1,2,3]；輸出：3。
 
-You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are arranged in a circle. That means the first house is the neighbor of the last one. Meanwhile, adjacent houses have a security system connected, and it will automatically contact the police if two adjacent houses were broken into on the same night.
-Given an integer array nums representing the amount of money of each house, return the maximum amount of money you can rob tonight without alerting the police.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= nums.length <= 100
+- 0 <= nums[i] <= 1000
 
-```text
-Input: nums = [2,3,2]
-Output: 3
-Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money = 2), because they are adjacent houses.
+## 解題思路
 
-Input: nums = [1,2,3,1]
-Output: 4
-Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
-Total amount you can rob = 1 + 3 = 4.
+1. 若房屋只有一間，直接回傳那間金額。
+2. 圓形只造成第一間和最後一間互斥。把情況拆成兩次直線問題：只考慮第 0 到 n-2 間，或只考慮第 1 到 n-1 間。
+3. 在線性範圍逐間計算：取目前房屋時可得「隔一間前的最佳值 + 目前金額」；不取時沿用前一間最佳值。
+4. 兩種範圍的最大值就是答案。
 
-Input: nums = [1,2,3]
-Output: 3
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(n)，額外空間 O(1)。
 
-1 <= nums.length <= 100
-0 <= nums[i] <= 1000
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-int rob(int* nums, int numsSize) {
-    
-}
-```
+int rob(int* nums, int numsSize)

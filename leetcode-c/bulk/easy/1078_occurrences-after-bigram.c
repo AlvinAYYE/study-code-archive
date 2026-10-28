@@ -1,39 +1,27 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1078. Occurrences After Bigram
- * Difficulty: Easy
- * Tags: string
- * URL: https://leetcode.com/problems/occurrences-after-bigram/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given two strings first and second, consider occurrences in some
- *     text of the form "first second third", where second comes
- *     immediately after first, and third comes immediately after second.
- *     Return an array of all the words third for each occurrence of "first
- *     second third".
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given two 字串 first and second, consider occurrences in some text of
- *     the form "first second third", where second comes immediately after
- *     first, and third comes immediately after second.
+ * 【完整中文題意】給定文字 text，以及兩個單字 first、second。找出所有連續出現為「first second third」的三個單字組合，並依照它們在文字中出現的順序，回傳每次符合時的第三個單字 third。相同的第三個單字若出現多次，也要重複放入答案。
  *
- * Examples:
- *     Input: text = "alice is a good girl she is a good student",
- *     first = "a", second = "good"
- *     Output: ["girl","student"]
- *     Input: text = "we will we will rock you", first = "we", second
- *     = "will"
- *     Output: ["we","rock"]
+ * 【範例】
+ * 1. text = "alice is a good girl she is a good student", first = "a", second = "good" → ["girl","student"]
+ * 2. text = "we will we will rock you", first = "we", second = "will" → ["we","rock"]
  *
- * Constraints:
- *   - 1 <= text.length <= 1000
- *   - text consists of lowercase English letters and spaces.
- *   - All the words in text are separated by a single space.
- *   - 1 <= first.length, second.length <= 10
- *   - first and second consist of lowercase English letters.
- *   - text will not have any leading or trailing spaces.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= text.length <= 1000
+ * - text 只含小寫英文字母與空格，單字之間恰好一個空格，且沒有開頭或結尾空格
+ * - 1 <= first.length, second.length <= 10
+ * - first 與 second 只含小寫英文字母
+ *
+ * 【解題步驟】
+ * 1. 由左至右掃描 text，每次找到一個單字的起點與結尾，不修改原字串。
+ * 2. 保留最近兩個單字的起點和長度。讀到新單字時，檢查前兩個是否依序等於 first、second。
+ * 3. 符合時，配置新字串複製目前單字，加入答案；接著把最近兩個單字往前更新。
+ *
+ * 【複雜度】時間 O(text 長度 + 回傳文字總長度)；空間 O(text 長度 + 回傳資料)
+ *
+ * 【LeetCode C 函式】char** findOcurrences(char* text, char* first, char* second, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,72 +195,45 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdlib.h>
-#include <string.h>
+char** findOcurrences(char* text, char* first, char* second, int* returnSize) {
+    int textLength = (int)strlen(text);
+    // 符合的第三個單字數量不會超過文字長度。
+    char** answer = (char**)malloc((size_t)(textLength + 1) * sizeof(char*));
+    const char* olderStart = NULL;
+    const char* previousStart = NULL;
+    int olderLength = 0;
+    int previousLength = 0;
+    int answerSize = 0;
+    const char* currentStart = text;
 
-#define MATCH(src, str, flag)                                                  \
-  while (*src && *str) {                                                       \
-    if (*src++ != *str++) {                                                    \
-      while (*src && *src != ' ')                                              \
-        src++;                                                                 \
-      flag = 1;                                                                \
-      break;                                                                   \
-    }                                                                          \
-  }                                                                            \
-  if (*src) {                                                                  \
-    src++;                                                                     \
-  } else {                                                                     \
-    break;                                                                     \
-  }
+    while (*currentStart != '\0') {
+        const char* currentEnd = currentStart;
+        while (*currentEnd != '\0' && *currentEnd != ' ') ++currentEnd;
+        int currentLength = (int)(currentEnd - currentStart);
 
-#define MAYBE_REALLOC(ptr, size, length)                                       \
-  if (length + 1 >= size) {                                                    \
-    size = size * 1.5;                                                         \
-    ptr = realloc(ptr, size * sizeof(*ptr));                                   \
-  }
+        // 最近兩個字分別是 first 和 second 時，複製這個第三字。
+        if (olderStart != NULL &&
+            olderLength == (int)strlen(first) &&
+            previousLength == (int)strlen(second) &&
+            memcmp(olderStart, first, (size_t)olderLength) == 0 &&
+            memcmp(previousStart, second, (size_t)previousLength) == 0) {
+            answer[answerSize] = (char*)malloc((size_t)currentLength + 1);
+            memcpy(answer[answerSize], currentStart, (size_t)currentLength);
+            answer[answerSize][currentLength] = '\0';
+            ++answerSize;
+        }
 
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-char **findOcurrences(char *text, char *first, char *second, int *returnSize) {
-  int size = 5, length = 0, bail = 0;
-  char **result = malloc(size * sizeof(*result));
-  char *rfirst, *rsecond, *pin;
-  while (*text) {
-    rfirst = first, rsecond = second, bail = 0;
-    // Match the first string.
-    MATCH(text, rfirst, bail);
-    // bail if necessary.
-    if (bail)
-      continue;
-    bail = 0;
+        olderStart = previousStart;
+        olderLength = previousLength;
+        previousStart = currentStart;
+        previousLength = currentLength;
 
-    // Keep track of where we are and match next.
-    pin = text;
-    MATCH(text, rsecond, bail);
-    // bail but backtrack.
-    if (bail) {
-      text = pin;
-      continue;
+        currentStart = currentEnd;
+        if (*currentStart == ' ') ++currentStart;
     }
 
-    // We've matched second, grab third word
-    pin = text;
-    while (*text && *text != ' ')
-      text++;
-    int diff = (text - pin) + 1;
-    // Place in result (check for realloc!)
-    MAYBE_REALLOC(result, size, length);
-    result[length] = malloc(diff * sizeof(**result));
-    strncpy(result[length], pin, diff - 1);
-    result[length++][diff - 1] = '\0';
-    // Unconditionally go back.
-    text = pin;
-  }
-
-  *returnSize = length;
-  return result;
+    *returnSize = answerSize;
+    return answer;
 }
 
 /* ---- generated tests ---- */

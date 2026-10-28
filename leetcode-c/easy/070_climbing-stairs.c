@@ -12,8 +12,15 @@
  *     can you climb to the top?
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     每次可爬 1 或 2 階，問爬 n 階有幾種不同方法（結果 fits
- *     32-bit, n<=45）。
+ *     一段樓梯共有 n 階，每次可以爬 1 階或 2 階。請計算恰好爬到樓梯頂端
+ *     共有多少種不同走法。
+ *
+ * [中文] 範例
+ *     1. n = 2，輸出 2；走法是 1+1 或 2。
+ *     2. n = 3，輸出 3；走法是 1+1+1、1+2、2+1。
+ *
+ * [中文] 限制
+ *     - 1 <= n <= 45
  *
  * Examples:
  *   Example 1:
@@ -38,7 +45,11 @@
  *   }
  *
  * [EN] Approach: Fibonacci: ways(n)=ways(n-1)+ways(n-2) because the last step is 1 or 2 stairs. Iterate upward. Time O(n), space O(1).
- * [中文] 思路: 費氏遞迴：最後一步是 1 或 2 階，故 ways(n)=ways(n-1)+ways(n-2)。由下往上迭代。時間 O(n)、空間 O(1)。
+ * [中文] 直觀解題思路
+ *     1. 到第 n 階的最後一步只可能從第 n-1 階走 1 階，或從第 n-2 階
+ *        走 2 階，因此 ways(n) = ways(n-1) + ways(n-2)。
+ *     2. 基底是 ways(1)=1、ways(2)=2，之後由小到大計算。
+ *     3. 只保留前兩個結果，不必建立整張表。時間 O(n)，額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -46,6 +57,7 @@
 /* ---------- LeetCode submission / 提交區 ---------- */
 int climbStairs(int n) {
     int a = 1, b = 1, i, c;
+    /* 迴圈開始前，a=ways(0)、b=ways(1)。 */
     for (i = 2; i <= n; ++i) { c = a + b; a = b; b = c; }
     return b;
 }

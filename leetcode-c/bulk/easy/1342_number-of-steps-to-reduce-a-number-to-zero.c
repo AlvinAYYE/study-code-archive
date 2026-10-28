@@ -1,43 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1342. Number of Steps to Reduce a Number to Zero
- * Difficulty: Easy
- * Tags: math, bit-manipulation
- * URL: https://leetcode.com/problems/number-of-steps-to-reduce-a-number-to-zero/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer num, return the number of steps to reduce it to
- *     zero.
- *     In one step, if the current number is even, you have to divide it by
- *     2, otherwise, you have to subtract 1 from it.
+ * Title-CN: 將數字減到零所需的步數
+ * LeetCode 1342. Number of Steps to Reduce a Number to Zero (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 整數 num, 回傳⋯⋯的數量 steps to reduce it to zero.
+ * 題意翻譯：給定非負整數 num。若目前數字是偶數，就除以 2；若是奇數，就減 1。
+ * 重複操作直到數字變成 0，請回傳總共操作幾次。
  *
- * Examples:
- *     Input: num = 14
- *     Output: 6
- *     Explanation:
- *     Step 1) 14 is even; divide by 2 and obtain 7.
- *     Step 2) 7 is odd; subtract 1 and obtain 6.
- *     Step 3) 6 is even; divide by 2 and obtain 3.
- *     Step 4) 3 is odd; subtract 1 and obtain 2.
- *     Step 5) 2 is even; divide by 2 and obtain 1.
- *     Step 6) 1 is odd; subtract 1 and obtain 0.
- *     Input: num = 8
- *     Output: 4
- *     Explanation:
- *     Step 1) 8 is even; divide by 2 and obtain 4.
- *     Step 2) 4 is even; divide by 2 and obtain 2.
- *     Step 3) 2 is even; divide by 2 and obtain 1.
- *     Step 4) 1 is odd; subtract 1 and obtain 0.
- *     Input: num = 123
- *     Output: 12
+ * 範例 1：num = 14，輸出 6：14 -> 7 -> 6 -> 3 -> 2 -> 1 -> 0。
+ * 範例 2：num = 8，輸出 4。
+ * 範例 3：num = 123，輸出 12。
  *
- * Constraints:
- *   - 0 <= num <= 10^6
- * ==========================================================================
+ * 限制：0 <= num <= 10^6。
+ *
+ * 解題思路：只要 num 尚未到 0，就依奇偶性執行題目規定的操作，並把步數加一。
+ * 每次偶數減半，奇數減一後就會成為偶數，因此最多處理 O(log num) 次；額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,19 +185,18 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-int numberOfSteps (int num){
-    int count = 0;
-    while(num){
-        if (num & 1){
-            num ^= 1;
+int numberOfSteps(int num) {
+    int steps = 0;
+
+    while (num > 0) {
+        if (num % 2 == 0) {
+            num /= 2;
         } else {
-            num>>=1; 
+            --num;
         }
-        count++;
+        ++steps;
     }
-    return count;
+    return steps;
 }
 
 /* ---- generated tests ---- */

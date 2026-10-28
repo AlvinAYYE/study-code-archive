@@ -16,20 +16,21 @@
  *     respectively.
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     在 n×n 棋盤放 n 個皇后互不攻擊，回傳所有布局。
+ *     N 皇后問題要求在 n x n 棋盤上放置 n 個皇后，使任意兩個皇后都
+ *     無法互相攻擊。給定整數 n，請回傳所有不同的合法棋盤配置，順序不限。
+ *     每個配置由 n 個字串組成，其中 'Q' 表示皇后，'.' 表示空格。
  *
- * Examples:
- *   Example 1:
- *     Input: n = 4
- *     Output:
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：n = 4
+ *     輸出：
  *     [[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
- *     Explanation: There exist two distinct solutions to the 4-queens
- *     puzzle as shown above
- *   Example 2:
- *     Input: n = 1
- *     Output: [["Q"]]
+ *     說明：四皇后問題共有上述兩種不同解法。
+ *   範例 2：
+ *     輸入：n = 1
+ *     輸出：[["Q"]]
  *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= n <= 9
  *
  * LeetCode official C stub (函式簽名):
@@ -37,7 +38,16 @@
  *   }
  *
  * [EN] Approach: Row-by-row backtracking with columns + both diagonals marked used; snapshot the board when row==n. Classic O(n!).
- * [中文] 思路: 逐行放置＋回溯，用陣列記錄欄位與兩條對角線是否被占；放滿 n 行就複製棋盤。時間 O(n!)。
+ * [中文] 直觀解題思路：
+ *   1. 每列恰好放一個皇后，從第 0 列開始，依序嘗試該列的每一欄。
+ *   2. 同一欄不能重複；兩格 (r,c) 的 r+c 相同時在同一條「/」對角線，
+ *      r-c 相同時在同一條「\\」對角線。用三個布林陣列 O(1) 判斷衝突。
+ *   3. 選定位置後標記三種攻擊線，遞迴處理下一列；返回時取消標記，
+ *      讓後續分支可以重新使用，這就是回溯。
+ *   4. 當 r == n 時代表所有列都合法放完，依 pos[] 複製出一份棋盤答案。
+ *
+ * 複雜度：搜尋上界約 O(n!)；三組標記與路徑使用 O(n) 空間，輸出所需
+ * 空間另計。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -47,6 +57,7 @@
 /* ---------- LeetCode submission / 提交區 ---------- */
 static void record(int n, int *pos, char ****boards, int *bcnt, int *bcap) {
     char **board; int r, c;
+    /* 答案數未知，以倍增方式擴充棋盤指標陣列。 */
     if (*bcnt == *bcap) {
         *bcap = *bcap ? *bcap * 2 : 8;
         *boards = (char ***)realloc(*boards, (size_t)*bcap * sizeof(char **));
@@ -66,9 +77,11 @@ static void bt(int n, int r, int *pos, char *ucol, char *ud1, char *ud2,
     int c;
     if (r == n) { record(n, pos, boards, bcnt, bcap); return; }
     for (c = 0; c < n; ++c) {
+        /* r-c 可能為負，加上 n-1 後映射到 0..2n-2。 */
         if (ucol[c] || ud1[r + c] || ud2[r - c + n - 1]) continue;
         ucol[c] = ud1[r + c] = ud2[r - c + n - 1] = 1; pos[r] = c;
         bt(n, r + 1, pos, ucol, ud1, ud2, boards, bcnt, bcap);
+        /* 復原選擇，繼續嘗試同一列的下一個欄位。 */
         ucol[c] = ud1[r + c] = ud2[r - c + n - 1] = 0;
     }
 }

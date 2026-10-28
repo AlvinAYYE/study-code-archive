@@ -11,31 +11,34 @@
  *     all overlapping intervals, and return an array of the non-overlapping
  *     intervals that cover all the intervals in the input.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     合併所有重疊區間並回傳不重疊區間集合。
+ * [中文] 題目說明
+ *     給定多個區間 intervals[i] = [start_i, end_i]，合併所有互相重疊的區間，
+ *     回傳一組互不重疊、且完整涵蓋原輸入範圍的區間。
  *
- * Examples:
- *   Example 1:
- *     Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
- *     Output: [[1,6],[8,10],[15,18]]
- *     Explanation: Since intervals [1,3] and [2,6] overlap, merge them
- *     into [1,6].
- *   Example 2:
- *     Input: intervals = [[1,4],[4,5]]
- *     Output: [[1,5]]
- *     Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+ *     輸出：[[1,6],[8,10],[15,18]]
+ *     說明：[1,3] 與 [2,6] 重疊，因此合併成 [1,6]。
+ *   範例 2：
+ *     輸入：intervals = [[1,4],[4,5]]
+ *     輸出：[[1,5]]
+ *     說明：[1,4] 與 [4,5] 共用端點 4，仍視為重疊。
  *
- * Constraints:
- *   - 1 <= intervals.length <= 10^4
- *   - intervals[i].length == 2
- *   - 0 <= starti <= endi <= 10^4
+ * [中文] 限制
+ *   - 1 <= intervals.length <= 10^4。
+ *   - intervals[i].length == 2。
+ *   - 0 <= start_i <= end_i <= 10^4。
  *
  * LeetCode official C stub (函式簽名):
  *   int** merge(int** intervals, int intervalsSize, int* intervalsColSize, int* returnSize, int** returnColumnSizes) {
  *   }
  *
- * [EN] Approach: Sort by start, then greedily extend the current interval while it overlaps. Time O(n log n), space O(1) extra.
- * [中文] 思路: 依起點排序後依序貪心：若與當前區間重疊就延伸右端點，否則新開一段。時間 O(n log n)。
+ * [中文] 直觀解題思路
+ *   1. 先按起點由小到大排序；如此後面的區間不可能從目前區間左側開始。
+ *   2. 若下一區間的起點 <= 目前結果最後一段的終點，兩者重疊，只要把終點延伸到較大值。
+ *   3. 否則兩者分離，將下一區間複製成新的結果區間。
+ *   排序主導時間複雜度 O(n log n)；不計輸出，額外空間取決於 qsort 的實作。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -56,7 +59,8 @@ int **merge(int **intervals, int intervalsSize, int *intervalsColSize,
     out  = (int **)malloc((size_t)intervalsSize * sizeof(int *));
     cols = (int *)malloc((size_t)intervalsSize * sizeof(int));
     for (i = 0; i < intervalsSize; ++i) {
-        if (cnt && intervals[i][0] <= out[cnt - 1][1]) {      /* overlaps last */
+        /* 排序後只需和輸出中的最後一段比較。 */
+        if (cnt && intervals[i][0] <= out[cnt - 1][1]) {
             if (intervals[i][1] > out[cnt - 1][1]) out[cnt - 1][1] = intervals[i][1];
         } else {
             out[cnt] = (int *)malloc(2 * sizeof(int));

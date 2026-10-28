@@ -1,36 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1160. Find Words That Can Be Formed by Characters
- * Difficulty: Easy
- * Tags: array, hash-table, string, counting
- * URL: https://leetcode.com/problems/find-words-that-can-be-formed-by-characters/
- * Source: community solution, repo akib-islam-coder_leetcodesolutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given an array of strings words and a string chars.
- *     A string is good if it can be formed by characters from chars (each
- *     character can only be used once for each word in words).
- *     Return the sum of lengths of all good strings in words.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     給定一個陣列 of 字串 words and a 字串 chars.
+ * 【完整中文題意】給定字串陣列 words 和字串 chars。若某個 word 的每個字母都能從 chars 取得，而且 chars 中每個字母每個 word 最多只能使用一次，該 word 就是可組成的字串。請回傳所有可組成字串的長度總和。
  *
- * Examples:
- *     Input: words = ["cat","bt","hat","tree"], chars = "atach"
- *     Output: 6
- *     Explanation: The strings that can be formed are "cat" and
- *     "hat" so the answer is 3 + 3 = 6.
- *     Input: words = ["hello","world","leetcode"], chars =
- *     "welldonehoneyr"
- *     Output: 10
- *     Explanation: The strings that can be formed are "hello" and
- *     "world" so the answer is 5 + 5 = 10.
+ * 【範例】
+ * 1. words = ["cat","bt","hat","tree"], chars = "atach" → 6（可組成 "cat" 與 "hat"，長度為 3 + 3）
+ * 2. words = ["hello","world","leetcode"], chars = "welldonehoneyr" → 10（可組成 "hello" 與 "world"）
  *
- * Constraints:
- *   - 1 <= words.length <= 1000
- *   - 1 <= words[i].length, chars.length <= 100
- *   - words[i] and chars consist of lowercase English letters.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= words.length <= 1000
+ * - 1 <= words[i].length, chars.length <= 100
+ * - words[i] 與 chars 只含小寫英文字母
+ *
+ * 【解題步驟】
+ * 1. 統計 chars 中 a 到 z 每個字母可用幾次。
+ * 2. 逐一處理每個 word，統計它需要的字母數量。
+ * 3. 只要任何字母需求量超過 chars 的可用量，這個 word 就不能組成；否則把它的長度加到總和。不同 word 可以各自重複使用 chars，因為每個字只獨立判斷。
+ *
+ * 【複雜度】時間 O(chars 長度 + words 總字元數 + 26 × words.length)；空間 O(26)，也就是 O(1) 額外空間
+ *
+ * 【LeetCode C 函式】int countCharacters(char** words, int wordsSize, char* chars)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -204,51 +194,33 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-int original_hashtable[26] = {0};
-int cur_hashtable[26] = {0};
+int countCharacters(char** words, int wordsSize, char* chars) {
+    int available[26] = {0};
+    for (int i = 0; chars[i] != '\0'; ++i) {
+        ++available[chars[i] - 'a'];
+    }
 
-int countCharacters(char ** words, int wordsSize, char * chars)
-{
-    memset(original_hashtable, 0x00, sizeof(original_hashtable));
-    
-    //Build hashtable, the value being the freq of characters
-    int i=0;
-    while(chars[i] != '\0')
-    {
-        original_hashtable[chars[i] - 'a'] += 1;
-        i++;
-    }
-    
-    
-    int count = 0;
-    for(i=0; i<wordsSize; i++)
-    {
-        memcpy(cur_hashtable, original_hashtable, sizeof(original_hashtable));
-        int j=0;
-        bool match = true;
-        while(words[i][j] != '\0')
-        {
-            int freq = cur_hashtable[words[i][j] - 'a'];
-            if(freq > 0)
-            {
-                cur_hashtable[words[i][j] - 'a'] -= 1;
+    int totalLength = 0;
+    for (int i = 0; i < wordsSize; ++i) {
+        int needed[26] = {0};
+        int wordLength = 0;
+        bool canForm = true;
+
+        for (int j = 0; words[i][j] != '\0'; ++j) {
+            int letter = words[i][j] - 'a';
+            ++needed[letter];
+            ++wordLength;
+            if (needed[letter] > available[letter]) {
+                canForm = false;
             }
-            
-            if(freq == 0)
-            {
-                match = false;
-            }
-            j++;
         }
-        
-        if(match)
-        {
-            count += strlen(words[i]);
-        }
+
+        if (canForm) totalLength += wordLength;
     }
-    return count;
+
+    return totalLength;
 }
+
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

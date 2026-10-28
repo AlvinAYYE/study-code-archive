@@ -206,57 +206,26 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
- * Definition for singly-linked list.
- * 
- */
+/* ---- 易讀解法：把區段中的節點逐個插到反轉區段前端 ---- */
+struct ListNode* reverseBetween(struct ListNode* head, int left, int right) {
+    struct ListNode dummy = {0, NULL};
+    struct ListNode *before;
+    struct ListNode *sublistHead;
+    int moves;
 
+    dummy.next = head;
+    before = &dummy;
+    for (moves = 1; moves < left; ++moves) before = before->next;
 
-struct ListNode* reverseBetween(struct ListNode* head, int m, int n) 
-{
-	struct ListNode *cur = head;
-	struct ListNode *nxt = NULL;
-	struct ListNode *pre = NULL;
-	struct ListNode *tmp1 = NULL; // node with index m-1
-	struct ListNode *tmp2 = NULL; // node with index m
-	int ctr = 0;
-	for (int i = 1; i <= n; i++) 
-	{
-		nxt = cur->next;
-		if (i == m-1)
-		{
-			tmp1 = cur;
-		}
-
-		if (i >= m)
-		{  
-			if (i == m)
-			{
-				tmp2 = cur;
-			}
-			cur->next = pre;
-		}
-		pre = cur; 
-		cur = nxt;
-
-		if (i == n)
-		{
-			if (tmp1) // case: m > 0
-			{
-				tmp1->next = pre;
-			} else // case: m = 0
-			{
-				head = pre;
-			}
-
-			tmp2->next = cur;
-		}
-	}    
-	return head;
+    sublistHead = before->next;
+    for (moves = 0; moves < right - left; ++moves) {
+        struct ListNode *nodeToMove = sublistHead->next;
+        sublistHead->next = nodeToMove->next;
+        nodeToMove->next = before->next;
+        before->next = nodeToMove;
+    }
+    return dummy.next;
 }
-
 
 /* ---- generated tests ---- */
 int main(void){

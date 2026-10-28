@@ -1,35 +1,12 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0118. Pascal's Triangle
- * Difficulty: Easy
- * Tags: array, dynamic-programming
- * URL: https://leetcode.com/problems/pascals-triangle/
- * Source: community solution, repo begeekmyfriend_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer numRows, return the first numRows of Pascal's
- *     triangle.
- *     In Pascal's triangle, each number is the sum of the two numbers
- *     directly above it as shown:
- *
- * [中文] 題目: 楊輝三角
- * [中文] 題目說明:
- *     給定整數 numRows，回傳楊輝三角的前 numRows 列。每列
- *     兩端皆為 1，內部每個數字等於上一列正上方兩個相鄰數字之和。numR
- *     ows 介於 1 至 30。
- *
- * [中文] 思路:
- *     逐列配置陣列，先將首尾設為 1，再以前一列相鄰兩數之和填入中間位置。
- *
- * Examples:
- *     Input: numRows = 5
- *     Output: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
- *     Input: numRows = 1
- *     Output: [[1]]
- *
- * Constraints:
- *   - 1 <= numRows <= 30
- * ==========================================================================
+ * LeetCode 0118. Pascal's Triangle《楊輝三角》
+ * 題意：給定列數 numRows，回傳楊輝三角的前 numRows 列。每列兩端都是 1；
+ *       中間的數字等於上一列左上與右上的兩個數字相加。
+ * 範例：numRows=5 -> [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+ *       numRows=1 -> [[1]]
+ * 限制：1 <= numRows <= 30。
+ * 解法：逐列建立陣列；先填兩端的 1，再用上一列相鄰兩數之和填中間。
+ * 複雜度：時間 O(numRows^2)，輸出空間 O(numRows^2)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -203,32 +180,30 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
-#include <stdlib.h>
-
 
 /**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *returnColumnSizes array must be malloced, assume caller calls free().
+ * 回傳每列各自配置的整數陣列；呼叫端負責釋放回傳的記憶體。
  */
-int** generate(int numRows, int *returnSize, int** returnColumnSizes)
-{
-    int i, j;
-    int **triangle = malloc(numRows * sizeof(int *));
-    *returnColumnSizes = malloc(numRows * sizeof(int *));
-    for (i = 0; i < numRows; i++) {
-        int num = i + 1;
-        (*returnColumnSizes)[i] = num;
-        triangle[i] = malloc(num * sizeof(int));
-        triangle[i][0] = 1;
-        triangle[i][num - 1] = 1;
-        for (j = 1; j <= num - 2; j++) {
-            triangle[i][j] = triangle[i - 1][j - 1] + triangle[i - 1][j];
+int** generate(int numRows, int* returnSize, int** returnColumnSizes) {
+    int** triangle = malloc((size_t)numRows * sizeof(*triangle));
+    *returnColumnSizes = malloc((size_t)numRows * sizeof(**returnColumnSizes));
+    *returnSize = numRows;
+
+    for (int row = 0; row < numRows; ++row) {
+        int length = row + 1;
+        triangle[row] = malloc((size_t)length * sizeof(**triangle));
+        (*returnColumnSizes)[row] = length;
+
+        /* 每列最左與最右的數字固定是 1。 */
+        triangle[row][0] = 1;
+        triangle[row][length - 1] = 1;
+
+        /* 內部數字由上一列相鄰的兩個數字相加而來。 */
+        for (int col = 1; col < length - 1; ++col) {
+            triangle[row][col] =
+                triangle[row - 1][col - 1] + triangle[row - 1][col];
         }
     }
-    *returnSize = numRows;
     return triangle;
 }
 

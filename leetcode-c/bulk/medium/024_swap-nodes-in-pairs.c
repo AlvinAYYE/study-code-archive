@@ -17,8 +17,12 @@
  *     ，只能調整節點本身的連結。
  *
  * [中文] 思路:
- *     程式以遞迴處理每一對節點：把第二個節點接到第一個之前，再將第一個節點
- *     連到後續子串列交換後的結果。剩下不足一對的節點直接保留。
+ *     使用虛擬頭節點與固定數量的指標逐對調整 next 連結。剩下一個落單節點
+ *     時保留原位，因此不需修改節點值，也不需配置新節點。
+ * [中文] 範例：[1,2,3,4] -> [2,1,4,3]；[] -> []；[1] -> [1]；
+ *     [1,2,3] -> [2,1,3]。
+ * [中文] 限制：節點數介於 0 到 100，0 <= Node.val <= 100。
+ *     時間 O(n)，額外空間 O(1)。
  *
  * Examples:
  *     Input: head = [1,2,3,4]
@@ -207,55 +211,27 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-24. Swap Nodes in Pairs
-
-Given a linked list, swap every two adjacent nodes and return its head.
-
-
-
-For example,
-Given 1->2->3->4, you should return the list as 2->1->4->3.
-
-
-
-Your algorithm should use only constant space. You may not modify the values in the list, only nodes itself can be changed.
-*/
-
-/**
- * Definition for singly-linked list.
- * 
- */
+/* ---- 易讀解法：用虛擬頭節點逐對重新連接 ---- */
 struct ListNode* swapPairs(struct ListNode* head) {
-    struct ListNode *a, *b, *c;
-    
-    a = head;
-    if (a && a->next) {
-        b = a->next;
-        c = b->next;
-        b->next = a;
-        a->next = swapPairs(c);
-        return b;
+    struct ListNode dummy = {0, head};
+    struct ListNode *previous = &dummy;
+
+    while (previous->next != NULL && previous->next->next != NULL) {
+        struct ListNode *first = previous->next;
+        struct ListNode *second = first->next;
+
+        /* 將 previous -> first -> second 改接為 previous -> second -> first。 */
+        first->next = second->next;
+        second->next = first;
+        previous->next = second;
+
+        /* 下一對緊接在 first 後面，因此 first 成為下一輪的前一節點。 */
+        previous = first;
     }
-    
-    return a;
+
+    return dummy.next;
 }
 
-/*
-Difficulty:Medium
-Total Accepted:181.1K
-Total Submissions:470K
-
-
-Companies Microsoft Bloomberg Uber
-Related Topics Linked List
-Similar Questions 
-                
-                  
-                    Reverse Nodes in k-Group
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,45 +1,31 @@
-# 0201. Bitwise AND of Numbers Range《數字範圍的位元 AND》
+# LeetCode 0201. Bitwise AND of Numbers Range
 
-- **Difficulty**: Medium
-- **Tags**: bit-manipulation
-- **題目連結**: https://leetcode.com/problems/bitwise-and-of-numbers-range/
-- **程式碼**: [`201_bitwise-and-of-numbers-range.c`](./201_bitwise-and-of-numbers-range.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+Title-CN: 範圍內數字的按位 AND
 
-## 題目說明（中文）
+## 題目
 
-給定 left 與 right，代表閉區間 [left, right]，請回傳區間內所有整數做位元 AND 的結果。輸入滿足 0 ≤ left ≤ right ≤ 2^31 - 1。
+給定兩個整數 left 和 right，請計算從 left 到 right（包含兩端）所有整數的按位 AND。
 
-**思路**：程式由低位元開始清除遮罩中的位元，直到 left 與 right 的保留位元相同；最終以 left 與此共同前綴遮罩做 AND。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：left = 5，right = 7；輸出：4。因為 5 AND 6 AND 7 = 4。
+2. 輸入：left = 0，right = 0；輸出：0。
+3. 輸入：left = 1，right = 2147483647；輸出：0。
 
-Given two integers left and right that represent the range [left, right], return the bitwise AND of all numbers in this range, inclusive.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 0 <= left <= right <= 2^31 - 1
 
-```text
-Input: left = 5, right = 7
-Output: 4
+## 解題思路
 
-Input: left = 0, right = 0
-Output: 0
+1. 把 left 和 right 同時右移，直到兩者相同。右移會保留共同的高位前綴，並逐步移除可能不同的低位。
+2. 記錄右移次數 shift；相同前綴就是整個區間 AND 後一定保留的位元。
+3. 最後把共同前綴左移 shift 位，低位補 0，得到區間 AND。
 
-Input: left = 1, right = 2147483647
-Output: 0
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(31)，額外空間 O(1)。
 
-0 <= left <= right <= 231 - 1
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-int rangeBitwiseAnd(int left, int right) {
-    
-}
-```
+int rangeBitwiseAnd(int left, int right)

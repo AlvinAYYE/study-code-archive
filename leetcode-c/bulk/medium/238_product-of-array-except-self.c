@@ -1,42 +1,20 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0238. Product of Array Except Self
+ * LeetCode 0238. Product of Array Except Self（除自身以外陣列的乘積）
  * Difficulty: Medium
- * Tags: array, prefix-sum
- * URL: https://leetcode.com/problems/product-of-array-except-self/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array nums, return an array answer such that
- *     answer[i] is equal to the product of all the elements of nums except
- *     nums[i].
- *     The product of any prefix or suffix of nums is guaranteed to fit in
- *     a 32-bit integer.
- *     You must write an algorithm that runs in O(n) time and without using
- *     the division operation.
- *
- * [中文] 題目: 除自身以外陣列的乘積
- * [中文] 題目說明:
- *     給定整數陣列 nums，建立 answer，其中 answer[i]
- *      為除 nums[i] 外所有元素的乘積。必須在 O(n) 時間內且
- *     不可使用除法；各前綴或後綴乘積保證可放入 32 位元整數。
- *
- * [中文] 思路:
- *     先由左至右把每個位置左側的前綴乘積寫入答案陣列。再由右至左維護後綴乘
- *     積，乘到對應答案位置。
- *
- * Examples:
- *     Input: nums = [1,2,3,4]
- *     Output: [24,12,8,6]
- *     Input: nums = [-1,1,0,-3,3]
- *     Output: [0,0,9,0,0]
- *
- * Constraints:
+ * 題意：給定整數陣列 nums，回傳 answer，使 answer[i] 等於 nums 中除了 nums[i] 以外所有元素的乘積。不能使用除法，並需在 O(n) 時間內完成。
+ * 範例：
+ *   1. 輸入：nums = [1,2,3,4]；輸出：[24,12,8,6]。
+ *   2. 輸入：nums = [-1,1,0,-3,3]；輸出：[0,0,9,0,0]。
+ * 限制：
  *   - 2 <= nums.length <= 10^5
  *   - -30 <= nums[i] <= 30
- *   - The input is generated such that answer[i] is guaranteed to
- *   fit in a 32-bit integer.
- * ==========================================================================
+ *   - 每個 answer[i] 都保證能用 32 位元整數表示
+ * 解法：
+ *   1. 若有至少兩個 0，每個位置排除一個元素後仍會乘到 0，因此答案全為 0。
+ *   2. 若恰好一個 0，只有 0 所在位置可能非 0；該位置的答案是所有非 0 元素相乘。
+ *   3. 沒有 0 時，先由左往右把「左側乘積」存入答案，再由右往左乘上「右側乘積」。
+ *   4. 用兩次線性掃描取代每個位置重新計算，完全不需要除法。
+ * 複雜度：時間 O(n)，額外空間 O(1)（不計回傳陣列）。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,61 +188,54 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-238. Product of Array Except Self
-
-Given an array of n integers where n > 1, nums, return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
-
-Solve it without division and in O(n).
-
-For example, given [1,2,3,4], return [24,12,8,6].
-
-Follow up:
-Could you solve it with constant space complexity? (Note: The output array does not count as extra space for the purpose of space complexity analysis.)
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
 int* productExceptSelf(int* nums, int numsSize, int* returnSize) {
-    int *x = malloc(numsSize * sizeof(int));
-    //assert(x);
-    int i, j, k;
-    
-    x[0] = 1;
-    for (i = 1; i < numsSize; i ++) {
-        x[i] = x[i - 1] * nums[i - 1];
+    int *answer = (int *)malloc(sizeof(int) * (size_t)numsSize);
+    if (answer == NULL) {
+        *returnSize = 0;
+        return NULL;
     }
-    k = nums[numsSize - 1];
-    for (i = numsSize - 2; i >= 0; i --) {
-        x[i] = x[i] * k;
-        k *= nums[i];
-    }
-    
     *returnSize = numsSize;
-    return x;
+
+    int zeroCount = 0;
+    int zeroIndex = -1;
+    for (int i = 0; i < numsSize; i++) {
+        if (nums[i] == 0) {
+            zeroCount++;
+            zeroIndex = i;
+        }
+    }
+
+    if (zeroCount >= 2) {
+        for (int i = 0; i < numsSize; i++) {
+            answer[i] = 0;
+        }
+        return answer;
+    }
+    if (zeroCount == 1) {
+        long long product = 1;
+        for (int i = 0; i < numsSize; i++) {
+            if (i != zeroIndex) {
+                product *= nums[i];
+            }
+            answer[i] = 0;
+        }
+        answer[zeroIndex] = (int)product;
+        return answer;
+    }
+
+    long long leftProduct = 1;
+    for (int i = 0; i < numsSize; i++) {
+        answer[i] = (int)leftProduct;
+        leftProduct *= nums[i];
+    }
+
+    long long rightProduct = 1;
+    for (int i = numsSize - 1; i >= 0; i--) {
+        answer[i] = (int)(answer[i] * rightProduct);
+        rightProduct *= nums[i];
+    }
+    return answer;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:106.1K
-Total Submissions:216.4K
-
-
-Companies Amazon LinkedIn Apple Facebook Microsoft
-Related Topics Array
-Similar Questions 
-                
-                  
-                    Trapping Rain Water
-                  
-                    Maximum Product Subarray
-                  
-                    Paint House II
-*/
 
 /* ---- generated tests ---- */
 int main(void){

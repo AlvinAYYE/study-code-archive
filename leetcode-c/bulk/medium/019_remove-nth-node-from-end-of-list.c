@@ -16,9 +16,13 @@
  *     。n 保證有效；題目進一步要求嘗試在一次走訪中完成。
  *
  * [中文] 思路:
- *     程式讓快指針先向前走 n 步，再讓快慢指針同步前進，使慢指針停在待刪
- *     節點。另以 prev 保留前一節點來重新連接串列，並特別處理刪除頭節
- *     點的情況。
+ *     在原頭節點前加上虛擬節點，快慢指標先相隔 n 步，再一起走到尾端。
+ *     此時慢指標的下一個節點就是要刪除的節點；虛擬節點也讓刪除頭節點
+ *     能使用相同的接線方式。
+ * [中文] 範例：輸入 [1,2,3,4,5]、n = 2，刪除節點 4 後得到 [1,2,3,5]；
+ *     輸入 [1]、n = 1，刪除後為空串列；輸入 [1,2]、n = 1，結果為 [1]。
+ * [中文] 限制：節點數 sz 滿足 1 <= sz <= 30，0 <= Node.val <= 100，
+ *     1 <= n <= sz。時間 O(sz)，額外空間 O(1)。
  *
  * Examples:
  *     Input: head = [1,2,3,4,5], n = 2
@@ -206,64 +210,28 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-19. Remove Nth Node From End of List
-
-Given a linked list, remove the nth node from the end of list and return its head.
-
-
-For example,
-
-   Given linked list: 1->2->3->4->5, and n = 2.
-
-   After removing the second node from the end, the linked list becomes 1->2->3->5.
-
-
-
-Note:
-Given n will always be valid.
-Try to do this in one pass.
-*/
-
-/**
- * Definition for singly-linked list.
- * 
- */
+/* ---- 易讀解法：快慢指標保持 n 個節點的距離 ---- */
 struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
-    struct ListNode *a, *b, *p = NULL;
-    a = b = head;
-    while (n-- > 0) {       // b moves n steps first
-        b = b->next;
+    struct ListNode dummy = {0, head};
+    struct ListNode *fast = &dummy;
+    struct ListNode *slow = &dummy;
+    struct ListNode *removed;
+    int step;
+
+    for (step = 0; step < n; ++step) {
+        fast = fast->next;
     }
-    
-    while (b) {             // a, b move together, keeps a gap of n steps
-        p = a;
-        a = a->next;
-        b = b->next;
+    while (fast->next != NULL) {
+        fast = fast->next;
+        slow = slow->next;
     }
-    
-    if (a == head) {        // a is the one to be removed
-        head = a->next;
-    } else {
-        p->next = a->next;
-    }
-    free(a);
-    
-    return head;
+
+    removed = slow->next;
+    slow->next = removed->next;
+    free(removed);
+    return dummy.next;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:188.5K
-Total Submissions:563.1K
-
-
-Related Topics Linked List Two Pointers
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

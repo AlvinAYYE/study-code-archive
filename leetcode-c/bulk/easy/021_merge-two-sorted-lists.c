@@ -14,12 +14,24 @@
  *
  * [中文] 題目: 合併兩個有序連結串列
  * [中文] 題目說明:
- *     給定兩個已依非遞減順序排列的連結串列，將它們合併成一個有序串列。合併
- *     時應串接原本兩串列的節點，並回傳合併後的頭節點。
+ *     給定兩個按非遞減順序排列的單向鏈結串列 list1 與 list2，重新串接
+ *     兩者原有節點，合併成一個同樣有序的串列，並回傳表頭。
  *
- * [中文] 思路:
- *     程式以虛擬頭節點作為輸出尾端，比較兩串列目前節點後接上較小者。任一串
- *     列耗盡時，直接接上另一串列的剩餘部分。
+ * [中文] 範例:
+ *     1. list1 = [1,2,4]、list2 = [1,3,4]，輸出 [1,1,2,3,4,4]。
+ *     2. list1 = []、list2 = []，輸出 []。
+ *     3. list1 = []、list2 = [0]，輸出 [0]。
+ *
+ * [中文] 限制:
+ *     - 兩串列的節點總數介於 0 到 50。
+ *     - -100 <= Node.val <= 100
+ *     - list1 與 list2 都按非遞減順序排列。
+ *
+ * [中文] 直觀解題思路:
+ *     1. 建立虛擬表頭 head，p 指向結果尾端，免除第一個節點的特殊處理。
+ *     2. 比較兩串列表頭，把較小節點接到 p 後，再推進該串列與 p。
+ *     3. 任一串列耗盡後，另一串列的剩餘部分可整段接上。
+ *     4. 時間 O(m+n)，只改動指標，額外空間 O(1)。
  *
  * Examples:
  *     Input: list1 = [1,2,4], list2 = [1,3,4]
@@ -221,6 +233,7 @@ Merge two sorted linked lists and return it as a new list. The new list should b
 struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2) {
     struct ListNode head, *p;
     
+    /* head 是不存答案資料的虛擬表頭，p 始終指向目前尾端。 */
     p = &head;
     
     while (l1 && l2) {
@@ -234,7 +247,7 @@ struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2) {
         p = p->next;
     }
     
-    // chain remaining
+    /* 一條串列用完後，直接接上另一條已排序的剩餘部分。 */
     if (l1) p->next = l1;
     if (l2) p->next = l2;
     

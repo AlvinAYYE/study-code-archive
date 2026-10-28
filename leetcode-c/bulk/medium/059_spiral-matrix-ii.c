@@ -200,46 +200,45 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** generateMatrix(int n, int* returnSize, int** returnColumnSizes)
-{
-    int **ret = malloc(sizeof(int *) * n);
-    *returnColumnSizes = malloc(sizeof(int) * n);
-    *returnSize = n;
-    for (int i = 0; i < n; i++) {
-        ret[i] = malloc(sizeof(int) * n);
-        (*returnColumnSizes)[i] = n;
+/* ---- 易讀解法：沿四邊螺旋填入遞增數字 ---- */
+int** generateMatrix(int n, int* returnSize, int** returnColumnSizes) {
+    int **matrix = (int **)malloc((size_t)n * sizeof(int *));
+    int *columnSizes = (int *)malloc((size_t)n * sizeof(int));
+    int top = 0;
+    int bottom = n - 1;
+    int left = 0;
+    int right = n - 1;
+    int value = 1;
+    int row;
+
+    for (row = 0; row < n; ++row) {
+        matrix[row] = (int *)malloc((size_t)n * sizeof(int));
+        columnSizes[row] = n;
     }
 
-    int dir[4][2] = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}}; // right, down, left, up
-    int didx = 0, row_tail = n, col_tail = n, row_head = 1, col_head = 0;
-    int x = 0, y = 0;
-    for (int ctr = 1; ctr <= n*n; ctr++) {
-        ret[x][y] = ctr;
-        if (didx == 0 && y + 1 == col_tail) {
-            didx = 1;
-            col_tail--;
-        } else if (didx == 1 && x + 1 == row_tail) {
-            didx = 2;
-            row_tail--;
-        } else if (didx == 2 && y == col_head) {
-            didx = 3;
-            col_head++;
-        } else if (didx == 3 && x == row_head) {
-            didx = 0;
-            row_head++;
+    while (top <= bottom && left <= right) {
+        int i;
+        for (i = left; i <= right; ++i) matrix[top][i] = value++;
+        ++top;
+
+        for (i = top; i <= bottom; ++i) matrix[i][right] = value++;
+        --right;
+
+        if (top <= bottom) {
+            for (i = right; i >= left; --i) matrix[bottom][i] = value++;
+            --bottom;
         }
-        x += dir[didx][0];
-        y += dir[didx][1];
+        if (left <= right) {
+            for (i = bottom; i >= top; --i) matrix[i][left] = value++;
+            ++left;
+        }
     }
-    return ret;
+
+    *returnSize = n;
+    *returnColumnSizes = columnSizes;
+    return matrix;
 }
+
 
 /* ---- generated tests ---- */
 int main(void){

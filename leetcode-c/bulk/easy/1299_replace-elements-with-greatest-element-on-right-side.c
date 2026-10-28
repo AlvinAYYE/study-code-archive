@@ -1,46 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1299. Replace Elements with Greatest Element on Right Side
- * Difficulty: Easy
- * Tags: array
- * URL: https://leetcode.com/problems/replace-elements-with-greatest-element-on-right-side/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array arr, replace every element in that array with the
- *     greatest element among the elements to its right, and replace the
- *     last element with -1.
- *     After doing so, return the array.
+ * Title-CN: 將每個元素替換成右側最大值
+ * LeetCode 1299. Replace Elements with Greatest Element on Right Side (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 陣列 arr, replace every element in that 陣列 with the greatest
- *     element among the elements to its right, and replace the last
- *     element with -1.
+ * 題意翻譯：給定整數陣列 arr。把每個位置的值替換成它右側所有元素中的最大值；
+ * 最後一個位置右側沒有元素，因此替換成 -1。回傳替換後的陣列。
  *
- * Examples:
- *     Input: arr = [17,18,5,4,6,1]
- *     Output: [18,6,6,6,1,-1]
- *     Explanation:
- *     - index 0 --> the greatest element to the right of index 0 is
- *     index 1 (18).
- *     - index 1 --> the greatest element to the right of index 1 is
- *     index 4 (6).
- *     - index 2 --> the greatest element to the right of index 2 is
- *     index 4 (6).
- *     - index 3 --> the greatest element to the right of index 3 is
- *     index 4 (6).
- *     - index 4 --> the greatest element to the right of index 4 is
- *     index 5 (1).
- *     - index 5 --> there are no elements to the right of index 5,
- *     so we put -1.
- *     Input: arr = [400]
- *     Output: [-1]
- *     Explanation: There are no elements to the right of index 0.
+ * 範例 1：arr = [17,18,5,4,6,1]，輸出 [18,6,6,6,1,-1]。
+ * 範例 2：arr = [400]，輸出 [-1]。
  *
- * Constraints:
- *   - 1 <= arr.length <= 10^4
- *   - 1 <= arr[i] <= 10^5
- * ==========================================================================
+ * 限制：1 <= arr.length <= 10^4；1 <= arr[i] <= 10^5。
+ *
+ * 解題思路：由右往左掃描，維護「目前位置右側的最大值」。先把這個最大值放進答案，
+ * 再用原本的 arr[i] 更新最大值，供左邊位置使用。最後位置的右側沒有元素，所以
+ * 初始最大值設為 -1。每個元素只處理一次，時間 O(n)，空間 O(n) 用來存回傳陣列。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -221,16 +193,27 @@ static int lc_dummy_;
  */
 int *replaceElements(int *arr, int arrSize, int *returnSize)
 {
+    int *replaced;
+    int greatestOnRight = -1;
+    int i;
+
     *returnSize = arrSize;
-    int max = arr[arrSize - 1];
-    arr[arrSize - 1] = -1;
-    for (int i = arrSize - 2; i >= 0; i--) {
-        int tmp = max;
-        max = (max > arr[i] ? max : arr[i]);
-        arr[i] = tmp;
+    if (arrSize <= 0) {
+        *returnSize = 0;
+        return NULL;
     }
 
-    return arr;
+    replaced = malloc(sizeof(*replaced) * (size_t)arrSize);
+    if (replaced == NULL) {
+        *returnSize = 0;
+        return NULL;
+    }
+    for (i = arrSize - 1; i >= 0; --i) {
+        int originalValue = arr[i];
+        replaced[i] = greatestOnRight;
+        if (originalValue > greatestOnRight) greatestOnRight = originalValue;
+    }
+    return replaced;
 }
 /* ---- generated tests ---- */
 int main(void){
@@ -239,15 +222,17 @@ int main(void){
   int rsz_0 = 0;
   static int arr0_0[] = {17,18,5,4,6,1};
   int *act_0 = replaceElements(arr0_0, 6,&rsz_0);
-  static const int exp_0[] = {-1,1,6,6,6,18};
-  if (!(lc_eq_list_sorted(act_0, rsz_0, exp_0, 6))) { pass = 0; printf("  test 0 FAIL\n"); }
+  static const int exp_0[] = {18,6,6,6,1,-1};
+  if (!(lc_eq_list(act_0, rsz_0, exp_0, 6))) { pass = 0; printf("  test 0 FAIL\n"); }
+  free(act_0);
   ntests++; }
 {
   int rsz_1 = 0;
   static int arr1_0[] = {400};
   int *act_1 = replaceElements(arr1_0, 1,&rsz_1);
   static const int exp_1[] = {-1};
-  if (!(lc_eq_list_sorted(act_1, rsz_1, exp_1, 1))) { pass = 0; printf("  test 1 FAIL\n"); }
+  if (!(lc_eq_list(act_1, rsz_1, exp_1, 1))) { pass = 0; printf("  test 1 FAIL\n"); }
+  free(act_1);
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 1299, "replaceElements", ntests);
  return (pass&&ntests)?0:1;

@@ -1,48 +1,45 @@
-# 0090. Subsets II《子集 II》
+# 0090. Subsets II｜子集合 II
 
-- **Difficulty**: Medium
-- **Tags**: array, backtracking, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/subsets-ii/
-- **程式碼**: [`090_subsets-ii.c`](./090_subsets-ii.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、回溯、位元運算
+- **題目連結**：[LeetCode 0090](https://leetcode.com/problems/subsets-ii/)
+- **C 程式**：[090_subsets-ii.c](./090_subsets-ii.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定可能含重複元素的整數陣列 nums，回傳所有可能的子集。答案不得包含重複子集，回傳順序不限。nums 長度介於 1 到 10。
+給定可能含有重複值的整數陣列 `nums`，回傳所有不同的子集合。每個元素可以選或不選；若輸入有重複數字，答案仍不能出現內容相同的子集合。答案順序不限。
 
-**思路**：先排序並壓縮為每個不同數值及其出現次數。回溯時對每個數值選擇加入 0 到其出現次數個，因而避免產生重複子集。
-
-## Problem Statement (English)
-
-Given an integer array nums that may contain duplicates, return all possible subsets (the power set).
-The solution set must not contain duplicate subsets. Return the solution in any order.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [1,2,2]
-Output: [[],[1],[1,2],[1,2,2],[2],[2,2]]
+輸入：nums = [1,2,2]
+輸出：[[],[1],[1,2],[1,2,2],[2],[2,2]]
 
-Input: nums = [0]
-Output: [[],[0]]
+輸入：nums = [0]
+輸出：[[],[0]]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= nums.length <= 10
--10 <= nums[i] <= 10
+- `1 <= nums.length <= 10`。
+- `-10 <= nums[i] <= 10`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 先複製並排序輸入，讓相同數字排在一起，也避免改動呼叫者提供的陣列。
+2. 回溯函式每進入一層，就先把目前 `path` 複製為一個答案；因此空集合也會自然加入。
+3. 從 `start` 開始挑選下一個數字。若它和同一層前一個候選值相同，就跳過，避免產生相同選擇分支。
+4. 選入數字後，從下一個索引遞迴；回溯時用同一個 `path` 儲存區即可。
+5. 最多有 `2^n` 個子集合，所以先以此數量配置答案指標與每列大小陣列。
+
+## 複雜度
+
+- 時間：`O(n × 2^n)`，排序後列出子集合與其元素。
+- 額外空間：`O(n)` 工作空間（排序副本、路徑與遞迴）；回傳結果最多占 `O(n × 2^n)`。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** subsetsWithDup(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
-    
-}
+int** subsetsWithDup(int* nums, int numsSize, int* returnSize,
+                     int** returnColumnSizes);
 ```

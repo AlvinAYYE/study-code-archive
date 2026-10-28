@@ -1,39 +1,27 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1266. Minimum Time Visiting All Points
- * Difficulty: Easy
- * Tags: array, math, geometry
- * URL: https://leetcode.com/problems/minimum-time-visiting-all-points/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     On a 2D plane, there are n points with integer coordinates points[i]
- *     = [xi, yi]. Return the minimum time in seconds to visit all the
- *     points in the order given by points.
- *     You can move according to these rules:
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     On a 2D plane, there are n points with 整數 coordinates points[i] =
- *     [xi, yi]. 回傳最小的 time in seconds to visit all the points in the order
- *     given by points.
+ * 【完整中文題意】給定平面上的 points，必須依照陣列順序逐一拜訪所有點。每秒可以往上下左右移動一格，或沿對角線移動一格。請回傳完成所有拜訪所需的最短秒數。
  *
- * Examples:
- *     Input: points = [[1,1],[3,4],[-1,0]]
- *     Output: 7
- *     Explanation: One optimal path is [1,1] -> [2,2] -> [3,3] ->
- *     [3,4] -> [2,3] -> [1,2] -> [0,1] -> [-1,0]
- *     Time from [1,1] to [3,4] = 3 seconds
- *     Time from [3,4] to [-1,0] = 4 seconds
- *     Total time = 7 seconds
- *     Input: points = [[3,2],[-2,2]]
- *     Output: 5
+ * 【範例】
+ * 1. points = [[1,1],[3,4],[-1,0]] → 7（兩段路程分別需要 3 秒與 4 秒）
+ * 2. points = [[3,2],[-2,2]] → 5
  *
- * Constraints:
- *   - points.length == n
- *   - 1 <= n <= 100
- *   - points[i].length == 2
- *   - -1000 <= points[i][0], points[i][1] <= 1000
- * ==========================================================================
+ * 【限制】
+ * - 1 <= points.length <= 100
+ * - 每個點恰有 x、y 兩個座標
+ * - -1000 <= x, y <= 1000
+ *
+ * 【解題步驟】
+ * 1. 依序處理相鄰的兩個點，計算水平距離 dx 和垂直距離 dy。
+ * 2. 每秒可同時沿 x、y 方向各移動一格，因此先沿對角線走 min(dx, dy) 秒。
+ * 3. 剩下較長方向的差距再直線走完；這一段兩點間最短時間就是 max(dx, dy)。
+ * 4. 把每一段的 max(dx, dy) 加總並回傳。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int minTimeToVisitAllPoints(int** points, int pointsSize, int* pointsColSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,47 +195,22 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-// 32 bit ints (2's complement assuming)
-#define ABS(x) ((x >> 31) ^ x) - (x >> 31)
+int minTimeToVisitAllPoints(int** points, int pointsSize,
+                            int* pointsColSize) {
+    (void)pointsColSize;
+    int totalTime = 0;
 
-int minTimeToVisitAllPoints(int** points, int pointsSize, int* pointsColSize){
-    register int steps = 0;
-    int sx, sy, dx, dy, diff_x, diff_y;
-    for(int i = 0; i < pointsSize - 1; i++){
-        sx = points[i][0];
-        sy = points[i][1];
-        dx = points[i+1][0];
-        dy = points[i+1][1];
-        // Move diagonally first.
-        if ((sx ^ dx) || (sy ^ dy)){
-            diff_x = dx - sx;
-            diff_y = dy - sy;
-            int abs_diff_x = ABS(diff_x);
-            int abs_diff_y = ABS(diff_y);
-            if (abs_diff_x < abs_diff_y){
-                sx += diff_x;
-                sy += diff_y > 0 ? abs_diff_x : -abs_diff_x;
-                steps += abs_diff_x;
-            } else {
-                sy += diff_y;
-                sx += diff_x > 0 ? abs_diff_y : -abs_diff_y;
-                steps += abs_diff_y;
-            }
-        }
-        // Then vertically (y-axis)
-        if ((sy ^ dy) && !(sx ^ dx)){
-            diff_y = dy - sy;
-            sy += diff_y;
-            steps += ABS(diff_y);
-        // If not, horizontically (x-axis.)
-        } else {
-            diff_x = dx - sx;
-            sx += diff_x;
-            steps += ABS(diff_x);
-        }
+    for (int i = 1; i < pointsSize; ++i) {
+        int dx = points[i][0] - points[i - 1][0];
+        int dy = points[i][1] - points[i - 1][1];
+        if (dx < 0) dx = -dx;
+        if (dy < 0) dy = -dy;
+
+        // 對角線可同時縮短 x、y，距離較長的方向決定總步數。
+        totalTime += dx > dy ? dx : dy;
     }
-    return steps;
+
+    return totalTime;
 }
 
 /* ---- generated tests ---- */

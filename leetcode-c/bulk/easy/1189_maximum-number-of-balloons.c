@@ -1,33 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1189. Maximum Number of Balloons
- * Difficulty: Easy
- * Tags: hash-table, string, counting
- * URL: https://leetcode.com/problems/maximum-number-of-balloons/
- * Source: community solution, repo MainakRepositor_LeetCode-C (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a string text, you want to use the characters of text to form
- *     as many instances of the word "balloon" as possible.
- *     You can use each character in text at most once. Return the maximum
- *     number of instances that can be formed.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given a 字串 text, you want to use the characters of text to form as
- *     many instances of the word "balloon" as possible.
+ * 【完整中文題意】給定只含小寫英文字母的字串 text，請找出最多可以從這些字母拼出幾個完整的 balloon。每個字母只能使用 text 中實際出現的次數；balloon 裡的 l 和 o 各需要兩個。
  *
- * Examples:
- *     Input: text = "nlaebolko"
- *     Output: 1
- *     Input: text = "loonbalxballpoon"
- *     Output: 2
- *     Input: text = "leetcode"
- *     Output: 0
+ * 【範例】
+ * 1. text = "nlaebolko" → 1
+ * 2. text = "loonbalxballpoon" → 2
+ * 3. text = "leetcode" → 0
  *
- * Constraints:
- *   - 1 <= text.length <= 10^4
- *   - text consists of lower case English letters only.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= text.length <= 10⁴
+ * - text 只含小寫英文字母
+ *
+ * 【解題步驟】
+ * 1. 統計 text 中 b、a、l、o、n 的出現次數。
+ * 2. 每個 balloon 需要 b、a、n 各 1 個，以及 l、o 各 2 個，所以先把 l 和 o 的次數除以 2。
+ * 3. 這五種可用數量的最小值，就是能拼出的 balloon 數量。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int maxNumberOfBalloons(char* text)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,57 +194,18 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-int maxNumberOfBalloons(char *text)
-{
-    /*
-        0 -> b,
-        1 -> a,
-        2 -> l,
-        3 -> o,
-        4 -> n
-    */
-    int count_letters[5] = {0};
-    int i, min_counter_ballons;
-
-    for (char *ptr = text; *ptr; ptr++)
-    {
-        if (*ptr == 'b')
-        {
-            count_letters[0]++;
-        }
-        else if (*ptr == 'a')
-        {
-            count_letters[1]++;
-        }
-        else if (*ptr == 'l')
-        {
-            count_letters[2]++;
-        }
-        else if (*ptr == 'o')
-        {
-            count_letters[3]++;
-        }
-        else if (*ptr == 'n')
-        {
-            count_letters[4]++;
-        }
+int maxNumberOfBalloons(char* text) {
+    int count[26] = {0};
+    for (int i = 0; text[i] != '\0'; ++i) {
+        ++count[text[i] - 'a'];
     }
 
-    /* Divide by 2 the repeted letters */
-    count_letters[2] /= 2;
-    count_letters[3] /= 2;
-
-    /* Max number of times which we can write ballon is equal to min value of
-     * letters on count_letter */
-    min_counter_ballons = count_letters[0];
-    for (i = 1; i < 5; i++)
-    {
-        if (count_letters[i] < min_counter_ballons)
-            min_counter_ballons = count_letters[i];
-    }
-
-    return min_counter_ballons;
+    int possible = count['b' - 'a'];
+    if (count['a' - 'a'] < possible) possible = count['a' - 'a'];
+    if (count['l' - 'a'] / 2 < possible) possible = count['l' - 'a'] / 2;
+    if (count['o' - 'a'] / 2 < possible) possible = count['o' - 'a'] / 2;
+    if (count['n' - 'a'] < possible) possible = count['n' - 'a'];
+    return possible;
 }
 
 /* ---- generated tests ---- */

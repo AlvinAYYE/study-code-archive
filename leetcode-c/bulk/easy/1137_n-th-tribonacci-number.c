@@ -1,33 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1137. N-th Tribonacci Number
- * Difficulty: Easy
- * Tags: math, dynamic-programming, memoization
- * URL: https://leetcode.com/problems/n-th-tribonacci-number/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     The Tribonacci sequence Tn is defined as follows:
- *     T0 = 0, T1 = 1, T2 = 1, and Tn+3 = Tn + Tn+1 + Tn+2 for n >= 0.
- *     Given n, return the value of Tn.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     The Tribonacci sequence Tn is defined as follows:
+ * 【完整中文題意】Tribonacci 數列定義為 T0 = 0、T1 = 1、T2 = 1；從 T3 開始，每一項等於前面三項相加，也就是 Tn = Tn-1 + Tn-2 + Tn-3。給定 n，請回傳 Tn。
  *
- * Examples:
- *     Input: n = 4
- *     Output: 4
- *     Explanation:
- *     T_3 = 0 + 1 + 1 = 2
- *     T_4 = 1 + 1 + 2 = 4
- *     Input: n = 25
- *     Output: 1389537
+ * 【範例】
+ * 1. n = 4 → 4（T3 = 0 + 1 + 1 = 2，T4 = 1 + 1 + 2 = 4）
+ * 2. n = 25 → 1389537
  *
- * Constraints:
- *   - 0 <= n <= 37
- *   - The answer is guaranteed to fit within a 32-bit integer, ie.
- *   answer <= 2^31 - 1.
- * ==========================================================================
+ * 【限制】
+ * - 0 <= n <= 37
+ * - 答案保證可用 32 位元有號整數表示
+ *
+ * 【解題步驟】
+ * 1. n 為 0、1、2 時直接回傳對應初始值。
+ * 2. 用三個變數保存目前連續的三項 T(i-3)、T(i-2)、T(i-1)。
+ * 3. 從 i = 3 算到 n：新值是三項相加，接著將三個變數往前移一格。
+ * 4. 回傳最後算出的 Tn。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int tribonacci(int n)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,22 +194,23 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
+int tribonacci(int n) {
+    if (n == 0) return 0;
+    if (n == 1 || n == 2) return 1;
 
-int tribonacci(int n)
-{
-    if (n < 3)
-        return (n == 0 ? 0 : 1);
+    int t0 = 0;
+    int t1 = 1;
+    int t2 = 1;
 
-    int n0 = 0, n1 = 1, n2 = 1;
-    for (int i = 3; i <= n; i++) {
-        int tmp = n0 + n1 + n2;
-        n0 = n1;
-        n1 = n2;
-        n2 = tmp;
+    for (int i = 3; i <= n; ++i) {
+        int next = t0 + t1 + t2;
+        // 三個變數往前滑動，保存下一輪需要的連續三項。
+        t0 = t1;
+        t1 = t2;
+        t2 = next;
     }
 
-    return n2;
+    return t2;
 }
 
 /* ---- generated tests ---- */

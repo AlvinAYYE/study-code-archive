@@ -214,58 +214,48 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-338. Counting Bits
-
-Given a non negative integer number num. For every numbers i in the range 0   i   num calculate the number of 1's in their binary representation and return them as an array.
-
-
-Example:
-For num = 5 you should return [0,1,1,2,1,2].
-
-
-Follow up:
-
-It is very easy to come up with a solution with run time O(n*sizeof(integer)). But can you do it in linear time O(n) /possibly in a single pass?
-Space complexity should be O(n).
-Can you do it like a boss? Do it without using any builtin function like __builtin_popcount  in c++ or in any other language.
-
-
-
-Credits:Special thanks to @ syedee  for adding this problem and creating all test cases.
-*/
-
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
+/* 解題說明
+ * 題目：338. Counting Bits（位元 1 的個數）
+ *
+ * 題意完整翻譯：
+ *     給定非負整數 n，請回傳長度為 n + 1 的陣列 ans。對每個 i（0 <= i <= n），ans[i] 是 i 的二進位表示中
+ *     1 的個數。目標是在線性時間內完成，且不要呼叫內建的位元計數函式。
+ *
+ * 範例：
+ *   輸入：n = 2
+ *   輸出：[0,1,1]
+ *   說明：0 的二進位是 0，1 是 1，2 是 10，因此 1 的個數依序是 0、1、1。
+ *   輸入：n = 5
+ *   輸出：[0,1,1,2,1,2]
+ *   說明：0 到 5 的二進位表示分別為 0、1、10、11、100、101。
+ *
+ * 限制：
+ *   - 0 <= n <= 10^5
+ *
+ * 解題步驟：
+ *   1. 建立長度 n + 1 的答案陣列，並令 ans[0] = 0。
+ *   2. 對每個 i >= 1，先看 i 除以 2 的商：它的二進位就是 i 去掉最右邊一位，因此 1 的數量為 ans[i / 2]。
+ *   3. 若 i 是奇數，最右位是 1，再加 1；所以 ans[i] = ans[i / 2] + (i % 2)。
+ *
+ * 複雜度：
+ *   時間：O(n)，每個答案只計算一次。
+ *   空間：O(n)，需要回傳 n + 1 個整數；除回傳陣列外只用 O(1) 額外空間。
  */
-int* countBits(int num, int* returnSize) {
-    int *p, i;
-    
-    p = malloc((num + 1) * sizeof(int));
-    //assert(p);
-    *returnSize = num + 1;
-    
-    p[0] = 0;
-    for (i = 1; i <= num; i ++) {
-        p[i] = p[i & (i - 1)] + 1;  // i & (i - 1) is to remove a bit from tail
+
+int* countBits(int n, int* returnSize) {
+    int* answer = (int*)malloc(sizeof(int) * (size_t)(n + 1));
+    int i;
+
+    *returnSize = n + 1;
+    answer[0] = 0;
+
+    for (i = 1; i <= n; ++i) {
+        // i / 2 去掉 i 的最右位；若 i 為奇數，該位是 1。
+        answer[i] = answer[i / 2] + (i % 2);
     }
-    
-    return p;
+
+    return answer;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:84.7K
-Total Submissions:138.2K
-
-
-Related Topics Dynamic Programming Bit Manipulation
-Similar Questions Number of 1 Bits
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

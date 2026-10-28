@@ -1,51 +1,57 @@
-# 0292. Nim Game《尼姆遊戲》
+# 292 Nim Game：Nim 遊戲
 
-- **Difficulty**: Easy
-- **Tags**: math, brainteaser, game-theory
-- **題目連結**: https://leetcode.com/problems/nim-game/
-- **程式碼**: [`292_nim-game.c`](./292_nim-game.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-有一堆 n 顆石頭，兩位玩家輪流移除 1 到 3 顆，移除最後一顆者獲勝，且你先手。假設雙方都採最佳策略，判斷你能否獲勝。
+桌上有 n 顆石頭，你先拿；你與對手輪流拿石頭，每回合只能拿 1、2 或 3 顆，拿走最後一顆的人獲勝。假設雙方都採取最佳策略，給定 n，判斷你是否能獲勝。
 
-**思路**：程式直接利用必敗局面為 4 的倍數：面對其他數量時可移除適當顆數，使對手面對 4 的倍數。因此只要檢查 n % 4 是否非零。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-You are playing the following Nim Game with your friend:
-Given n, the number of stones in the heap, return true if you can win the game assuming both you and your friend play optimally, otherwise return false.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+- 輸入：n = 4
+- 輸出：false
+- 說明：你拿 1、2、3 顆後，對手都能拿走剩餘的石頭。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: n = 4
-Output: false
-Explanation: These are the possible outcomes:
-1. You remove 1 stone. Your friend removes 3 stones, including the last stone. Your friend wins.
-2. You remove 2 stones. Your friend removes 2 stones, including the last stone. Your friend wins.
-3. You remove 3 stones. Your friend removes the last stone. Your friend wins.
-In all outcomes, your friend wins.
+- 輸入：n = 1
+- 輸出：true
+- 說明：你可以一次拿走全部石頭。
 
-Input: n = 1
-Output: true
+### 範例 3
 
-Input: n = 2
-Output: true
-```
+- 輸入：n = 2
+- 輸出：true
+- 說明：你可以一次拿走 2 顆。
 
-## 限制 Constraints
+## 限制
 
-1 <= n <= 231 - 1
+- 1 <= n <= 2^31 - 1
 
-## 官方 C 函式簽名 Signature
+## 解題思路
 
-```c
+1. 如果石頭數是 1、2 或 3，你可以一次拿完。
+2. 若 n 不是 4 的倍數，拿走 n 除以 4 的餘數（1、2 或 3 顆），就會把 4 的倍數留給對手。
+3. 若 n 是 4 的倍數，無論先拿 1、2 或 3 顆，都會讓對手有辦法再把 4 的倍數留回來。因此 4 的倍數是必敗局面；回傳 n % 4 != 0。
+
+## 複雜度
+
+- 時間：O(1)，只做一次取餘數運算。
+- 空間：O(1)。
+
+## C 函式簽名
+
+~~~c
+bool canWinNim(int n);
+~~~
+
+## 程式如何運作
+
+~~~c
 bool canWinNim(int n) {
-    
+    // 4 的倍數是必敗局面；其餘數量都能先拿到下一個 4 的倍數。
+    return n % 4 != 0;
 }
-```
+~~~

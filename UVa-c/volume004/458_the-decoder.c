@@ -17,8 +17,18 @@ char decode_char(char c) {
     return (char)(c - 7);
 }
 
+void solve_uva458(FILE *in, FILE *out) {
+    int ch;
+    while ((ch = fgetc(in)) != EOF) {
+        if (ch == '\n' || ch == '\r') {
+            fputc(ch, out);
+        } else {
+            fputc(decode_char((char)ch), out);
+        }
+    }
+}
+
 int main(void) {
-    int ok = (decode_char('1') == '*') && (decode_char('J') == 'C');
-    printf("%s: UVa 458 - The Decoder\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    solve_uva458(stdin, stdout);
+    return 0;
 }

@@ -1,33 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1207. Unique Number of Occurrences
- * Difficulty: Easy
- * Tags: array, hash-table
- * URL: https://leetcode.com/problems/unique-number-of-occurrences/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array of integers arr, return true if the number of
- *     occurrences of each value in the array is unique or false otherwise.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 陣列 of integers arr, 若成立回傳 true， the number of occurrences
- *     of each value in the 陣列 is unique or false 否則.
+ * 【完整中文題意】給定整數陣列 arr，判斷每個不同數值的出現次數是否都不相同。若任兩個不同數值都沒有相同的出現次數，回傳 true；否則回傳 false。
  *
- * Examples:
- *     Input: arr = [1,2,2,1,1,3]
- *     Output: true
- *     Explanation: The value 1 has 3 occurrences, 2 has 2 and 3 has
- *     1. No two values have the same number of occurrences.
- *     Input: arr = [1,2]
- *     Output: false
- *     Input: arr = [-3,0,1,-3,1,1,1,-3,10,0]
- *     Output: true
+ * 【範例】
+ * 1. arr = [1,2,2,1,1,3] → true（1 出現 3 次、2 出現 2 次、3 出現 1 次）
+ * 2. arr = [1,2] → false（兩個數都出現 1 次）
+ * 3. arr = [-3,0,1,-3,1,1,1,-3,10,0] → true
  *
- * Constraints:
- *   - 1 <= arr.length <= 1000
- *   - -1000 <= arr[i] <= 1000
- * ==========================================================================
+ * 【限制】
+ * - 1 <= arr.length <= 1000
+ * - -1000 <= arr[i] <= 1000
+ *
+ * 【解題步驟】
+ * 1. 利用數值範圍固定這個條件，使用 2001 格計數表統計每個值的次數，索引以 value + 1000 平移。
+ * 2. 再用另一個表記錄某個出現次數是否已被其他數值使用。
+ * 3. 若某個次數第二次出現，代表不同值有相同頻率，立即回傳 false；全部檢查完則回傳 true。
+ *
+ * 【複雜度】時間 O(n + 2001)；空間 O(2001 + n)，兩個固定計數表
+ *
+ * 【LeetCode C 函式】bool uniqueOccurrences(int* arr, int arrSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,24 +194,19 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-bool uniqueOccurrences(int* arr, int arrSize)
-{
-    //-1000 <= arr[i] <= 1000
-    int freq[2001] = {0};
-    for (int i = 0; i < arrSize; i++) {
-        freq[arr[i]+1000]++;
+bool uniqueOccurrences(int* arr, int arrSize) {
+    int frequency[2001] = {0};
+    for (int i = 0; i < arrSize; ++i) {
+        ++frequency[arr[i] + 1000];
     }
 
-    int dup[1001] = {0};
-    for (int i = 0; i < 2001; i++) {
-        if (freq[i])
-            dup[freq[i]]++;
-    }
-
-    for (int i = 0; i < 1001; i++) {
-        if (dup[i] > 1)
-            return false;
+    // 次數最多是 arrSize，且 arrSize 不超過 1000。
+    bool seenFrequency[1001] = {false};
+    for (int i = 0; i < 2001; ++i) {
+        int count = frequency[i];
+        if (count == 0) continue;
+        if (seenFrequency[count]) return false;
+        seenFrequency[count] = true;
     }
 
     return true;

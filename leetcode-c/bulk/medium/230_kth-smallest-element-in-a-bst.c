@@ -1,37 +1,19 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0230. Kth Smallest Element in a BST
+ * LeetCode 0230. Kth Smallest Element in a BST（二元搜尋樹中第 K 小的元素）
  * Difficulty: Medium
- * Tags: tree, depth-first-search, binary-search-tree, binary-tree
- * URL: https://leetcode.com/problems/kth-smallest-element-in-a-bst/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the root of a binary search tree, and an integer k, return the
- *     kth smallest value (1-indexed) of all the values of the nodes in the
- *     tree.
- *
- * [中文] 題目: 二元搜尋樹中的第 K 小元素
- * [中文] 題目說明:
- *     給定二元搜尋樹根節點與整數 k，回傳所有節點值中第 k 小的值，k 
- *     以 1 起算。題目也詢問當樹常插入、刪除且需頻繁查詢時，如何進一步最
- *     佳化。
- *
- * [中文] 思路:
- *     每次遞迴先計算目前節點左子樹大小，再據此判斷答案是根、位於左子樹，或
- *     位於調整後 k 的右子樹。
- *
- * Examples:
- *     Input: root = [3,1,4,null,2], k = 1
- *     Output: 1
- *     Input: root = [5,3,6,2,4,null,null,1], k = 3
- *     Output: 3
- *
- * Constraints:
- *   - The number of nodes in the tree is n.
- *   - 1 <= k <= n <= 10^4
+ * 題意：給定一棵二元搜尋樹 root 和整數 k，請回傳所有節點值由小到大排列後的第 k 個值。
+ * 範例：
+ *   1. 輸入：root = [3,1,4,null,2]，k = 1；輸出：1。
+ *   2. 輸入：root = [5,3,6,2,4,null,null,1]，k = 3；輸出：3。
+ * 限制：
+ *   - 1 <= k <= 節點數 <= 10^4
  *   - 0 <= Node.val <= 10^4
- * ==========================================================================
+ *   - 輸入保證 k 不大於節點數
+ * 解法：
+ *   1. 二元搜尋樹的左子樹值較小、右子樹值較大，所以中序走訪（左、根、右）會依遞增順序看到節點。
+ *   2. 用明確的堆疊模擬中序走訪：一路把左子節點壓入堆疊，接著取出一個節點並讓訪問次數加一，再轉向它的右子樹。
+ *   3. 第 k 次取出的節點就是第 k 小值，立刻回傳。
+ * 複雜度：時間 O(H + k)，額外空間 O(H)；H 為樹高，最壞情況 O(n)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,56 +187,28 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-230. Kth Smallest Element in a BST
-
-Given a binary search tree, write a function kthSmallest to find the kth smallest element in it.
-
-Note: 
-You may assume k is always valid, 1 ? k ? BST's total elements.
-
-Follow up:
-What if the BST is modified (insert/delete operations) often and you need to find the kth smallest frequently? How would you optimize the kthSmallest routine?
-
-Credits:Special thanks to @ts for adding this problem and creating all test cases.
-*/
-
-/**
- * Definition for a binary tree node.
- * 
- */
-int count(struct TreeNode *node) {
-    if (!node) return 0;
-    return count(node->left) + count(node->right) + 1;
-}
 int kthSmallest(struct TreeNode* root, int k) {
-    struct TreeNode *node = root;
-    int n;
-    n = count(node->left);
-    if (n == k - 1) {
-        return node->val;
-    } else 
-    if (n >= k) {
-        return kthSmallest(node->left, k);
+    // 題目限制節點數最多 10^4，堆疊最多同時保存一條根到葉路徑。
+    struct TreeNode *stack[10000];
+    int top = 0;
+    struct TreeNode *current = root;
+
+    while (current != NULL || top > 0) {
+        while (current != NULL) {
+            stack[top++] = current;
+            current = current->left;
+        }
+
+        current = stack[--top];
+        k--;
+        if (k == 0) {
+            return current->val;
+        }
+        current = current->right;
     }
-    return kthSmallest(node->right, k - n - 1);
+
+    return -1;  // 題目保證 k 有效，這裡只作為防禦性回傳。
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:104.8K
-Total Submissions:239.5K
-
-
-Companies Bloomberg Uber Google
-Related Topics Binary Search Tree
-Similar Questions 
-                
-                  
-                    Binary Tree Inorder Traversal
-*/
 
 /* ---- generated tests ---- */
 int main(void){

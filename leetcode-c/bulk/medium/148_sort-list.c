@@ -205,90 +205,60 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-148. Sort List
-
-Sort a linked list in O(n log n) time using constant space complexity.
-
-Example 1:
-
-Input: 4->2->1->3
-Output: 1->2->3->4
-
-
-Example 2:
-
-Input: -1->5->3->4->0
-Output: -1->0->3->4->5
-*/
-
-/**
- * Definition for singly-linked list.
- * 
- */
-struct ListNode* divide(struct ListNode *p) {
-    struct ListNode *a, *b;
-    a = p;
-    b = p->next;
-    
-    while (b) {
-        b = b->next;        // b moves two steps
-        if (b) {
-            a = a->next;    // a moves one steps
-            b = b->next;
-        }
-    }
-    
-    b = a->next;            // this is the middle point
-    a->next = NULL;
-    
-    return b;
-}
-
-struct ListNode* merge(struct ListNode *a, struct ListNode *b) {
-    struct ListNode head, *p, *c;
-    
-    p = &head;
-    
-    while (a && b) {
-        if (a->val < b->val) {
-            c = a;
-            a = a->next;
-        } else {
-            c = b;
-            b = b->next;
-        }
-        p->next = c;
-        p = c;
-    }
-    
-    p->next = a ? a : b;
-    
-    return head.next;
-}
+/* ---- 易讀解法：自底向上合併排序，不配置節點或遞迴堆疊 ---- */
 struct ListNode* sortList(struct ListNode* head) {
-    struct ListNode *p, *a, *b;
-    
-    if (!head || !head->next) return head;
-    
-    p = divide(head);       // divide the list to two
-    
-    a = sortList(head);     // sort separately
-    b = sortList(p);
-    
-    p = merge(a, b);        // and merge them
-    
-    return p;
+    struct ListNode *current;
+    int length = 0;
+    int width;
+
+    if (head == NULL || head->next == NULL) return head;
+    for (current = head; current != NULL; current = current->next) ++length;
+
+    for (width = 1; width < length; width *= 2) {
+        struct ListNode dummy = {0, NULL};
+        struct ListNode *tail = &dummy;
+        current = head;
+
+        while (current != NULL) {
+            struct ListNode *left = current;
+            struct ListNode *right;
+            int leftCount = 0;
+            int rightCount = 0;
+            int i;
+
+            for (i = 0; i < width && current != NULL; ++i) {
+                ++leftCount;
+                current = current->next;
+            }
+            right = current;
+            for (i = 0; i < width && current != NULL; ++i) {
+                ++rightCount;
+                current = current->next;
+            }
+
+            while (leftCount > 0 || rightCount > 0) {
+                struct ListNode *chosen;
+                if (rightCount == 0 ||
+                    (leftCount > 0 && left->val <= right->val)) {
+                    chosen = left;
+                    left = left->next;
+                    --leftCount;
+                } else {
+                    chosen = right;
+                    right = right->next;
+                    --rightCount;
+                }
+                tail->next = chosen;
+                tail = chosen;
+            }
+            tail->next = current;
+        }
+
+        tail->next = NULL;
+        head = dummy.next;
+    }
+    return head;
 }
-
-
-/*
-Difficulty:Medium
-
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

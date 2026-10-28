@@ -204,52 +204,52 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-283. Move Zeroes
-
-Given an array nums, write a function to move all 0's to the end of it while maintaining the relative order of the non-zero elements.
-
-
-
-For example, given nums  = [0, 1, 0, 3, 12], after calling your function, nums should be [1, 3, 12, 0, 0].
-
-
-
-Note:
-
-You must do this in-place without making a copy of the array.
-Minimize the total number of operations.
-
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
+/* 解題說明
+ * 題目：283. Move Zeroes（移動零）
+ *
+ * 題意完整翻譯：
+ *     給定整數陣列 nums，請把所有 0 移到陣列尾端，並保持非零數字原本的相對順序。必須直接修改原陣列，不可另外複製一份陣列。
+ *
+ * 範例：
+ *   輸入：nums = [0,1,0,3,12]
+ *   輸出：[1,3,12,0,0]
+ *   說明：非零數字依序保留為 1、3、12，再把兩個 0 放到尾端。
+ *   輸入：nums = [0]
+ *   輸出：[0]
+ *   說明：陣列只有一個 0，移動後仍相同。
+ *
+ * 限制：
+ *   - 1 <= nums.length <= 10^4
+ *   - -2^31 <= nums[i] <= 2^31 - 1
+ *
+ * 解題步驟：
+ *   1. 用 writeIndex 記錄下一個非零值該放的位置。
+ *   2. 從左到右掃描，把每個非零值依序寫到 writeIndex，然後增加 writeIndex。
+ *   3. 掃描完後，從 writeIndex 到陣列尾端全部填 0。
+ *
+ * 複雜度：
+ *   時間：O(n)，最多掃描並填寫陣列各一次。
+ *   空間：O(1)，直接修改原陣列。
+ */
 
 void moveZeroes(int* nums, int numsSize) {
-    int i, j, k;
-    for (i = 0, j = 0; j < numsSize; j ++) {
-        if (nums[j] != 0) {
-            nums[i ++] = nums[j];
+    int writeIndex = 0;
+    int i;
+
+    // 先依序把非零值集中到陣列前方。
+    for (i = 0; i < numsSize; ++i) {
+        if (nums[i] != 0) {
+            nums[writeIndex] = nums[i];
+            ++writeIndex;
         }
     }
-    memset(&nums[i], 0, (j - i) * sizeof(int));
+
+    // 剩餘位置全部補零。
+    while (writeIndex < numsSize) {
+        nums[writeIndex] = 0;
+        ++writeIndex;
+    }
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:202.9K
-Total Submissions:407K
-
-
-Companies Bloomberg Facebook
-Related Topics Array Two Pointers
-Similar Questions 
-                
-                  
-                    Remove Element
-*/
 
 /* ---- generated tests ---- */
 int main(void){

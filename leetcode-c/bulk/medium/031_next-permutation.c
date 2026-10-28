@@ -27,7 +27,7 @@
  *
  * [中文] 思路:
  *     程式從尾端找出第一個小於其右側元素的樞紐，再在尾段找出最右側且大於樞
- *     紐的元素來交換。交換後將尾段排序為遞增；若無樞紐則把整個陣列排序為遞
+ *     紐的元素來交換。交換後將尾段反轉為遞增；若無樞紐則把整個陣列反轉為遞
  *     增。
  *
  * Examples:
@@ -214,68 +214,40 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-31. Next Permutation
-
-Implement next permutation, which rearranges numbers into the lexicographically next greater permutation of numbers.
-
-
-If such arrangement is not possible, it must rearrange it as the lowest possible order (ie, sorted in ascending order).
-
-
-The replacement must be in-place, do not allocate extra memory.
-
-
-Here are some examples. Inputs are in the left-hand column and its corresponding outputs are in the right-hand column.
-1,2,3   1,3,2
-3,2,1   1,2,3
-1,1,5   1,5,1
-*/
-
-int cmp(const void *a, const void *b) {
-    return *(int *)a - *(int *)b;
+/* ---- 易讀解法：找樞紐、換成較大值、反轉尾段 ---- */
+static void swapValues(int *a, int *b) {
+    int temporary = *a;
+    *a = *b;
+    *b = temporary;
 }
-void nextPermutation(int* nums, int numsSize) {
-    int i, j, k;
-    for (i = numsSize - 1; i > 0; i --) {
-        if (nums[i - 1] < nums[i]) {
-            j = i - 1;  // this is the first small number from tail
-            while (i < numsSize - 1 &&
-                nums[i + 1] > nums[j]) {  // find the second small number in the tail
-                i ++;
-            }
-            k = nums[i];  // swap it
-            nums[i] = nums[j];
-            nums[j] = k;
-            qsort(&nums[j + 1], numsSize - j - 1, sizeof(int), cmp);
-            return;
-        }
+
+static void reverseRange(int *nums, int left, int right) {
+    while (left < right) {
+        swapValues(&nums[left], &nums[right]);
+        ++left;
+        --right;
     }
-    qsort(nums, numsSize, sizeof(int), cmp);
 }
 
+void nextPermutation(int* nums, int numsSize) {
+    int pivot = numsSize - 2;
 
-/*
-Difficulty:Medium
-Total Accepted:116.6K
-Total Submissions:405.2K
+    while (pivot >= 0 && nums[pivot] >= nums[pivot + 1]) {
+        --pivot;
+    }
 
+    if (pivot >= 0) {
+        int successor = numsSize - 1;
+        while (nums[successor] <= nums[pivot]) {
+            --successor;
+        }
+        swapValues(&nums[pivot], &nums[successor]);
+    }
 
-Companies Google
-Related Topics Array
-Similar Questions 
-                
-                  
-                    Permutations
-                  
-                    Permutations II
-                  
-                    Permutation Sequence
-                  
-                    Palindrome Permutation II
-*/
+    /* 樞紐右側原本是遞減序列，反轉後成為最小的遞增尾段。 */
+    reverseRange(nums, pivot + 1, numsSize - 1);
+}
+
 
 /* ---- generated tests ---- */
 int main(void){

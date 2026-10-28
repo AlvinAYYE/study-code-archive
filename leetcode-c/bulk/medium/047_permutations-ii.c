@@ -204,55 +204,64 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-
-static void dfs_runner(int* nums, int numsSize, int *tmp, int tmp_idx, char *v, int **ret, int* returnSize, int** returnColumnSizes)
-{
-    if (tmp_idx == numsSize) {
-        ret[*returnSize] = malloc(sizeof(int)*numsSize);
-        memcpy(ret[*returnSize], tmp, sizeof(int)*numsSize);
-        (*returnColumnSizes)[*returnSize] = numsSize;
-        *returnSize += 1;
+/* 深度優先搜尋；排序後可在同一層跳過重複值。 */
+static void buildUniquePermutations(int *nums, int numsSize, bool *used,
+                                    int *path, int depth, int **answer,
+                                    int *columnSizes, int *count) {
+    int i;
+    if (depth == numsSize) {
+        answer[*count] = (int *)malloc((size_t)numsSize * sizeof(int));
+        memcpy(answer[*count], path, (size_t)numsSize * sizeof(int));
+        columnSizes[*count] = numsSize;
+        ++(*count);
         return;
     }
 
-    for (int i = 0; i < numsSize; i++) {
-        if (v[i] || (i > 0 && nums[i] == nums[i-1] && !v[i-1]))
-            continue;
-        v[i] = 1;
-        tmp[tmp_idx] = nums[i];
-        dfs_runner(nums, numsSize, tmp, tmp_idx + 1, v, ret, returnSize, returnColumnSizes);
-        v[i] = 0;
+    for (i = 0; i < numsSize; ++i) {
+        if (used[i]) continue;
+        if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) continue;
+
+        used[i] = true;
+        path[depth] = nums[i];
+        buildUniquePermutations(nums, numsSize, used, path, depth + 1,
+                                answer, columnSizes, count);
+        used[i] = false;
     }
 }
 
-static int compare(const void *a, const void *b)
-{
-    return (*(int*)a) - (*(int*)b);
+static int compareValues(const void *a, const void *b) {
+    int x = *(const int *)a;
+    int y = *(const int *)b;
+    return (x > y) - (x < y);
 }
 
-int** permuteUnique(int* nums, int numsSize, int* returnSize, int** returnColumnSizes)
-{
-    qsort(nums, numsSize, sizeof(int), compare);
-    int max_per = 1;
-    for (int i = 2; i <= numsSize; i++)
-        max_per *= i;
+/* ---- 易讀解法：排序去重後回溯建立不同排列 ---- */
+int** permuteUnique(int* nums, int numsSize, int* returnSize,
+                    int** returnColumnSizes) {
+    int capacity = 1;
+    int count = 0;
+    int i;
+    int **answer;
+    int *columnSizes;
+    int *path;
+    bool *used;
 
-    int **ret = malloc(sizeof(int*)*max_per);
-    *returnColumnSizes = malloc(sizeof(int)*max_per);
-    int *tmp = malloc(sizeof(int)*numsSize);
-    char *visited = calloc(numsSize, sizeof(int));
-    *returnSize = 0;
-    dfs_runner(nums, numsSize, tmp, 0, visited, ret, returnSize, returnColumnSizes);
-    free(visited);
-    return ret;
+    qsort(nums, (size_t)numsSize, sizeof(int), compareValues);
+    for (i = 2; i <= numsSize; ++i) capacity *= i;
+    answer = (int **)malloc((size_t)capacity * sizeof(int *));
+    columnSizes = (int *)malloc((size_t)capacity * sizeof(int));
+    path = (int *)malloc((size_t)numsSize * sizeof(int));
+    used = (bool *)calloc((size_t)numsSize, sizeof(bool));
+
+    buildUniquePermutations(nums, numsSize, used, path, 0,
+                            answer, columnSizes, &count);
+    free(path);
+    free(used);
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
+
 
 /* ---- generated tests ---- */
 int main(void){

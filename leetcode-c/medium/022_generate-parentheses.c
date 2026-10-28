@@ -10,26 +10,30 @@
  *     Given n pairs of parentheses, write a function to generate all
  *     combinations of well-formed parentheses.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     生成 n 對括號所有合法組合。
+ * [中文] 題目說明
+ *     給定 n 對括號，產生所有格式正確的括號組合。格式正確表示每個右括號
+ *     都能與前面尚未配對的左括號成對，而且最後所有括號都完成配對。
  *
- * Examples:
- *   Example 1:
- *     Input: n = 3
- *     Output: ["((()))","(()())","(())()","()(())","()()()"]
- *   Example 2:
- *     Input: n = 1
- *     Output: ["()"]
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：n = 3
+ *     輸出：["((()))","(()())","(())()","()(())","()()()"]
+ *   範例 2：
+ *     輸入：n = 1
+ *     輸出：["()"]
  *
- * Constraints:
- *   - 1 <= n <= 8
+ * [中文] 限制
+ *   - 1 <= n <= 8。
  *
  * LeetCode official C stub (函式簽名):
  *   char** generateParenthesis(int n, int* returnSize) {
  *   }
  *
- * [EN] Approach: Backtrack: place '(' while open<n, place ')' while close<open; emit when length==2n (Catalan count).
- * [中文] 思路: 回溯：仍有左括號就能放 (，右括號數小於左括號才能放 )，長度滿 2n 即產出（卡塔蘭數）。
+ * [中文] 直觀解題思路
+ *   1. 由左到右建立答案字串，open、close 分別記錄已放的左右括號數。
+ *   2. open < n 時可以放左括號；close < open 時才能放右括號，確保任何前綴都合法。
+ *   3. 長度達 2n 時複製目前字串；遞迴返回後改試另一種選擇。
+ *   只會走訪合法前綴。共有 Cn 個答案，每份長度 2n，時間與輸出空間皆為 O(n * Cn)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -40,6 +44,7 @@
 static void bt(char *buf, int pos, int open, int close, int n,
                char ***out, int *cnt, int *cap) {
     if (pos == 2 * n) {
+        /* 只有合法前綴能走到這裡，因此可直接收錄完整答案。 */
         if (*cnt == *cap) {
             *cap = *cap ? *cap * 2 : 16;
             *out = (char **)realloc(*out, (size_t)*cap * sizeof(char *));
@@ -52,8 +57,14 @@ static void bt(char *buf, int pos, int open, int close, int n,
         }
         return;
     }
-    if (open < n)  { buf[pos] = '('; bt(buf, pos + 1, open + 1, close, n, out, cnt, cap); }
-    if (close < open) { buf[pos] = ')'; bt(buf, pos + 1, open, close + 1, n, out, cnt, cap); }
+    if (open < n) {
+        buf[pos] = '(';
+        bt(buf, pos + 1, open + 1, close, n, out, cnt, cap);
+    }
+    if (close < open) {
+        buf[pos] = ')';
+        bt(buf, pos + 1, open, close + 1, n, out, cnt, cap);
+    }
 }
 
 char **generateParenthesis(int n, int *returnSize) {

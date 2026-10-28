@@ -1,51 +1,44 @@
-# 0191. Number of 1 Bits《1 的個數》
+# 0191. Number of 1 Bits《1 位元數量》
 
-- **Difficulty**: Easy
-- **Tags**: divide-and-conquer, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/number-of-1-bits/
-- **程式碼**: [`191_number-of-1-bits.c`](./191_number-of-1-bits.c) — 社群解答（repo lennylxx_leetcode），已通過編譯+官方示例執行驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/number-of-1-bits/
 
-## 題目說明（中文）
+## 題目翻譯
 
-給定一個正整數 n，請回傳其二進位表示中設定位元（1）的數量，也就是漢明重量。n 的範圍在 32 位元正整數內。
+給定正整數 n，回傳它的二進位表示中有幾個 1，也就是 Hamming weight。
 
-**思路**：實際函式使用平行位元計數：反覆以遮罩在各個 4 位元區塊累加位元數，再合併位元組總和並取出最高位元組。
+## 範例
 
-## Problem Statement (English)
+~~~text
+輸入：n = 11
+輸出：3
+二進位 1011 含三個 1。
 
-Given a positive integer n, write a function that returns the number of set bits in its binary representation (also known as the Hamming weight).
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+輸入：n = 128
+輸出：1
+二進位 10000000 含一個 1。
 
-## 範例 Examples
+輸入：n = 2147483645
+輸出：30
+~~~
 
-```text
-Input: n = 11
-Output: 3
-Explanation:
-The input binary string 1011 has a total of three set bits.
+## 限制
 
-Input: n = 128
-Output: 1
-Explanation:
-The input binary string 10000000 has a total of one set bit.
+- 1 <= n <= 2^31 - 1
 
-Input: n = 2147483645
-Output: 30
-Explanation:
-The input binary string 1111111111111111111111111111101 has a total of thirty set bits.
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 只要 n 不為 0，就執行 n = n & (n - 1)。
+2. 這個運算會清掉目前最右邊的 1。
+3. 每清除一次就把 count 加一，最後 count 就是 1 的數量。
 
-1 <= n <= 231 - 1
+## 複雜度
 
-## 官方 C 函式簽名 Signature
+- 時間：O(k)，k 是 n 中 1 的個數；每次迴圈都會清掉一個 1。
+- 空間：O(1)。
 
-```c
-int hammingWeight(int n) {
-    
-}
-```
+## C 函式簽名
+
+~~~c
+int hammingWeight(int n);
+~~~

@@ -1,51 +1,43 @@
-# 0147. Insertion Sort List《對鏈結串列進行插入排序》
+# 0147. Insertion Sort List｜插入排序鏈結串列
 
-- **Difficulty**: Medium
-- **Tags**: linked-list, sorting
-- **題目連結**: https://leetcode.com/problems/insertion-sort-list/
-- **程式碼**: [`147_insertion-sort-list.c`](./147_insertion-sort-list.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：鏈結串列、排序
+- **題目連結**：[LeetCode 0147](https://leetcode.com/problems/insertion-sort-list/)
+- **C 程式**：[147_insertion-sort-list.c](./147_insertion-sort-list.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定單向鏈結串列的頭節點，使用插入排序將串列排序後回傳新頭節點。插入排序會維護已排序部分，並在每輪從未排序部分取出一個節點，原地插入其正確位置。串列節點數介於 1 至 5000，節點值介於 -5000 至 5000。
+給定單向鏈結串列，使用插入排序將節點依遞增順序排列並回傳新頭節點。做法是逐一取出未排序節點，插入已排序部分的正確位置。
 
-**思路**：逐一從輸入串列拆下節點，在已排序串列中線性尋找第一個不小於它的位置，再將該節點插入。
-
-## Problem Statement (English)
-
-Given the head of a singly linked list, sort the list using insertion sort, and return the sorted list's head.
-The steps of the insertion sort algorithm:
-The following is a graphical example of the insertion sort algorithm. The partially sorted list (black) initially contains only the first element in the list. One element (red) is removed from the input data and inserted in-place into the sorted list with each iteration.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: head = [4,2,1,3]
-Output: [1,2,3,4]
+輸入：head = [4,2,1,3]
+輸出：[1,2,3,4]
 
-Input: head = [-1,5,3,4,0]
-Output: [-1,0,3,4,5]
+輸入：head = [-1,5,3,4,0]
+輸出：[-1,0,3,4,5]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the list is in the range [1, 5000].
--5000 <= Node.val <= 5000
+- 節點數介於 `1` 到 `5000`。
+- `-5000 <= Node.val <= 5000`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 用虛擬頭節點作為已排序串列的起點，避免插入新最小值時特別處理頭節點。
+2. `current` 逐一取出原串列節點；先保存下一個未處理節點，避免重新接線後失去原串列。
+3. 從虛擬頭開始尋找第一個值大於目前值的位置，將目前節點插入它前面。
+4. 重複直到原串列處理完畢；虛擬頭後方就是排序結果。
+
+## 複雜度
+
+- 時間：`O(n²)`，每個節點最差要走過已排序部分尋找插入位置。
+- 額外空間：`O(1)`，只重接既有節點。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* insertionSortList(struct ListNode* head) {
-    
-}
+struct ListNode* insertionSortList(struct ListNode* head);
 ```

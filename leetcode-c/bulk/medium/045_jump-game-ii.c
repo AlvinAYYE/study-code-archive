@@ -211,22 +211,26 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#define MAX(a, b) (a > b ? a : b)
-int jump(int* nums, int numsSize)
-{
-    int farthest = 0, last = 0, ctr = 0;
-    for (int i = 0; i < numsSize - 1; i++) {
-        farthest = MAX(farthest, i + nums[i]);
-        if (i == last) {
-            last = farthest;
-            ctr++;
+/* ---- 易讀解法：每一跳處理一整段可到達範圍 ---- */
+int jump(int* nums, int numsSize) {
+    int jumps = 0;
+    int currentEnd = 0;
+    int farthest = 0;
+    int i;
+
+    for (i = 0; i < numsSize - 1; ++i) {
+        int reachFromHere = i + nums[i];
+        if (reachFromHere > farthest) farthest = reachFromHere;
+
+        if (i == currentEnd) {
+            ++jumps;
+            currentEnd = farthest;
+            if (currentEnd >= numsSize - 1) break;
         }
     }
-
-    return ctr;
+    return jumps;
 }
+
 
 /* ---- generated tests ---- */
 int main(void){

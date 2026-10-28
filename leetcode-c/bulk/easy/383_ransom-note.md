@@ -1,47 +1,75 @@
-# 0383. Ransom Note《贖金信》
+# 383 Ransom Note：贖金信
 
-- **Difficulty**: Easy
-- **Tags**: hash-table, string, counting
-- **題目連結**: https://leetcode.com/problems/ransom-note/
-- **程式碼**: [`383_ransom-note.c`](./383_ransom-note.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定字串 ransomNote 與 magazine，判斷能否只使用 magazine 中的字母組成 ransomNote。magazine 的每個字母最多只能使用一次。
+給定字串 ransomNote 與 magazine，判斷能否只使用 magazine 中的字母拼出 ransomNote。magazine 的每個字母最多只能使用一次。
 
-**思路**：先統計贖金信各字母需求量，再掃描雜誌字母並扣除尚未滿足的需求，最後檢查是否仍有缺字。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given two strings ransomNote and magazine, return true if ransomNote can be constructed by using the letters from magazine and false otherwise.
-Each letter in magazine can only be used once in ransomNote.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+- 輸入：ransomNote = "a", magazine = "b"
+- 輸出：false
+- 說明：magazine 沒有字母 a。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: ransomNote = "a", magazine = "b"
-Output: false
+- 輸入：ransomNote = "aa", magazine = "ab"
+- 輸出：false
+- 說明：magazine 只有一個 a，不足以拼出兩個 a。
 
-Input: ransomNote = "aa", magazine = "ab"
-Output: false
+### 範例 3
 
-Input: ransomNote = "aa", magazine = "aab"
-Output: true
-```
+- 輸入：ransomNote = "aa", magazine = "aab"
+- 輸出：true
+- 說明：magazine 有兩個 a，可以各使用一次。
 
-## 限制 Constraints
+## 限制
 
-1 <= ransomNote.length, magazine.length <= 105
-ransomNote and magazine consist of lowercase English letters.
+- 1 <= ransomNote.length, magazine.length <= 10^5
+- 兩個字串都只含小寫英文字母
 
-## 官方 C 函式簽名 Signature
+## 解題思路
 
-```c
+1. 建立 26 個計數欄位，掃描 magazine 並記下每個字母可用幾次。
+2. 掃描 ransomNote；每需要一個字母，就將該字母的剩餘數量減 1。
+3. 若某字母減完小於 0，表示 magazine 不夠用，回傳 false；全部用完仍足夠則回傳 true。
+
+## 複雜度
+
+- 時間：O(m + n)，m、n 分別是兩個字串的長度。
+- 空間：O(1)，只使用 26 個計數欄位。
+
+## C 函式簽名
+
+~~~c
+bool canConstruct(char* ransomNote, char* magazine);
+~~~
+
+## 程式如何運作
+
+~~~c
 bool canConstruct(char* ransomNote, char* magazine) {
-    
+    int available[26] = {0};
+    int i;
+
+    // 統計 magazine 中各字母可以使用的次數。
+    for (i = 0; magazine[i] != '\0'; ++i) {
+        ++available[magazine[i] - 'a'];
+    }
+
+    // 每拼出一個字母，就消耗一次可用數量。
+    for (i = 0; ransomNote[i] != '\0'; ++i) {
+        int letter = ransomNote[i] - 'a';
+        --available[letter];
+
+        if (available[letter] < 0) {
+            return false;
+        }
+    }
+
+    return true;
 }
-```
+~~~

@@ -1,44 +1,28 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1184. Distance Between Bus Stops
- * Difficulty: Easy
- * Tags: array
- * URL: https://leetcode.com/problems/distance-between-bus-stops/
- * Source: community solution, repo MainakRepositor_LeetCode-C (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     A bus has n stops numbered from 0 to n - 1 that form a circle. We
- *     know the distance between all pairs of neighboring stops where
- *     distance[i] is the distance between the stops number i and (i + 1) %
- *     n.
- *     The bus goes along both directions i.e. clockwise and
- *     counterclockwise.
- *     Return the shortest distance between the given start and destination
- *     stops.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     A bus has n stops numbered from 0 to n - 1 that form a circle. We
- *     know the distance between all pairs of neighboring stops where
- *     distance[i] is the distance between the stops number i and (i + 1) %
- *     n.
+ * 【完整中文題意】有 n 個公車站沿著環狀路線排列，distance[i] 表示第 i 站到下一站（第 (i+1) % n 站）之間的距離。給定起點 start 和終點 destination，請回傳沿環狀路線前往目的地的兩條路徑中較短的距離。
  *
- * Examples:
- *     Input: distance = [1,2,3,4], start = 0, destination = 1
- *     Output: 1
- *     Explanation: Distance between 0 and 1 is 1 or 9, minimum is 1.
- *     Input: distance = [1,2,3,4], start = 0, destination = 2
- *     Output: 3
- *     Explanation: Distance between 0 and 2 is 3 or 7, minimum is 3.
- *     Input: distance = [1,2,3,4], start = 0, destination = 3
- *     Output: 4
- *     Explanation: Distance between 0 and 3 is 6 or 4, minimum is 4.
+ * 【範例】
+ * 1. distance = [1,2,3,4], start = 0, destination = 1 → 1
+ * 2. distance = [1,2,3,4], start = 0, destination = 2 → 3（兩條路徑長度為 3 與 7）
+ * 3. distance = [1,2,3,4], start = 0, destination = 3 → 4（兩條路徑長度為 6 與 4）
  *
- * Constraints:
- *   - 1 <= n <= 10^4
- *   - distance.length == n
- *   - 0 <= start, destination < n
- *   - 0 <= distance[i] <= 10^4
- * ==========================================================================
+ * 【限制】
+ * - 1 <= n <= 10⁴
+ * - distance.length == n
+ * - 0 <= start, destination < n
+ * - 0 <= distance[i] <= 10⁴
+ *
+ * 【解題步驟】
+ * 1. 先把所有路段距離加總，得到環路總長。
+ * 2. 從 start 出發，沿著索引增加方向走到 destination，累加走過的路段距離。
+ * 3. 另一條路的距離是環路總長減去剛才的路程；回傳兩者較小值。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int distanceBetweenBusStops(int* distance, int distanceSize, int start, int destination)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -212,25 +196,24 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-int distanceBetweenBusStops(int *distance, int distanceSize, int start,
-                            int destination)
-{
-    int sum1 = 0, sum2 = 0;
-    if (start > destination)
-    {
-        int tmp = start;
-        start = destination;
-        destination = tmp;
+int distanceBetweenBusStops(int* distance, int distanceSize,
+                            int start, int destination) {
+    int totalDistance = 0;
+    for (int i = 0; i < distanceSize; ++i) {
+        totalDistance += distance[i];
     }
-    for (auto i = 0; i < distanceSize; ++i)
-    {
-        if (i >= start && i < destination)
-            sum1 += distance[i];
-        else
-            sum2 += distance[i];
+
+    int forwardDistance = 0;
+    int stop = start;
+    // distance[stop] 是目前車站到下一站的距離。
+    while (stop != destination) {
+        forwardDistance += distance[stop];
+        stop = (stop + 1) % distanceSize;
     }
-    return sum1 < sum2 ? sum1 : sum2;
+
+    int backwardDistance = totalDistance - forwardDistance;
+    return forwardDistance < backwardDistance
+         ? forwardDistance : backwardDistance;
 }
 
 /* ---- generated tests ---- */

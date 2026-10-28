@@ -1,37 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0204. Count Primes
+ * LeetCode 0204. Count Primes（計算小於 n 的質數數量）
  * Difficulty: Medium
- * Tags: array, math, enumeration, number-theory
- * URL: https://leetcode.com/problems/count-primes/
- * Source: community solution, repo lennylxx_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer n, return the number of prime numbers that are
- *     strictly less than n.
- *
- * [中文] 題目: 計數質數
- * [中文] 題目說明:
- *     給定整數 n，請回傳所有嚴格小於 n 的質數數量。n 可為 0，最大
- *     可達 5 × 10^6。
- *
- * [中文] 思路:
- *     採線性篩法維護已發現的質數與合數標記；每個數以現有質數標記乘積，遇到
- *     其最小質因數後停止，避免重複篩除。
- *
- * Examples:
- *     Input: n = 10
- *     Output: 4
- *     Explanation: There are 4 prime numbers less than 10, they are
- *     2, 3, 5, 7.
- *     Input: n = 0
- *     Output: 0
- *     Input: n = 1
- *     Output: 0
- *
- * Constraints:
+ * 題意：給定整數 n，回傳嚴格小於 n 的質數個數。質數是大於 1 且只有 1 和自己兩個正因數的整數。
+ * 範例：
+ *   1. 輸入：n = 10；輸出：4。小於 10 的質數是 2、3、5、7。
+ *   2. 輸入：n = 0；輸出：0。
+ *   3. 輸入：n = 1；輸出：0。
+ * 限制：
  *   - 0 <= n <= 5 * 10^6
- * ==========================================================================
+ * 解法：
+ *   1. 建立長度 n 的標記表，先假設每個數都還可能是質數。
+ *   2. 從 2 開始，遇到尚未被標記的 p，就把 p 的倍數標成合數。從 p*p 開始即可，因為更小的倍數已由較小因數處理。
+ *   3. 只需枚舉到 p*p < n；最後統計 2 到 n-1 中仍未標記的數。
+ * 複雜度：時間 O(n log log n)，額外空間 O(n)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,36 +186,35 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-
-/* 147 ms, a bit slow */
-/* So weird, it's 39 ms now. Does the test mechanism change? */
-/* I notice there is a line says "n is order in 1,000,000 to */
-/* 5,000,000", but it's gone now.                            */
 int countPrimes(int n) {
-    bool *flag = (bool *)calloc(n + 1, sizeof(bool));
-    int *prime = (int *)calloc(n / 2, sizeof(int));
+    if (n <= 2) {
+        return 0;
+    }
 
-    flag[0] = 1; /* dummy */
-    flag[1] = 1; /* dummy, 1 is not prime */
+    unsigned char *isComposite = (unsigned char *)calloc((size_t)n, sizeof(*isComposite));
+    if (isComposite == NULL) {
+        return 0;
+    }
 
-    int i, j;
-    int count = 0;
-    for (i = 2; i < n; i++) {
-        if (flag[i] == 0) { /* i is prime */
-            prime[count ++] = i;
+    // 對每個尚未被標記的 p，從 p*p 開始標記它的倍數。
+    for (int p = 2; p <= (n - 1) / p; p++) {
+        if (isComposite[p]) {
+            continue;
         }
-        for (j = 0; j < count && i * prime[j] < n; j++) {
-            flag[i * prime[j]] = 1;
-            if (i % prime[j] == 0) { /* important */
-                break;
-            }
+        for (int multiple = p * p; multiple < n; multiple += p) {
+            isComposite[multiple] = 1;
         }
     }
-    return count;
+
+    int primeCount = 0;
+    for (int value = 2; value < n; value++) {
+        if (!isComposite[value]) {
+            primeCount++;
+        }
+    }
+
+    free(isComposite);
+    return primeCount;
 }
 
 /* ---- generated tests ---- */

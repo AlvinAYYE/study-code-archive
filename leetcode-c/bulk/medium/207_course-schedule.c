@@ -1,48 +1,21 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0207. Course Schedule
+ * LeetCode 0207. Course Schedule（課程表）
  * Difficulty: Medium
- * Tags: depth-first-search, breadth-first-search, graph, topological-sort
- * URL: https://leetcode.com/problems/course-schedule/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     There are a total of numCourses courses you have to take, labeled
- *     from 0 to numCourses - 1. You are given an array prerequisites where
- *     prerequisites[i] = [ai, bi] indicates that you must take course bi
- *     first if you want to take course ai.
- *     Return true if you can finish all courses. Otherwise, return false.
- *
- * [中文] 題目: 課程表
- * [中文] 題目說明:
- *     共有編號 0 至 numCourses - 1 的課程，prereq
- *     uisites 中的 [a, b] 表示修習 a 前必須先修 b。請
- *     判斷是否能完成所有課程。若先修關係形成循環，則無法完成。
- *
- * [中文] 思路:
- *     以鄰接矩陣表示有向圖，並進行 DFS；節點在目前遞迴路徑中標記為造訪
- *     中，若再次走到此類節點即偵測到環。
- *
- * Examples:
- *     Input: numCourses = 2, prerequisites = [[1,0]]
- *     Output: true
- *     Explanation: There are a total of 2 courses to take.
- *     To take course 1 you should have finished course 0. So it is
- *     possible.
- *     Input: numCourses = 2, prerequisites = [[1,0],[0,1]]
- *     Output: false
- *     Explanation: There are a total of 2 courses to take.
- *     To take course 1 you should have finished course 0, and to
- *     take course 0 you should also have finished course 1. So it is
- *     impossible.
- *
- * Constraints:
+ * 題意：共有 numCourses 門課，課號為 0 到 numCourses-1。prerequisites[i] = [a, b] 表示必須先修完課程 b，才能修課程 a。判斷是否能修完所有課程；若先修關係形成循環，就無法完成。
+ * 範例：
+ *   1. 輸入：numCourses = 2，prerequisites = [[1,0]]；輸出：true。先修 0 再修 1 即可。
+ *   2. 輸入：numCourses = 2，prerequisites = [[1,0],[0,1]]；輸出：false。兩門課互相要求先修，形成循環。
+ * 限制：
  *   - 1 <= numCourses <= 2000
  *   - 0 <= prerequisites.length <= 5000
- *   - prerequisites[i].length == 2
- *   - 0 <= ai, bi < numCourses
- *   - All the pairs prerequisites[i] are unique.
- * ==========================================================================
+ *   - 每列長度為 2；課號介於 0 和 numCourses-1 之間
+ *   - 先修組合不重複
+ * 解法：
+ *   1. 把課程視為圖上的節點；每個 [課程, 先修課] 轉成先修課指向課程的一條有向邊。
+ *   2. 記錄每門課還有幾個先修條件（入度），把入度為 0 的課放進佇列。
+ *   3. 每修完一門課，就沿著它的邊減少後續課程入度；入度降到 0 時即可入列。
+ *   4. 若最後處理的課數等於 numCourses，代表沒有循環，可以修完；否則有課仍被循環卡住。
+ * 複雜度：時間 O(V + E)，額外空間 O(V + E)；V 是課程數，E 是先修關係數。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -216,112 +189,69 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-207. Course Schedule
+bool canFinish(int numCourses, int** prerequisites, int prerequisitesSize,
+               int* prerequisitesColSize) {
+    (void)prerequisitesColSize;  // 每列固定有兩個課程編號。
 
-There are a total of n courses you have to take, labeled from 0 to n - 1.
+    int edgeCapacity = prerequisitesSize > 0 ? prerequisitesSize : 1;
+    int *head = (int *)malloc(sizeof(int) * (size_t)numCourses);
+    int *to = (int *)malloc(sizeof(int) * (size_t)edgeCapacity);
+    int *next = (int *)malloc(sizeof(int) * (size_t)edgeCapacity);
+    int *indegree = (int *)calloc((size_t)numCourses, sizeof(int));
+    int *queue = (int *)malloc(sizeof(int) * (size_t)numCourses);
+    if (head == NULL || to == NULL || next == NULL ||
+        indegree == NULL || queue == NULL) {
+        free(head);
+        free(to);
+        free(next);
+        free(indegree);
+        free(queue);
+        return false;
+    }
 
-Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: [0,1]
+    for (int course = 0; course < numCourses; course++) {
+        head[course] = -1;
+    }
 
+    // 建立「先修課 -> 這門課」的鄰接串列。
+    for (int i = 0; i < prerequisitesSize; i++) {
+        int course = prerequisites[i][0];
+        int prerequisite = prerequisites[i][1];
+        to[i] = course;
+        next[i] = head[prerequisite];
+        head[prerequisite] = i;
+        indegree[course]++;
+    }
 
-Given the total number of courses and a list of prerequisite pairs, is it possible for you to finish all courses?
-
-
-For example:
-2, [[1,0]]
-There are a total of 2 courses to take. To take course 1 you should have finished course 0. So it is possible.
-
-2, [[1,0],[0,1]]
-There are a total of 2 courses to take. To take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.
-
-Note:
-
-The input prerequisites is a graph represented by a list of edges, not adjacency matrices. Read more about how a graph is represented.
-You may assume that there are no duplicate edges in the input prerequisites.
-
-
-
-click to show more hints.
-
-Hints:
-
-This problem is equivalent to finding if a cycle exists in a directed graph. If a cycle exists, no topological ordering exists and therefore it will be impossible to take all courses.
-Topological Sort via DFS - A great video tutorial (21 minutes) on Coursera explaining the basic concepts of Topological Sort.
-Topological sort could also be done via BFS.
-*/
-
-int has_cycle(int *buff, int n, int sz, int *visited) {
-    int i, *node;
-    
-    if (visited[n] == -1) return 0;
-    if (visited[n] == 1) return 1;
-    
-    visited[n] = 1;
-    
-    node = &buff[n * sz];
-    for (i = 0; i < sz; i ++) {
-        if (node[i] != 0 && has_cycle(buff, node[i], sz, visited)) {
-            return true;
+    int front = 0;
+    int back = 0;
+    for (int course = 0; course < numCourses; course++) {
+        if (indegree[course] == 0) {
+            queue[back++] = course;
         }
     }
-    
-    visited[n] = -1;
-    
-    return false;
+
+    int completed = 0;
+    while (front < back) {
+        int prerequisite = queue[front++];
+        completed++;
+
+        for (int edge = head[prerequisite]; edge != -1; edge = next[edge]) {
+            int course = to[edge];
+            indegree[course]--;
+            if (indegree[course] == 0) {
+                queue[back++] = course;
+            }
+        }
+    }
+
+    free(head);
+    free(to);
+    free(next);
+    free(indegree);
+    free(queue);
+    return completed == numCourses;
 }
-bool canFinish(int numCourses, int** prerequisites, int prerequisitesRowSize, int prerequisitesColSize) {
-    int ret = true;
-    int *buff, *root, *node;
-    int i, a, b;
-    int *visited;
-    
-    buff = calloc((numCourses + 1) * numCourses, sizeof(int)); // each node with all possible neighbors
-    visited = calloc((numCourses + 1), sizeof(int));
-    //assert(buff && visited);
-    
-    root = &buff[0];  // root node has neighbors of all
-    for (i = 0; i < numCourses; i ++) {
-        root[i] = i + 1;
-    }
-    
-    for (i = 0; i < prerequisitesRowSize; i ++) {
-        a = prerequisites[i][1] + 1;
-        b = prerequisites[i][0];
-        node = &buff[a * numCourses];
-        node[b] = b + 1;
-    }
-    
-    if (has_cycle(buff, 0, numCourses, visited)) {
-        ret = false;
-    }
-    
-    free(buff);
-    free(visited);
-
-    return ret;
-}
-
-
-/*
-Difficulty:Medium
-Total Accepted:88.1K
-Total Submissions:274.7K
-
-
-Companies Apple Yelp Zenefits
-Related Topics Depth-first Search Breadth-first Search Graph Topological Sort
-Similar Questions 
-                
-                  
-                    Course Schedule II
-                  
-                    Graph Valid Tree
-                  
-                    Minimum Height Trees
-                  
-                    Course Schedule III
-*/
 
 /* ---- generated tests ---- */
 int main(void){

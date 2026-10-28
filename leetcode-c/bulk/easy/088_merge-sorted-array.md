@@ -1,59 +1,47 @@
 # 0088. Merge Sorted Array《合併兩個排序陣列》
 
-- **Difficulty**: Easy
-- **Tags**: array, two-pointers, sorting
-- **題目連結**: https://leetcode.com/problems/merge-sorted-array/
-- **程式碼**: [`088_merge-sorted-array.c`](./088_merge-sorted-array.c) — 社群解答（repo DimitrisJim_leetcode_solutions），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：陣列、雙指標、排序
+- **題目連結**：https://leetcode.com/problems/merge-sorted-array/
 
-## 題目說明（中文）
+## 題目說明
 
-給定兩個非遞減排序陣列 nums1、nums2，以及各自有效元素數 m、n，將兩者合併為非遞減排序結果。nums1 長度為 m + n，前 m 個才是有效值，後 n 個預留位置；結果必須存回 nums1，而非另行回傳。
+給定兩個非遞減排序陣列 `nums1` 和 `nums2`，以及其中有效元素的數量 `m`、`n`。`nums1` 的長度是 `m+n`，只有前 `m` 個位置是資料，後 `n` 個位置是預留空間；`nums2` 有 `n` 個有效元素。請把兩個陣列合併成排序結果，直接寫回 `nums1`，不用回傳陣列。
 
-**思路**：先把 nums2 的所有元素複製到 nums1 的預留空間，再以 qsort 對整個 nums1 進行排序。
-
-## Problem Statement (English)
-
-You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively.
-Merge nums1 and nums2 into a single array sorted in non-decreasing order.
-The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-Follow up: Can you come up with an algorithm that runs in O(m + n) time?
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
-Output: [1,2,2,3,5,6]
-Explanation: The arrays we are merging are [1,2,3] and [2,5,6].
-The result of the merge is [1,2,2,3,5,6] with the underlined elements coming from nums1.
+輸入：nums1 = [1,2,3,0,0,0]，m = 3，nums2 = [2,5,6]，n = 3
+輸出：nums1 = [1,2,2,3,5,6]
+說明：nums1 的有效部分是 [1,2,3]，和 nums2 的 [2,5,6] 合併。
 
-Input: nums1 = [1], m = 1, nums2 = [], n = 0
-Output: [1]
-Explanation: The arrays we are merging are [1] and [].
-The result of the merge is [1].
+輸入：nums1 = [1]，m = 1，nums2 = []，n = 0
+輸出：[1]
 
-Input: nums1 = [0], m = 0, nums2 = [1], n = 1
-Output: [1]
-Explanation: The arrays we are merging are [] and [1].
-The result of the merge is [1].
-Note that because m = 0, there are no elements in nums1. The 0 is only there to ensure the merge result can fit in nums1.
+輸入：nums1 = [0]，m = 0，nums2 = [1]，n = 1
+輸出：[1]
+說明：nums1 原本沒有有效元素，0 只是預留位置。
 ```
 
-## 限制 Constraints
+## 限制
 
-nums1.length == m + n
-nums2.length == n
-0 <= m, n <= 200
-1 <= m + n <= 200
--109 <= nums1[i], nums2[j] <= 109
+- `nums1.length == m + n`
+- `nums2.length == n`
+- `0 <= m, n <= 200`
+- `1 <= m + n <= 200`
+- `-10^9 <= nums1[i], nums2[j] <= 10^9`
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 三個指標分別指向 `nums1` 有效部分的尾端、`nums2` 尾端，以及 `nums1` 最後一個預留位置。
+2. 比較兩個尾端元素，把較大的值寫到 `nums1` 的尾端，再將相應指標往左移。
+3. 持續直到 `nums2` 的元素都放好。若 `nums1` 還有剩餘元素，它們本來就在正確位置；若 `nums1` 先用完，則把 `nums2` 剩餘元素依序放入。
+4. 從後往前填可以保留 `nums1` 尚未比較的有效元素，不需要額外陣列。
+
+**複雜度**：每個元素最多處理一次，時間 `O(m+n)`；額外空間 `O(1)`。
+
+## C 函式簽名
 
 ```c
-void merge(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n) {
-    
-}
+void merge(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n);
 ```

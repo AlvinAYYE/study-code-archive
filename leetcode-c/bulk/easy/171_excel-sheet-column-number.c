@@ -1,47 +1,11 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0171. Excel Sheet Column Number
- * Difficulty: Easy
- * Tags: math, string
- * URL: https://leetcode.com/problems/excel-sheet-column-number/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a string columnTitle that represents the column title as
- *     appears in an Excel sheet, return its corresponding column number.
- *     For example:
- *
- * [中文] 題目: Excel 欄編號
- * [中文] 題目說明:
- *     給定 Excel 格式的大寫字母欄名 columnTitle，請回傳
- *     其對應的欄位編號。例如 A 為 1、Z 為 26、AA 為 27。輸
- *     入只含大寫英文字母，且長度最多為 7。
- *
- * [中文] 思路:
- *     由左至右累積 26 進位值，將目前結果乘 26 後加上字母對應的 1
- *      至 26。
- *
- * Examples:
- *     A -> 1
- *     B -> 2
- *     C -> 3
- *     ...
- *     Z -> 26
- *     AA -> 27
- *     AB -> 28
- *     ...
- *     Input: columnTitle = "A"
- *     Output: 1
- *     Input: columnTitle = "AB"
- *     Output: 28
- *     Input: columnTitle = "ZY"
- *     Output: 701
- *
- * Constraints:
- *   - 1 <= columnTitle.length <= 7
- *   - columnTitle consists only of uppercase English letters.
- *   - columnTitle is in the range ["A", "FXSHRXW"].
- * ==========================================================================
+ * LeetCode 0171. Excel Sheet Column Number《Excel 欄位序號》
+ * 題意：給定只含大寫英文字母的 Excel 欄位名稱，轉成對應的欄號。
+ *       A 到 Z 對應 1 到 26，AA 對應 27。
+ * 範例："A" -> 1；"AB" -> 28；"ZY" -> 701。
+ * 限制：長度 1 到 7；只含 A-Z；欄名介於 A 和 FXSHRXW。
+ * 解法：由左至右讀字母。每讀一個字母，就將目前總數乘 26 再加該字母的 1-based 值。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -215,48 +179,16 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-171. Excel Sheet Column Number
 
-Related to question Excel Sheet Column Title
-Given a column title as appear in an Excel sheet, return its corresponding column number.
+int titleToNumber(char* columnTitle) {
+    int columnNumber = 0;
 
-For example:
-    A -> 1
-    B -> 2
-    C -> 3
-    ...
-    Z -> 26
-    AA -> 27
-    AB -> 28 
-
-Credits:Special thanks to @ts for adding this problem and creating all test cases.
-*/
-
-int titleToNumber(char* s) {
-    int k = 0;
-    while (s && *s) {
-        k = k * 26 + (*s) - 'A' + 1;
-        s ++;
+    for (int i = 0; columnTitle[i] != '\0'; ++i) {
+        int letterValue = columnTitle[i] - 'A' + 1;
+        columnNumber = columnNumber * 26 + letterValue;
     }
-    return k;
+    return columnNumber;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:136.5K
-Total Submissions:289.8K
-
-
-Companies Microsoft Uber
-Related Topics Math
-Similar Questions 
-                
-                  
-                    Excel Sheet Column Title
-*/
 
 /* ---- generated tests ---- */
 int main(void){

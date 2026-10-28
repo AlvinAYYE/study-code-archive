@@ -221,9 +221,11 @@ Ref: https://leetcode.com/problems/same-tree/
 
 bool isSameTree(struct TreeNode *p, struct TreeNode *q)
 {
+    /* 同一位置都是空節點，代表這一部分結構相同。 */
     if (p == NULL && q == NULL) {
         return true;
     } else if (p != NULL && q != NULL) {
+        /* 兩邊都存在時，先比值，再逐一比對左右子樹。 */
         if (p->val == q->val) {
             if (!isSameTree(p->left, q->left))
                 return false;

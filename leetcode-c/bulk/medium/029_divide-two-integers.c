@@ -26,9 +26,9 @@
  *     數範圍；超過上界時回傳 2^31-1，除數保證不為零。
  *
  * [中文] 思路:
- *     程式先處理符號與 INT_MIN 的特殊情況，再將兩數轉為正值。它反
- *     覆以左移倍增除數，找到不超過剩餘被除數的最大倍數後扣除並累加相應的 
- *     2 次冪商。
+ *     先處理 INT_MIN / -1，再把兩數保持在非正數範圍，避免對 INT_MIN
+ *     取絕對值時溢位。每次將除數和對應商倍增到仍可扣除的最大區塊，從被除數
+ *     扣掉該區塊並累加商；最後依輸入符號決定商的正負。
  *
  * Examples:
  *     Input: dividend = 10, divisor = 3
@@ -48,6 +48,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include <limits.h>
 struct ListNode { int val; struct ListNode *next; };
 typedef struct ListNode ListNode;
 struct TreeNode { int val; struct TreeNode *left; struct TreeNode *right; };
@@ -214,101 +215,34 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
-29. Divide Two Integers [M]
-Ref: https://leetcode.com/problems/divide-two-integers/
+/* ---- 易讀解法：以負數表示絕對值，靠加倍逐塊扣除 ---- */
+int divide(int dividend, int divisor) {
+    int remaining;
+    int negativeQuotient = 0;
+    bool resultIsNegative;
 
-Given two integers dividend and divisor, divide two integers without using multiplication, division and mod operator.
+    if (dividend == INT_MIN && divisor == -1) return INT_MAX;
+    if (divisor == 0) return INT_MAX;
 
-Return the quotient after dividing dividend by divisor.
+    resultIsNegative = (dividend < 0) != (divisor < 0);
+    remaining = dividend > 0 ? -dividend : dividend;
+    divisor = divisor > 0 ? -divisor : divisor;
 
-The integer division should truncate toward zero.
+    while (remaining <= divisor) {
+        int chunk = divisor;
+        int quotientChunk = -1;
 
-Example 1:
-Input: dividend = 10, divisor = 3
-Output: 3
+        /* 加倍到下一次會超過 remaining，或再加倍會溢位。 */
+        while (chunk >= INT_MIN - chunk && remaining <= chunk + chunk) {
+            chunk += chunk;
+            quotientChunk += quotientChunk;
+        }
+        remaining -= chunk;
+        negativeQuotient += quotientChunk;
+    }
 
-Example 2:
-Input: dividend = 7, divisor = -3
-Output: -2
-
-Note:
-Both dividend and divisor will be 32-bit signed integers.
-The divisor will never be 0.
-Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: [ 231,  231   1]. For the purpose of this problem, assume that your function returns 231   1 when the division result overflows.
-
- */
-
-/**
- *     32/3  
- *      3 (3 << 0)
- *      6 (3 << 1)
- *     12
- *     24
- *     48  => "48 > 32" => 32-24=8
- *----------------------------------
- *      8/3
- *      3
- *      6
- *     12  => "12 > 8" => 8-6=2
- *----------------------------------
- *      2/3  => "2 < 3" => return 
- *         
- *   32/3 = (24+6+2)/3 = (8+2+0)/3 => 2^3 + 2^1 = 10
- */
-int divide(int dividend, int divisor)
-{
-	/* edge case */
-	if (divisor == 0)
-	{
-		return INT_MIN;
-	}
-	if (dividend == INT_MIN)
-	{
-		if (divisor == 1)
-		{
-			return INT_MIN;
-		} else if (divisor == -1)
-		{
-			return INT_MAX;
-		}
-	}
-	/* use long type to avoid int overflow */
-	long divd = (long)dividend;
-	long divs = (long)divisor;
-
-	/* negative case */
-	int sign = 0;
-	if (divd < 0)
-	{
-		sign ^= 1;
-		divd *= -1;
-	}
-	if (divs < 0)
-	{
-		sign ^= 1;
-		divs *= -1;
-	}
-
-	int shift = 0;
-	int ret = 0;
-	while (divd >= divs)
-	{        
-		shift++;
-		long tmp = divs << shift;
-		if (tmp > divd)
-		{
-			divd = divd - (divs << (shift-1));
-			ret += (1 << (shift-1));
-			shift = 0;
-		}
-	}
-
-	return (sign == 0 ? ret : ret*(-1));
+    return resultIsNegative ? negativeQuotient : -negativeQuotient;
 }
-
 
 
 /* ---- generated tests ---- */

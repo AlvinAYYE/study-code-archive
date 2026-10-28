@@ -208,57 +208,62 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-
-int compare(const void *a, const void *b)
-{
-	int *n1 = *(int **)a;
-	int *n2 = *(int **)b;
-
-	return n1[0] - n2[0];    
+/* 依區間起點排序；比較時不直接相減，避免溢位。 */
+static int compareIntervals(const void *a, const void *b) {
+    const int *left = *(const int *const *)a;
+    const int *right = *(const int *const *)b;
+    return (left[0] > right[0]) - (left[0] < right[0]);
 }
 
-int** merge(int** intervals, int intervalsSize, int* intervalsColSize, int* returnSize, int** returnColumnSizes)
-{
-	int **ret = malloc(sizeof(int *)*intervalsSize);
-	(*returnColumnSizes) = malloc(sizeof(int)*intervalsSize);
-	*returnSize = 0;
-	if (intervalsSize == 0)
-	{
-		return ret;
-	}
+/* 將區間複製到答案，避免回傳輸入列的別名。 */
+static void appendInterval(int **answer, int *columnSizes, int *count,
+                           int start, int end) {
+    answer[*count] = (int *)malloc(2 * sizeof(int));
+    answer[*count][0] = start;
+    answer[*count][1] = end;
+    columnSizes[*count] = 2;
+    ++(*count);
+}
 
-	// Sort the intervals
-	qsort(intervals, intervalsSize, sizeof(int *), compare);
+/* ---- 易讀解法：排序後合併相接或重疊的區間 ---- */
+int** merge(int** intervals, int intervalsSize, int* intervalsColSize,
+            int* returnSize, int** returnColumnSizes) {
+    int **sorted;
+    int **answer;
+    int *columnSizes;
+    int count = 0;
+    int i;
+    int currentStart;
+    int currentEnd;
+    (void)intervalsColSize;
 
-	int *prev = intervals[0];
-	for (int curIdx = 1; curIdx < intervalsSize; curIdx++)
-	{ 
-		// Find overlapping
-		if (prev[1] >= intervals[curIdx][0])
-		{
-			prev[1] = ((prev[1] <= intervals[curIdx][1]) ? intervals[curIdx][1] : prev[1]);
-		} else
-		{
-			ret[*returnSize] = malloc(sizeof(int)*2);
-			ret[*returnSize][0] = prev[0];
-			ret[*returnSize][1] = prev[1];
-			(*returnColumnSizes)[*returnSize] = 2;            
-			*returnSize += 1;
-			// Update the previous
-			prev = intervals[curIdx];
-		}
-	}
+    *returnSize = 0;
+    *returnColumnSizes = NULL;
+    if (intervalsSize == 0) return NULL;
 
-	// Finish prev[] off
-	ret[*returnSize] = malloc(sizeof(int)*2);
-	ret[*returnSize][0] = prev[0];
-	ret[*returnSize][1] = prev[1];
-	(*returnColumnSizes)[*returnSize] = 2;
-	*returnSize += 1;    
+    sorted = (int **)malloc((size_t)intervalsSize * sizeof(int *));
+    memcpy(sorted, intervals, (size_t)intervalsSize * sizeof(int *));
+    qsort(sorted, (size_t)intervalsSize, sizeof(int *), compareIntervals);
+    answer = (int **)malloc((size_t)intervalsSize * sizeof(int *));
+    columnSizes = (int *)malloc((size_t)intervalsSize * sizeof(int));
 
-	return ret;
+    currentStart = sorted[0][0];
+    currentEnd = sorted[0][1];
+    for (i = 1; i < intervalsSize; ++i) {
+        if (sorted[i][0] <= currentEnd) {
+            if (sorted[i][1] > currentEnd) currentEnd = sorted[i][1];
+        } else {
+            appendInterval(answer, columnSizes, &count, currentStart, currentEnd);
+            currentStart = sorted[i][0];
+            currentEnd = sorted[i][1];
+        }
+    }
+    appendInterval(answer, columnSizes, &count, currentStart, currentEnd);
+
+    free(sorted);
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
 
 

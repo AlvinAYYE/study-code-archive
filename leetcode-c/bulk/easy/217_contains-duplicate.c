@@ -1,40 +1,26 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0217. Contains Duplicate
- * Difficulty: Easy
- * Tags: array, hash-table, sorting
- * URL: https://leetcode.com/problems/contains-duplicate/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array nums, return true if any value appears at
- *     least twice in the array, and return false if every element is
- *     distinct.
+ * LeetCode 217. Contains Duplicate
+ * 難度：Easy
  *
- * [中文] 題目: 存在重複元素
- * [中文] 題目說明:
- *     給定整數陣列 nums，判斷是否有任一數值至少出現兩次。若所有元素皆
- *     相異則回傳 false，否則回傳 true。
+ * 【完整中文題意】給定整數陣列 nums。若有任何數值至少出現兩次，回傳 true；若所有元素都不相同，回傳 false。
  *
- * [中文] 思路:
- *     先將陣列排序，再線性檢查相鄰元素是否相等；一旦相等便回傳 true。
+ * 【範例】
+ * 1. nums = [1,2,3,1] → true（1 出現在索引 0 與 3）
+ * 2. nums = [1,2,3,4] → false
+ * 3. nums = [1,1,1,3,3,4,3,2,4,2] → true
  *
- * Examples:
- *     Input: nums = [1,2,3,1]
- *     Output: true
- *     Explanation:
- *     The element 1 occurs at the indices 0 and 3.
- *     Input: nums = [1,2,3,4]
- *     Output: false
- *     Explanation:
- *     All elements are distinct.
- *     Input: nums = [1,1,1,3,3,4,3,2,4,2]
- *     Output: true
+ * 【限制】
+ * - 1 <= nums.length <= 10⁵
+ * - -10⁹ <= nums[i] <= 10⁹
  *
- * Constraints:
- *   - 1 <= nums.length <= 10^5
- *   - -10^9 <= nums[i] <= 10^9
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 將 nums 由小到大排序。
+ * 2. 排序後，相同數值會相鄰。
+ * 3. 掃描相鄰元素；只要有一對相同就回傳 true，否則全部看完後回傳 false。
+ *
+ * 【複雜度】時間 O(n log n)；空間 O(log n) 排序堆疊，排序會改動輸入陣列
+ *
+ * 【LeetCode C 函式】bool containsDuplicate(int* nums, int numsSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -208,44 +194,21 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-217. Contains Duplicate
-
-Given an array of integers, find if the array contains any duplicates. Your function should return true if any value appears at least twice in the array, and it should return false if every element is distinct.
-*/
-
-int cmp(const void *a, const void *b) {
-    return *(int *)a - *(int *)b;
+static int compareInts217(const void* left, const void* right) {
+    int a = *(const int*)left;
+    int b = *(const int*)right;
+    return (a > b) - (a < b);
 }
+
 bool containsDuplicate(int* nums, int numsSize) {
-    int i;
-    
-    qsort(nums, numsSize, sizeof(int), cmp);
-    
-    for (i = 1; i < numsSize; i ++) {
+    qsort(nums, (size_t)numsSize, sizeof(int), compareInts217);
+
+    for (int i = 1; i < numsSize; ++i) {
+        // 排序後相鄰且相同，代表有重複值。
         if (nums[i] == nums[i - 1]) return true;
     }
-    
     return false;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:168.7K
-Total Submissions:368.9K
-
-
-Companies Palantir Airbnb Yahoo
-Related Topics Array Hash Table
-Similar Questions 
-                
-                  
-                    Contains Duplicate II
-                  
-                    Contains Duplicate III
-*/
 
 /* ---- generated tests ---- */
 int main(void){

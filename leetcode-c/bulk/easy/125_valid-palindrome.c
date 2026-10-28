@@ -1,48 +1,12 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0125. Valid Palindrome
- * Difficulty: Easy
- * Tags: two-pointers, string
- * URL: https://leetcode.com/problems/valid-palindrome/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     A phrase is a palindrome if, after converting all uppercase letters
- *     into lowercase letters and removing all non-alphanumeric characters,
- *     it reads the same forward and backward. Alphanumeric characters
- *     include letters and numbers.
- *     Given a string s, return true if it is a palindrome, or false
- *     otherwise.
- *
- * [中文] 題目: 驗證回文串
- * [中文] 題目說明:
- *     若將字串中的大寫字母轉成小寫、移除所有非英數字元後，正讀與反讀相同，
- *     則該字串是回文。給定字串 s，請判斷它是否為回文並回傳 true 或
- *      false。s 的長度介於 1 至 2×10^5，且只包含可列印 
- *     ASCII 字元。
- *
- * [中文] 思路:
- *     以左右雙指針向中間掃描，跳過非英數字元，將英文字母統一大小寫後比較；
- *     任一對不同即可回傳 false。
- *
- * Examples:
- *     Input: s = "A man, a plan, a canal: Panama"
- *     Output: true
- *     Explanation: "amanaplanacanalpanama" is a palindrome.
- *     Input: s = "race a car"
- *     Output: false
- *     Explanation: "raceacar" is not a palindrome.
- *     Input: s = " "
- *     Output: true
- *     Explanation: s is an empty string "" after removing
- *     non-alphanumeric characters.
- *     Since an empty string reads the same forward and backward, it
- *     is a palindrome.
- *
- * Constraints:
- *   - 1 <= s.length <= 2 * 10^5
- *   - s consists only of printable ASCII characters.
- * ==========================================================================
+ * LeetCode 0125. Valid Palindrome《有效回文》
+ * 題意：忽略非英數字元並忽略大小寫後，判斷字串是否正著讀、反著讀都相同。
+ *       空字串也算回文。輸入只含可列印 ASCII 字元。
+ * 範例："A man, a plan, a canal: Panama" -> true；"race a car" -> false；
+ *       " " -> true。
+ * 限制：1 <= s.length <= 2 * 10^5；s 只含可列印 ASCII 字元。
+ * 解法：左右指標向中央移動，跳過標點與空格，再比較小寫化後的字元。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -216,74 +180,46 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-125. Valid Palindrome
 
-Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
+/* 題目限定 ASCII，因此直接辨識英文字母與數字即可。 */
+static bool isAsciiAlphaNumeric(unsigned char ch) {
+    return (ch >= '0' && ch <= '9') ||
+           (ch >= 'A' && ch <= 'Z') ||
+           (ch >= 'a' && ch <= 'z');
+}
 
-
-
-For example,
-"A man, a plan, a canal: Panama" is a palindrome.
-"race a car" is not a palindrome.
-
-
-
-Note:
-Have you consider that the string might be empty? This is a good question to ask during an interview.
-
-For the purpose of this problem, we define empty string as valid palindrome.
-*/
+static unsigned char toAsciiLower(unsigned char ch) {
+    if (ch >= 'A' && ch <= 'Z') {
+        return (unsigned char)(ch - 'A' + 'a');
+    }
+    return ch;
+}
 
 bool isPalindrome(char* s) {
-    int i = 0;
-    int j;
-    char a, b;
-    
-    if (!s || !*s) return true;
-    
-    j = strlen(s) - 1;
-    while (i < j) {
-        a = s[i];
-        b = s[j];
-        if (!((a >= '0' && a <= '9') ||
-              (a >= 'A' && a <= 'Z') ||
-              (a >= 'a' && a <= 'z'))) {
-            i ++;
+    int left = 0;
+    int right = (int)strlen(s) - 1;
+
+    while (left < right) {
+        unsigned char leftChar = (unsigned char)s[left];
+        unsigned char rightChar = (unsigned char)s[right];
+
+        if (!isAsciiAlphaNumeric(leftChar)) {
+            ++left;
             continue;
         }
-        if (!((b >= '0' && b <= '9') ||
-              (b >= 'A' && b <= 'Z') ||
-              (b >= 'a' && b <= 'z'))) {
-            j --;
+        if (!isAsciiAlphaNumeric(rightChar)) {
+            --right;
             continue;
         }
-        a = a > 'Z' ? a - 'a' + 'A' : a;
-        b = b > 'Z' ? b - 'a' + 'A' : b;
-        if (a != b) {
+
+        if (toAsciiLower(leftChar) != toAsciiLower(rightChar)) {
             return false;
         }
-        i ++;
-        j --;
+        ++left;
+        --right;
     }
     return true;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:170.9K
-Total Submissions:651.4K
-
-
-Companies Microsoft Uber Facebook Zenefits
-Related Topics Two Pointers String
-Similar Questions 
-                
-                  
-                    Palindrome Linked List
-*/
 
 /* ---- generated tests ---- */
 int main(void){

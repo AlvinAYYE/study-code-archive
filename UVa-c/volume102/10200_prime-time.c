@@ -13,14 +13,44 @@
  */
 #include <stdio.h>
 
-static int is_prime(long long n) {
+static int is_prime(int n) {
+    int divisor;
     if (n < 2) return 0;
-    for (long long i = 2; i * i <= n; i++) if (n % i == 0) return 0;
+    if (n % 2 == 0) return n == 2;
+    for (divisor = 3; divisor <= n / divisor; divisor += 2) {
+        if (n % divisor == 0) return 0;
+    }
     return 1;
 }
 
+int solve(FILE *in, FILE *out) {
+    int prefix[10001];
+    int a;
+    int b;
+    int n;
+
+    prefix[0] = is_prime(41);
+    for (n = 1; n <= 10000; ++n) {
+        prefix[n] = prefix[n - 1] + is_prime(n * n + n + 41);
+    }
+
+    while (fscanf(in, "%d %d", &a, &b) == 2) {
+        int count;
+        int total;
+        double percentage;
+        if (a > b) {
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+        count = prefix[b] - (a == 0 ? 0 : prefix[a - 1]);
+        total = b - a + 1;
+        percentage = 100.0 * (double)count / (double)total;
+        fprintf(out, "%.2f\n", percentage + 1e-9);
+    }
+    return 0;
+}
+
 int main(void) {
-    int ok = is_prime(0*0 + 0 + 41) && is_prime(1*1 + 1 + 41);
-    printf("%s: UVa 10200 - Prime Time\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    return solve(stdin, stdout);
 }

@@ -205,42 +205,44 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdio.h>
-#include <stdlib.h>
+/* ---- 易讀解法：借用第一列與第一欄記錄歸零標記 ---- */
+void setZeroes(int** matrix, int matrixSize, int* matrixColSize) {
+    int rows = matrixSize;
+    int columns = matrixColSize[0];
+    bool firstRowHasZero = false;
+    bool firstColumnHasZero = false;
+    int row;
+    int column;
 
+    for (column = 0; column < columns; ++column) {
+        if (matrix[0][column] == 0) firstRowHasZero = true;
+    }
+    for (row = 0; row < rows; ++row) {
+        if (matrix[row][0] == 0) firstColumnHasZero = true;
+    }
 
-void setZeroes(int** matrix, int matrixSize, int* matrixColSize)
-{
-    int row, col;
-    bool bRow = false, bCol = false;
-    for (row = 0; row < matrixSize; row++) {
-        for (col = 0; col < matrixColSize[row]; col++) {
-            if (matrix[row][col] == 0) {
-                if (row == 0) bRow = true;
-                if (col == 0) bCol = true;
-                matrix[0][col] = matrix[row][0] = 0;
+    for (row = 1; row < rows; ++row) {
+        for (column = 1; column < columns; ++column) {
+            if (matrix[row][column] == 0) {
+                matrix[row][0] = 0;
+                matrix[0][column] = 0;
             }
         }
     }
 
-    for (row = 1; row < matrixSize; row++) {
-        for(col = 1; col < matrixColSize[row]; col++){
-            if (matrix[0][col] == 0 || matrix[row][0] == 0) {
-                matrix[row][col] = 0;
+    for (row = 1; row < rows; ++row) {
+        for (column = 1; column < columns; ++column) {
+            if (matrix[row][0] == 0 || matrix[0][column] == 0) {
+                matrix[row][column] = 0;
             }
         }
     }
 
-    if (bRow) {
-        memset(matrix[0], 0, matrixColSize[0] * sizeof(int));
+    if (firstRowHasZero) {
+        for (column = 0; column < columns; ++column) matrix[0][column] = 0;
     }
-
-    if (bCol) {
-        for (row = 0; row < matrixSize; row++) {
-            matrix[row][0] = 0;
-        }
+    if (firstColumnHasZero) {
+        for (row = 0; row < rows; ++row) matrix[row][0] = 0;
     }
 }
 

@@ -1,44 +1,22 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0287. Find the Duplicate Number
+ * LeetCode 0287. Find the Duplicate Number（尋找重複數字）
  * Difficulty: Medium
- * Tags: array, two-pointers, binary-search, bit-manipulation
- * URL: https://leetcode.com/problems/find-the-duplicate-number/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array of integers nums containing n + 1 integers where each
- *     integer is in the range [1, n] inclusive.
- *     There is only one repeated number in nums, return this repeated
- *     number.
- *     You must solve the problem without modifying the array nums and
- *     using only constant extra space.
- *
- * [中文] 題目: 尋找重複數
- * [中文] 題目說明:
- *     nums 含有 n + 1 個整數，且每個值都在 [1, n] 範圍
- *     內，其中恰有一個數值重複出現，重複次數可能超過兩次。請找出該重複數，
- *     且不得修改陣列並只能使用 O(1) 額外空間。
- *
- * [中文] 思路:
- *     把陣列值視為下一個索引，使用 Floyd 快慢指標先在環中相遇。再讓
- *     其中一指標回到起點並同步前進，第二次相遇的位置就是重複值。
- *
- * Examples:
- *     Input: nums = [1,3,4,2,2]
- *     Output: 2
- *     Input: nums = [3,1,3,4,2]
- *     Output: 3
- *     Input: nums = [3,3,3,3,3]
- *     Output: 3
- *
- * Constraints:
+ * 題意：陣列 nums 長度為 n+1，元素值介於 1 和 n，且只有一個不同數字重複出現（可能出現多次）。請找出這個重複數字，不可修改陣列，並只使用常數額外空間。
+ * 範例：
+ *   1. 輸入：nums = [1,3,4,2,2]；輸出：2。
+ *   2. 輸入：nums = [3,1,3,4,2]；輸出：3。
+ *   3. 輸入：nums = [3,3,3,3,3]；輸出：3。
+ * 限制：
  *   - 1 <= n <= 10^5
  *   - nums.length == n + 1
  *   - 1 <= nums[i] <= n
- *   - All the integers in nums appear only once except for precisely
- *   one integer which appears two or more times.
- * ==========================================================================
+ *   - 只有一個不同數字重複，且重複至少兩次
+ * 解法：
+ *   1. 把每個索引 i 看成節點，nums[i] 看成下一個索引。因為索引有 n+1 個，但可指向的值只有 1 到 n，走訪必定進入循環。
+ *   2. 重複的數字就是循環入口。
+ *   3. 使用 Floyd 快慢指標：快指標一次走兩步，慢指標一次走一步，兩者在循環內相遇。
+ *   4. 把一個指標移回索引 0，兩者再各走一步；再次相遇的位置就是循環入口，也就是重複數字。
+ * 複雜度：時間 O(n)，額外空間 O(1)，不修改輸入陣列。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -212,66 +190,26 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-287. Find the Duplicate Number
-
-Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
-
-
-
-Note:
-
-You must not modify the array (assume the array is read only).
-You must use only constant, O(1) extra space.
-Your runtime complexity should be less than O(n2).
-There is only one duplicate number in the array, but it could be repeated more than once.
-
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
-
 int findDuplicate(int* nums, int numsSize) {
-    int slow, fast;
-    
-    slow = fast = 0;
-    do {
-        slow = nums[slow];          // one step
-        fast = nums[nums[fast]];    // two steps
-    } while (slow != fast);
-    
+    (void)numsSize;  // 由題目保證所有走訪索引都在陣列範圍內。
+
+    int slow = nums[0];
+    int fast = nums[nums[0]];
+
+    // 快慢指標先在循環內相遇。
+    while (slow != fast) {
+        slow = nums[slow];
+        fast = nums[nums[fast]];
+    }
+
+    // 一個指標回到起點，兩者同速前進，交會處就是循環入口。
     slow = 0;
-    do {
+    while (slow != fast) {
         slow = nums[slow];
         fast = nums[fast];
-    } while (slow != fast); // start of the cycle
-    
+    }
     return slow;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:75.7K
-Total Submissions:174.4K
-
-
-Companies Bloomberg
-Related Topics Binary Search Array Two Pointers
-Similar Questions 
-                
-                  
-                    First Missing Positive
-                  
-                    Single Number
-                  
-                    Linked List Cycle II
-                  
-                    Missing Number
-                  
-                    Set Mismatch
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,48 +1,38 @@
-# 0231. Power of Two《2 的冪次》
+# LeetCode 231. Power of Two
 
-- **Difficulty**: Easy
-- **Tags**: math, bit-manipulation, recursion
-- **題目連結**: https://leetcode.com/problems/power-of-two/
-- **程式碼**: [`231_power-of-two.c`](./231_power-of-two.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：Easy**
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定整數 n，判斷它是否為 2 的某個冪次。若存在整數 x 使 n 等於 2 的 x 次方則回傳 true，否則回傳 false。
+給定整數 n，判斷它是否能表示成 2 的非負整數次方，也就是是否存在整數 x，使 n = 2ˣ。若是回傳 true，否則回傳 false。
 
-**思路**：先排除零與負數，再利用正的 2 冪只有一個位元為 1 的特性，檢查 n & (n - 1) 是否為 0。
+## 範例
 
-## Problem Statement (English)
+1. n = 1 → true（2⁰ = 1）
+2. n = 16 → true（2⁴ = 16）
+3. n = 3 → false
 
-Given an integer n, return true if it is a power of two. Otherwise, return false.
-An integer n is a power of two, if there exists an integer x such that n == 2x.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- -2³¹ <= n <= 2³¹ - 1
 
-```text
-Input: n = 1
-Output: true
-Explanation: 20 = 1
+## 解題思路
 
-Input: n = 16
-Output: true
-Explanation: 24 = 16
+1. 2 的冪必須是正數，所以 n <= 0 時直接回傳 false。
+2. 正的 2 的冪在二進位中只有一個 1，例如 8 是 1000。
+3. 對 n 和 n - 1 做 AND；若 n 只有一個 1，結果會是 0。
 
-Input: n = 3
-Output: false
-```
+## 複雜度
 
-## 限制 Constraints
+- 時間：O(1)
+- 空間：O(1)
 
--231 <= n <= 231 - 1
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
+~~~c
+bool isPowerOfTwo(int n);
+~~~
 
-```c
-bool isPowerOfTwo(int n) {
-    
-}
-```
+## 程式如何運作
+
+提交函式依照上述步驟完成計算；程式註解標出每個關鍵動作。本地測試 harness 保留在 .c 檔尾端。

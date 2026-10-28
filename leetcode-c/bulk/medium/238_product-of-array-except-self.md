@@ -1,49 +1,33 @@
-# 0238. Product of Array Except Self《除自身以外陣列的乘積》
+# LeetCode 0238. Product of Array Except Self
 
-- **Difficulty**: Medium
-- **Tags**: array, prefix-sum
-- **題目連結**: https://leetcode.com/problems/product-of-array-except-self/
-- **程式碼**: [`238_product-of-array-except-self.c`](./238_product-of-array-except-self.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 除自身以外陣列的乘積
 
-## 題目說明（中文）
+## 題目
 
-給定整數陣列 nums，建立 answer，其中 answer[i] 為除 nums[i] 外所有元素的乘積。必須在 O(n) 時間內且不可使用除法；各前綴或後綴乘積保證可放入 32 位元整數。
+給定整數陣列 nums，回傳 answer，使 answer[i] 等於 nums 中除了 nums[i] 以外所有元素的乘積。不能使用除法，並需在 O(n) 時間內完成。
 
-**思路**：先由左至右把每個位置左側的前綴乘積寫入答案陣列。再由右至左維護後綴乘積，乘到對應答案位置。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：nums = [1,2,3,4]；輸出：[24,12,8,6]。
+2. 輸入：nums = [-1,1,0,-3,3]；輸出：[0,0,9,0,0]。
 
-Given an integer array nums, return an array answer such that answer[i] is equal to the product of all the elements of nums except nums[i].
-The product of any prefix or suffix of nums is guaranteed to fit in a 32-bit integer.
-You must write an algorithm that runs in O(n) time and without using the division operation.
-Example 1:
-Example 2:
-Constraints:
-Follow up: Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)
+## 限制
 
-## 範例 Examples
+- 2 <= nums.length <= 10^5
+- -30 <= nums[i] <= 30
+- 每個 answer[i] 都保證能用 32 位元整數表示
 
-```text
-Input: nums = [1,2,3,4]
-Output: [24,12,8,6]
+## 解題思路
 
-Input: nums = [-1,1,0,-3,3]
-Output: [0,0,9,0,0]
-```
+1. 若有至少兩個 0，每個位置排除一個元素後仍會乘到 0，因此答案全為 0。
+2. 若恰好一個 0，只有 0 所在位置可能非 0；該位置的答案是所有非 0 元素相乘。
+3. 沒有 0 時，先由左往右把「左側乘積」存入答案，再由右往左乘上「右側乘積」。
+4. 用兩次線性掃描取代每個位置重新計算，完全不需要除法。
 
-## 限制 Constraints
+## 複雜度
 
-2 <= nums.length <= 105
--30 <= nums[i] <= 30
-The input is generated such that answer[i] is guaranteed to fit in a 32-bit integer.
+時間 O(n)，額外空間 O(1)（不計回傳陣列）。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* productExceptSelf(int* nums, int numsSize, int* returnSize) {
-    
-}
-```
+int* productExceptSelf(int* nums, int numsSize, int* returnSize)

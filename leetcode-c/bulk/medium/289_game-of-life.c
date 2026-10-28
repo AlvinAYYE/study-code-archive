@@ -1,50 +1,19 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0289. Game of Life
+ * LeetCode 0289. Game of Life（生命遊戲）
  * Difficulty: Medium
- * Tags: array, matrix, simulation
- * URL: https://leetcode.com/problems/game-of-life/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     According to Wikipedia's article: "The Game of Life, also known
- *     simply as Life, is a cellular automaton devised by the British
- *     mathematician John Horton Conway in 1970."
- *     The board is made up of an m x n grid of cells, where each cell has
- *     an initial state: live (represented by a 1) or dead (represented by
- *     a 0). Each cell interacts with its eight neighbors (horizontal,
- *     vertical, diagonal) using the following four rules (taken from the
- *     above Wikipedia article):
- *     The next state of the board is determined by applying the above
- *     rules simultaneously to every cell in the current state of the m x n
- *     grid board. In this process, births and deaths occur simultaneously.
- *     Given the current state of the board, update the board to reflect
- *     its next state.
- *     Note that you do not need to return anything.
- *
- * [中文] 題目: 生命遊戲
- * [中文] 題目說明:
- *     給定 m × n 的細胞棋盤，1 代表活細胞、0 代表死細胞；每個細
- *     胞只考慮周圍八個方向的鄰居。所有細胞必須同時依規則更新：活細胞有 2
- *      或 3 個活鄰居才存活，死細胞恰有 3 個活鄰居才復活，其餘情況為
- *     死亡或維持死亡。請原地把棋盤改為下一世代，無須回傳值。
- *
- * [中文] 思路:
- *     第一輪以低位保存原狀、以 0x10 標記下一世代，計算鄰居時只讀低位
- *     ，因此不會受已處理格子影響。第二輪再依高位統一寫回 0 或 1。
- *
- * Examples:
- *     Input: board = [[0,1,0],[0,0,1],[1,1,1],[0,0,0]]
- *     Output: [[0,0,0],[1,0,1],[0,1,1],[0,1,0]]
- *     Input: board = [[1,1],[1,0]]
- *     Output: [[1,1],[1,1]]
- *
- * Constraints:
- *   - m == board.length
- *   - n == board[i].length
+ * 題意：給定只含 0（死細胞）和 1（活細胞）的棋盤，依生命遊戲規則同時更新所有格子：活細胞鄰居少於 2 個會死亡；有 2 或 3 個鄰居則存活；多於 3 個會死亡；死細胞恰有 3 個活鄰居時會復活。鄰居是水平、垂直或斜角相接的最多 8 格。請原地更新棋盤。
+ * 範例：
+ *   1. 輸入：board = [[0,1,0],[0,0,1],[1,1,1],[0,0,0]]；輸出：[[0,0,0],[1,0,1],[0,1,1],[0,1,0]]。
+ *   2. 輸入：board = [[1,1],[1,0]]；輸出：[[1,1],[1,1]]。
+ * 限制：
  *   - 1 <= m, n <= 25
- *   - board[i][j] is 0 or 1.
- * ==========================================================================
+ *   - board[i][j] 只能是 0 或 1
+ * 解法：
+ *   1. 逐格統計周圍 8 個位置的活細胞數，邊界外的位置忽略。
+ *   2. 更新必須同時生效，所以先把新狀態存在第二個位元，低位仍保留原狀態供後續格子讀取。
+ *   3. 新狀態為活細胞時，把該格的第二個位元設為 1。
+ *   4. 所有格子都計算完後，將每格右移一位，讓新狀態成為正式值。
+ * 複雜度：時間 O(mn)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -218,115 +187,39 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/**
+void gameOfLife(int** board, int boardSize, int* boardColSize) {
+    int rows = boardSize;
+    int columns = boardColSize[0];
+    const int rowOffset[8] = {-1, -1, -1, 0, 0, 1, 1, 1};
+    const int columnOffset[8] = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-  289. Game of Life [Medium]
+    for (int row = 0; row < rows; row++) {
+        for (int column = 0; column < columns; column++) {
+            int liveNeighbors = 0;
+            for (int direction = 0; direction < 8; direction++) {
+                int neighborRow = row + rowOffset[direction];
+                int neighborColumn = column + columnOffset[direction];
+                if (neighborRow >= 0 && neighborRow < rows &&
+                    neighborColumn >= 0 && neighborColumn < columns) {
+                    liveNeighbors += board[neighborRow][neighborColumn] & 1;
+                }
+            }
 
-  According to the Wikipedia's article: "The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970."
+            int alive = board[row][column] & 1;
+            int nextAlive = alive
+                ? (liveNeighbors == 2 || liveNeighbors == 3)
+                : (liveNeighbors == 3);
+            board[row][column] |= nextAlive << 1;
+        }
+    }
 
-  Given a board with m by n cells, each cell has an initial state live (1) or dead (0). Each cell interacts with its eight neighbors (horizontal, vertical, diagonal) using the following four rules (taken from the above Wikipedia article):
-
-  Any live cell with fewer than two live neighbors dies, as if caused by under-population.
-  Any live cell with two or three live neighbors lives on to the next generation.
-  Any live cell with more than three live neighbors dies, as if by over-population..
-  Any dead cell with exactly three live neighbors becomes a live cell, as if by reproduction.
-  Write a function to compute the next state (after one update) of the board given its current state. The next state is created by applying the above rules simultaneously to every cell in the current state, where births and deaths occur simultaneously.
-
-Example:
-Input: 
-[
-	[0,1,0],
-	[0,0,1],
-	[1,1,1],
-	[0,0,0]
-]
-
-Output: 
-[
-	[0,0,0],
-	[1,0,1],
-	[0,1,1],
-	[0,1,0]
-]
-
-Follow up:
-Could you solve it in-place? Remember that the board needs to be updated at the same time: You cannot update some cells first and then use their updated values to update other cells.
-In this question, we represent the board using a 2D array. In principle, the board is infinite, which would cause problems when the active area encroaches the border of the array. How would you address these problems?
-
- */
-
-void checkNeighbor(int** board, int row, int col, int rowSize, int colSize, int *live, int *dead)
-{
-	for (int x = -1; x < 2; x++)
-	{
-		for (int y = -1; y < 2; y ++)
-		{
-			int curRow = row + x;
-			int curCol = col + y;
-
-			if (curRow < 0 || curRow >= rowSize ||
-					curCol < 0 || curCol >= colSize ||
-					(curRow == row && curCol == col))
-			{
-				continue;
-			}
-			if ((board[curRow][curCol] & 0x01) == 0x01)
-			{
-				*live += 1;
-			} else
-			{
-				*dead += 1;
-			}
-		}
-	}    
+    // 原狀態已不再需要，將第二個位元移到最低位。
+    for (int row = 0; row < rows; row++) {
+        for (int column = 0; column < columns; column++) {
+            board[row][column] >>= 1;
+        }
+    }
 }
-
-void gameOfLife(int** board, int boardSize, int* boardColSize){
-
-	if (boardSize == 0)
-	{
-		return board;        
-	}
-
-	int colSize = boardColSize[0];
-	for (int x = 0; x < boardSize; x++)
-	{
-		for (int y = 0; y < colSize; y++)
-		{            
-			int live = 0, dead = 0;
-			checkNeighbor(board, x, y, boardSize, colSize, &live, &dead);                        
-			if ((board[x][y] & 0x01) == 0x01) /* live */
-			{
-				if (live == 2 || live == 3)
-				{
-					board[x][y] |= 0x10;
-				}
-			} else /* dead */
-			{
-				if (live == 3)
-				{
-					board[x][y] |= 0x10;
-				}
-			}
-		}
-	}
-
-	for (int x = 0; x < boardSize; x++)
-	{
-		for (int y = 0; y < colSize; y++)
-		{        
-			if ((board[x][y] & 0x10) == 0x10)
-			{
-				board[x][y] = 1;
-			} else
-			{
-				board[x][y] = 0;
-			}
-		}
-	}
-}
-
 
 /* ---- generated tests ---- */
 int main(void){

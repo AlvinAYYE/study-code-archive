@@ -12,7 +12,16 @@
  *     path from the root node down to the farthest leaf node.
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     回傳二叉樹最深節點的深度（根節點深度計為 1）。
+ *     給定二元樹的根節點 root，回傳這棵樹的最大深度。最大深度是從根節點
+ *     到最遠葉節點的最長路徑上，所包含的節點數；空樹的深度為 0。
+ *
+ * [中文] 範例
+ *     1. root = [3,9,20,null,null,15,7]，輸出 3。
+ *     2. root = [1,null,2]，輸出 2。
+ *
+ * [中文] 限制
+ *     - 樹的節點數介於 0 到 10^4。
+ *     - -100 <= Node.val <= 100
  *
  * Examples:
  *   Example 1:
@@ -31,7 +40,12 @@
  *   }
  *
  * [EN] Approach: Recursion: depth = 1 + max(depth(left), depth(right)); empty node gives 0. Time O(n), space O(h).
- * [中文] 思路: 遞迴：深度 = 1 + max(左子樹深度, 右子樹深度)，空節點回傳 0。時間 O(n)、空間 O(h)。
+ * [中文] 直觀解題思路
+ *     1. 空節點不包含任何節點，深度是 0，作為遞迴終止條件。
+ *     2. 非空節點分別求左、右子樹深度；從目前節點出發的最長路徑會走向
+ *        較深的一側，因此答案是 1 + max(左深度, 右深度)。
+ *     3. 每個節點只拜訪一次，時間 O(n)；遞迴呼叫堆疊最多 O(h)，其中 h
+ *        是樹高。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -45,6 +59,7 @@ typedef struct TreeNode TreeNode;
 int maxDepth(TreeNode *root) {
     int l, r;
     if (!root) return 0;
+    /* 目前節點的深度，由較深的子樹決定。 */
     l = maxDepth(root->left);
     r = maxDepth(root->right);
     return 1 + (l > r ? l : r);

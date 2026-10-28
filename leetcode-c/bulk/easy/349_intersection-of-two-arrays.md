@@ -1,46 +1,74 @@
-# 0349. Intersection of Two Arrays《兩個陣列的交集》
+# 349 Intersection of Two Arrays：兩個陣列的交集
 
-- **Difficulty**: Easy
-- **Tags**: array, hash-table, two-pointers, binary-search, sorting
-- **題目連結**: https://leetcode.com/problems/intersection-of-two-arrays/
-- **程式碼**: [`349_intersection-of-two-arrays.c`](./349_intersection-of-two-arrays.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定兩個整數陣列 nums1 與 nums2，回傳它們的交集陣列。結果中的每個元素只能出現一次，輸出順序不限。
+給定整數陣列 nums1 與 nums2，回傳同時出現在兩個陣列中的數字。結果中的每個數字只能出現一次，回傳順序不限。
 
-**思路**：將 nums1 放入雜湊集合，再掃描 nums2；找到共同元素時加入答案並自集合移除，以確保不重複。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.
-Example 1:
-Example 2:
-Constraints:
+- 輸入：nums1 = [1,2,2,1], nums2 = [2,2]
+- 輸出：[2]
+- 說明：2 同時出現在兩個陣列中，但結果只保留一次。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: nums1 = [1,2,2,1], nums2 = [2,2]
-Output: [2]
+- 輸入：nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+- 輸出：[9,4]
+- 說明：[4,9] 也符合，因為回傳順序不限。
 
-Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
-Output: [9,4]
-Explanation: [4,9] is also accepted.
-```
+## 限制
 
-## 限制 Constraints
+- 1 <= nums1.length, nums2.length <= 1000
+- 0 <= nums1[i], nums2[i] <= 1000
 
-1 <= nums1.length, nums2.length <= 1000
-0 <= nums1[i], nums2[i] <= 1000
+## 解題思路
 
-## 官方 C 函式簽名 Signature
+1. 用布林陣列記錄 nums1 出現過哪些值。
+2. 再掃描 nums2；若某值也在 nums1 出現，而且還沒放入答案，就加入答案並標記。
+3. 每個值最多加入一次，所以結果自然不會有重複數字。
 
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* intersection(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {
-    
+## 複雜度
+
+- 時間：O(n1 + n2)，另有固定大小 1001 的初始化。
+- 空間：O(1) 額外空間（值域固定為 0 到 1000）；回傳陣列另需 O(min(n1,n2))。
+
+## C 函式簽名
+
+~~~c
+int* intersection(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize);
+~~~
+
+## 程式如何運作
+
+~~~c
+int* intersection(int* nums1, int nums1Size,
+                   int* nums2, int nums2Size, int* returnSize) {
+    bool appearsInFirst[1001] = {false};
+    bool alreadyAdded[1001] = {false};
+    int capacity = nums1Size < nums2Size ? nums1Size : nums2Size;
+    int* answer = (int*)malloc(sizeof(int) * (size_t)capacity);
+    int i;
+
+    *returnSize = 0;
+
+    for (i = 0; i < nums1Size; ++i) {
+        appearsInFirst[nums1[i]] = true;
+    }
+
+    for (i = 0; i < nums2Size; ++i) {
+        int value = nums2[i];
+
+        if (appearsInFirst[value] && !alreadyAdded[value]) {
+            answer[*returnSize] = value;
+            ++(*returnSize);
+            alreadyAdded[value] = true;
+        }
+    }
+
+    return answer;
 }
-```
+~~~

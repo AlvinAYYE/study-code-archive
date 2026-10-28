@@ -12,18 +12,31 @@
  *
  * [中文] 題目: 二進位求和
  * [中文] 題目說明:
- *     給定兩個只由 '0' 與 '1' 組成的二進位字串 a、b，回傳它們
- *     的二進位和。除了數字零本身外，兩個輸入都不含前導零。
+ *     給定兩個只由 '0' 與 '1' 組成的二進位字串 a、b，計算兩數之和，
+ *     並以二進位字串回傳。除了數字 0 本身外，輸入不含前導零。
  *
- * [中文] 思路:
- *     由兩字串尾端開始逐位相加並攜帶進位，先把結果以反向順序寫入緩衝區。處
- *     理完剩餘位與最後進位後，再將字串反轉。
+ * [中文] 範例:
+ *     1. a = "11"、b = "1"，輸出 "100"。
+ *     2. a = "1010"、b = "1011"，輸出 "10101"。
+ *
+ * [中文] 限制:
+ *     - 1 <= a.length, b.length <= 10^4
+ *     - a 與 b 只包含 '0'、'1'。
+ *     - 除了 "0" 以外，字串不含前導零。
+ *
+ * [中文] 直觀解題思路:
+ *     1. 從兩字串末端，也就是最低位開始相加。
+ *     2. 每位把 a、b 的位元與 carry 相加，結果最低位寫入答案，較高位成為
+ *        下一輪進位。
+ *     3. 較長字串的剩餘位繼續與進位相加，最後若仍有進位便補上一個 '1'。
+ *     4. 目前答案是由低位到高位寫入，反轉後即為正確字串。
+ *        時間 O(max(m,n))，回傳字串使用 O(max(m,n)) 空間。
  *
  * Examples:
  *     Input: a = "11", b = "1"
  *     Output: "100"
  *     Input: a = "1010", b = "1011"
- *     Output: "1010^1"
+ *     Output: "10101"
  *
  * Constraints:
  *   - 1 <= a.length, b.length <= 10^4
@@ -224,8 +237,9 @@ int calSum(char *ret, int retCtr, char *a, int idxA, char *b, int idxB, int carr
 	{
 		tmp = (a[idxA]-'0') + carry;
 	}
+	/* tmp 最多為 3：最低位寫入答案，第二位就是下一輪進位。 */
 	carry = ((tmp & 0x2) != 0) ? 1 : 0;
-	ret[retCtr] = (tmp & 0x1 != 0) ? '1' : '0';
+	ret[retCtr] = ((tmp & 0x1) != 0) ? '1' : '0';
 	return carry;
 }
 
@@ -243,12 +257,14 @@ void reverseStr(char *ret, int head, int tail)
 
 char * addBinary(char * a, char * b)
 {   
+	/* 從最低位開始逐位相加，答案先以反向順序放入新字串。 */
 	int idxA = strlen(a)-1;
 	int idxB = strlen(b)-1;
 	int maxLen = idxA > idxB ? idxA : idxB;
 	char *ret = calloc(maxLen+3 /* '\0' and 'carry' and 'index2len' */, sizeof(char));
 	int ctr = 0;
 	int carry = 0;
+	/* 先處理兩字串都有位元的位置；每一輪都把進位帶到下一位。 */
 	while (idxA >= 0 && idxB >= 0)
 	{
 		carry = calSum(ret, ctr, a, idxA, b, idxB, carry);
@@ -256,7 +272,7 @@ char * addBinary(char * a, char * b)
 		idxA--;
 		idxB--;
 	}
-	/* Check the ramining */
+	/* 較短字串用完後，較長字串的剩餘位仍需加上目前進位。 */
 	while (idxA >= 0)
 	{
 		carry = calSum(ret, ctr, a, idxA, NULL, 0, carry);
@@ -269,13 +285,13 @@ char * addBinary(char * a, char * b)
 		ctr++;
 		idxB--;
 	}
-	/* Check the carry bit */
+	/* 最高位仍有進位時，答案需再多一位。 */
 	if (carry)
 	{
 		ret[ctr] = '1';
 		ctr++;
 	}
-	/* reverse string */
+	/* 位元目前由低到高排列，反轉後才是一般由高位到低位的表示。 */
 	reverseStr(ret, 0, ctr-1);
 
 	return ret;

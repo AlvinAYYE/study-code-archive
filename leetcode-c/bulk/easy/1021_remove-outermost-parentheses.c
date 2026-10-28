@@ -1,57 +1,28 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1021. Remove Outermost Parentheses
- * Difficulty: Easy
- * Tags: string, stack
- * URL: https://leetcode.com/problems/remove-outermost-parentheses/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     A valid parentheses string is either empty "", "(" + A + ")", or A +
- *     B, where A and B are valid parentheses strings, and + represents
- *     string concatenation.
- *     A valid parentheses string s is primitive if it is nonempty, and
- *     there does not exist a way to split it into s = A + B, with A and B
- *     nonempty valid parentheses strings.
- *     Given a valid parentheses string s, consider its primitive
- *     decomposition: s = P1 + P2 + ... + Pk, where Pi are primitive valid
- *     parentheses strings.
- *     Return s after removing the outermost parentheses of every primitive
- *     string in the primitive decomposition of s.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     A valid parentheses 字串 is either empty "", "(" + A + ")", or A + B,
- *     where A and B are valid parentheses 字串, and + represents 字串
- *     concatenation.
+ * 【完整中文題意】有效括號字串可拆成一個或多個最外層不可再拆的有效括號片段（原始片段）。對每個片段各自移除最外面的那一對括號，再將剩下內容依原順序串接並回傳。
  *
- * Examples:
- *     Input: s = "(()())(())"
- *     Output: "()()()"
- *     Explanation:
- *     The input string is "(()())(())", with primitive decomposition
- *     "(()())" + "(())".
- *     After removing outer parentheses of each part, this is "()()"
- *     + "()" = "()()()".
- *     Input: s = "(()())(())(()(()))"
- *     Output: "()()()()(())"
- *     Explanation:
- *     The input string is "(()())(())(()(()))", with primitive
- *     decomposition "(()())" + "(())" + "(()(()))".
- *     After removing outer parentheses of each part, this is "()()"
- *     + "()" + "()(())" = "()()()()(())".
- *     Input: s = "()()"
- *     Output: ""
- *     Explanation:
- *     The input string is "()()", with primitive decomposition "()"
- *     + "()".
- *     After removing outer parentheses of each part, this is "" + ""
- *     = "".
+ * 【範例】
+ * 1. s = "(()())(())" → "()()()"
+ * 2. s = "(()())(())(()(()))" → "()()()()(())"
+ * 3. s = "()()" → ""
  *
- * Constraints:
- *   - 1 <= s.length <= 10^5
- *   - s[i] is either '(' or ')'.
- *   - s is a valid parentheses string.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= s.length <= 10⁵
+ * - s[i] 只會是 '(' 或 ')'
+ * - 輸入保證是有效括號字串
+ *
+ * 【解題步驟】
+ * 1. 用 depth 記錄讀到目前位置時，括號內層的深度。
+ * 2. 遇到左括號時，若進入前 depth 大於 0，表示它不是該原始片段的最外層左括號，便加入答案；接著 depth 加一。
+ * 3. 遇到右括號時，先將 depth 減一；若減完仍大於 0，表示它不是最外層右括號，便加入答案。
+ * 4. 答案最長不會超過輸入長度，因此配置 len + 1 的空間並補上字串結尾。
+ *
+ * 【複雜度】時間 O(n)；空間 O(n)（回傳字串）
+ *
+ * 【LeetCode C 函式】char* removeOuterParentheses(char* s)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -225,34 +196,27 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
+char* removeOuterParentheses(char* s) {
+    int length = (int)strlen(s);
+    char* answer = (char*)malloc((size_t)length + 1);
+    int depth = 0;
+    int out = 0;
 
-char * removeOuterParentheses(char * S)
-{
-	int len = strlen(S);
-	int ctr = 0;
-	int idx = 0;
-	char *ret = calloc(len+1, sizeof(char));
-	for (int i = 0; i < len; i++)
-	{
-		if (S[i] == '(')
-		{
-			ctr++;
-		} else
-		{            
-			ctr--;
-			// Get outer parentheses, remvoe it
-			if (ctr == 0)
-			{
-				S[i] = '\0';
-				strcat(ret, &(S[idx+1]));
-				idx = i+1;
-			}
-		}
-	}    
-	return ret;
+    for (int i = 0; i < length; ++i) {
+        if (s[i] == '(') {
+            // depth 為 0 代表這是原始片段的最外層左括號。
+            if (depth > 0) answer[out++] = s[i];
+            ++depth;
+        } else {
+            --depth;
+            // depth 歸零代表這是原始片段的最外層右括號。
+            if (depth > 0) answer[out++] = s[i];
+        }
+    }
+
+    answer[out] = '\0';
+    return answer;
 }
-
 
 /* ---- generated tests ---- */
 int main(void){

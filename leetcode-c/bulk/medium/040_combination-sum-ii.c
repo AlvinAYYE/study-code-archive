@@ -216,73 +216,68 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-
-int sumHelper(int *candidates, int curTarget, int tail, 
-		int *tmp, int tmpCtr, int sum, int target, 
-		int ***ret, int* returnSize, int** returnColumnSizes)
-{
-	int foundIdx = -1;
-	for (int i = tail; i >= 0; i--)
-	{
-		if ((candidates[i] > curTarget) ||
-				(foundIdx != -1 && candidates[i] == candidates[foundIdx]))
-		{
-			continue;
-		}
-
-		tmp[tmpCtr] = candidates[i];        
-
-		if (sum+candidates[i] == target)
-		{
-
-			*ret = realloc(*ret, sizeof(int *)*(*returnSize + 1));
-			*returnColumnSizes = realloc(*returnColumnSizes, sizeof(int)*(*returnSize + 1));
-
-			(*ret)[*returnSize] = malloc(sizeof(int)*(tmpCtr+1));
-			memcpy((*ret)[*returnSize], tmp, sizeof(int)*(tmpCtr+1));
-			(*returnColumnSizes)[*returnSize] = tmpCtr + 1;
-
-			*returnSize += 1;
-			foundIdx = i;
-		} else
-		{
-			if (-1 != sumHelper(candidates, curTarget-candidates[i], i-1, 
-						tmp, tmpCtr+1, sum+candidates[i], target,
-						ret, returnSize, returnColumnSizes))
-			{
-				foundIdx = i;
-			}
-		}
-	}   
-
-	return foundIdx;
+/* 儲存一個答案，並在需要時擴大答案陣列。 */
+static void saveCombination(int *path, int pathLength,
+                            int ***answer, int **columnSizes,
+                            int *count, int *capacity) {
+    if (*count == *capacity) {
+        *capacity = *capacity == 0 ? 16 : *capacity * 2;
+        *answer = (int **)realloc(*answer, (size_t)*capacity * sizeof(int *));
+        *columnSizes = (int *)realloc(*columnSizes, (size_t)*capacity * sizeof(int));
+    }
+    (*answer)[*count] = (int *)malloc((size_t)pathLength * sizeof(int));
+    memcpy((*answer)[*count], path, (size_t)pathLength * sizeof(int));
+    (*columnSizes)[*count] = pathLength;
+    ++(*count);
 }
 
-int compare(const void *a, const void *b)
-{
-	return *(int *)a - *(int *)b;
+static void searchUniqueCombinations(int *candidates, int candidatesSize,
+                                     int start, int remaining, int *path,
+                                     int pathLength, int ***answer,
+                                     int **columnSizes, int *count,
+                                     int *capacity) {
+    int i;
+    if (remaining == 0) {
+        saveCombination(path, pathLength, answer, columnSizes, count, capacity);
+        return;
+    }
+
+    for (i = start; i < candidatesSize && candidates[i] <= remaining; ++i) {
+        if (i > start && candidates[i] == candidates[i - 1]) continue;
+        path[pathLength] = candidates[i];
+        /* 傳入 i + 1，確保每個陣列位置最多使用一次。 */
+        searchUniqueCombinations(candidates, candidatesSize, i + 1,
+                                 remaining - candidates[i], path,
+                                 pathLength + 1, answer, columnSizes,
+                                 count, capacity);
+    }
 }
 
-int** combinationSum2(int* candidates, int candidatesSize, int target, int* returnSize, int** returnColumnSizes)
-{
-	qsort(candidates, candidatesSize, sizeof(int), compare);
-
-	int **ret = malloc(sizeof(int *));
-	(*returnColumnSizes) = malloc(sizeof(int));
-	*returnSize = 0;
-
-	int *tmp = malloc(sizeof(int)*candidatesSize);
-	int tmpCtr = 0;
-	sumHelper(candidates, target, candidatesSize-1, 
-			tmp, 0, 0, target, 
-			&ret, returnSize, returnColumnSizes);
-
-	free(tmp);    
-	return ret;    
+static int compareCandidates(const void *a, const void *b) {
+    int x = *(const int *)a;
+    int y = *(const int *)b;
+    return (x > y) - (x < y);
 }
 
+/* ---- 易讀解法：排序、同層去重、每個位置只選一次 ---- */
+int** combinationSum2(int* candidates, int candidatesSize, int target,
+                      int* returnSize, int** returnColumnSizes) {
+    int **answer = NULL;
+    int *columnSizes = NULL;
+    int *path = (int *)malloc((size_t)candidatesSize * sizeof(int));
+    int count = 0;
+    int capacity = 0;
+
+    qsort(candidates, (size_t)candidatesSize, sizeof(int), compareCandidates);
+    searchUniqueCombinations(candidates, candidatesSize, 0, target,
+                             path, 0, &answer, &columnSizes,
+                             &count, &capacity);
+    free(path);
+
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
+}
 
 
 /* ---- generated tests ---- */

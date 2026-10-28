@@ -1,42 +1,27 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1221. Split a String in Balanced Strings
- * Difficulty: Easy
- * Tags: string, greedy, counting
- * URL: https://leetcode.com/problems/split-a-string-in-balanced-strings/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Balanced strings are those that have an equal quantity of 'L' and
- *     'R' characters.
- *     Given a balanced string s, split it into some number of substrings
- *     such that:
- *     Return the maximum number of balanced strings you can obtain.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Balanced 字串 are those that have an equal quantity of 'L' and 'R'
- *     characters.
+ * 【完整中文題意】平衡字串是 L 與 R 數量相同的字串。給定一個平衡字串 s，請把它切成最多個非空的連續平衡子字串，並回傳切出的子字串數量。
  *
- * Examples:
- *     Input: s = "RLRRLLRLRL"
- *     Output: 4
- *     Explanation: s can be split into "RL", "RRLL", "RL", "RL",
- *     each substring contains same number of 'L' and 'R'.
- *     Input: s = "RLRRRLLRLL"
- *     Output: 2
- *     Explanation: s can be split into "RL", "RRRLLRLL", each
- *     substring contains same number of 'L' and 'R'.
- *     Note that s cannot be split into "RL", "RR", "RL", "LR", "LL",
- *     because the 2nd and 5th substrings are not balanced.
- *     Input: s = "LLLLRRRR"
- *     Output: 1
- *     Explanation: s can be split into "LLLLRRRR".
+ * 【範例】
+ * 1. s = "RLRRLLRLRL" → 4（可切成 "RL"、"RRLL"、"RL"、"RL"）
+ * 2. s = "RLRRRLLRLL" → 2
+ * 3. s = "LLLLRRRR" → 1
  *
- * Constraints:
- *   - 2 <= s.length <= 1000
- *   - s[i] is either 'L' or 'R'.
- *   - s is a balanced string.
- * ==========================================================================
+ * 【限制】
+ * - 2 <= s.length <= 1000
+ * - s[i] 是 'L' 或 'R'
+ * - s 本身是平衡字串
+ *
+ * 【解題步驟】
+ * 1. 由左至右掃描，用 balance 記錄目前片段中 R 的數量減去 L 的數量。
+ * 2. 遇到 R 就加一，遇到 L 就減一。
+ * 3. balance 回到 0 時，代表目前片段已平衡；切一段並把答案加一。貪心地在每次歸零時切開，可得到最多片段。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int balancedStringSplit(char* s)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,32 +195,23 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
+int balancedStringSplit(char* s) {
+    int balance = 0;
+    int pieces = 0;
 
-int balancedStringSplit(char * s)
-{
-	int ret = 0;
-	int balancedCtr = 0;
-	while (*s)
-	{
-		if (*s == 'R')
-		{
-			balancedCtr++;
-		} else
-		{
-			balancedCtr--;
-		}
+    for (int i = 0; s[i] != '\0'; ++i) {
+        if (s[i] == 'R') {
+            ++balance;
+        } else {
+            --balance;
+        }
 
-		if (balancedCtr == 0)
-		{
-			ret++;
-		}
-		s++;
-	}
+        // 目前片段中 L、R 數量相同，可以在這裡切開。
+        if (balance == 0) ++pieces;
+    }
 
-	return ret;
+    return pieces;
 }
-
 
 /* ---- generated tests ---- */
 int main(void){

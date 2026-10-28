@@ -1,36 +1,25 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1089. Duplicate Zeros
- * Difficulty: Easy
- * Tags: array, two-pointers
- * URL: https://leetcode.com/problems/duplicate-zeros/
- * Source: community solution, repo MainakRepositor_LeetCode-C (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a fixed-length integer array arr, duplicate each occurrence of
- *     zero, shifting the remaining elements to the right.
- *     Note that elements beyond the length of the original array are not
- *     written. Do the above modifications to the input array in place and
- *     do not return anything.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given a fixed-length 整數 陣列 arr, 重複 each occurrence of zero, shifting
- *     the remaining elements to the right.
+ * 【完整中文題意】給定固定長度的整數陣列 arr。每遇到一個 0，就在它後面再插入一個 0，並把後續元素往右移。超出原陣列長度的元素不寫入。請直接修改輸入陣列，不回傳陣列。
  *
- * Examples:
- *     Input: arr = [1,0,2,3,0,4,5,0]
- *     Output: [1,0,0,2,3,0,0,4]
- *     Explanation: After calling your function, the input array is
- *     modified to: [1,0,0,2,3,0,0,4]
- *     Input: arr = [1,2,3]
- *     Output: [1,2,3]
- *     Explanation: After calling your function, the input array is
- *     modified to: [1,2,3]
+ * 【範例】
+ * 1. arr = [1,0,2,3,0,4,5,0] → 修改為 [1,0,0,2,3,0,0,4]
+ * 2. arr = [1,2,3] → 修改為 [1,2,3]
  *
- * Constraints:
- *   - 1 <= arr.length <= 10^4
- *   - 0 <= arr[i] <= 9
- * ==========================================================================
+ * 【限制】
+ * - 1 <= arr.length <= 10⁴
+ * - 0 <= arr[i] <= 9
+ *
+ * 【解題步驟】
+ * 1. 複製原陣列，讓讀取資料不會被後續寫入覆蓋。
+ * 2. 由左至右讀取副本，將每個值寫回 arr。
+ * 3. 若讀到 0，且陣列尚有空位，再多寫一個 0；寫到陣列末端就停止。
+ *
+ * 【複雜度】時間 O(n)；空間 O(n)（暫存副本）
+ *
+ * 【LeetCode C 函式】void duplicateZeros(int* arr, int arrSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -204,28 +193,21 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-void duplicateZeros(int *arr, int arrSize)
-{
-    int i, start = 0;
-    int *tmp = malloc(arrSize * sizeof(int));
-    /* Copy arr into tmp arr */
-    for (i = 0; i < arrSize; i++)
-    {
-        tmp[i] = arr[i];
-    }
-    i = 0;
-    for (start = 0; start < arrSize; start++)
-    {
-        arr[start] = tmp[i];
-        if (tmp[i] == 0)
-        {
-            start++;
-            if (start < arrSize)
-                arr[start] = 0;
+void duplicateZeros(int* arr, int arrSize) {
+    int* original = (int*)malloc((size_t)arrSize * sizeof(int));
+    memcpy(original, arr, (size_t)arrSize * sizeof(int));
+
+    int write = 0;
+    for (int read = 0; read < arrSize && write < arrSize; ++read) {
+        arr[write++] = original[read];
+
+        // 零要多寫一次，但不可超出固定長度的陣列。
+        if (original[read] == 0 && write < arrSize) {
+            arr[write++] = 0;
         }
-        i++;
     }
+
+    free(original);
 }
 
 /* ---- generated tests ---- */

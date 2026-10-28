@@ -1,57 +1,33 @@
-# 0241. Different Ways to Add Parentheses《為運算式設計優先序》
+# LeetCode 0241. Different Ways to Add Parentheses
 
-- **Difficulty**: Medium
-- **Tags**: math, string, dynamic-programming, recursion, memoization
-- **題目連結**: https://leetcode.com/problems/different-ways-to-add-parentheses/
-- **程式碼**: [`241_different-ways-to-add-parentheses.c`](./241_different-ways-to-add-parentheses.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 為運算式加上不同括號
 
-## 題目說明（中文）
+## 題目
 
-給定僅含數字與 +、-、* 的運算式字串，列出以所有不同括號分組方式計算所能得到的結果。結果順序不限，且測資保證結果值在 32 位元整數範圍內、可能結果數不超過 10^4。
+給定只包含非負整數和 +、-、* 的運算式 expression。透過在不同位置加上括號，列出所有可能的計算結果。每一種括號分組都要保留，即使結果數值重複也不能去重。
 
-**思路**：遞迴把每一個運算子當作最後一步，分別求左右子字串的所有結果。將左右結果兩兩套用該運算子並累積。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：expression = 2-1-1；輸出：[0,2]。分別是 (2-1)-1 和 2-(1-1)。
+2. 輸入：expression = 2*3-4*5；輸出：[-34,-14,-10,-10,10]。
 
-Given a string expression of numbers and operators, return all possible results from computing all the different possible ways to group numbers and operators. You may return the answer in any order.
-The test cases are generated such that the output values fit in a 32-bit integer and the number of different results does not exceed 104.
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= expression.length <= 20
+- 字串只含數字與 +、-、*
+- 每個整數介於 0 和 99，且沒有正負號
 
-```text
-Input: expression = "2-1-1"
-Output: [0,2]
-Explanation:
-((2-1)-1) = 0 
-(2-(1-1)) = 2
+## 解題思路
 
-Input: expression = "2*3-4*5"
-Output: [-34,-14,-10,-10,10]
-Explanation:
-(2*(3-(4*5))) = -34 
-((2*3)-(4*5)) = -14 
-((2*(3-4))*5) = -10 
-(2*((3-4)*5)) = -10 
-(((2*3)-4)*5) = 10
-```
+1. 每遇到一個運算子，就把它當作最後一次運算，把字串切成左、右兩段。
+2. 遞迴列出左段與右段各自的所有結果，再將左右結果兩兩配對，套用中間的運算子。
+3. 把所有切分位置產生的答案串接起來；相同數值也要保留，因為它們代表不同括號方式。
+4. 若片段內沒有運算子，直接解析成一個整數結果。
 
-## 限制 Constraints
+## 複雜度
 
-1 <= expression.length <= 20
-expression consists of digits and the operator '+', '-', and '*'.
-All the integer values in the input expression are in the range [0, 99].
-The integer values in the input expression do not have a leading '-' or '+' denoting the sign.
+時間為指數級，因為必須列出所有括號結果；額外空間依結果數量成長，遞迴深度 O(k)，k 為運算子數。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* diffWaysToCompute(char* expression, int* returnSize) {
-    
-}
-```
+int* diffWaysToCompute(char* expression, int* returnSize)

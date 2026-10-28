@@ -204,99 +204,26 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
+/* ---- 易讀解法：滑動視窗內最多保留 k 個零 ---- */
+int longestOnes(int* nums, int numsSize, int k) {
+    int left = 0;
+    int zeroCount = 0;
+    int longest = 0;
+    int right;
 
+    for (right = 0; right < numsSize; ++right) {
+        if (nums[right] == 0) ++zeroCount;
 
-int longestOnes(int* nums, int numsSize, int k)
-{
-    
-    int start_index = 0;
-    int end_index = 0;
-    int max = INT_MIN;
-    
-    if(k==0)
-    {
-        //Calculate no of consecutive 1's
-        while(end_index < numsSize)
-        {
-            if(nums[end_index] == 1)
-            {
-                end_index++;
-            }
-            else
-            {
-                start_index++;
-                if(start_index > end_index)
-                {
-                    end_index = start_index;
-                }
-            }
-            
-            if(end_index - start_index >= max)
-            {
-                max = (end_index - start_index);
-            }
+        while (zeroCount > k) {
+            if (nums[left] == 0) --zeroCount;
+            ++left;
         }
-        return max;
+
+        if (right - left + 1 > longest) longest = right - left + 1;
     }
-    
-    int no_of_flips = 0;
-    int * index_arr = (int *)malloc(sizeof(int) * k);
-    int index_arr_index = 0;
-    int cur_check_index = 0;
-    
-    while(end_index<numsSize)
-    {
-        if(nums[end_index] == 1)
-        {
-            end_index++;
-            
-        }
-        
-        else if(nums[end_index] == 0)
-        {
-            if(no_of_flips < k)
-            {
-                no_of_flips++;
-                index_arr[index_arr_index++] = end_index;
-                end_index++;    
-                
-            }
-            else
-            {
-                if(start_index != index_arr[cur_check_index])
-                {
-                    start_index++;
-                }
-                else if(start_index == index_arr[cur_check_index])
-                {
-                    cur_check_index++;
-                    if(cur_check_index == k)
-                    {
-                        cur_check_index = 0;
-                    }
-                    no_of_flips--;
-                    
-                    if(index_arr_index == k)
-                    {
-                        index_arr_index = 0;
-                    }
-                    start_index++;
-                    
-                }
-            }
-            
-        }
-        
-        if(end_index - start_index > max)
-        {
-            max = end_index - start_index;
-        }      
-    }
-    free(index_arr);
-    return max;
+    return longest;
 }
+
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

@@ -1,38 +1,20 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0300. Longest Increasing Subsequence
+ * LeetCode 0300. Longest Increasing Subsequence（最長遞增子序列）
  * Difficulty: Medium
- * Tags: array, binary-search, dynamic-programming
- * URL: https://leetcode.com/problems/longest-increasing-subsequence/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array nums, return the length of the longest
- *     strictly increasing subsequence.
- *
- * [中文] 題目: 最長遞增子序列
- * [中文] 題目說明:
- *     給定整數陣列 nums，請回傳最長嚴格遞增子序列的長度。子序列不必連
- *     續，但必須保留原本的元素相對順序。
- *
- * [中文] 思路:
- *     維護各長度遞增子序列可達到的最小結尾值。對每個數字以二分搜尋其第一個
- *     可替換位置，最後有效尾端陣列的長度即為答案。
- *
- * Examples:
- *     Input: nums = [10,9,2,5,3,7,10^1,18]
- *     Output: 4
- *     Explanation: The longest increasing subsequence is
- *     [2,3,7,10^1], therefore the length is 4.
- *     Input: nums = [0,1,0,3,2,3]
- *     Output: 4
- *     Input: nums = [7,7,7,7,7,7,7]
- *     Output: 1
- *
- * Constraints:
+ * 題意：給定整數陣列 nums，找出最長嚴格遞增子序列的長度。子序列可以刪除原陣列中的一些元素，但保留其餘元素的相對順序；不要求連續。
+ * 範例：
+ *   1. 輸入：nums = [10,9,2,5,3,7,101,18]；輸出：4，例如 [2,3,7,101]。
+ *   2. 輸入：nums = [0,1,0,3,2,3]；輸出：4。
+ *   3. 輸入：nums = [7,7,7,7,7,7,7]；輸出：1。
+ * 限制：
  *   - 1 <= nums.length <= 2500
  *   - -10^4 <= nums[i] <= 10^4
- * ==========================================================================
+ * 解法：
+ *   1. tails[length-1] 保存所有長度為 length 的遞增子序列中，結尾值最小的那一個。
+ *   2. 對每個數字，用二分搜尋找到 tails 中第一個大於或等於它的位置。
+ *   3. 用目前數字替換該位置，讓同長度序列的結尾盡量小；若位置剛好在已知長度末端，就把遞增子序列長度加一。
+ *   4. tails 的內容不一定是一條實際子序列，但其長度就是答案。
+ * 複雜度：時間 O(n log n)，額外空間 O(n)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -206,102 +188,36 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-300. Longest Increasing Subsequence
-
-Given an unsorted array of integers, find the length of longest increasing subsequence.
-
-
-For example,
-Given [10, 9, 2, 5, 3, 7, 101, 18],
-The longest increasing subsequence is [2, 3, 7, 101], therefore the length is 4. Note that there may be more than one LIS combination, it is only necessary for you to return the length.
-
-
-Your algorithm should run in O(n2) complexity.
-
-
-Follow up: Could you improve it to O(n log n) time complexity? 
-
-Credits:Special thanks to @pbrother for adding this problem and creating all test cases.
-*/
-
-int lower_bound(int *p, int start, int end, int k) {
-    int mid;
-    
-    if (start > end) {
-        return start;
-    }
-    
-    mid = start + (end - start) / 2;
-    
-    if (p[mid] == k) return mid;
-    
-    if (p[mid] > k) return lower_bound(p, start, mid - 1, k);
-    
-    return lower_bound(p, mid + 1, end, k);
-}
 int lengthOfLIS(int* nums, int numsSize) {
-    int *lens, max, i, j;
-    
-    if (numsSize == 0) return 0;
-    
-    lens = malloc(numsSize * sizeof(int));
-    //assert(lens);
-    
-    max = 1;
-    
-#if 0   // O(n^2)   19ms
-    for (i = 0; i < numsSize; i ++) {
-        lens[i] = 1;                    // starts from 1
-        for (j = 0; j < i; j ++) {
-            if (nums[i] > nums[j] &&        // a small number is ahead
-                lens[i] < lens[j] + 1) {    //
-                lens[i] = lens[j] + 1;      // increase 1
+    int *tails = (int *)malloc(sizeof(int) * (size_t)numsSize);
+    if (tails == NULL) {
+        return 0;
+    }
+
+    int length = 0;
+    for (int i = 0; i < numsSize; i++) {
+        int left = 0;
+        int right = length;
+
+        // 找第一個大於或等於 nums[i] 的結尾值，維持嚴格遞增。
+        while (left < right) {
+            int middle = left + (right - left) / 2;
+            if (tails[middle] < nums[i]) {
+                left = middle + 1;
+            } else {
+                right = middle;
             }
         }
-        if (max < lens[i]) max = lens[i];
+
+        tails[left] = nums[i];
+        if (left == length) {
+            length++;
+        }
     }
-#else   // O(nlogn) 3ms
-    int last = 0;
-    int *p = lens;      // p is array of sorted numbers
-    
-    // initialize p with the first num
-    p[0] = nums[0];
-    // for the rest of nums
-    for (i = 1; i < numsSize; i ++) {
-        // find proper location of num in sorted array p
-        j = lower_bound(p, 0, last, nums[i]);
-        // save it in p
-        p[j] = nums[i];
-        if (last < j) last = j;
-    }
-    max = last + 1;  // the length of final p is the answer
-#endif
-    
-    free(lens);
-    
-    return max;
+
+    free(tails);
+    return length;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:85.2K
-Total Submissions:222.2K
-
-
-Companies Microsoft
-Related Topics Dynamic Programming Binary Search
-Similar Questions 
-                
-                  
-                    Increasing Triplet Subsequence
-                  
-                    Russian Doll Envelopes
-                  
-                    Maximum Length of Pair Chain
-*/
 
 /* ---- generated tests ---- */
 int main(void){

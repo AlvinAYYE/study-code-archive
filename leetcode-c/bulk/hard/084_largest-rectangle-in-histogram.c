@@ -13,26 +13,27 @@
  *
  * [中文] 題目: 柱狀圖中最大的矩形
  * [中文] 題目說明:
- *     給定陣列 heights，其中每個元素代表寬度為 1 的直方圖柱高，
- *     求直方圖內最大矩形的面積。柱高可為 0，陣列長度至多為 10^5。
+ *     給定整數陣列 heights，heights[i] 代表直方圖第 i 根柱子的高度，
+ *     每根柱子的寬度皆為 1。請回傳直方圖中可形成的最大矩形面積。
  *
- * [中文] 思路:
- *     逐一將每根柱子視為矩形高度，向左右擴張到遇到較低柱為止並計算可涵蓋的
- *     寬度與面積。程式以標記略過已包含在目前最大矩形中的相同高度位置。
+ * [中文] 範例：
+ *   範例 1：輸入 heights = [2,1,5,6,2,3]；輸出 10。
+ *     說明：高度 5、6 的相鄰柱可形成高 5、寬 2、面積 10 的矩形。
+ *   範例 2：輸入 heights = [2,4]；輸出 4。
  *
- * Examples:
- *     Input: heights = [2,1,5,6,2,3]
- *     Output: 10
- *     Explanation: The above is a histogram where width of each bar
- *     is 1.
- *     The largest rectangle is shown in the red area, which has an
- *     area = 10 units.
- *     Input: heights = [2,4]
- *     Output: 4
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= heights.length <= 10^5
  *   - 0 <= heights[i] <= 10^4
+ *
+ * [中文] 直觀解題思路（目前實作）：
+ *   1. 將每根未略過的柱子 heights[x] 當成候選矩形高度。
+ *   2. 往左、右擴張，直到遇到第一根比它矮的柱子；途中每根柱都能支撐
+ *      heights[x]，因此走過的總根數 ctr 就是矩形寬度。
+ *   3. 同高度且落在此區間內的位置會記在 tmpMark。若本次面積成為新最大值，
+ *      把標記保存到 mark，之後可略過這些會得到相同候選矩形的位置。
+ *   4. 比較所有未略過候選的 heights[x] * ctr，回傳最大值。
+ *
+ * 最壞時間 O(n^2)，每輪暫存標記使用 O(n) 空間；mark 另需 O(n) 空間。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -217,7 +218,7 @@ Ref: https://leetcode.com/problems/largest-rectangle-in-histogram/
 
 int largestRectangleArea(int* heights, int heightsSize)
 {
-	/* Use mark table to skip the index with same height and in current max rectangle */
+	/* 略過與目前最大矩形同高、且位於相同可延伸區間的位置。 */
 	char *mark = calloc(heightsSize, sizeof(char));
 	int max = 0;
 	for (int x = 0; x < heightsSize; x++)
@@ -227,6 +228,7 @@ int largestRectangleArea(int* heights, int heightsSize)
 			continue;
 		}
 
+		/* 暫記本候選區間內所有相同高度的位置。 */
 		char *tmpMark = calloc(heightsSize, sizeof(char));
 		tmpMark[x] = 1;
 		int ctr = 1;
@@ -256,6 +258,7 @@ int largestRectangleArea(int* heights, int heightsSize)
 		}
 		if (max < heights[x]*ctr)
 		{
+			/* 只有產生新最大值時，這批等高位置才可安全略過。 */
 			max = heights[x]*ctr;
 			memcpy(mark, tmpMark, sizeof(char)*heightsSize);
 		}

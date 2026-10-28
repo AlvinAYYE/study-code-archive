@@ -1,47 +1,41 @@
-# 0219. Contains Duplicate II《存在重複元素 II》
+# LeetCode 219. Contains Duplicate II
 
-- **Difficulty**: Easy
-- **Tags**: array, hash-table, sliding-window
-- **題目連結**: https://leetcode.com/problems/contains-duplicate-ii/
-- **程式碼**: [`219_contains-duplicate-ii.c`](./219_contains-duplicate-ii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：Easy**
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定整數陣列 nums 與 k，判斷是否存在兩個不同索引 i、j，使 nums[i] 等於 nums[j]。兩索引的絕對差必須不大於 k。
+給定整數陣列 nums 和整數 k。判斷是否存在兩個不同索引 i、j，使 nums[i] == nums[j]，而且兩個索引距離 |i - j| 不超過 k。
 
-**思路**：將每個值與原索引組成配對後，依值、索引排序。相同值會相鄰，比較相鄰配對的索引差是否不超過 k。
+## 範例
 
-## Problem Statement (English)
+1. nums = [1,2,3,1], k = 3 → true
+2. nums = [1,0,1,1], k = 1 → true
+3. nums = [1,2,3,1,2,3], k = 2 → false
 
-Given an integer array nums and an integer k, return true if there are two distinct indices i and j in the array such that nums[i] == nums[j] and abs(i - j) <= k.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= nums.length <= 10⁵
+- -10⁹ <= nums[i] <= 10⁹
+- 0 <= k <= 10⁵
 
-```text
-Input: nums = [1,2,3,1], k = 3
-Output: true
+## 解題思路
 
-Input: nums = [1,0,1,1], k = 1
-Output: true
+1. 建立由 (數值, 原索引) 組成的副本，不修改輸入陣列。
+2. 先依數值排序；數值相同時，再依原索引排序。
+3. 檢查相鄰的相同數值配對；因索引已由小到大，相鄰配對中若有距離不超過 k 的，就回傳 true。
+4. 若所有配對距離都太遠，回傳 false。
 
-Input: nums = [1,2,3,1,2,3], k = 2
-Output: false
-```
+## 複雜度
 
-## 限制 Constraints
+- 時間：O(n log n)
+- 空間：O(n)（索引副本與排序堆疊）
 
-1 <= nums.length <= 105
--109 <= nums[i] <= 109
-0 <= k <= 105
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
+~~~c
+bool containsNearbyDuplicate(int* nums, int numsSize, int k);
+~~~
 
-```c
-bool containsNearbyDuplicate(int* nums, int numsSize, int k) {
-    
-}
-```
+## 程式如何運作
+
+提交函式依照上述步驟完成計算；程式註解標出每個關鍵動作。本地測試 harness 保留在 .c 檔尾端。

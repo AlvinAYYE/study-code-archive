@@ -1,49 +1,71 @@
-# 0263. Ugly Number《醜數》
+# 263 Ugly Number：醜數
 
-- **Difficulty**: Easy
-- **Tags**: math
-- **題目連結**: https://leetcode.com/problems/ugly-number/
-- **程式碼**: [`263_ugly-number.c`](./263_ugly-number.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-醜數是正整數，且其質因數只可為 2、3、5。給定整數 n，判斷 n 是否為醜數；1 視為醜數，非正數不是。
+醜數是正整數，且它的質因數只能是 2、3、5。給定整數 n，若 n 是醜數就回傳 true，否則回傳 false。1 沒有質因數，因此也算醜數；0 與負數不是正整數。
 
-**思路**：依序持續除去 5、3、2 的所有因子。最後剩下 1 才回傳 true。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-An ugly number is a positive integer which does not have a prime factor other than 2, 3, and 5.
-Given an integer n, return true if n is an ugly number.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+- 輸入：n = 6
+- 輸出：true
+- 說明：6 = 2 × 3，質因數只有 2、3。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: n = 6
-Output: true
-Explanation: 6 = 2 × 3
+- 輸入：n = 1
+- 輸出：true
+- 說明：1 沒有質因數。
 
-Input: n = 1
-Output: true
-Explanation: 1 has no prime factors.
+### 範例 3
 
-Input: n = 14
-Output: false
-Explanation: 14 is not ugly since it includes the prime factor 7.
-```
+- 輸入：n = 14
+- 輸出：false
+- 說明：14 含有質因數 7。
 
-## 限制 Constraints
+## 限制
 
--231 <= n <= 231 - 1
+- -2^31 <= n <= 2^31 - 1
 
-## 官方 C 函式簽名 Signature
+## 解題思路
 
-```c
+1. 若 n <= 0，直接回傳 false。
+2. 依序用 2、3、5 除 n；只要能整除，就一直除到不能再除。
+3. 若最後剩下 1，表示沒有其他質因數，回傳 true；否則回傳 false。
+
+## 複雜度
+
+- 時間：O(log n)，每次除法都會讓 n 變小。
+- 空間：O(1)，只使用固定數量的變數。
+
+## C 函式簽名
+
+~~~c
+bool isUgly(int n);
+~~~
+
+## 程式如何運作
+
+~~~c
 bool isUgly(int n) {
-    
+    int factors[] = {2, 3, 5};
+    int i;
+
+    if (n <= 0) {
+        return false;
+    }
+
+    // 移除所有允許出現的質因數。
+    for (i = 0; i < 3; ++i) {
+        while (n % factors[i] == 0) {
+            n /= factors[i];
+        }
+    }
+
+    // 若仍有其他質因數，最後的 n 就不會是 1。
+    return n == 1;
 }
-```
+~~~

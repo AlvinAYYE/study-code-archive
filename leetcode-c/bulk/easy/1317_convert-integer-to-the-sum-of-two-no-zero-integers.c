@@ -1,38 +1,19 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1317. Convert Integer to the Sum of Two No-Zero Integers
- * Difficulty: Easy
- * Tags: math
- * URL: https://leetcode.com/problems/convert-integer-to-the-sum-of-two-no-zero-integers/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     No-Zero integer is a positive integer that does not contain any 0 in
- *     its decimal representation.
- *     Given an integer n, return a list of two integers [a, b] where:
- *     The test cases are generated so that there is at least one valid
- *     solution. If there are many valid solutions, you can return any of
- *     them.
+ * Title-CN: 將整數拆成兩個不含 0 的整數
+ * LeetCode 1317. Convert Integer to the Sum of Two No-Zero Integers (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     No-Zero 整數 is a positive 整數 that does not contain any 0 in its
- *     decimal representation.
+ * 題意翻譯：若一個正整數的十進位表示中沒有數字 0，就稱它為「無零整數」。給定 n，
+ * 請找出兩個正整數 [a,b]，使得 a+b=n，且 a、b 都是無零整數。題目保證至少有一組
+ * 解；若有多組，回傳任意一組即可。
  *
- * Examples:
- *     Input: n = 2
- *     Output: [1,1]
- *     Explanation: Let a = 1 and b = 1.
- *     Both a and b are no-zero integers, and a + b = 2 = n.
- *     Input: n = 11
- *     Output: [2,9]
- *     Explanation: Let a = 2 and b = 9.
- *     Both a and b are no-zero integers, and a + b = 11 = n.
- *     Note that there are other valid answers as [8, 3] that can be
- *     accepted.
+ * 範例 1：n = 2，輸出 [1,1]。
+ * 範例 2：n = 11，輸出 [2,9]；2 和 9 都不含 0，且相加為 11。
  *
- * Constraints:
- *   - 2 <= n <= 10^4
- * ==========================================================================
+ * 限制：2 <= n <= 10^4。
+ *
+ * 解題思路：從 a = 1 開始逐一嘗試，令 b = n-a。用除以 10 的餘數檢查兩個數字是否
+ * 含 0；若都不含 0，就回傳這一對。n 最大只有 10^4，逐一嘗試足夠快。時間
+ * O(n log n)，空間 O(1)，不計回傳陣列。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,44 +186,31 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdlib.h>
-
-inline int is_nozero(int i) {
-  int d = 1000;
-  // reduce d to appropriate value.
-  while (i < d)
-    d /= 10;
-  while (d) {
-    int q = i / d;
-    if (!q)
-      return 0;
-    // reduce.
-    i %= d, d /= 10;
-  }
-  return 1;
+static int containsZero(int value) {
+    while (value > 0) {
+        if (value % 10 == 0) return 1;
+        value /= 10;
+    }
+    return 0;
 }
 
 int *getNoZeroIntegers(int n, int *returnSize) {
-  int *result = malloc(2 * sizeof(*result));
-  *returnSize = 2;
+    int *result = malloc(sizeof(*result) * 2U);
+    int first;
 
-  int upper = n, lower = 1;
-  while (1) {
-    int candidate = upper + lower;
-    if (candidate == n) {
-      result[0] = lower;
-      result[1] = upper;
-      return result;
-    } else if (candidate < n) {
-      while (!is_nozero(++lower))
-        ;
-    } else {
-      while (!is_nozero(--upper))
-        ;
+    *returnSize = 0;
+    if (result == NULL) return NULL;
+    for (first = 1; first < n; ++first) {
+        int second = n - first;
+        if (!containsZero(first) && !containsZero(second)) {
+            result[0] = first;
+            result[1] = second;
+            *returnSize = 2;
+            return result;
+        }
     }
-  }
+    free(result);
+    return NULL;
 }
 
 /* ---- generated tests ---- */

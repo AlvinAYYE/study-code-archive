@@ -1,35 +1,25 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1018. Binary Prefix Divisible By 5
- * Difficulty: Easy
- * Tags: array, bit-manipulation
- * URL: https://leetcode.com/problems/binary-prefix-divisible-by-5/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given a binary array nums (0-indexed).
- *     We define xi as the number whose binary representation is the
- *     subarray nums[0..i] (from most-significant-bit to
- *     least-significant-bit).
- *     Return an array of booleans answer where answer[i] is true if xi is
- *     divisible by 5.
+ * LeetCode 1018. Binary Prefix Divisible by 5
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     給定 a binary 陣列 nums (0-indexed).
+ * 【完整中文題意】給定只由 0 和 1 組成的陣列 nums。對每個索引 i，取 nums[0..i] 當成由最高位到最低位排列的二進位數。回傳布林陣列 answer，其中 answer[i] 表示這個二進位前綴能否被 5 整除。
  *
- * Examples:
- *     Input: nums = [0,1,1]
- *     Output: [true,false,false]
- *     Explanation: The input numbers in binary are 0, 01, 011; which
- *     are 0, 1, and 3 in base-10.
- *     Only the first number is divisible by 5, so answer[0] is true.
- *     Input: nums = [1,1,1]
- *     Output: [false,false,false]
+ * 【範例】
+ * 1. nums = [0,1,1] → [true,false,false]（前綴為 0₂、01₂、011₂，也就是 0、1、3）
+ * 2. nums = [1,1,1] → [false,false,false]（前綴值為 1、3、7）
  *
- * Constraints:
- *   - 1 <= nums.length <= 10^5
- *   - nums[i] is either 0 or 1.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= nums.length <= 10⁵
+ * - nums[i] 為 0 或 1
+ *
+ * 【解題步驟】
+ * 1. 從左到右讀取位元，維護目前前綴除以 5 的餘數 rem。
+ * 2. 加入新位元 b 後，新數值等於舊數值乘 2 再加 b，所以新餘數是 (rem × 2 + b) % 5。
+ * 3. 餘數為 0 時，把該位置的答案設為 true；每一步都只保存 0 到 4 的餘數，不會讓整個二進位數溢位。
+ *
+ * 【複雜度】時間 O(n)；空間 O(n)（回傳陣列；額外狀態 O(1)）
+ *
+ * 【LeetCode C 函式】bool* prefixesDivBy5(int* nums, int numsSize, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -203,12 +193,18 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
 bool* prefixesDivBy5(int* nums, int numsSize, int* returnSize) {
-    bool *out = (bool*)malloc((size_t)numsSize * sizeof(bool));
-    int i, v = 0;
-    for (i = 0; i < numsSize; ++i) { v = (v * 2 + nums[i]) % 5; out[i] = (v == 0); }
-    *returnSize = numsSize; return out;
+    bool* answer = (bool*)malloc((size_t)numsSize * sizeof(bool));
+    int remainder = 0;
+
+    for (int i = 0; i < numsSize; ++i) {
+        // 加入一個二進位位元：舊值乘 2 再加新位元。
+        remainder = (remainder * 2 + nums[i]) % 5;
+        answer[i] = (remainder == 0);
+    }
+
+    *returnSize = numsSize;
+    return answer;
 }
 
 /* ---- generated tests ---- */

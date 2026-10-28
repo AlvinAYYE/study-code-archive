@@ -15,33 +15,32 @@
  *
  * [中文] 題目: 最小覆蓋子字串
  * [中文] 題目說明:
- *     給定字串 s 與 t，找出 s 中最短且包含 t 所有字元的子字串，
- *     重複字元也必須包含足夠次數。若不存在則回傳空字串。測資保證最短答案唯
- *     一。
+ *     給定長度分別為 m、n 的字串 s 與 t，找出 s 中最短的連續子字串，
+ *     使它包含 t 的所有字元及各字元的需求次數。若不存在則回傳空字串 ""；
+ *     測試資料保證最短答案唯一。
  *
- * [中文] 思路:
- *     以字元計數表搭配左右指針維護滑動視窗，右端擴張直到涵蓋 t 的所有字
- *     元。視窗有效時持續收縮左端並記錄最短區間。
+ * [中文] 範例：
+ *   範例 1：輸入 s = "ADOBECODEBANC", t = "ABC"；輸出 "BANC"。
+ *     說明："BANC" 包含 A、B、C，且長度最短。
+ *   範例 2：輸入 s = "a", t = "a"；輸出 "a"。
+ *   範例 3：輸入 s = "a", t = "aa"；輸出 ""。
+ *     說明：t 需要兩個 a，但 s 只有一個，因此不存在合法視窗。
  *
- * Examples:
- *     Input: s = "ADOBECODEBANC", t = "ABC"
- *     Output: "BANC"
- *     Explanation: The minimum window substring "BANC" includes 'A',
- *     'B', and 'C' from string t.
- *     Input: s = "a", t = "a"
- *     Output: "a"
- *     Explanation: The entire string s is the minimum window.
- *     Input: s = "a", t = "aa"
- *     Output: ""
- *     Explanation: Both 'a's from t must be included in the window.
- *     Since the largest window of s only has one 'a', return empty
- *     string.
- *
- * Constraints:
- *   - m == s.length
- *   - n == t.length
+ * [中文] 限制：
+ *   - m == s.length，n == t.length
  *   - 1 <= m, n <= 10^5
- *   - s and t consist of uppercase and lowercase English letters.
+ *   - s 與 t 僅包含大寫及小寫英文字母。
+ *
+ * [中文] 直觀解題思路：
+ *   1. cnt[c] 起初記錄 t 還需要幾個字元 c；n 記錄尚未滿足的字元總數。
+ *   2. tail 向右擴張。若加入字元前 cnt[c] > 0，代表補到一個需求，n 減一；
+ *      無論是否需要，都將 cnt[c] 減一以反映視窗內數量。
+ *   3. n == 0 時視窗已涵蓋 t，持續右移 head 收縮並更新最短區間。
+ *   4. 移出字元後 cnt[c] 加一；若變成正數，表示移掉必要字元，視窗失效，
+ *      再回到擴張階段。
+ *   5. 找到答案時在原字串的區間尾端寫入 '\0' 並回傳其起點；否則回傳 ""。
+ *
+ * head、tail 各走過 s 至多一次，時間 O(m+n)，固定計數表使額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -249,21 +248,21 @@ char* minWindow(char* s, char* t) {
     
     while (c = *(t ++)) {
         cnt[c] ++;
-        n ++;   // total number of characters in T
+        n ++;   /* 尚未由視窗滿足的字元總數 */
     }
     
     head = tail = 0;
     while (c = s[tail ++]) {
-        if (cnt[c] > 0) n --;  // decrease total number if a valid character is found
-        cnt[c] --;  // decrease count of current character
+        if (cnt[c] > 0) n --;  /* 此字元補到尚未滿足的需求 */
+        cnt[c]--;              /* 負值表示視窗內有多餘字元 */
         
-        while (n == 0) { // all characters are found
+        while (n == 0) { /* 視窗有效時持續縮小左端 */
             if (len == -1 || len > tail - head) {
                 start = head;
                 len = tail - head;
             }
-            c = s[head ++];  // advance head
-            cnt[c] ++;  // increase count
+            c = s[head++];
+            cnt[c]++;
             if (cnt[c] > 0) {
                 n = 1;  // a valid character was pushed out of head, will find it back from tail
             }

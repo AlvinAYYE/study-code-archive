@@ -1,55 +1,32 @@
-# 0299. Bulls and Cows《猜數字遊戲》
+# LeetCode 0299. Bulls and Cows
 
-- **Difficulty**: Medium
-- **Tags**: hash-table, string, counting
-- **題目連結**: https://leetcode.com/problems/bulls-and-cows/
-- **程式碼**: [`299_bulls-and-cows.c`](./299_bulls-and-cows.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+Title-CN: 公牛與母牛
 
-## 題目說明（中文）
+## 題目
 
-給定祕密數字 secret 與猜測 guess，位置與數字都相同的位數稱為公牛（bull），數字相同但位置不同的位數稱為母牛（cow）。兩字串可含重複數字，請以 "xAyB" 格式回傳公牛數 x 與母牛數 y。
+給定等長數字字串 secret 和 guess。公牛（bull）代表數字和位置都正確；母牛（cow）代表數字正確但位置不同。回傳格式為 xAyB，其中 x 是公牛數、y 是母牛數。
 
-**思路**：同時統計兩個字串的 0 到 9 出現次數並計算同位置相等的公牛數。各數字計數的較小值總和是共同數字數，扣掉公牛數即為母牛數。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：secret = 1807，guess = 7810；輸出：1A3B。
+2. 輸入：secret = 1123，guess = 0111；輸出：1A1B。不能把已配成公牛的數字再算成母牛。
 
-You are playing the Bulls and Cows game with your friend.
-You write down a secret number and ask your friend to guess what the number is. When your friend makes a guess, you provide a hint with the following info:
-Given the secret number secret and your friend's guess guess, return the hint for your friend's guess.
-The hint should be formatted as "xAyB", where x is the number of bulls and y is the number of cows. Note that both secret and guess may contain duplicate digits.
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= secret.length == guess.length <= 1000
+- secret 和 guess 只包含數字
 
-```text
-Input: secret = "1807", guess = "7810"
-Output: "1A3B"
-Explanation: Bulls are connected with a '|' and cows are underlined:
-"1807"
-  |
-"7810"
+## 解題思路
 
-Input: secret = "1123", guess = "0111"
-Output: "1A1B"
-Explanation: Bulls are connected with a '|' and cows are underlined:
-"1123"        "1123"
-  |      or     |
-"0111"        "0111"
-Note that only one of the two unmatched 1s is counted as a cow since the non-bull digits can only be rearranged to allow one 1 to be a bull.
-```
+1. 先逐位比較；同一位置數字相同就計為公牛。
+2. 其餘位置才可能形成母牛，分別統計 secret 和 guess 中未配對的 0 到 9 數量。
+3. 每個數字能配對的母牛數，是兩邊未配對數量的較小值；將十種數字的配對數加總。
+4. 把公牛數和母牛數格式化成 xAyB 字串。
 
-## 限制 Constraints
+## 複雜度
 
-1 <= secret.length, guess.length <= 1000
-secret.length == guess.length
-secret and guess consist of digits only.
+時間 O(n)，額外空間 O(1)。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-char* getHint(char* secret, char* guess) {
-    
-}
-```
+char* getHint(char* secret, char* guess)

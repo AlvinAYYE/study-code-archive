@@ -7,9 +7,17 @@
 
 ## 題目說明（中文）
 
-給定字串 s 與 t，求 s 中有多少個不同的子序列恰好等於 t。子序列可刪除 s 的部分字元，但必須保留其相對順序。測資保證答案可放入 32 位元帶符號整數。兩字串長度各介於 1 至 1000，且只包含英文字母。
+給定字串 `s` 與 `t`，請計算 `s` 中有多少個不同的子序列恰好等於 `t`。子序列可以刪除 `s` 的部分字元，但剩餘字元必須維持原本的相對順序。測試資料保證答案可放入 32 位元帶符號整數。
 
-**思路**：使用二維 DP，dp[i][j] 記錄 s 前綴中形成 t 前綴的方式數；字元相等時加上略過與配對兩種來源，不等時只略過 s 的字元。
+## 解題思路
+
+1. 定義 `dp[i][j]`：使用 `s[0..i]` 形成 `t[0..j]` 的不同方式數。
+2. 無論字元是否相同，都可以略過 `s[i]`，因此先承接 `dp[i-1][j]`。
+3. 若 `s[i] == t[j]`，也可使用這兩個字元配對，再加上 `dp[i-1][j-1]`。
+4. 第一欄只需累計 `t[0]` 在 `s` 前綴中的出現次數；其餘狀態依列向後填表。
+5. `dp[slen-1][tlen-1]` 就是完整 `t` 的形成方式數。
+
+時間複雜度為 `O(|s||t|)`，二維 DP 表使用 `O(|s||t|)` 空間。
 
 ## Problem Statement (English)
 
@@ -19,32 +27,22 @@ Example 1:
 Example 2:
 Constraints:
 
-## 範例 Examples
+## 範例
 
 ```text
-Input: s = "rabbbit", t = "rabbit"
-Output: 3
-Explanation:
-As shown below, there are 3 ways you can generate "rabbit" from s.
-rabbbit
-rabbbit
-rabbbit
+輸入：s = "rabbbit", t = "rabbit"
+輸出：3
+說明：三個 b 中選擇兩個，有 3 種方式形成 "rabbit"。
 
-Input: s = "babgbag", t = "bag"
-Output: 5
-Explanation:
-As shown below, there are 5 ways you can generate "bag" from s.
-babgbag
-babgbag
-babgbag
-babgbag
-babgbag
+輸入：s = "babgbag", t = "bag"
+輸出：5
+說明：從原字串選出 b、a、g 且保持相對順序，共有 5 種選法。
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= s.length, t.length <= 1000
-s and t consist of English letters.
+- `1 <= s.length, t.length <= 1000`
+- `s` 與 `t` 僅包含英文字母。
 
 ## 官方 C 函式簽名 Signature
 

@@ -1,55 +1,67 @@
-# 0268. Missing Number《缺失的數字》
+# 268 Missing Number：缺失的數字
 
-- **Difficulty**: Easy
-- **Tags**: array, hash-table, math, binary-search, bit-manipulation, sorting
-- **題目連結**: https://leetcode.com/problems/missing-number/
-- **程式碼**: [`268_missing-number.c`](./268_missing-number.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定含有 n 個相異數字的陣列 nums，所有數字皆在 [0, n] 中，找出範圍內唯一沒有出現的數字。題目追問要求以 O(n) 時間及 O(1) 額外空間完成。
+給定包含 n 個相異整數的陣列 nums，陣列中的數字都在 0 到 n 之間。這個範圍共有 n + 1 個數字，陣列少了其中一個；請回傳缺少的數字。目標是以 O(n) 時間與 O(1) 額外空間完成。
 
-**思路**：先計算 0 到 n 的等差級數總和，再逐一扣除陣列中的數字。最終剩餘值就是缺失數字。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given an array nums containing n distinct numbers in the range [0, n], return the only number in the range that is missing from the array.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-Follow up: Could you implement a solution using only O(1) extra space complexity and O(n) runtime complexity?
+- 輸入：nums = [3,0,1]
+- 輸出：2
+- 說明：n = 3，範圍是 [0,3]，只有 2 沒出現。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: nums = [3,0,1]
-Output: 2
-Explanation:
-n = 3 since there are 3 numbers, so all numbers are in the range [0,3] . 2 is the missing number in the range since it does not appear in nums .
+- 輸入：nums = [0,1]
+- 輸出：2
+- 說明：n = 2，範圍是 [0,2]，只有 2 沒出現。
 
-Input: nums = [0,1]
-Output: 2
-Explanation:
-n = 2 since there are 2 numbers, so all numbers are in the range [0,2] . 2 is the missing number in the range since it does not appear in nums .
+### 範例 3
 
-Input: nums = [9,6,4,2,3,5,7,0,1]
-Output: 8
-Explanation:
-n = 9 since there are 9 numbers, so all numbers are in the range [0,9] . 8 is the missing number in the range since it does not appear in nums .
-```
+- 輸入：nums = [9,6,4,2,3,5,7,0,1]
+- 輸出：8
+- 說明：n = 9，範圍是 [0,9]，只有 8 沒出現。
 
-## 限制 Constraints
+## 限制
 
-n == nums.length
-1 <= n <= 104
-0 <= nums[i] <= n
-All the numbers of nums are unique.
+- n == nums.length
+- 1 <= n <= 10^4
+- 0 <= nums[i] <= n
+- nums 中所有數字皆相異
 
-## 官方 C 函式簽名 Signature
+## 解題思路
 
-```c
+1. 0 到 n 的完整總和是 n × (n + 1) / 2。
+2. 把陣列中的每個數字從完整總和扣掉。
+3. 最後剩下的數字就是缺失值。
+
+## 複雜度
+
+- 時間：O(n)，只需掃描陣列一次。
+- 空間：O(1)，只使用一個累計變數。
+
+## C 函式簽名
+
+~~~c
+int missingNumber(int* nums, int numsSize);
+~~~
+
+## 程式如何運作
+
+~~~c
 int missingNumber(int* nums, int numsSize) {
-    
+    int missing = numsSize * (numsSize + 1) / 2;
+    int i;
+
+    // 完整範圍總和減去已出現的數字。
+    for (i = 0; i < numsSize; ++i) {
+        missing -= nums[i];
+    }
+
+    return missing;
 }
-```
+~~~

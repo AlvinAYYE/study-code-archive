@@ -1,48 +1,41 @@
 # 0202. Happy Number《快樂數》
 
-- **Difficulty**: Easy
-- **Tags**: hash-table, math, two-pointers
-- **題目連結**: https://leetcode.com/problems/happy-number/
-- **程式碼**: [`202_happy-number.c`](./202_happy-number.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/happy-number/
 
-## 題目說明（中文）
+## 題目翻譯
 
-對正整數反覆將數字替換為其各位數平方和；若最終到達 1，該數為快樂數，若進入不含 1 的循環則不是。請判斷給定 n 是否為快樂數。
+從正整數 n 開始，不斷把它替換成「每位數字平方後的總和」。如果某次得到 1，n 就是快樂數；如果結果不斷重複並形成不含 1 的循環，就不是快樂數。
 
-**思路**：每輪計算各位數平方和，並將已出現的數值存入動態陣列；若結果為 1 則成功，若新值已出現則判定進入循環。
+## 範例
 
-## Problem Statement (English)
+~~~text
+輸入：n = 19
+輸出：true
+19 -> 1²+9²=82 -> 8²+2²=68 -> 6²+8²=100 -> 1²+0²+0²=1
 
-Write an algorithm to determine if a number n is happy.
-A happy number is a number defined by the following process:
-Return true if n is a happy number, and false if not.
-Example 1:
-Example 2:
-Constraints:
+輸入：n = 2
+輸出：false
+~~~
 
-## 範例 Examples
+## 限制
 
-```text
-Input: n = 19
-Output: true
-Explanation:
-12 + 92 = 82
-82 + 22 = 68
-62 + 82 = 100
-12 + 02 + 02 = 1
+- 1 <= n <= 2^31 - 1
 
-Input: n = 2
-Output: false
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 寫一個小函式，計算目前數字各位數字的平方和。
+2. 每次先做平方和，再查這個結果是否已經出現。
+3. 如果結果是 1，回傳 true；如果結果重複，代表陷入循環，回傳 false。
+4. 輸入最多 10 位數，所以第一次平方和不超過 810；用 811 格布林陣列記錄狀態即可。
 
-1 <= n <= 231 - 1
+## 複雜度
 
-## 官方 C 函式簽名 Signature
+- 時間：O(1)，在題目的 32 位元輸入範圍內，可能狀態數有固定上限。
+- 空間：O(1)，使用固定大小的狀態陣列。
 
-```c
-bool isHappy(int n) {
-    
-}
-```
+## C 函式簽名
+
+~~~c
+bool isHappy(int n);
+~~~

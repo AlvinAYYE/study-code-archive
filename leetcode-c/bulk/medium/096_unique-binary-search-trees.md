@@ -1,41 +1,43 @@
-# 0096. Unique Binary Search Trees《不同的二元搜尋樹》
+# 0096. Unique Binary Search Trees｜不同的二元搜尋樹
 
-- **Difficulty**: Medium
-- **Tags**: math, dynamic-programming, tree, binary-search-tree, binary-tree
-- **題目連結**: https://leetcode.com/problems/unique-binary-search-trees/
-- **程式碼**: [`096_unique-binary-search-trees.c`](./096_unique-binary-search-trees.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：數學、動態規劃、二元搜尋樹
+- **題目連結**：[LeetCode 0096](https://leetcode.com/problems/unique-binary-search-trees/)
+- **C 程式**：[096_unique-binary-search-trees.c](./096_unique-binary-search-trees.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定整數 n，求恰好使用 1 到 n 這 n 個互異值時，結構不同的二元搜尋樹數量。保證 1 ≤ n ≤ 19。
+給定整數 `n`，使用值為 `1` 到 `n` 的 `n` 個不同數字建立二元搜尋樹。請回傳結構不同的二元搜尋樹總數。只比較樹的形狀與節點位置，不是比較節點值排列。
 
-**思路**：以 DP 計算節點數為 i 的樹數量，依序枚舉每個值當根。根左、右的節點數固定後，方案數為兩側方案數的乘積並累加。
-
-## Problem Statement (English)
-
-Given an integer n, return the number of structurally unique BST's (binary search trees) which has exactly n nodes of unique values from 1 to n.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: n = 3
-Output: 5
+輸入：n = 3
+輸出：5
+說明：三個節點可形成五種不同的 BST 結構。
 
-Input: n = 1
-Output: 1
+輸入：n = 1
+輸出：1
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= n <= 19
+- `1 <= n <= 19`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. `dp[count]` 表示用 `count` 個連續值可形成的 BST 數量；空樹只有一種，所以 `dp[0] = 1`。
+2. 對每個節點數 `count`，逐一假設其中一個值當根。
+3. 若根左邊有 `leftCount` 個值，右邊就有 `count - 1 - leftCount` 個值；左右子樹可以各自獨立選形狀，因此這個根的組合數是兩者數量相乘。
+4. 累加所有根的位置，就是 `dp[count]`；最後回傳 `dp[n]`。
+
+## 複雜度
+
+- 時間：`O(n²)`，每個節點數都嘗試所有根位置。
+- 額外空間：`O(n)`，保存每種節點數的答案。
+
+## LeetCode C 函式簽名
 
 ```c
-int numTrees(int n) {
-    
-}
+int numTrees(int n);
 ```

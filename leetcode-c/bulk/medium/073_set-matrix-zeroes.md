@@ -1,46 +1,45 @@
-# 0073. Set Matrix Zeroes《矩陣置零》
+# 0073. Set Matrix Zeroes｜矩陣置零
 
-- **Difficulty**: Medium
-- **Tags**: array, hash-table, matrix
-- **題目連結**: https://leetcode.com/problems/set-matrix-zeroes/
-- **程式碼**: [`073_set-matrix-zeroes.c`](./073_set-matrix-zeroes.c) — 社群解答（repo begeekmyfriend_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、雜湊表、矩陣
+- **題目連結**：[LeetCode 0073](https://leetcode.com/problems/set-matrix-zeroes/)
+- **C 程式**：[073_set-matrix-zeroes.c](./073_set-matrix-zeroes.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定 m × n 整數矩陣，只要某個元素為 0，就必須將它所在的整列與整欄都設為 0。必須直接在原矩陣中完成修改。矩陣的列數與欄數皆介於 1 到 200。
+給定整數矩陣 `matrix`。只要某格原本是 `0`，就把該格所在的整列和整欄全部設為 `0`。必須直接修改原矩陣，不能建立另一個同樣大小的矩陣。
 
-**思路**：先用第一列與第一欄記錄其餘各列、各欄是否應歸零，並另外保存第一列與第一欄原本是否含零。再依標記填零，最後處理第一列和第一欄。
-
-## Problem Statement (English)
-
-Given an m x n integer matrix matrix, if an element is 0, set its entire row and column to 0's.
-You must do it in place.
-Example 1:
-Example 2:
-Constraints:
-Follow up:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: matrix = [[1,1,1],[1,0,1],[1,1,1]]
-Output: [[1,0,1],[0,0,0],[1,0,1]]
+輸入：matrix = [[1,1,1],[1,0,1],[1,1,1]]
+輸出：[[1,0,1],[0,0,0],[1,0,1]]
 
-Input: matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
-Output: [[0,0,0,0],[0,4,5,0],[0,3,1,0]]
+輸入：matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]
+輸出：[[0,0,0,0],[0,4,5,0],[0,3,1,0]]
 ```
 
-## 限制 Constraints
+## 限制
 
-m == matrix.length
-n == matrix[0].length
-1 <= m, n <= 200
--231 <= matrix[i][j] <= 231 - 1
+- `matrix` 有 `m` 列、`n` 欄，且每列欄數相同。
+- `1 <= m, n <= 200`。
+- `-2^31 <= matrix[i][j] <= 2^31 - 1`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 用第一列記錄「哪些欄要歸零」，用第一欄記錄「哪些列要歸零」；另外用兩個布林值記住第一列、第一欄原本是否含有 `0`。
+2. 先檢查第一列和第一欄，保存它們自己的歸零狀態。
+3. 掃描其餘格子。遇到 `0` 時，把同一列的第一格和同一欄的第一格標成 `0`。
+4. 再掃描其餘格子，只要該列或該欄的標記是 `0`，就把格子設為 `0`。
+5. 最後依照兩個布林值處理第一列和第一欄，避免標記時丟失它們原本是否含零的資訊。
+
+## 複雜度
+
+- 時間：`O(m × n)`，矩陣最多掃描數次。
+- 額外空間：`O(1)`，只用兩個旗標，並借用矩陣第一列與第一欄做標記。
+
+## LeetCode C 函式簽名
 
 ```c
-void setZeroes(int** matrix, int matrixSize, int* matrixColSize) {
-    
-}
+void setZeroes(int** matrix, int matrixSize, int* matrixColSize);
 ```

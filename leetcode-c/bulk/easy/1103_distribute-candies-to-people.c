@@ -1,52 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1103. Distribute Candies to People
- * Difficulty: Easy
- * Tags: math, simulation
- * URL: https://leetcode.com/problems/distribute-candies-to-people/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     We distribute some number of candies, to a row of n = num_people
- *     people in the following way:
- *     We then give 1 candy to the first person, 2 candies to the second
- *     person, and so on until we give n candies to the last person.
- *     Then, we go back to the start of the row, giving n + 1 candies to
- *     the first person, n + 2 candies to the second person, and so on
- *     until we give 2 * n candies to the last person.
- *     This process repeats (with us giving one more candy each time, and
- *     moving to the start of the row after we reach the end) until we run
- *     out of candies. The last person will receive all of our remaining
- *     candies (not necessarily one more than the previous gift).
- *     Return an array (of length num_people and sum candies) that
- *     represents the final distribution of candies.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     We distribute some number of candies, to a 行 of n = num_people
- *     people in the following way:
+ * 【完整中文題意】把 candies 顆糖果依序分給一排 num_people 個人：第一次給第 1 人 1 顆、第 2 人 2 顆，依序增加到最後一人；下一輪回到第 1 人，繼續每次多給 1 顆。若糖果不夠完成下一次分配，最後一位收到糖果的人拿走所有剩餘糖果。請回傳每個人最後拿到的糖果數。
  *
- * Examples:
- *     Input: candies = 7, num_people = 4
- *     Output: [1,2,3,1]
- *     Explanation:
- *     On the first turn, ans[0] += 1, and the array is [1,0,0,0].
- *     On the second turn, ans[1] += 2, and the array is [1,2,0,0].
- *     On the third turn, ans[2] += 3, and the array is [1,2,3,0].
- *     On the fourth turn, ans[3] += 1 (because there is only one
- *     candy left), and the final array is [1,2,3,1].
- *     Input: candies = 10, num_people = 3
- *     Output: [5,2,3]
- *     Explanation:
- *     On the first turn, ans[0] += 1, and the array is [1,0,0].
- *     On the second turn, ans[1] += 2, and the array is [1,2,0].
- *     On the third turn, ans[2] += 3, and the array is [1,2,3].
- *     On the fourth turn, ans[0] += 4, and the final array is
- *     [5,2,3].
+ * 【範例】
+ * 1. candies = 7, num_people = 4 → [1,2,3,1]
+ * 2. candies = 10, num_people = 3 → [5,2,3]
  *
- * Constraints:
- *   - 1 <= candies <= 10^9
- *   - 1 <= num_people <= 1000
- * ==========================================================================
+ * 【限制】
+ * - 1 <= candies <= 10⁹
+ * - 1 <= num_people <= 1000
+ *
+ * 【解題步驟】
+ * 1. 配置長度為 num_people 的零陣列，代表每個人的糖果數。
+ * 2. 從要發出的 1 顆開始，每次把 min(目前應給數量, 剩餘糖果) 加到輪到的人身上。
+ * 3. 扣掉已發出的數量，輪到下一個人並把下一份預定數量加一。
+ * 4. 糖果發完後回傳陣列。
+ *
+ * 【複雜度】時間 O(發放次數 + num_people)，發放次數為 O(√candies)；空間 O(num_people)（回傳陣列）
+ *
+ * 【LeetCode C 函式】int* distributeCandies(int candies, int num_people, int* returnSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -220,51 +194,23 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
+int* distributeCandies(int candies, int num_people, int* returnSize) {
+    int* answer = (int*)calloc((size_t)num_people, sizeof(int));
+    *returnSize = num_people;
 
-static inline void assign_rest(int *ret, int ctr, int candies, int num_people)
-{
-    int idx = 0;
-    while (candies > 0 && ctr < candies) {
-        ret[idx] += ctr;
-        candies -= ctr;
-        idx = (idx + 1) % num_people;
-        ctr++;
-    }
-    ret[idx] += candies;
-}
+    int nextGift = 1;
+    int person = 0;
+    while (candies > 0) {
+        int gift = nextGift < candies ? nextGift : candies;
+        answer[person] += gift;
+        candies -= gift;
 
-/**
-   * Note: The returned array must be malloced, assume caller calls free().
-    */
-int *distributeCandies(int candies, int num_people, int *return_sz)
-{
-    int *ret = calloc(num_people, sizeof(int));
-    *return_sz = num_people;
-
-    int sum = (((1 + num_people) * num_people) >> 1);
-    int round = 0;
-    if (sum > candies)
-        goto out;
-
-    while (1) {
-        round++;
-        int cur = (((((1 + round * num_people) << 1) + num_people - 1) *
-                    num_people) >>
-                   1);
-        if ((sum + cur) > candies) {
-            candies -= sum;
-            break;
-        }
-        sum += cur;
+        // 每次都多準備一顆，並繞回下一位收糖果的人。
+        ++nextGift;
+        person = (person + 1) % num_people;
     }
 
-    for (int i = 0; i < num_people; i++)
-        ret[i] = ((((i << 1) + num_people * (round - 1) + 2) * round) >> 1);
-
-out:
-    assign_rest(ret, 1 + round * num_people, candies, num_people);
-    return ret;
+    return answer;
 }
 
 /* ---- generated tests ---- */

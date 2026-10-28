@@ -208,99 +208,50 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-392. Is Subsequence
-
-Given a string s and a string t, check if s is subsequence of t.
-
-
-
-You may assume that there is only lower case English letters in both s and t. t is potentially a very long (length ~= 500,000) string, and s is a short string (<=100).
-
-
-
-A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, "ace" is a subsequence of "abcde" while "aec" is not).
-
-
-Example 1:
-s = "abc", t = "ahbgdc"
-
-
-Return true.
-
-
-Example 2:
-s = "axc", t = "ahbgdc"
-
-
-Return false.
-
-
-Follow up:
-If there are lots of incoming S, say S1, S2, ... , Sk where k >= 1B, and you want to check one by one to see if T has its subsequence. In this scenario, how would you change your code?
-
-Credits:Special thanks to @pbrother for adding this problem and creating all test cases.
-*/
-
-#define IDX(ROW, COL, SZ) ((ROW + 1) * (SZ + 1) + (COL + 1))
+/* 解題說明
+ * 題目：392. Is Subsequence（判斷子序列）
+ *
+ * 題意完整翻譯：
+ *     給定字串 s 與 t，判斷 s 是否為 t
+ *     的子序列。子序列是從原字串刪除零個或多個字元後形成的字串，但保留下來的字元相對順序必須不變。例如 ace 是 abcde
+ *     的子序列，aec 則不是。
+ *
+ * 範例：
+ *   輸入：s = "abc", t = "ahbgdc"
+ *   輸出：true
+ *   說明：依序可在 t 中找到 a、b、c。
+ *   輸入：s = "axc", t = "ahbgdc"
+ *   輸出：false
+ *   說明：找到 a 後，後面沒有 x，因此無法按順序找到整個 s。
+ *
+ * 限制：
+ *   - 0 <= s.length <= 100
+ *   - 0 <= t.length <= 10^4
+ *   - s 與 t 都只含小寫英文字母
+ *
+ * 解題步驟：
+ *   1. 用 i 指向 s 目前要比對的字元。
+ *   2. 從左到右掃描 t；若 t[j] 等於 s[i]，就讓 i 前進，表示成功配對一個字元。
+ *   3. t 掃描完後，若 s[i] 已到結尾，表示所有字元都按順序找到，回傳 true。空字串也是任何字串的子序列。
+ *
+ * 複雜度：
+ *   時間：O(|s| + |t|)，每個字串最多掃描一次。
+ *   空間：O(1)，只使用索引變數。
+ */
 
 bool isSubsequence(char* s, char* t) {
-#if 0   // 260ms
-    int sl, tl, row, col;
-    bool *dp, ans = false;
-    
-    if (!s || !*s) return true;
-    else if (!t || !*t) return false;
-    
-    sl = strlen(s);
-    tl = strlen(t);
-    
-    dp = calloc((sl + 1) * (tl + 1), sizeof(bool));
-    //assert(dp);
-    
-    for (col = -1; col < tl; col ++) {
-        dp[IDX(-1, col, tl)] = true;
-    }
-    /*for (row = 0; row < sl; row ++) {
-        dp[IDX(row, -1, tl)] = false;
-    }*/
-    
-    for (row = 0; row < sl; row ++) {
-        for (col = 0; col < tl; col ++) {
-            dp[IDX(row, col, tl)] = dp[IDX(row, col - 1, tl)] ||
-                (s[row] == t[col] && dp[IDX(row -1, col - 1, tl)]);
+    int sIndex = 0;
+    int tIndex = 0;
+
+    while (s[sIndex] != '\0' && t[tIndex] != '\0') {
+        if (s[sIndex] == t[tIndex]) {
+            ++sIndex; /* 配對到下一個需要的字元。 */
         }
-        if (!dp[IDX(row, col - 1, tl)]) goto done;
+        ++tIndex;
     }
-    
-    ans = dp[IDX(sl - 1, tl - 1, tl)];
-    
-done:
-    free(dp);
-    
-    return ans;
-#else   // 12ms
-    while (*s && *t) {
-        while (*t && *t != *s) {
-            t ++;
-        }
-        if (*t) {
-            s ++;
-            t ++;
-        }
-    }
-    if (*s) return false;
-    return true;
-#endif
+
+    return s[sIndex] == '\0';
 }
-
-
-/*
-Difficulty:Medium
-
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -15,7 +15,18 @@
  *     cannot achieve any profit, return 0.
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     給定每日股價陣列，選一天買進、之後某天賣出，求最大利潤（不交易則為 0）。
+ *     給定每日股價陣列 prices，其中 prices[i] 是第 i 天的股價。請選一天
+ *     買進一股，並在之後的另一天賣出，使這次交易的利潤最大。若無法獲利，
+ *     回傳 0。
+ *
+ * [中文] 範例
+ *     1. prices = [7,1,5,3,6,4]，輸出 5；第 2 天以 1 買進，第 5 天
+ *        以 6 賣出，利潤為 5。買進必須早於賣出。
+ *     2. prices = [7,6,4,3,1]，輸出 0；價格持續下降，不進行交易。
+ *
+ * [中文] 限制
+ *     - 1 <= prices.length <= 10^5
+ *     - 0 <= prices[i] <= 10^4
  *
  * Examples:
  *   Example 1:
@@ -40,7 +51,12 @@
  *   }
  *
  * [EN] Approach: Track the lowest price seen so far and the best profit (price - lowest) in one pass. Time O(n), space O(1).
- * [中文] 思路: 單遍掃描：維護歷史最低買價，用「今日價 - 最低價」更新最大利潤。時間 O(n)、空間 O(1)。
+ * [中文] 直觀解題思路
+ *     1. 由左往右掃描，minp 記錄今天以前看過的最低價格，代表最佳買入價。
+ *     2. 若今天賣出，利潤是 prices[i] - minp，用它更新目前最大利潤 best。
+ *     3. 再用今天價格更新 minp，供後續日期使用。這個順序自然保證先買後賣。
+ *     4. best 初始為 0，所以沒有獲利機會時會回傳 0。時間 O(n)，
+ *        額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -49,6 +65,7 @@
 int maxProfit(int *prices, int pricesSize) {
     int minp = prices[0], best = 0, i;
     for (i = 1; i < pricesSize; ++i) {
+        /* 先計算今天賣出的利潤，再把今天納入往後的最低買價。 */
         if (prices[i] - minp > best) best = prices[i] - minp;
         if (prices[i] < minp) minp = prices[i];
     }

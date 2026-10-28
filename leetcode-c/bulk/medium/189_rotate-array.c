@@ -209,31 +209,22 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-void rotate(int* nums, int numsSize, int k)
-{
-    // edge cases: no need for movement
-    if (numsSize == 1 || (k % numsSize) == 0)
-        return;
-
-    int cur_val = nums[0], cur_idx = 0, start_idx = 0;
-    for (int swap_ctr = 0; swap_ctr < numsSize; swap_ctr++) {
-        int tmp_idx = (cur_idx + k) % numsSize;
-        int tmp_val = nums[tmp_idx];
-        nums[tmp_idx] = cur_val;
-        cur_val = tmp_val;
-        cur_idx = tmp_idx;
-        // Once cur_idx reaches the position of start_idx, increment the 
-        // start_idx by 1, and then assign it back to cur_idx. This way, the 
-        // position of cur_idx is also changed, allowing the swapping process 
-        // to continue.
-        if (cur_idx == start_idx) {
-            start_idx++;
-            cur_idx = start_idx;
-            cur_val = nums[start_idx];
-        }
+/* ---- 易讀解法：反轉全陣列，再分別反轉兩個旋轉區段 ---- */
+static void reverseArrayRange(int* nums, int left, int right) {
+    while (left < right) {
+        int temporary = nums[left];
+        nums[left] = nums[right];
+        nums[right] = temporary;
+        ++left;
+        --right;
     }
+}
+
+void rotate(int* nums, int numsSize, int k) {
+    k %= numsSize;
+    reverseArrayRange(nums, 0, numsSize - 1);
+    reverseArrayRange(nums, 0, k - 1);
+    reverseArrayRange(nums, k, numsSize - 1);
 }
 
 /* ---- generated tests ---- */

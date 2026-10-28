@@ -1,39 +1,25 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0231. Power of Two
- * Difficulty: Easy
- * Tags: math, bit-manipulation, recursion
- * URL: https://leetcode.com/problems/power-of-two/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer n, return true if it is a power of two. Otherwise,
- *     return false.
- *     An integer n is a power of two, if there exists an integer x such
- *     that n == 2x.
+ * LeetCode 231. Power of Two
+ * 難度：Easy
  *
- * [中文] 題目: 2 的冪次
- * [中文] 題目說明:
- *     給定整數 n，判斷它是否為 2 的某個冪次。若存在整數 x 使 n 
- *     等於 2 的 x 次方則回傳 true，否則回傳 false。
+ * 【完整中文題意】給定整數 n，判斷它是否能表示成 2 的非負整數次方，也就是是否存在整數 x，使 n = 2ˣ。若是回傳 true，否則回傳 false。
  *
- * [中文] 思路:
- *     先排除零與負數，再利用正的 2 冪只有一個位元為 1 的特性，檢查 
- *     n & (n - 1) 是否為 0。
+ * 【範例】
+ * 1. n = 1 → true（2⁰ = 1）
+ * 2. n = 16 → true（2⁴ = 16）
+ * 3. n = 3 → false
  *
- * Examples:
- *     Input: n = 1
- *     Output: true
- *     Explanation: 20 = 1
- *     Input: n = 16
- *     Output: true
- *     Explanation: 24 = 16
- *     Input: n = 3
- *     Output: false
+ * 【限制】
+ * - -2³¹ <= n <= 2³¹ - 1
  *
- * Constraints:
- *   - -231 <= n <= 231 - 1
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 2 的冪必須是正數，所以 n <= 0 時直接回傳 false。
+ * 2. 正的 2 的冪在二進位中只有一個 1，例如 8 是 1000。
+ * 3. 對 n 和 n - 1 做 AND；若 n 只有一個 1，結果會是 0。
+ *
+ * 【複雜度】時間 O(1)；空間 O(1)
+ *
+ * 【LeetCode C 函式】bool isPowerOfTwo(int n)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,45 +193,10 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-231. Power of Two
-
-Given an integer, write a function to determine if it is a power of two.
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
-
 bool isPowerOfTwo(int n) {
-    if (!n || (n & 0x80000000)) return false; // this is important!
-#if 0
-    while (!(n & 1)) n >>= 1;
-    return n == 1 ? true : false;
-#else
-    //printf("%x, %x\n", n, n - 1);
-    return (n & (n - 1)) == 0 ? true : false;
-#endif
+    // 正的 2 的冪只有一個二進位 1；n-1 會把它右側位元都變成 1。
+    return n > 0 && (n & (n - 1)) == 0;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:141.5K
-Total Submissions:352.5K
-
-
-Companies Google
-Related Topics Math Bit Manipulation
-Similar Questions 
-                
-                  
-                    Number of 1 Bits
-                  
-                    Power of Three
-                  
-                    Power of Four
-*/
 
 /* ---- generated tests ---- */
 int main(void){

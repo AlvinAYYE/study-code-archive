@@ -14,36 +14,28 @@
  *     Write the code that will take a string and make this conversion
  *     given a number of rows:
  *
- * [中文] 題目: Z 字形变换
- *     将一个给定字符串 s 根据给定的行数 numRows ，以从上往下、
- *     从左到右进行 Z 字形排列。 比如输入字符串为 "PAYPALISH
- *     IRING" 行数为 3 时，排列如下： P A H N A P L
- *      S I I G Y I R 之后，你的输出需要从左往右逐行读取，产
- *     生出一个新的字符串，比如： "PAHNAPLSIIGYIR" 。 请
- *     你实现这个将字符串进行指定行数变换的函数： string c...
+ * [中文] 題目：Z 字形變換
+ *     將字串 s 依 numRows 列，以由上往下、再斜向上、反覆往返的 Z 字形
+ *     排列，最後按列由上到下讀取並回傳新字串。
  *
- * Examples:
- *     P A H N
- *     A P L S I I G
- *     Y I R
- *     string convert(string s, int numRows);
- *     Input: s = "PAYPALISHIRING", numRows = 3
- *     Output: "PAHNAPLSIIGYIR"
- *     Input: s = "PAYPALISHIRING", numRows = 4
- *     Output: "PINALSIGYAHRPI"
- *     Explanation:
- *     P I N
- *     A L S I G
- *     Y A H R
- *     P I
- *     Input: s = "A", numRows = 1
- *     Output: "A"
+ * [中文] 範例
+ *   範例 1：輸入 s = "PAYPALISHIRING", numRows = 3，
+ *           輸出 "PAHNAPLSIIGYIR"。
+ *   範例 2：輸入 s = "PAYPALISHIRING", numRows = 4，
+ *           輸出 "PINALSIGYAHRPI"。
+ *   範例 3：輸入 s = "A", numRows = 1，輸出 "A"。
  *
- * Constraints:
- *   - 1 <= s.length <= 1000
- *   - s consists of English letters (lower-case and upper-case), ','
- *   and '.'.
- *   - 1 <= numRows <= 1000
+ * [中文] 限制
+ *   - 1 <= s.length <= 1000。
+ *   - s 由大小寫英文字母、逗號與句點組成。
+ *   - 1 <= numRows <= 1000。
+ *
+ * [中文] 直觀解題思路
+ *   1. 沿 Z 字形走訪一次，統計每一列會放幾個字元。
+ *   2. 計算每列在答案字串中的起始位置。
+ *   3. 再沿相同路徑走一次，將字元寫入所屬列的下一個位置。
+ *   4. 只有一列或列數不少於字串長度時，直接複製原字串。
+ *   時間 O(n + numRows)，額外位置資料與回傳字串共 O(n + numRows) 空間。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -217,71 +209,60 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-6. ZigZag Conversion
-
-The string "PAYPALISHIRING" is written in a zigzag pattern on a given number of rows like this: (you may want to display this pattern in a fixed font for better legibility)
-P   A   H   N
-A P L S I I G
-Y   I   R
-
-
-And then read line by line: "PAHNAPLSIIGYIR"
-
-
-Write the code that will take a string and make this conversion given a number of rows:
-
-string convert(string text, int nRows);
-
-convert("PAYPALISHIRING", 3) should return "PAHNAPLSIIGYIR".
-*/
-
+/* ---- 易讀解法：先計算各列範圍，再按 Z 字形填入 ---- */
 char* convert(char* s, int numRows) {
-    int len;
-    int i, j, k = 0;
-    char *p;
-    int step, up;
-    
-    if (!s || !*s || numRows == 1) return s;
-    
-    len = strlen(s);
-    p = malloc((len + 1) * sizeof(char));
-    //assert(p);
-    
-    step = (numRows - 1) * 2;       // max span
-    
-    for (i = 0; i < numRows; i ++) {
-        j = i;                      // first letter of each row
-        up = 1;
-        while (j < len) {
-            p[k ++] = s[j];
-            if (i == 0 || i == numRows - 1) {
-                j += step;          // full span
-            } else if (up) {
-                j += step - i * 2;  // full span - offset
-                up = 0;
-            } else {
-                j += i * 2;         // offset
-                up = 1;
-            }
-        }
+    int n = (int)strlen(s);
+    char *answer = (char *)malloc((size_t)n + 1);
+    int *rowCounts;
+    int *rowStarts;
+    int *nextPosition;
+    int row = 0;
+    int direction = 1;
+    int i;
+
+    if (numRows == 1 || numRows >= n) {
+        memcpy(answer, s, (size_t)n + 1);
+        return answer;
     }
-    p[k] = 0;
-    return p;
+
+    rowCounts = (int *)calloc((size_t)numRows, sizeof(int));
+    rowStarts = (int *)malloc((size_t)numRows * sizeof(int));
+    nextPosition = (int *)malloc((size_t)numRows * sizeof(int));
+
+    /* 第一趟只計算每列會放幾個字元。 */
+    for (i = 0; i < n; ++i) {
+        ++rowCounts[row];
+        if (row == 0) direction = 1;
+        else if (row == numRows - 1) direction = -1;
+        row += direction;
+    }
+
+    /* 每列在答案中的區間接在前一列後面。 */
+    rowStarts[0] = 0;
+    for (row = 1; row < numRows; ++row) {
+        rowStarts[row] = rowStarts[row - 1] + rowCounts[row - 1];
+    }
+    for (row = 0; row < numRows; ++row) {
+        nextPosition[row] = rowStarts[row];
+    }
+
+    /* 第二趟沿 Z 字形行走，把字元放進它所屬列的區間。 */
+    row = 0;
+    direction = 1;
+    for (i = 0; i < n; ++i) {
+        answer[nextPosition[row]++] = s[i];
+        if (row == 0) direction = 1;
+        else if (row == numRows - 1) direction = -1;
+        row += direction;
+    }
+
+    answer[n] = '\0';
+    free(rowCounts);
+    free(rowStarts);
+    free(nextPosition);
+    return answer;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:163.3K
-Total Submissions:610.5K
-
-
-Related Topics String
-
-*/
 
 /* ---- generated tests ---- */
 int main(void){

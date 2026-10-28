@@ -1,45 +1,49 @@
-# 0273. Integer to English Words《整數轉英文單字》
+# 0273. 整數轉英文單字（Integer to English Words）
 
-- **Difficulty**: Hard
-- **Tags**: math, string, recursion
-- **題目連結**: https://leetcode.com/problems/integer-to-english-words/
-- **程式碼**: [`273_integer-to-english-words.c`](./273_integer-to-english-words.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Hard
+- **標籤**：數學、字串
+- **題目連結**：[LeetCode 273](https://leetcode.com/problems/integer-to-english-words/)
+- **解答檔案**：[273_integer-to-english-words.c](./273_integer-to-english-words.c)
 
-## 題目說明（中文）
+## 題目完整翻譯
 
-將非負整數 num 轉換為英文單字表示。輸入範圍為 0 到 2^31 - 1，單字間以單一空白分隔，0 應輸出 Zero。
+給定非負整數 `num`，請把它轉成英文單字表示並回傳。單字首字母大寫，單字之間以一個空格分隔，不包含連字號或「and」。
 
-**思路**：利用個位、十位、teen、百與 Billion／Million／Thousand 字詞表，從十億位開始逐個三位數區塊組裝。完成後移除最後多餘空白，並對零特別回傳 Zero。
-
-## Problem Statement (English)
-
-Convert a non-negative integer num to its English words representation.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: num = 123
-Output: "One Hundred Twenty Three"
+輸入：num = 123
+輸出："One Hundred Twenty Three"
 
-Input: num = 12345
-Output: "Twelve Thousand Three Hundred Forty Five"
+輸入：num = 12345
+輸出："Twelve Thousand Three Hundred Forty Five"
 
-Input: num = 1234567
-Output: "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+輸入：num = 1234567
+輸出："One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
 ```
 
-## 限制 Constraints
+## 限制
 
-0 <= num <= 231 - 1
+- `0 <= num <= 2^31 - 1`
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 把數字由高位切成每組三位：Billion、Million、Thousand、個位組。
+2. 對每組 0 到 999，依序輸出百位、十位與個位；10 到 19 有各自的英文單字。
+3. 數值為 0 的組別跳過，避免多出空格或多餘的單位名稱。
+4. 若整個數值是 0，答案就是 `Zero`。
+
+例如 `1234567` 切成 `1 | 234 | 567`，分別轉成 `One Million`、`Two Hundred Thirty Four Thousand`、`Five Hundred Sixty Seven`，再依序接起來。
+
+## 複雜度
+
+- 時間：`O(1)`，最多處理四組三位數。
+- 額外空間：`O(1)`，不含回傳字串。
+
+## C 函式介面
 
 ```c
-char* numberToWords(int num) {
-    
-}
+char* numberToWords(int num);
 ```
+
+回傳字串由解答配置，呼叫端需負責釋放。

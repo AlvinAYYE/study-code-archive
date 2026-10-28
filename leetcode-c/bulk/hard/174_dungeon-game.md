@@ -1,50 +1,48 @@
-# 0174. Dungeon Game《地下城遊戲》
+# 0174. 地下城遊戲（Dungeon Game）
 
-- **Difficulty**: Hard
-- **Tags**: array, dynamic-programming, matrix
-- **題目連結**: https://leetcode.com/problems/dungeon-game/
-- **程式碼**: [`174_dungeon-game.c`](./174_dungeon-game.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：Hard
+- **標籤**：陣列、動態規劃、矩陣
+- **題目連結**：[LeetCode 174](https://leetcode.com/problems/dungeon-game/)
+- **解答檔案**：[174_dungeon-game.c](./174_dungeon-game.c)
 
-## 題目說明（中文）
+## 題目完整翻譯
 
-騎士從左上角出發，只能向右或向下前進至右下角救出公主。格子可扣除、維持或增加生命值，且生命值在任何時刻降至 0 或以下就會死亡。請回傳保證可抵達終點所需的最小初始生命值，起點與終點格也必須計入。
+騎士從地下城左上角出發，要前往右下角救出公主。地下城是一個 `m × n` 的格子，每格可能有怪物（負數，扣除生命）、空房間（0）或魔法球（正數，增加生命）。騎士每一步只能往右或往下。
 
-**思路**：從右下角反向動態規劃，以一維 dp 記錄進入各欄後續所需的最低生命；每格取右與下的較小需求，扣除格子值後至少維持 1。
+騎士有正整數生命值；生命值一旦降到 0 或以下就會死亡。請回傳能確保騎士走到公主所在位置所需的**最少初始生命值**。起點與終點也可能有怪物或魔法球。
 
-## Problem Statement (English)
-
-The demons had captured the princess and imprisoned her in the bottom-right corner of a dungeon. The dungeon consists of m x n rooms laid out in a 2D grid. Our valiant knight was initially positioned in the top-left room and must fight his way through dungeon to rescue the princess.
-The knight has an initial health point represented by a positive integer. If at any point his health point drops to 0 or below, he dies immediately.
-Some of the rooms are guarded by demons (represented by negative integers), so the knight loses health upon entering these rooms; other rooms are either empty (represented as 0) or contain magic orbs that increase the knight's health (represented by positive integers).
-To reach the princess as quickly as possible, the knight decides to move only rightward or downward in each step.
-Return the knight's minimum initial health so that he can rescue the princess.
-Note that any room can contain threats or power-ups, even the first room the knight enters and the bottom-right room where the princess is imprisoned.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: dungeon = [[-2,-3,3],[-5,-10,1],[10,30,-5]]
-Output: 7
-Explanation: The initial health of the knight must be at least 7 if he follows the optimal path: RIGHT-> RIGHT -> DOWN -> DOWN.
+輸入：dungeon = [[-2,-3,3],[-5,-10,1],[10,30,-5]]
+輸出：7
+說明：最佳路線為右、右、下、下；初始生命至少為 7。
 
-Input: dungeon = [[0]]
-Output: 1
+輸入：dungeon = [[0]]
+輸出：1
 ```
 
-## 限制 Constraints
+## 限制
 
-m == dungeon.length
-n == dungeon[i].length
-1 <= m, n <= 200
--1000 <= dungeon[i][j] <= 1000
+- `1 <= m, n <= 200`
+- `-1000 <= dungeon[i][j] <= 1000`
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 從終點往起點反向計算。令 `dp[j]` 表示走進目前格子之前，至少要有多少生命才能安全抵達公主。
+2. 從右下角往左上角走。進入一格後，騎士可以往右或往下，因此選兩個後續需求較小的那一個。
+3. 目前格子的需求為 `max(1, 後續需求 - 格子值)`：生命至少要剩 1；負數會增加所需生命，正數會減少所需生命。
+4. 只保存一列 `dp`。更新每格時，更新前的 `dp[j]` 是下方需求，`dp[j+1]` 是右方需求。
+
+例如某格是 `-5`，後續至少需要 3 點生命，則進格前需要 `3 - (-5) = 8` 點。
+
+## 複雜度
+
+- 時間：`O(mn)`。
+- 額外空間：`O(n)`。
+
+## C 函式介面
 
 ```c
-int calculateMinimumHP(int** dungeon, int dungeonSize, int* dungeonColSize) {
-    
-}
+int calculateMinimumHP(int** dungeon, int dungeonSize, int* dungeonColSize);
 ```

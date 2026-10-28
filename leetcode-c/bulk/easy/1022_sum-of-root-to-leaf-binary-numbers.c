@@ -1,36 +1,26 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1022. Sum of Root To Leaf Binary Numbers
- * Difficulty: Easy
- * Tags: tree, depth-first-search, binary-tree
- * URL: https://leetcode.com/problems/sum-of-root-to-leaf-binary-numbers/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given the root of a binary tree where each node has a value
- *     0 or 1. Each root-to-leaf path represents a binary number starting
- *     with the most significant bit.
- *     For all leaves in the tree, consider the numbers represented by the
- *     path from the root to that leaf. Return the sum of these numbers.
- *     The test cases are generated so that the answer fits in a 32-bits
- *     integer.
+ * LeetCode 1022. Sum of Root to Leaf Binary Numbers
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     給定一棵二叉樹的根節點 where each 節點 has a value 0 or 1. Each 根節點-to-leaf path
- *     represents a binary number starting with the most significant bit.
+ * 【完整中文題意】給定一棵二元樹，每個節點的值都是 0 或 1。從根節點走到任一葉節點會形成一個二進位數，根是最高位、葉是最低位。請把所有根到葉路徑代表的數字相加並回傳。
  *
- * Examples:
- *     Input: root = [1,0,1,0,1,0,1]
- *     Output: 22
- *     Explanation: (100) + (10^1) + (110) + (111) = 4 + 5 + 6 + 7 =
- *     22
- *     Input: root = [0]
- *     Output: 0
+ * 【範例】
+ * 1. root = [1,0,1,0,1,0,1] → 22（路徑為 100₂、101₂、110₂、111₂，即 4 + 5 + 6 + 7）
+ * 2. root = [0] → 0
  *
- * Constraints:
- *   - The number of nodes in the tree is in the range [1, 1000].
- *   - Node.val is 0 or 1.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= 節點數 <= 1000
+ * - 每個節點值為 0 或 1
+ * - 答案保證可用 32 位元有號整數表示
+ *
+ * 【解題步驟】
+ * 1. 從根節點開始做深度優先搜尋，並帶著目前已組成的數值 prefix。
+ * 2. 走到節點 val 時，將數值更新成 prefix × 2 + val，等同於在二進位數尾端附加一位。
+ * 3. 遇到葉節點就回傳這條路徑的數值；否則遞迴計算左右子樹並將結果相加。
+ *
+ * 【複雜度】時間 O(n)，每個節點走訪一次；空間 O(h)，遞迴堆疊高度 h；最壞 O(n)
+ *
+ * 【LeetCode C 函式】int sumRootToLeaf(struct TreeNode* root)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -204,113 +194,22 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-typedef struct qData
-{
-	struct TreeNode *node;
-	int sum;
-} DATA;
+static int sumPathsFrom(struct TreeNode* node, int prefix) {
+    if (node == NULL) return 0;
 
-typedef struct queueInfo
-{
-	int size;
-	int cur;
-	int front;
-	int rear;
-	DATA *data;
-} QUEUE;
+    // 把目前節點的位元接到已形成的二進位前綴後面。
+    int value = prefix * 2 + node->val;
+    if (node->left == NULL && node->right == NULL) {
+        return value;
+    }
 
-QUEUE* createQueue(int size)
-{
-	QUEUE *obj = malloc(sizeof(QUEUE));
-	obj->size = size;
-	obj->cur = 0;
-	obj->front = 0;
-	obj->rear = -1;
-	obj->data = malloc(sizeof(DATA)*size);
-	return obj;
+    return sumPathsFrom(node->left, value)
+         + sumPathsFrom(node->right, value);
 }
 
-void destroyQueue(QUEUE *obj)
-{
-	free(obj->data);
-	free(obj);
+int sumRootToLeaf(struct TreeNode* root) {
+    return sumPathsFrom(root, 0);
 }
-
-bool isEmpty(QUEUE *obj)
-{
-	return (obj->cur == 0 ? true : false) ;
-}
-
-bool isFull(QUEUE *obj)
-{
-	return (obj->cur == obj->size ? true : false) ;
-}
-
-void addQueue(QUEUE *obj, struct TreeNode *root, int sum)
-{
-	if (isFull(obj))
-	{
-		return;
-	}
-	obj->rear = (obj->rear+1) % obj->size;
-	obj->data[obj->rear].node = root;
-	obj->data[obj->rear].sum = sum;
-	obj->cur++;
-}
-
-int getSizeQueue(QUEUE *obj)
-{
-	return obj->cur;
-}
-
-DATA delQueue(QUEUE *obj)
-{
-	DATA ret = obj->data[obj->front];
-	obj->front = (obj->front+1) % obj->size;
-	obj->cur--;
-	return ret;
-}
-
-/**
- * Definition for a binary tree node.
- * 
- */
-
-int sumRootToLeaf(struct TreeNode* root)
-{
-	QUEUE *q = createQueue(1000);
-
-	int ret = 0;
-	addQueue(q, root, root->val);
-	while (!isEmpty(q))
-	{
-		int curSize = getSizeQueue(q);
-		for (int i = 0; i < curSize; i++)
-		{
-			DATA d = delQueue(q);
-			if (d.node->left == NULL && d.node->right == NULL)
-			{
-				ret += d.sum;
-			} else
-			{
-				if (d.node->left)
-				{
-					addQueue(q, d.node->left, (d.sum)*2 + d.node->left->val);
-				}
-				if (d.node->right)
-				{
-					addQueue(q, d.node->right, (d.sum)*2 + d.node->right->val);
-				}
-			}
-		}
-	}
-
-	delQueue(q);
-	return ret;    
-}
-
-
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,62 +1,46 @@
 # 0112. Path Sum《路徑總和》
 
-- **Difficulty**: Easy
-- **Tags**: tree, depth-first-search, breadth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/path-sum/
-- **程式碼**: [`112_path-sum.c`](./112_path-sum.c) — 本專案自行撰寫並通過官方示例驗證
+- **難度**：Easy
+- **標籤**：樹、深度優先搜尋、廣度優先搜尋、二元樹
+- **題目連結**：https://leetcode.com/problems/path-sum/
 
-## 題目說明（中文）
+## 題目說明
 
-給定二元樹根節點與整數 targetSum，判斷是否存在一條根到葉的路徑，其節點值總和恰好等於 targetSum。葉節點是沒有子節點的節點，空樹不存在符合條件的路徑。存在時回傳 true，否則回傳 false。樹最多有 5000 個節點，節點值與 targetSum 均介於 -1000 至 1000。
+給定二元樹根節點 `root` 和整數 `targetSum`，判斷是否存在一條「從根節點走到葉節點」的路徑，使路徑上所有節點值相加剛好等於 `targetSum`。葉節點是沒有任何子節點的節點；空樹不會有符合條件的路徑。請回傳布林值。
 
-**思路**：遞迴向下傳遞扣除目前節點值後的目標和，並在葉節點直接比較其值是否等於剩餘目標。
-
-## Problem Statement (English)
-
-Given the root of a binary tree and an integer targetSum, return true if the tree has a root-to-leaf path such that adding up all the values along the path equals targetSum.
-A leaf is a node with no children.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22
-Output: true
-Explanation: The root-to-leaf path with the target sum is shown.
+輸入：root = [5,4,8,11,null,13,4,7,2,null,null,null,1]，targetSum = 22
+輸出：true
+說明：路徑 5 → 4 → 11 → 2 的總和是 22。
 
-Input: root = [1,2,3], targetSum = 5
-Output: false
-Explanation: There are two root-to-leaf paths in the tree:
-(1 --> 2): The sum is 3.
-(1 --> 3): The sum is 4.
-There is no root-to-leaf path with sum = 5.
+輸入：root = [1,2,3]，targetSum = 5
+輸出：false
+說明：兩條根到葉路徑的總和分別是 1+2=3 和 1+3=4，都不是 5。
 
-Input: root = [], targetSum = 0
-Output: false
-Explanation: Since the tree is empty, there are no root-to-leaf paths.
+輸入：root = []，targetSum = 0
+輸出：false
+說明：空樹沒有根到葉路徑。
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [0, 5000].
--1000 <= Node.val <= 1000
--1000 <= targetSum <= 1000
+- 節點數介於 `0` 到 `5000`。
+- `-1000 <= Node.val <= 1000`。
+- `-1000 <= targetSum <= 1000`。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 從根節點開始，將目前節點值從目標和中扣除，並把剩餘目標傳給子節點。
+2. 若目前節點為空，這個方向沒有路徑，回傳 `false`。
+3. 只有走到葉節點時，才檢查節點值是否剛好等於剩餘目標；中途經過某節點時即使總和符合，也不能提早算成功。
+4. 左、右子樹任一方向找到符合路徑，就回傳 `true`。
+
+**複雜度**：最壞情況時間 `O(n)`；遞迴堆疊額外使用 `O(h)` 空間。
+
+## C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-bool hasPathSum(struct TreeNode* root, int targetSum) {
-    
-}
+bool hasPathSum(struct TreeNode* root, int targetSum);
 ```

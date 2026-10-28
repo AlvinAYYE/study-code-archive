@@ -1,52 +1,44 @@
-# 0098. Validate Binary Search Tree《驗證二元搜尋樹》
+# 0098. Validate Binary Search Tree｜驗證二元搜尋樹
 
-- **Difficulty**: Medium
-- **Tags**: tree, depth-first-search, binary-search-tree, binary-tree
-- **題目連結**: https://leetcode.com/problems/validate-binary-search-tree/
-- **程式碼**: [`098_validate-binary-search-tree.c`](./098_validate-binary-search-tree.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：樹、深度優先搜尋、二元搜尋樹
+- **題目連結**：[LeetCode 0098](https://leetcode.com/problems/validate-binary-search-tree/)
+- **C 程式**：[098_validate-binary-search-tree.c](./098_validate-binary-search-tree.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定二元樹根節點，判斷它是否為有效的二元搜尋樹。每個節點的左子樹值都必須嚴格小於該節點，右子樹值都必須嚴格大於該節點，且兩側子樹也必須各自有效。
+給定二元樹根節點，判斷它是否為有效的二元搜尋樹（BST）。每個節點都必須滿足：左子樹中所有值嚴格小於該節點，右子樹中所有值嚴格大於該節點；左右子樹本身也都要符合這個規則。相同值不允許出現在同一棵 BST 中。
 
-**思路**：以中序遞迴走訪二元樹並保留前一個走訪節點。只要目前值不嚴格大於前值，即可判定不是有效 BST。
-
-## Problem Statement (English)
-
-Given the root of a binary tree, determine if it is a valid binary search tree (BST).
-A valid BST is defined as follows:
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [2,1,3]
-Output: true
+輸入：root = [2,1,3]
+輸出：true
 
-Input: root = [5,1,4,null,null,3,6]
-Output: false
-Explanation: The root node's value is 5 but its right child's value is 4.
+輸入：root = [5,1,4,null,null,3,6]
+輸出：false
+說明：根節點右子樹中的 4 小於根值 5，因此違反 BST 規則。
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [1, 104].
--231 <= Node.val <= 231 - 1
+- 節點數介於 `1` 到 `10^4`。
+- `-2^31 <= Node.val <= 2^31 - 1`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 使用中序走訪：有效 BST 的中序結果必須嚴格遞增。
+2. 用堆疊模擬遞迴，先一路走到最左節點，再依序取出節點並記錄前一個值。
+3. 若目前值小於或等於前一個值，代表順序不是嚴格遞增，立即回傳 `false`。
+4. 否則走訪目前節點的右子樹；全部節點都通過後回傳 `true`。
+
+## 複雜度
+
+- 時間：`O(n)`，每個節點走訪一次。
+- 額外空間：`O(h)`，堆疊最多保存樹高 `h` 個節點。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-bool isValidBST(struct TreeNode* root) {
-    
-}
+bool isValidBST(struct TreeNode* root);
 ```

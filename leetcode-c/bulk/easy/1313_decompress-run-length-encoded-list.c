@@ -1,40 +1,17 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1313. Decompress Run-Length Encoded List
- * Difficulty: Easy
- * Tags: array
- * URL: https://leetcode.com/problems/decompress-run-length-encoded-list/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     We are given a list nums of integers representing a list compressed
- *     with run-length encoding.
- *     Consider each adjacent pair of elements [freq, val] = [nums[2*i],
- *     nums[2*i+1]] (with i >= 0). For each such pair, there are freq
- *     elements with value val concatenated in a sublist. Concatenate all
- *     the sublists from left to right to generate the decompressed list.
- *     Return the decompressed list.
+ * Title-CN: 解開連續次數編碼的陣列
+ * LeetCode 1313. Decompress Run-Length Encoded List (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     We are given a list nums of integers representing a list compressed
- *     with run-length encoding.
+ * 題意翻譯：nums 以兩個一組記錄壓縮資料：[頻率, 數值]。每一組代表把該數值連續
+ * 放入答案指定次數。請依照原順序展開所有組，並回傳新的陣列。
  *
- * Examples:
- *     Input: nums = [1,2,3,4]
- *     Output: [2,4,4,4]
- *     Explanation: The first pair [1,2] means we have freq = 1 and
- *     val = 2 so we generate the array [2].
- *     The second pair [3,4] means we have freq = 3 and val = 4 so we
- *     generate [4,4,4].
- *     At the end the concatenation [2] + [4,4,4] is [2,4,4,4].
- *     Input: nums = [1,1,2,3]
- *     Output: [1,3,3]
+ * 範例 1：nums = [1,2,3,4]，代表「2 放 1 次」和「4 放 3 次」，輸出 [2,4,4,4]。
+ * 範例 2：nums = [1,1,2,3]，輸出 [1,3,3]。
  *
- * Constraints:
- *   - 2 <= nums.length <= 100
- *   - nums.length % 2 == 0
- *   - 1 <= nums[i] <= 100
- * ==========================================================================
+ * 限制：nums.length 是 2 到 100 的偶數；每個 nums[i] 介於 1 到 100。
+ *
+ * 解題思路：先把每組的頻率加總，得知答案陣列需要多大空間；再逐組讀取頻率與數值，
+ * 將數值寫入答案相應次數。時間 O(n + k)，空間 O(k)，n 是輸入長度，k 是展開後長度。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,49 +184,35 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
 /**
  * Note: The returned array must be malloced, assume caller calls free().
  */
-int* decompressRLElist(int* nums, int numsSize, int* returnSize){
-    
-    int size = 0;
-    for (unsigned i = 0; i < numsSize;){
-        size += nums[i];
-        i += 2;
+int *decompressRLElist(int *nums, int numsSize, int *returnSize) {
+    int decompressedSize = 0;
+    int *decompressed;
+    int inputIndex;
+    int outputIndex = 0;
+
+    for (inputIndex = 0; inputIndex < numsSize; inputIndex += 2) {
+        decompressedSize += nums[inputIndex];
     }
-    int *res = (int *)malloc(sizeof(int) * size);
-    /*
-    // memory 10.4mb -- 9.49%, 36ms 
-    unsigned k = 0, i = 0;
-    int fr = nums[0];
-    int el = nums[1];
-    while (1){
-        if (fr == 0){
-            k += 2;
-            if (k >= numsSize){
-                break;
-            }
-            fr = nums[k];
-            el = nums[k+1];
-        } else {
-            res[i] = el;
-            fr -= 1;
-            i += 1;
+    decompressed = malloc(sizeof(*decompressed) * (size_t)decompressedSize);
+    if (decompressed == NULL) {
+        *returnSize = 0;
+        return NULL;
+    }
+
+    for (inputIndex = 0; inputIndex < numsSize; inputIndex += 2) {
+        int repeatCount = nums[inputIndex];
+        int value = nums[inputIndex + 1];
+        int repeat;
+        for (repeat = 0; repeat < repeatCount; ++repeat) {
+            decompressed[outputIndex++] = value;
         }
     }
-    */
-    // same memory 10.4mb -- 9.49%, 32ms -- 81.02% 
-    for (unsigned i = 0, z=0; i < numsSize;){
-        for (unsigned j = 0; j < nums[i]; j++){
-            res[z] = nums[i+1];
-            z += 1;
-        }
-        i = i + 2;
-    }
-    *returnSize = size;
-    return res;
+
+    *returnSize = decompressedSize;
+    return decompressed;
 }
 
 /* ---- generated tests ---- */
@@ -260,14 +223,16 @@ int main(void){
   static int arr0_0[] = {1,2,3,4};
   int *act_0 = decompressRLElist(arr0_0, 4,&rsz_0);
   static const int exp_0[] = {2,4,4,4};
-  if (!(lc_eq_list_sorted(act_0, rsz_0, exp_0, 4))) { pass = 0; printf("  test 0 FAIL\n"); }
+   if (!(lc_eq_list(act_0, rsz_0, exp_0, 4))) { pass = 0; printf("  test 0 FAIL\n"); }
+   free(act_0);
   ntests++; }
 {
   int rsz_1 = 0;
   static int arr1_0[] = {1,1,2,3};
   int *act_1 = decompressRLElist(arr1_0, 4,&rsz_1);
   static const int exp_1[] = {1,3,3};
-  if (!(lc_eq_list_sorted(act_1, rsz_1, exp_1, 3))) { pass = 0; printf("  test 1 FAIL\n"); }
+   if (!(lc_eq_list(act_1, rsz_1, exp_1, 3))) { pass = 0; printf("  test 1 FAIL\n"); }
+   free(act_1);
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 1313, "decompressRLElist", ntests);
  return (pass&&ntests)?0:1;

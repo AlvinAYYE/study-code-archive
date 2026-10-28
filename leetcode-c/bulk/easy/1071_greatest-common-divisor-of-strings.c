@@ -1,35 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1071. Greatest Common Divisor of Strings
- * Difficulty: Easy
- * Tags: math, string
- * URL: https://leetcode.com/problems/greatest-common-divisor-of-strings/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     For two strings s and t, we say "t divides s" if and only if s = t +
- *     t + t + ... + t + t (i.e., t is concatenated with itself one or more
- *     times).
- *     Given two strings str1 and str2, return the largest string x such
- *     that x divides both str1 and str2.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     For two 字串 s and t, we say "t divides s" if and only if s = t + t +
- *     t + ... + t + t (i.e., t is concatenated with itself one or more
- *     times).
+ * 【完整中文題意】若字串 t 可以重複串接一次或多次，剛好組成字串 s，就說 t 可以整除 s。給定 str1 和 str2，請找出能同時整除這兩個字串的最長字串；若不存在，回傳空字串。
  *
- * Examples:
- *     Input: str1 = "ABCABC", str2 = "ABC"
- *     Output: "ABC"
- *     Input: str1 = "ABABAB", str2 = "ABAB"
- *     Output: "AB"
- *     Input: str1 = "LEET", str2 = "CODE"
- *     Output: ""
+ * 【範例】
+ * 1. str1 = "ABCABC", str2 = "ABC" → "ABC"
+ * 2. str1 = "ABABAB", str2 = "ABAB" → "AB"
+ * 3. str1 = "LEET", str2 = "CODE" → ""
  *
- * Constraints:
- *   - 1 <= str1.length, str2.length <= 1000
- *   - str1 and str2 consist of English uppercase letters.
- * ==========================================================================
+ * 【限制】
+ * - 1 <= str1.length, str2.length <= 1000
+ * - str1 與 str2 只含大寫英文字母
+ *
+ * 【解題步驟】
+ * 1. 若兩字串有共同的重複基底，先串接 str1 + str2 和 str2 + str1，兩者必須完全相同；若不同，就沒有共同基底。
+ * 2. 計算兩個字串長度的最大公因數 g。共同基底長度必須整除兩個長度，因此最長者長度就是 g。
+ * 3. 配置 g + 1 個字元，複製 str1 的前 g 個字元並補上結尾符號後回傳。
+ *
+ * 【複雜度】時間 O(len1 + len2)；空間 O(g)（回傳字串，g 為字串長度最大公因數）
+ *
+ * 【LeetCode C 函式】char* gcdOfStrings(char* str1, char* str2)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -203,74 +194,38 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-
-char* checkDivisor(char *S, char *T)
-{
-	int lenS = strlen(S);
-	int lenT = strlen(T);
-	while (lenS > 0)
-	{
-		char *tmp = strstr(S, T);
-		if (tmp != NULL)
-		{
-			lenS -= lenT;
-			if (lenS == 0)
-			{
-				return T;
-			}
-		} else
-		{
-			break;
-		}
-		S += lenT;
-	}
-
-	return "";
+static int gcdLength(int a, int b) {
+    while (b != 0) {
+        int remainder = a % b;
+        a = b;
+        b = remainder;
+    }
+    return a;
 }
 
-char * gcdOfStringsHelper(char * str1, char * str2, int len1, int len2)
-{
-	char *str2_cpy = calloc(len2+1, sizeof(char));
-	strcpy(str2_cpy, str2);
-	for (int i = len2; i > 0; i--)
-	{
-		if (len2 % i != 0)
-		{
-			continue;
-		}
-		char tmpChar = str2_cpy[i];
-		str2_cpy[i] = 0;
+char* gcdOfStrings(char* str1, char* str2) {
+    int length1 = (int)strlen(str1);
+    int length2 = (int)strlen(str2);
 
-		char *ret = checkDivisor(str2, str2_cpy);
-		if (strlen(ret) != 0)
-		{
-			ret = checkDivisor(str1, str2_cpy);
-			if (strlen(ret) != 0)
-			{
-				return ret;
-			}
-		}
-		str2_cpy[i] = tmpChar;
-	}
+    // 直接逐字比較 str1+str2 與 str2+str1，不必真的建立串接字串。
+    for (int i = 0; i < length1 + length2; ++i) {
+        char fromFirstThenSecond =
+            (i < length1) ? str1[i] : str2[i - length1];
+        char fromSecondThenFirst =
+            (i < length2) ? str2[i] : str1[i - length2];
+        if (fromFirstThenSecond != fromSecondThenFirst) {
+            char* empty = (char*)malloc(1);
+            empty[0] = '\0';
+            return empty;
+        }
+    }
 
-	free(str2_cpy);
-	return "";
+    int baseLength = gcdLength(length1, length2);
+    char* answer = (char*)malloc((size_t)baseLength + 1);
+    memcpy(answer, str1, (size_t)baseLength);
+    answer[baseLength] = '\0';
+    return answer;
 }
-
-char * gcdOfStrings(char * str1, char * str2)
-{
-	int len1 = strlen(str1);
-	int len2 = strlen(str2);
-	if (len1 > len2)
-	{
-		return gcdOfStringsHelper(str1, str2, len1, len2);   
-	} else
-	{
-		return gcdOfStringsHelper(str2, str1, len2, len1);
-	}
-}
-
 
 /* ---- generated tests ---- */
 int main(void){

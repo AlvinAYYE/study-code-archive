@@ -1,46 +1,25 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0121. Best Time to Buy and Sell Stock
- * Difficulty: Easy
- * Tags: array, dynamic-programming
- * URL: https://leetcode.com/problems/best-time-to-buy-and-sell-stock/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given an array prices where prices[i] is the price of a
- *     given stock on the ith day.
- *     You want to maximize your profit by choosing a single day to buy one
- *     stock and choosing a different day in the future to sell that stock.
- *     Return the maximum profit you can achieve from this transaction. If
- *     you cannot achieve any profit, return 0.
+ * LeetCode 121. Best Time to Buy and Sell Stock
+ * 難度：Easy
  *
- * [中文] 題目: 買賣股票的最佳時機
- * [中文] 題目說明:
- *     給定 prices，其中 prices[i] 是第 i 天的股價，只
- *     能完成一次買入與一次之後賣出的交易。請回傳可取得的最大利潤；若無法獲
- *     利則回傳 0。prices 長度介於 1 至 10^5，股價介於 0
- *      至 10^4。
+ * 【完整中文題意】給定 prices[i]，表示第 i 天的股票價格。你最多只能完成一次交易：先買進一股，再於之後某一天賣出。請回傳能得到的最大利潤；若無法獲利，回傳 0。
  *
- * [中文] 思路:
- *     線性掃描並維護目前為止最低買入價，對每一天以當日價格減最低價更新最大
- *     利潤。
+ * 【範例】
+ * 1. prices = [7,1,5,3,6,4] → 5（第 2 天以 1 買進，第 5 天以 6 賣出，利潤 6 - 1 = 5）
+ * 2. prices = [7,6,4,3,1] → 0（價格一路下跌，不交易）
  *
- * Examples:
- *     Input: prices = [7,1,5,3,6,4]
- *     Output: 5
- *     Explanation: Buy on day 2 (price = 1) and sell on day 5 (price
- *     = 6), profit = 6-1 = 5.
- *     Note that buying on day 2 and selling on day 1 is not allowed
- *     because you must buy before you sell.
- *     Input: prices = [7,6,4,3,1]
- *     Output: 0
- *     Explanation: In this case, no transactions are done and the
- *     max profit = 0.
+ * 【限制】
+ * - 1 <= prices.length <= 10⁵
+ * - 0 <= prices[i] <= 10⁴
  *
- * Constraints:
- *   - 1 <= prices.length <= 10^5
- *   - 0 <= prices[i] <= 10^4
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 從左到右掃描價格，記錄目前看過的最低價格，作為可能的買進價。
+ * 2. 對每一天，計算當天價格減去最低買進價，更新最大利潤。
+ * 3. 再用當天價格更新最低價，確保日後的買進發生在賣出之前。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int maxProfit(int* prices, int pricesSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -214,70 +193,20 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-121. Best Time to Buy and Sell Stock
-
-Say you have an array for which the ith element is the price of a given stock on day i.
-
-If you were only permitted to complete at most one transaction (ie, buy one and sell one share of the stock), design an algorithm to find the maximum profit.
-
-Example 1:
-Input: [7, 1, 5, 3, 6, 4]
-Output: 5
-
-max. difference = 6-1 = 5 (not 7-1 = 6, as selling price needs to be larger than buying price)
-
-
-
-Example 2:
-Input: [7, 6, 4, 3, 1]
-Output: 0
-
-In this case, no transaction is done, i.e. max profit = 0.
-*/
-
 int maxProfit(int* prices, int pricesSize) {
-    int i, d, k = 0;
-    
-    if (pricesSize < 2) return 0;
-    
-    // O(n)
-    int cost = prices[0];
-    for (i = 1; i < pricesSize; i ++) {
-        if (prices[i] > cost) {
-            d = prices[i] - cost;
-            k = d > k ? d : k;
-        } else {
-            cost = prices[i];
-        }
+    int minimumPrice = prices[0];
+    int bestProfit = 0;
+
+    for (int day = 1; day < pricesSize; ++day) {
+        int profit = prices[day] - minimumPrice;
+        if (profit > bestProfit) bestProfit = profit;
+
+        // 當天價格成為未來可用的最低買進價。
+        if (prices[day] < minimumPrice) minimumPrice = prices[day];
     }
-    
-    return k;
+
+    return bestProfit;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:207.9K
-Total Submissions:504.8K
-
-
-Companies Amazon Microsoft Bloomberg Uber Facebook
-Related Topics Array Dynamic Programming
-Similar Questions 
-                
-                  
-                    Maximum Subarray
-                  
-                    Best Time to Buy and Sell Stock II
-                  
-                    Best Time to Buy and Sell Stock III
-                  
-                    Best Time to Buy and Sell Stock IV
-                  
-                    Best Time to Buy and Sell Stock with Cooldown
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,48 +1,46 @@
 # 0009. Palindrome Number《回文數》
 
-- **Difficulty**: Easy
-- **Tags**: math
-- **題目連結**: https://leetcode.com/problems/palindrome-number/
-- **程式碼**: [`009_palindrome-number.c`](./009_palindrome-number.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：Easy
+- **標籤**：math
+- **題目連結**：https://leetcode.com/problems/palindrome-number/
+- **程式碼**：[`009_palindrome-number.c`](./009_palindrome-number.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定整數 x，若其由左至右與由右至左讀取相同則回傳 true，否則回傳 false。負數不是回文數，因為負號在反向後的位置不同。
+給定整數 `x`。若它由左至右與由右至左讀取都相同，回傳 `true`；否則回傳 `false`。
 
-**思路**：程式排除負數後，將整數的各位數完整反轉，再與原值比較。反轉過程也會先檢查是否會超出 int 範圍，若會則判定為 false。
-
-## Problem Statement (English)
-
-Given an integer x, return true if x is a palindrome, and false otherwise.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: x = 121
-Output: true
-Explanation: 121 reads as 121 from left to right and from right to left.
+輸入：x = 121
+輸出：true
+說明：正讀與反讀都是 121。
 
-Input: x = -121
-Output: false
-Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+輸入：x = -121
+輸出：false
+說明：反讀會成為 121-，與原數不同。
 
-Input: x = 10
-Output: false
-Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
+輸入：x = 10
+輸出：false
+說明：反讀是 01。
 ```
 
-## 限制 Constraints
+## 限制
 
--231 <= x <= 231 - 1
+- `-2^31 <= x <= 2^31 - 1`
 
-## 官方 C 函式簽名 Signature
+## 直觀解題思路
+
+1. 負數的負號反向後位置不同，可直接回傳 `false`。
+2. 保留原值 `x`，再從副本 `n` 逐位取出個位數，組成反轉值 `k`。
+3. 每次計算 `k * 10 + d` 前先檢查是否超過 `int` 上限；若會溢位，反轉值不可能等於原數。
+4. 最後比較 `k` 與 `x` 是否相同。
+
+- 時間複雜度：`O(log |x|)`
+- 額外空間複雜度：`O(1)`
+
+## 官方 C 函式簽名
 
 ```c
-bool isPalindrome(int x) {
-    
-}
+bool isPalindrome(int x);
 ```

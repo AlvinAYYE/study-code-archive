@@ -1,49 +1,44 @@
-# 0078. Subsets《子集》
+# 0078. Subsets｜子集合
 
-- **Difficulty**: Medium
-- **Tags**: array, backtracking, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/subsets/
-- **程式碼**: [`078_subsets.c`](./078_subsets.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、回溯、位元運算
+- **題目連結**：[LeetCode 0078](https://leetcode.com/problems/subsets/)
+- **C 程式**：[078_subsets.c](./078_subsets.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定一個元素彼此不同的整數陣列 nums，回傳所有可能的子集，也就是冪集。答案中不得有重複子集，回傳順序不限。nums 長度介於 1 到 10。
+給定一組互不相同的整數 `nums`，回傳它的所有子集合（冪集）。每個數字可以選或不選，因此包含空集合；答案中不能有重複子集合，順序不限。
 
-**思路**：以深度優先搜尋對每個元素分別走不選與選取兩個分支。遞迴走到陣列尾端時，將目前暫存的子集加入結果。
-
-## Problem Statement (English)
-
-Given an integer array nums of unique elements, return all possible subsets (the power set).
-The solution set must not contain duplicate subsets. Return the solution in any order.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [1,2,3]
-Output: [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
+輸入：nums = [1,2,3]
+輸出：[[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
 
-Input: nums = [0]
-Output: [[],[0]]
+輸入：nums = [0]
+輸出：[[],[0]]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= nums.length <= 10
--10 <= nums[i] <= 10
-All the numbers of nums are unique.
+- `1 <= nums.length <= 10`。
+- `-10 <= nums[i] <= 10`。
+- `nums` 中的數字互不相同。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. `numsSize` 個數字各自有「選」或「不選」兩種狀態，所以總共有 `2^numsSize` 個子集合。
+2. 用整數 `mask` 從 `0` 列舉到 `2^numsSize - 1`；第 `bit` 位是 1，就代表把 `nums[bit]` 放入這個子集合。
+3. 先計算這個 `mask` 對應子集合的大小，再配置一列剛好容納它的記憶體並填入數字。
+4. 空集合也要有一列回傳空間；所有列填完後，回傳總數與每列大小。
+
+## 複雜度
+
+- 時間：`O(n × 2^n)`，列出每個子集合中的元素。
+- 額外空間：`O(1)` 工作空間；回傳結果占 `O(n × 2^n)`。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** subsets(int* nums, int numsSize, int* returnSize, int** returnColumnSizes) {
-    
-}
+int** subsets(int* nums, int numsSize, int* returnSize, int** returnColumnSizes);
 ```

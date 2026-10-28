@@ -201,119 +201,39 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
- * Definition for singly-linked list.
- * 
- */
+/* ---- 易讀解法：把節點索引放入單調遞減堆疊 ---- */
+int* nextLargerNodes(struct ListNode* head, int* returnSize) {
+    struct ListNode *current;
+    int length = 0;
+    int index = 0;
+    int top = 0;
+    int *values;
+    int *answer;
+    int *stack;
 
-typedef struct ListNode NODE;
+    for (current = head; current != NULL; current = current->next) ++length;
+    *returnSize = length;
+    if (length == 0) return (int*)malloc(sizeof(int));
 
-typedef struct __list_data {
-    int idx;
-    int val;
-    struct __list_data *next;
-} DATA;
-
-typedef struct {
-    DATA *head;
-} STACK;
-
-static inline STACK *stack_create()
-{
-    STACK *obj = malloc(sizeof(STACK));
-    obj->head = NULL;
-    return obj;
-}
-
-static void stack_push(STACK *obj, int idx, int val)
-{
-    DATA *new_node = calloc(1, sizeof(DATA));
-    new_node->idx = idx;
-    new_node->val = val;
-    if (obj->head)
-        new_node->next = obj->head;
-
-    obj->head = new_node;
-}
-
-static inline bool stack_is_empty(STACK *obj)
-{
-    return (obj->head == NULL);
-}
-
-/* return node index of head data node */
-static int stack_pop(STACK *obj)
-{
-    DATA *del = obj->head;
-    int ret = del->idx;
-    obj->head = del->next;
-    free(del);
-    return ret;
-}
-/* return value of head data node */
-static int stack_top(STACK *obj)
-{
-    return obj->head->val;
-}
-
-static inline void stack_release(STACK *obj)
-{
-    DATA *cur = obj->head;
-    while (cur) {
-        DATA *del = cur;
-        cur = cur->next;
-        free(del);
-    }
-    free(obj);
-}
-
-static inline int get_list_size(NODE *head)
-{
-    int size = 0;
-    while (head) {
-        head = head->next;
-        size++;
-    }
-    return size;
-}
-
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int *nextLargerNodes(struct ListNode *head, int *returnSize)
-{
-    int list_sz = get_list_size(head);
-    if (!list_sz) {
-        *returnSize = 0;
-        return NULL;
+    values = (int*)malloc((size_t)length * sizeof(int));
+    answer = (int*)calloc((size_t)length, sizeof(int));
+    stack = (int*)malloc((size_t)length * sizeof(int));
+    for (current = head; current != NULL; current = current->next) {
+        values[index++] = current->val;
     }
 
-    int *ret = malloc(sizeof(int) * list_sz);
-    *returnSize = list_sz;
-    STACK *s = stack_create();
-    NODE *cur = head;
-    int idx = 0;
-    while (cur) {
-        if (!stack_is_empty(s) && cur->val > stack_top(s)) {
-            int up_idx = stack_pop(s);
-            ret[up_idx] = cur->val;
-        } else {
-            stack_push(s, idx, cur->val);
-            cur = cur->next;
-            idx++;
+    for (index = 0; index < length; ++index) {
+        while (top > 0 && values[stack[top - 1]] < values[index]) {
+            answer[stack[--top]] = values[index];
         }
+        stack[top++] = index;
     }
 
-    while (!stack_is_empty(s)) {
-        int up_idx = stack_pop(s);
-        ret[up_idx] = 0;
-    }
-
-    stack_release(s);
-    return ret;
+    free(values);
+    free(stack);
+    return answer;
 }
+
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

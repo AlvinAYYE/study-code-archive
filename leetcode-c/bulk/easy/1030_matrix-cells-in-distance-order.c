@@ -1,49 +1,27 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1030. Matrix Cells in Distance Order
- * Difficulty: Easy
- * Tags: array, math, geometry, sorting, matrix
- * URL: https://leetcode.com/problems/matrix-cells-in-distance-order/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given four integers row, cols, rCenter, and cCenter. There
- *     is a rows x cols matrix and you are on the cell with the coordinates
- *     (rCenter, cCenter).
- *     Return the coordinates of all cells in the matrix, sorted by their
- *     distance from (rCenter, cCenter) from the smallest distance to the
- *     largest distance. You may return the answer in any order that
- *     satisfies this condition.
- *     The distance between two cells (r1, c1) and (r2, c2) is |r1 - r2| +
- *     |c1 - c2|.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     給定 four integers 行, cols, rCenter, and cCenter. There is a 行 x cols
- *     矩陣 and you are on the 格子 with the coordinates (rCenter, cCenter).
+ * 【完整中文題意】給定 rows × cols 的矩陣，以及中心格座標 (rCenter, cCenter)。請回傳矩陣內所有格子的座標，依照與中心格的曼哈頓距離由小到大排列。兩格 (r1,c1)、(r2,c2) 的距離是 |r1-r2| + |c1-c2|；距離相同時順序不限。
  *
- * Examples:
- *     Input: rows = 1, cols = 2, rCenter = 0, cCenter = 0
- *     Output: [[0,0],[0,1]]
- *     Explanation: The distances from (0, 0) to other cells are:
- *     [0,1]
- *     Input: rows = 2, cols = 2, rCenter = 0, cCenter = 1
- *     Output: [[0,1],[0,0],[1,1],[1,0]]
- *     Explanation: The distances from (0, 1) to other cells are:
- *     [0,1,1,2]
- *     The answer [[0,1],[1,1],[0,0],[1,0]] would also be accepted as
- *     correct.
- *     Input: rows = 2, cols = 3, rCenter = 1, cCenter = 2
- *     Output: [[1,2],[0,2],[1,1],[0,1],[1,0],[0,0]]
- *     Explanation: The distances from (1, 2) to other cells are:
- *     [0,1,1,2,2,3]
- *     There are other answers that would also be accepted as
- *     correct, such as [[1,2],[1,1],[0,2],[1,0],[0,1],[0,0]].
+ * 【範例】
+ * 1. rows = 1, cols = 2, rCenter = 0, cCenter = 0 → [[0,0],[0,1]]
+ * 2. rows = 2, cols = 2, rCenter = 0, cCenter = 1 → [[0,1],[0,0],[1,1],[1,0]]（同距離格子的先後可互換）
+ * 3. rows = 2, cols = 3, rCenter = 1, cCenter = 2 → [[1,2],[0,2],[1,1],[0,1],[1,0],[0,0]]（距離依序為 0、1、1、2、2、3）
  *
- * Constraints:
- *   - 1 <= rows, cols <= 100
- *   - 0 <= rCenter < rows
- *   - 0 <= cCenter < cols
- * ==========================================================================
+ * 【限制】
+ * - 1 <= rows, cols <= 100
+ * - 0 <= rCenter < rows
+ * - 0 <= cCenter < cols
+ *
+ * 【解題步驟】
+ * 1. 從中心格開始做廣度優先搜尋（BFS），並只往上、下、左、右四個方向移動。
+ * 2. 第一次取出的格子距離最小；BFS 每一層代表距離增加 1，因此取出順序已符合題目要求。
+ * 3. 用 visited 陣列避免重複加入格子；每取出一格，就配置一個長度為 2 的座標列放進答案。
+ *
+ * 【複雜度】時間 O(rows × cols)；空間 O(rows × cols)（佇列、標記及輸出）
+ *
+ * 【LeetCode C 函式】int** allCellsDistOrder(int rows, int cols, int rCenter, int cCenter, int* returnSize, int** returnColumnSizes)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -217,56 +195,58 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-typedef struct
-{
-	int *coordinate;
-	int dist;
-} DATA;
+int** allCellsDistOrder(int rows, int cols, int rCenter, int cCenter,
+                        int* returnSize, int** returnColumnSizes) {
+    int total = rows * cols;
+    int** answer = (int**)malloc((size_t)total * sizeof(int*));
+    int* columnSizes = (int*)malloc((size_t)total * sizeof(int));
+    int* queue = (int*)malloc((size_t)total * sizeof(int));
+    bool* visited = (bool*)calloc((size_t)total, sizeof(bool));
+    int head = 0;
+    int tail = 0;
+    int count = 0;
 
-int compare(const void *a, const void *b)
-{
-	DATA d1 = *(DATA *)a;
-	DATA d2 = *(DATA *)b;
-	return d1.dist - d2.dist;
+    // 用一個整數 r * cols + c 表示座標 (r, c)。
+    int start = rCenter * cols + cCenter;
+    queue[tail++] = start;
+    visited[start] = true;
+
+    const int dr[4] = {-1, 1, 0, 0};
+    const int dc[4] = {0, 0, -1, 1};
+
+    while (head < tail) {
+        int cell = queue[head++];
+        int row = cell / cols;
+        int col = cell % cols;
+
+        answer[count] = (int*)malloc(2 * sizeof(int));
+        answer[count][0] = row;
+        answer[count][1] = col;
+        columnSizes[count] = 2;
+        ++count;
+
+        // BFS 依距離一層層往外擴展，因此輸出已按距離排序。
+        for (int direction = 0; direction < 4; ++direction) {
+            int nextRow = row + dr[direction];
+            int nextCol = col + dc[direction];
+            if (nextRow < 0 || nextRow >= rows ||
+                nextCol < 0 || nextCol >= cols) {
+                continue;
+            }
+            int next = nextRow * cols + nextCol;
+            if (!visited[next]) {
+                visited[next] = true;
+                queue[tail++] = next;
+            }
+        }
+    }
+
+    free(queue);
+    free(visited);
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
-
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** allCellsDistOrder(int R, int C, int r0, int c0, int* returnSize, int** returnColumnSizes)
-{
-	DATA *d = malloc(sizeof(DATA)*R*C);
-	int **ret = malloc(sizeof(int *)*R*C);
-	*returnSize = R*C;
-	*returnColumnSizes = malloc(sizeof(int)*R*C);
-
-	int ctr = 0;
-	for (int i = 0; i < R; i++)
-	{
-		for (int j = 0; j < C; j++)
-		{
-			d[ctr].coordinate = malloc(sizeof(int)*2);            
-			d[ctr].coordinate[0] = i;
-			d[ctr].coordinate[1] = j;
-			d[ctr].dist = abs(i-r0) + abs(j-c0);
-			ctr++;
-		}
-	}
-
-	qsort(d, R*C, sizeof(DATA), compare);
-	for (int i = 0; i < R*C; i++)
-	{
-		ret[i] = d[i].coordinate;
-		(*returnColumnSizes)[i] = 2;
-	}
-
-	free(d);
-	return ret;
-}
-
 
 /* ---- generated tests ---- */
 int main(void){

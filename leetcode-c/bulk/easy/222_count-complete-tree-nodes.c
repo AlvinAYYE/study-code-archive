@@ -1,42 +1,27 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0222. Count Complete Tree Nodes
- * Difficulty: Easy
- * Tags: binary-search, bit-manipulation, tree, binary-tree
- * URL: https://leetcode.com/problems/count-complete-tree-nodes/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given the root of a complete binary tree, return the number of the
- *     nodes in the tree.
- *     According to Wikipedia, every level, except possibly the last, is
- *     completely filled in a complete binary tree, and all nodes in the
- *     last level are as far left as possible. It can have between 1 and 2h
- *     nodes inclusive at the last level h.
- *     Design an algorithm that runs in less than O(n) time complexity.
+ * LeetCode 222. Count Complete Tree Nodes
+ * 難度：Easy
  *
- * [中文] 題目: 完全二元樹的節點個數
- * [中文] 題目說明:
- *     給定一棵完全二元樹的根節點，回傳樹中節點總數。完全二元樹除最後一層外
- *     皆填滿，最後一層節點靠左排列，並要求演算法優於 O(n)。
+ * 【完整中文題意】給定一棵完全二元樹的根節點 root，請回傳樹中的節點總數。完全二元樹除了最後一層外都填滿；最後一層的節點從左側開始連續排列。
  *
- * [中文] 思路:
- *     分別量測子樹最左路徑與最右路徑高度；兩者相等時該子樹為滿二元樹，可直
- *     接以 2^h - 1 計數。否則遞迴計算左右子樹再加上根節點。
+ * 【範例】
+ * 1. root = [1,2,3,4,5,6] → 6
+ * 2. root = [] → 0
+ * 3. root = [1] → 1
  *
- * Examples:
- *     Input: root = [1,2,3,4,5,6]
- *     Output: 6
- *     Input: root = []
- *     Output: 0
- *     Input: root = [1]
- *     Output: 1
+ * 【限制】
+ * - 節點數介於 0 到 5 × 10⁴
+ * - 0 <= Node.val <= 5 × 10⁴
+ * - 輸入保證是完全二元樹
  *
- * Constraints:
- *   - The number of nodes in the tree is in the range [0, 5 * 10^4].
- *   - 0 <= Node.val <= 5 * 10^4
- *   - The tree is guaranteed to be complete.
- * ==========================================================================
+ * 【解題步驟】
+ * 1. 若目前節點是空指標，這棵子樹有 0 個節點。
+ * 2. 否則目前節點本身算 1 個，再遞迴計算左子樹與右子樹。
+ * 3. 將三部分相加並回傳。
+ *
+ * 【複雜度】時間 O(n)，每個節點走訪一次；空間 O(h) 遞迴堆疊，h 為樹高
+ *
+ * 【LeetCode C 函式】int countNodes(struct TreeNode* root)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -210,14 +195,10 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-int lh222(struct TreeNode *t) { int h = 0; while (t) { ++h; t = t->left; } return h; }
-int rh222(struct TreeNode *t) { int h = 0; while (t) { ++h; t = t->right; } return h; }
 int countNodes(struct TreeNode* root) {
-    int l, r;
-    if (!root) return 0;
-    l = lh222(root); r = rh222(root);
-    if (l == r) return (1 << l) - 1;
+    if (root == NULL) return 0;
+
+    // 節點數 = 根節點 1 個 + 左子樹節點數 + 右子樹節點數。
     return 1 + countNodes(root->left) + countNodes(root->right);
 }
 

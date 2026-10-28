@@ -1,32 +1,27 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1154. Day of the Year
- * Difficulty: Easy
- * Tags: math, string
- * URL: https://leetcode.com/problems/day-of-the-year/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a string date representing a Gregorian calendar date formatted
- *     as YYYY-MM-DD, return the day number of the year.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given a 字串 date representing a Gregorian calendar date formatted as
- *     YYYY-MM-DD, 回傳 the day number of the year.
+ * 【完整中文題意】給定格式為 YYYY-MM-DD 的西曆日期字串，請回傳該日期是當年度的第幾天。例如 1 月 1 日是第 1 天。
  *
- * Examples:
- *     Input: date = "2019-01-09"
- *     Output: 9
- *     Explanation: Given date is the 9th day of the year in 2019.
- *     Input: date = "2019-02-10"
- *     Output: 41
+ * 【範例】
+ * 1. date = "2019-01-09" → 9
+ * 2. date = "2019-02-10" → 41（1 月 31 天，再加 2 月 10 天）
  *
- * Constraints:
- *   - date.length == 10
- *   - date[4] == date[7] == '-', and all other date[i]'s are digits
- *   - date represents a calendar date between Jan 1st, 1900 and Dec
- *   31st, 2019.
- * ==========================================================================
+ * 【限制】
+ * - date.length == 10
+ * - date[4] 與 date[7] 是 '-'，其他字元都是數字
+ * - 日期介於 1900-01-01 到 2019-12-31，且是有效日期
+ *
+ * 【解題步驟】
+ * 1. 從字串位置讀出年份、月份、日期的數字。
+ * 2. 依照月份表加總該月份之前每個月的天數。
+ * 3. 若是閏年且日期在 3 月或之後，多加 1 天。
+ * 4. 再加上當月日期並回傳。閏年規則：能被 400 整除，或能被 4 整除但不能被 100 整除。
+ *
+ * 【複雜度】時間 O(12)，也就是 O(1)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int dayOfYear(char* date)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -200,14 +195,23 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
 int dayOfYear(char* date) {
-    int y = (date[0]-'0')*1000+(date[1]-'0')*100+(date[2]-'0')*10+(date[3]-'0');
-    int mo = (date[5]-'0')*10+(date[6]-'0'), d = (date[8]-'0')*10+(date[9]-'0');
-    int md[] = {31,28,31,30,31,30,31,31,30,31,30,31}, i, tot = d;
-    if (((y % 4 == 0 && y % 100 != 0) || y % 400 == 0) && mo > 2) tot += 1;
-    for (i = 0; i < mo - 1; ++i) tot += md[i];
-    return tot;
+    int year = (date[0] - '0') * 1000 + (date[1] - '0') * 100
+             + (date[2] - '0') * 10 + (date[3] - '0');
+    int month = (date[5] - '0') * 10 + (date[6] - '0');
+    int day = (date[8] - '0') * 10 + (date[9] - '0');
+    int daysInMonth[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    int leapYear = (year % 400 == 0) ||
+                   (year % 4 == 0 && year % 100 != 0);
+
+    if (leapYear) daysInMonth[1] = 29;
+
+    int dayNumber = day;
+    // 先加上日期之前完整月份的天數。
+    for (int i = 0; i < month - 1; ++i) {
+        dayNumber += daysInMonth[i];
+    }
+    return dayNumber;
 }
 
 /* ---- generated tests ---- */

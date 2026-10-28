@@ -1,63 +1,42 @@
 # 0094. Binary Tree Inorder Traversal《二元樹的中序走訪》
 
-- **Difficulty**: Easy
-- **Tags**: stack, tree, depth-first-search, binary-tree
-- **題目連結**: https://leetcode.com/problems/binary-tree-inorder-traversal/
-- **程式碼**: [`094_binary-tree-inorder-traversal.c`](./094_binary-tree-inorder-traversal.c) — 本專案自行撰寫並通過官方示例驗證
+- **難度**：Easy
+- **標籤**：堆疊、樹、深度優先搜尋、二元樹
+- **題目連結**：https://leetcode.com/problems/binary-tree-inorder-traversal/
 
-## 題目說明（中文）
+## 題目說明
 
-給定二元樹根節點，回傳所有節點值的中序走訪結果。中序走訪順序為左子樹、目前節點、右子樹；空樹的結果為空陣列。
+給定二元樹的根節點，請依「左子樹、目前節點、右子樹」的順序走訪所有節點，並回傳節點值組成的陣列。空樹的結果是空陣列。回傳的陣列必須由 `malloc` 配置，呼叫端會負責釋放。
 
-**思路**：以遞迴先走訪左子樹，再寫入目前節點值，最後走訪右子樹。
-
-## Problem Statement (English)
-
-Given the root of a binary tree, return the inorder traversal of its nodes' values.
-Example 1:
-Example 2:
-Example 3:
-Example 4:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: root = [1,null,2,3]
-Output: [1,3,2]
-Explanation:
+輸入：root = [1,null,2,3]
+輸出：[1,3,2]
+說明：先走訪根節點 1 的左側（沒有節點），再記錄 1，接著走訪右子樹：先記錄 3，再記錄 2。
 
-Input: root = [1,2,3,4,5,null,8,null,null,6,7,9]
-Output: [4,2,6,5,7,1,3,9,8]
-Explanation:
+輸入：root = []
+輸出：[]
 
-Input: root = []
-Output: []
-
-Input: root = [1]
-Output: [1]
+輸入：root = [1]
+輸出：[1]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in the tree is in the range [0, 100].
--100 <= Node.val <= 100
+- 節點數介於 `0` 到 `100`。
+- `-100 <= Node.val <= 100`。
 
-## 官方 C 函式簽名 Signature
+## 解題思路
+
+1. 遞迴處理目前節點的左子樹。
+2. 左子樹處理完後，把目前節點值放進結果陣列。
+3. 再遞迴處理右子樹。若目前節點為空就直接返回，因此空樹自然得到長度為 0 的結果。
+
+**複雜度**：每個節點走訪一次，時間 `O(n)`；遞迴堆疊使用 `O(h)` 空間，`h` 是樹高；結果陣列使用 `O(n)` 空間。
+
+## C 函式簽名
 
 ```c
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     struct TreeNode *left;
- *     struct TreeNode *right;
- * };
- */
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* inorderTraversal(struct TreeNode* root, int* returnSize) {
-    
-}
+int* inorderTraversal(struct TreeNode* root, int* returnSize);
 ```

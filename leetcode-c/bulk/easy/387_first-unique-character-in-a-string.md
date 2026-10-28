@@ -1,48 +1,72 @@
-# 0387. First Unique Character in a String《字串中的第一個唯一字元》
+# 387 First Unique Character in a String：字串中的第一個唯一字元
 
-- **Difficulty**: Easy
-- **Tags**: hash-table, string, queue, counting
-- **題目連結**: https://leetcode.com/problems/first-unique-character-in-a-string/
-- **程式碼**: [`387_first-unique-character-in-a-string.c`](./387_first-unique-character-in-a-string.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+**難度：** Easy
 
-## 題目說明（中文）
+## 題意完整翻譯
 
-給定字串 s，找出第一個只出現一次的字元並回傳其索引。若不存在不重複字元，回傳 -1。
+給定只含小寫英文字母的字串 s，找出第一個只出現一次的字元，並回傳它在字串中的索引。若沒有這種字元，回傳 -1。索引從 0 開始。
 
-**思路**：統計 26 個小寫字母的出現次數與最後索引，再在所有只出現一次的字母中取最小索引。
+## 範例
 
-## Problem Statement (English)
+### 範例 1
 
-Given a string s, find the first non-repeating character in it and return its index. If it does not exist, return -1.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+- 輸入：s = "leetcode"
+- 輸出：0
+- 說明：l 只出現一次，且它是最左邊的唯一字元。
 
-## 範例 Examples
+### 範例 2
 
-```text
-Input: s = "leetcode"
-Output: 0
-Explanation:
-The character 'l' at index 0 is the first character that does not occur at any other index.
+- 輸入：s = "loveleetcode"
+- 輸出：2
+- 說明：索引 2 的 v 是第一個只出現一次的字元。
 
-Input: s = "loveleetcode"
-Output: 2
+### 範例 3
 
-Input: s = "aabb"
-Output: -1
-```
+- 輸入：s = "aabb"
+- 輸出：-1
+- 說明：a 與 b 都出現兩次，沒有唯一字元。
 
-## 限制 Constraints
+## 限制
 
-1 <= s.length <= 105
-s consists of only lowercase English letters.
+- 1 <= s.length <= 10^5
+- s 只含小寫英文字母
 
-## 官方 C 函式簽名 Signature
+## 解題思路
 
-```c
+1. 第一次掃描字串，統計 26 個字母各自出現的次數。
+2. 第二次由左向右掃描，第一個計數為 1 的位置就是答案。
+3. 若掃描完都沒有計數為 1 的字母，回傳 -1。
+
+## 複雜度
+
+- 時間：O(n)，最多掃描字串兩次。
+- 空間：O(1)，只使用 26 個計數欄位。
+
+## C 函式簽名
+
+~~~c
+int firstUniqChar(char* s);
+~~~
+
+## 程式如何運作
+
+~~~c
 int firstUniqChar(char* s) {
-    
+    int frequency[26] = {0};
+    int i;
+
+    // 第一遍統計每個字母出現幾次。
+    for (i = 0; s[i] != '\0'; ++i) {
+        ++frequency[s[i] - 'a'];
+    }
+
+    // 第二遍找到最早只出現一次的字母。
+    for (i = 0; s[i] != '\0'; ++i) {
+        if (frequency[s[i] - 'a'] == 1) {
+            return i;
+        }
+    }
+
+    return -1;
 }
-```
+~~~

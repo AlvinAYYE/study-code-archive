@@ -1,46 +1,22 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0227. Basic Calculator II
+ * LeetCode 0227. Basic Calculator II（基本計算機 II）
  * Difficulty: Medium
- * Tags: math, string, stack
- * URL: https://leetcode.com/problems/basic-calculator-ii/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given a string s which represents an expression, evaluate this
- *     expression and return its value.
- *     The integer division should truncate toward zero.
- *     You may assume that the given expression is always valid. All
- *     intermediate results will be in the range of [-231, 231 - 1].
- *     Note: You are not allowed to use any built-in function which
- *     evaluates strings as mathematical expressions, such as eval().
- *
- * [中文] 題目: 基本計算機 II
- * [中文] 題目說明:
- *     計算合法字串運算式的值，式中含非負整數、加減乘除與空白。整數除法須朝
- *     零截斷，且不得使用 eval 等內建字串運算功能。
- *
- * [中文] 思路:
- *     將數字與運算子分別推入兩個堆疊，遇到同等或較低優先序的運算子時先結算
- *     。乘除優先於加減，掃描結束時透過結尾哨兵完成所有歸約。
- *
- * Examples:
- *     Input: s = "3+2*2"
- *     Output: 7
- *     Input: s = " 3/2 "
- *     Output: 1
- *     Input: s = " 3+5 / 2 "
- *     Output: 5
- *
- * Constraints:
+ * 題意：給定只包含非負整數、加減乘除運算子和空格的有效算式字串 s，請計算算式結果。乘除優先於加減；同一優先級由左至右計算；除法採向 0 截斷。
+ * 範例：
+ *   1. 輸入：s = 3+2*2；輸出：7。
+ *   2. 輸入：s = 3/2；輸出：1。
+ *   3. 輸入：s = 3+5/2；輸出：5。
+ * 限制：
  *   - 1 <= s.length <= 3 * 10^5
- *   - s consists of integers and operators ('+', '-', '*', '/')
- *   separated by some number of spaces.
- *   - s represents a valid expression.
- *   - All the integers in the expression are non-negative integers
- *   in the range [0, 231 - 1].
- *   - The answer is guaranteed to fit in a 32-bit integer.
- * ==========================================================================
+ *   - 字串只含非負整數、+、-、*、/ 與空格，且算式有效
+ *   - 每個整數介於 0 和 2^31-1
+ *   - 最後答案可用 32 位元有號整數表示
+ * 解法：
+ *   1. 逐字掃描，把連續數字組成目前的 number；空格直接略過。
+ *   2. 遇到運算子或字串結尾時，依前一個運算子處理 number。乘除立即套用到目前項目；加減則先把前一項加進 total，再以正號或負號保存新項目。
+ *   3. 因為乘除已在同一項中先算完，最後 total 加上尚未結算的項目就是結果。
+ *   4. 使用 long long 暫存中間值，最後依題目保證轉成 int 回傳。
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -214,140 +190,44 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-227. Basic Calculator II
-
-Implement a basic calculator to evaluate a simple expression string.
-
-The expression string contains only non-negative integers, +, -, *, / operators and empty spaces  . The integer division should truncate toward zero.
-
-You may assume that the given expression is always valid.
-
-Some examples:
-"3+2*2" = 7
-" 3/2 " = 1
-" 3+5 / 2 " = 5
-
-
-
-
-Note: Do not use the eval built-in library function.
-
-
-Credits:Special thanks to @ts for adding this problem and creating all test cases.
-*/
-
-typedef struct {
-    int *p;
-    int sz;
-    int n;
-} s_t;
-int parse(char **sp, int *k) {
-    char *s = *sp;
-    
-    while (*s == ' ') s ++;
- 
-    *k = 0;
-    
-    if (*s == 0) return 0;
-    
-    if (*s == '+' || *s == '-' || *s == '*' || *s == '/') {
-        *k = *s == '+' ? 1 :
-             *s == '-' ? 2 :
-             *s == '*' ? 3 : 4;
-        *sp = ++ s;
-        return 1;
-    }
-    
-    while (*s >= '0' && *s <= '9') {
-        *k = (*k) * 10 + *s - '0';
-        s ++;
-    }
-    *sp = s;
-    return 2;
-}
-void push(s_t *stack, int k) {
-    if (stack->sz == stack->n) {
-        stack->sz *= 2;
-        stack->p = realloc(stack->p, stack->sz * sizeof(int));
-        //assert(stack->p);
-    }
-    stack->p[stack->n ++] = k;
-}
-int low_op(s_t *ops, int k) {
-    const int priority[] = { 0, 1, 1, 2, 2 }; // null, +, -, *, /
-    return (priority[ops->p[ops->n - 1]] >= priority[k]) ? 1 : 0;
-}
 int calculate(char* s) {
-    s_t data = { 0 }, ops = { 0 };
-    int x, k, d1, d2, o;
- 
-    data.n = ops.n = 0;
-    data.sz = ops.sz = 10;
-    data.p = malloc(data.sz * sizeof(int));
-    ops.p = malloc(ops.sz * sizeof(int));
-    
-    push(&data, 0); // put a zero in case of with a null input
-    push(&ops, 0);  // put a null operator on top of operator stack
-    
-    do {
-        x = parse(&s, &k);
-        if (x == 2) {   // data, push to stack
-            push(&data, k);
-        } else {        // operator
-            while (low_op(&ops, k)) {
-                o = ops.p[-- ops.n];
-                if (o == 0) break;      // the end
-                d2 = data.p[-- data.n];
-                d1 = data.p[-- data.n];
-                switch (o) {
-                    case 1: // '+'
-                        d1 = d1 + d2;
-                        break;
-                    case 2: // '-'
-                        d1 = d1 - d2;
-                        break;
-                    case 3: // '*'
-                        d1 = d1 * d2;
-                        break;
-                    case 4: // '/'
-                        d1 = d1 / d2;
-                        break;
-                    default:
-                        break;
-                }
-                push(&data, d1);
-            }
-            if (k) push(&ops, k);
+    long long total = 0;
+    long long currentTerm = 0;
+    long long number = 0;
+    char previousOperator = '+';
+
+    for (int i = 0; ; i++) {
+        char current = s[i];
+        if (current >= '0' && current <= '9') {
+            number = number * 10 + (current - '0');
+            continue;
         }
-    } while (x);
-    
-    //assert(ops.n == 0);
-    k = data.p[data.n - 1];
-    
-    free(data.p);
-    free(ops.p);
-    
-    return k;
+        if (current == ' ') {
+            continue;
+        }
+
+        // 依上一個運算子處理剛讀完的數字。
+        if (previousOperator == '+') {
+            total += currentTerm;
+            currentTerm = number;
+        } else if (previousOperator == '-') {
+            total += currentTerm;
+            currentTerm = -number;
+        } else if (previousOperator == '*') {
+            currentTerm *= number;
+        } else {  // previousOperator == '/'
+            currentTerm /= number;
+        }
+
+        if (current == '\0') {
+            break;
+        }
+        previousOperator = current;
+        number = 0;
+    }
+
+    return (int)(total + currentTerm);
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:49.3K
-Total Submissions:168.9K
-
-
-Companies Airbnb
-Related Topics String
-Similar Questions 
-                
-                  
-                    Basic Calculator
-                  
-                    Expression Add Operators
-*/
 
 /* ---- generated tests ---- */
 int main(void){

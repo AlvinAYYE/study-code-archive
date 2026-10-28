@@ -209,52 +209,27 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
- * Definition for singly-linked list.
- * 
- */
+/* ---- 易讀解法：逐一取出節點，插入已排序串列的正確位置 ---- */
+struct ListNode* insertionSortList(struct ListNode* head) {
+    struct ListNode dummy = {0, NULL};
+    struct ListNode *current = head;
 
-typedef struct ListNode node_t;
+    while (current != NULL) {
+        struct ListNode *nextUnsorted = current->next;
+        struct ListNode *position = &dummy;
 
-static node_t *insert(node_t *ret, node_t *cur)
-{
-    node_t *root = ret, *prev = NULL;
-    while (root) {
-        if (cur->val <= root->val)
-            break;
-        prev = root;
-        root = root->next;
+        while (position->next != NULL &&
+               position->next->val <= current->val) {
+            position = position->next;
+        }
+
+        current->next = position->next;
+        position->next = current;
+        current = nextUnsorted;
     }
-
-    if (prev)
-        prev->next = cur;
-    else
-        ret = cur;
-
-    cur->next = root;
-    return ret;
+    return dummy.next;
 }
 
-struct ListNode *insertionSortList(struct ListNode *head)
-{
-    if (!head)
-        return NULL;
-
-    /* add first node to ret, so param ret in insert() won't be NULL */
-    node_t *ret = head;
-    head = head->next;
-    ret->next = NULL;
-    while (head) {
-        node_t *nextn = head->next;
-        head->next = NULL;
-        ret = insert(ret, head);
-        head = nextn;
-    }
-
-    return ret;
-}
 /* ---- generated tests ---- */
 int main(void){
  int pass=1,ntests=0;

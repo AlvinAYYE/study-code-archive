@@ -216,30 +216,20 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
- * Definition for a binary tree node.
- * 
- */
+/* ---- 易讀解法：沿路把新數字接到目前累積值後面 ---- */
+static int sumRootToLeaf(struct TreeNode* node, int prefix) {
+    int currentNumber;
 
+    if (node == NULL) return 0;
+    currentNumber = prefix * 10 + node->val;
+    if (node->left == NULL && node->right == NULL) return currentNumber;
 
-int sumNumbersHelper(struct TreeNode *root, int cur)
-{
-    if (!root)
-        return 0;
-
-    cur = cur * 10 + root->val;
-    if (NULL == root->left && NULL == root->right)
-        return cur;
-
-    return sumNumbersHelper(root->left, cur) +
-           sumNumbersHelper(root->right, cur);
+    return sumRootToLeaf(node->left, currentNumber) +
+           sumRootToLeaf(node->right, currentNumber);
 }
 
-int sumNumbers(struct TreeNode *root)
-{
-    return sumNumbersHelper(root, 0);
+int sumNumbers(struct TreeNode* root) {
+    return sumRootToLeaf(root, 0);
 }
 
 /* ---- generated tests ---- */

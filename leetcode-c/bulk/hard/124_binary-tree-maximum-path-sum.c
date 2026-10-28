@@ -18,27 +18,28 @@
  * [中文] 題目: 二元樹中的最大路徑和
  * [中文] 題目說明:
  *     二元樹中的路徑由相鄰節點間的邊連接，且同一節點最多只能出現一次，路徑
- *     不一定經過根節點。路徑和為路徑上所有節點值的總和。給定根節點，回傳任
- *     一非空路徑可得到的最大路徑和。樹的節點數介於 1 至 3×10^4，
- *     節點值介於 -1000 至 1000。
+ *     不一定經過根節點。路徑和為路徑上所有節點值的總和。給定根節點，回傳
+ *     任一非空路徑可得到的最大路徑和。
  *
- * [中文] 思路:
- *     後序 DFS 回傳從目前節點向下延伸的最佳單邊貢獻，負貢獻歸零，並以
- *     左右貢獻加目前節點更新全域最大路徑和。
+ * [中文] 範例：
+ *   範例 1：輸入 root = [1,2,3]；輸出 6。
+ *     說明：最佳路徑為 2 -> 1 -> 3，總和為 6。
+ *   範例 2：輸入 root = [-10,9,20,null,null,15,7]；輸出 42。
+ *     說明：最佳路徑為 15 -> 20 -> 7，總和為 42。
  *
- * Examples:
- *     Input: root = [1,2,3]
- *     Output: 6
- *     Explanation: The optimal path is 2 -> 1 -> 3 with a path sum
- *     of 2 + 1 + 3 = 6.
- *     Input: root = [-10,9,20,null,null,15,7]
- *     Output: 42
- *     Explanation: The optimal path is 15 -> 20 -> 7 with a path sum
- *     of 15 + 20 + 7 = 42.
- *
- * Constraints:
- *   - The number of nodes in the tree is in the range [1, 3 * 10^4].
+ * [中文] 限制：
+ *   - 樹的節點數介於 [1, 3 * 10^4]。
  *   - -1000 <= Node.val <= 1000
+ *
+ * [中文] 直觀解題思路：
+ *   1. 後序 DFS 先取得左右子樹「從子節點向下延伸」的最佳單邊貢獻。
+ *   2. 負貢獻只會讓總和變小，因此將它視為 0，等同不把該側接入路徑。
+ *   3. 以目前節點為最高點的完整路徑可同時接左右兩側：node->val+l+r；
+ *      用它更新全域最大值。
+ *   4. 回傳父節點的路徑不能分叉，所以只能選較大的單側：node->val+max(l,r)。
+ *   5. 全為負數時，全域值以 root->val 初始化，仍能保留至少一個節點。
+ *
+ * 每個節點造訪一次，時間 O(n)，遞迴堆疊空間 O(h)，h 為樹高。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -246,13 +247,13 @@ int maxsum(struct TreeNode *node, int *max) {
     l = maxsum(node->left, max);
     r = maxsum(node->right, max);
     
-    l = l > 0 ? l : 0;                  // ignore negative
+    l = l > 0 ? l : 0;                  /* 負貢獻不接入路徑 */
     r = r > 0 ? r : 0;
     
-    s = node->val + l + r;              // current node + both sides
+    s = node->val + l + r;              /* 目前節點作為最高點，可同時接兩側 */
     if (*max < s) *max = s;
     
-    k = node->val + (l > r ? l : r);    // current node + one side only
+    k = node->val + (l > r ? l : r);    /* 回傳父節點時只能保留單側 */
     return k;
 }
 int maxPathSum(struct TreeNode* root) {

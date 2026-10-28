@@ -210,71 +210,32 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-152. Maximum Product Subarray
-
-Find the contiguous subarray within an array (containing at least one number) which has the largest product.
-
-
-
-For example, given the array [2,3,-2,4],
-the contiguous subarray [2,3] has the largest product = 6.
-*/
-
+/* ---- 易讀解法：同時保存以目前位置結尾的最大與最小乘積 ---- */
 int maxProduct(int* nums, int numsSize) {
-    int i, j, k, m;
-#if 0
-    // O(n2)
-    for (i = 0; i < numsSize; i ++) {
-        k = nums[i]; if (i == 0 || m < k) m = k;
-        for (j = i + 1; j < numsSize; j ++) {
-            k = k * nums[j]; if (m < k) m = k;
+    int maximumEndingHere = nums[0];
+    int minimumEndingHere = nums[0];
+    int bestProduct = nums[0];
+    int i;
+
+    for (i = 1; i < numsSize; ++i) {
+        int value = nums[i];
+        int productFromMaximum;
+        int productFromMinimum;
+
+        if (value < 0) {
+            int temporary = maximumEndingHere;
+            maximumEndingHere = minimumEndingHere;
+            minimumEndingHere = temporary;
         }
+
+        productFromMaximum = maximumEndingHere * value;
+        productFromMinimum = minimumEndingHere * value;
+        maximumEndingHere = productFromMaximum > value ? productFromMaximum : value;
+        minimumEndingHere = productFromMinimum < value ? productFromMinimum : value;
+        if (maximumEndingHere > bestProduct) bestProduct = maximumEndingHere;
     }
-#else
-    int min, max;
-    m = min = max = nums[0];
-    for (i = 1; i < numsSize; i ++) {
-        if (nums[i] >= 0) {
-            k = max * nums[i];
-            max = k > nums[i] ? k : nums[i];
-            k = min * nums[i];
-            min = k < nums[i] ? k : nums[i];
-        } else {
-            j = max;
-            k = min * nums[i];
-            max = k > nums[i] ? k : nums[i];
-            k =   j * nums[i];
-            min = k < nums[i] ? k : nums[i];
-        }
-        m = m > max ? m : max;
-    }
-#endif
-    return m;
+    return bestProduct;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:106.6K
-Total Submissions:415.3K
-
-
-Companies LinkedIn
-Related Topics Array Dynamic Programming
-Similar Questions 
-                
-                  
-                    Maximum Subarray
-                  
-                    House Robber
-                  
-                    Product of Array Except Self
-                  
-                    Maximum Product of Three Numbers
-*/
 
 /* ---- generated tests ---- */
 int main(void){

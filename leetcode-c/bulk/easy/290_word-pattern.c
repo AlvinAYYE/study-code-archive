@@ -13,7 +13,7 @@
  *
  * [中文] 題目: 單詞規律
  * [中文] 題目說明:
- *     給定字元模式 pattern 與以單一空白分隔的字串 s，判斷 s 
+ *     給定字元模式 pattern 與以單一空白分隔的字串 s，判斷 s
  *     是否完整遵循該模式。每個模式字元必須對應到一個非空單字，且字元與單字
  *     之間必須是一對一雙射；兩邊的項目數也必須完全相符。
  *
@@ -212,84 +212,99 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-290. Word Pattern
+/* 解題說明
+ * 題目：290. Word Pattern（單詞規律）
+ *
+ * 題意完整翻譯：
+ *     給定由小寫英文字母組成的 pattern，以及由單字和單一空格組成的字串 s，判斷 s 是否符合
+ *     pattern。符合代表一對一對應：pattern 中每種字母固定對應一個非空單字，而且不同字母不能對應到同一個單字。
+ *
+ * 範例：
+ *   輸入：pattern = "abba", s = "dog cat cat dog"
+ *   輸出：true
+ *   說明：a 對應 dog，b 對應 cat，兩邊一對一且順序相符。
+ *   輸入：pattern = "abba", s = "dog cat cat fish"
+ *   輸出：false
+ *   說明：最後一個 a 對應 fish，與前面 a 對應的 dog 不同。
+ *   輸入：pattern = "aaaa", s = "dog cat cat dog"
+ *   輸出：false
+ *   說明：同一個字母 a 對應到了不同單字。
+ *
+ * 限制：
+ *   - 1 <= pattern.length <= 300
+ *   - pattern 只含小寫英文字母
+ *   - 1 <= s.length <= 3000
+ *   - s 只含小寫英文字母與空格，且沒有首尾空格
+ *   - s 中相鄰單字恰以一個空格分隔
+ *
+ * 解題步驟：
+ *   1. 用 26 個欄位記錄每個字母第一次對應到的單字起點與長度。
+ *   2. 依序取出 pattern 字母與 s 的下一個單字。若字母已經對應，確認單字內容完全相同。
+ *   3. 若字母還沒對應，檢查這個單字是否已被其他字母使用；若有就不符合，否則建立對應。
+ *   4. 最後確認 pattern 與 s 的單字都剛好用完。
+ *
+ * 複雜度：
+ *   時間：O(pattern 長度 + s 長度)；每個字母最多與固定 26 個映射比較。
+ *   空間：O(1)，只存固定 26 個字母的映射，不修改 s。
+ */
 
-Given a pattern and a string str, find if str follows the same pattern.
- Here follow means a full match, such that there is a bijection between a letter in pattern and a non-empty word in str.
-
-Examples:
-
-pattern = "abba", str = "dog cat cat dog" should return true.
-pattern = "abba", str = "dog cat cat fish" should return false.
-pattern = "aaaa", str = "dog cat cat dog" should return false.
-pattern = "abba", str = "dog dog dog dog" should return false.
-
-
-
-
-Notes:
-You may assume pattern contains only lowercase letters, and str contains lowercase letters separated by a single space.
-
-
-Credits:Special thanks to @minglotus6 for adding this problem and creating all test cases.
-*/
-
-bool wordPattern(char* pattern, char* str) {
-    char *bucket[26] = { 0 };
-    int   len   [26] = { 0 };
-    char c, *p, *s;
-    char t, *pat;
-    int l;
-    
-    pat = pattern;
-    while (*str && *pattern) {
-        s = str;
-        l = 0;
-        while (*str && *str != ' ') {
-            str ++;
-        }
-        l = str - s;
-        if (*str == ' ') {
-            *str = 0;  // strcmp is much faster than strncmp, so cut the strings.
-            str ++;    // skip single space
-        }
-        
-        c = *(pattern ++) - 'a';
-        p = bucket[c];
-        if (p) {
-            if (strcmp(p, s)) return false;
-        } else {
-            bucket[c] = s;
-            len[c] = l;
-            // cannot be same with other pattern
-            p = pat;
-            while ((t = (*p ++) - 'a') != c) {
-                if (len[t] == len[c] &&
-                    !strcmp(bucket[t], bucket[c])) return false;
-            }
-        }
-    }
-    
-    return (!*pattern && !*str) ? true : false;
+static int sameWord(const char* first, int firstLength,
+                    const char* second, int secondLength) {
+    return firstLength == secondLength &&
+           memcmp(first, second, (size_t)firstLength) == 0;
 }
 
-/*
-Difficulty:Easy
-Total Accepted:82.1K
-Total Submissions:248.7K
+bool wordPattern(char* pattern, char* s) {
+    const char* wordStart[26] = {0};
+    int wordLength[26] = {0};
+    int patternIndex = 0;
+    int position = 0;
+    int i;
 
+    while (pattern[patternIndex] != '\0') {
+        int start;
+        int length;
+        int letter;
 
-Companies Dropbox Uber
-Related Topics Hash Table
-Similar Questions 
-                
-                  
-                    Isomorphic Strings
-                  
-                    Word Pattern II
-*/
+        // pattern 還有字母時，s 必須還有下一個單字。
+        if (s[position] == '\0') {
+            return false;
+        }
+
+        start = position;
+        while (s[position] != '\0' && s[position] != ' ') {
+            ++position;
+        }
+        length = position - start;
+        letter = pattern[patternIndex] - 'a';
+
+        if (wordStart[letter] != NULL) {
+            // 已建立的字母只能再次對應到同一個單字。
+            if (!sameWord(wordStart[letter], wordLength[letter],
+                          s + start, length)) {
+                return false;
+            }
+        } else {
+            // 不同字母不能共用同一個單字。
+            for (i = 0; i < 26; ++i) {
+                if (wordStart[i] != NULL &&
+                    sameWord(wordStart[i], wordLength[i], s + start, length)) {
+                    return false;
+                }
+            }
+            wordStart[letter] = s + start;
+            wordLength[letter] = length;
+        }
+
+        ++patternIndex;
+        if (s[position] == ' ') {
+            ++position;
+        }
+    }
+
+    // pattern 用完後，s 也必須沒有剩餘單字。
+    return s[position] == '\0';
+}
 
 /* ---- generated tests ---- */
 int main(void){

@@ -24,16 +24,81 @@ static int cmp_str(const void *a, const void *b) {
     return strcmp(*(const char **)a, *(const char **)b);
 }
 
-int main(void) {
-    const char *trees[] = {
-        "Red Alder", "Ash", "Ash", "Red Alder", "Ash"
-    };
-    int n = 5;
-    const char *sorted[5];
-    for (int i = 0; i < n; i++) sorted[i] = trees[i];
-    qsort(sorted, n, sizeof(char *), cmp_str);
+static void trim_newline(char *s) {
+    size_t len = strlen(s);
+    while (len > 0 && (s[len - 1] == '\n' || s[len - 1] == '\r')) {
+        s[--len] = '\0';
+    }
+}
 
-    int ok = (strcmp(sorted[0], "Ash") == 0 && strcmp(sorted[3], "Red Alder") == 0);
-    printf("%s: UVa 10226 - Hardwood Species\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+static char *duplicate_string(const char *s) {
+    size_t len = strlen(s) + 1;
+    char *copy = (char *)malloc(len);
+    if (copy != NULL) memcpy(copy, s, len);
+    return copy;
+}
+
+int solve(FILE *in, FILE *out) {
+    char line[1024];
+    int test_cases;
+    int case_number;
+
+    if (fgets(line, sizeof(line), in) == NULL) return 0;
+    test_cases = atoi(line);
+
+    for (case_number = 0; case_number < test_cases; ++case_number) {
+        char **trees = NULL;
+        size_t count = 0;
+        size_t capacity = 0;
+        size_t i;
+
+        while (fgets(line, sizeof(line), in) != NULL) {
+            trim_newline(line);
+            if (line[0] != '\0') break;
+        }
+        if (line[0] != '\0') {
+            for (;;) {
+                char *tree;
+                if (count == capacity) {
+                    size_t next_capacity = capacity == 0 ? 128 : capacity * 2;
+                    char **next = (char **)realloc(trees, next_capacity * sizeof(*trees));
+                    if (next == NULL) goto memory_error;
+                    trees = next;
+                    capacity = next_capacity;
+                }
+                tree = duplicate_string(line);
+                if (tree == NULL) goto memory_error;
+                trees[count++] = tree;
+
+                if (fgets(line, sizeof(line), in) == NULL) break;
+                trim_newline(line);
+                if (line[0] == '\0') break;
+            }
+        }
+
+        qsort(trees, count, sizeof(*trees), cmp_str);
+        i = 0;
+        while (i < count) {
+            size_t j = i + 1;
+            while (j < count && strcmp(trees[i], trees[j]) == 0) ++j;
+            fprintf(out, "%s %.4f\n", trees[i],
+                    100.0 * (double)(j - i) / (double)count);
+            i = j;
+        }
+        if (case_number + 1 < test_cases) fputc('\n', out);
+
+        for (i = 0; i < count; ++i) free(trees[i]);
+        free(trees);
+        continue;
+
+memory_error:
+        for (i = 0; i < count; ++i) free(trees[i]);
+        free(trees);
+        return 1;
+    }
+    return 0;
+}
+
+int main(void) {
+    return solve(stdin, stdout);
 }

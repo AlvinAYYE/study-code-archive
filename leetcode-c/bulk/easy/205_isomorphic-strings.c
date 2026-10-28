@@ -1,48 +1,12 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0205. Isomorphic Strings
- * Difficulty: Easy
- * Tags: hash-table, string
- * URL: https://leetcode.com/problems/isomorphic-strings/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given two strings s and t, determine if they are isomorphic.
- *     Two strings s and t are isomorphic if the characters in s can be
- *     replaced to get t.
- *     All occurrences of a character must be replaced with another
- *     character while preserving the order of characters. No two
- *     characters may map to the same character, but a character may map to
- *     itself.
- *
- * [中文] 題目: 同構字串
- * [中文] 題目說明:
- *     給定等長字串 s 與 t，判斷是否能將 s 的每種字元一致地替換後得
- *     到 t，且字元順序必須保留。不同來源字元不可映射到同一目標字元，但字
- *     元可以映射為自己。
- *
- * [中文] 思路:
- *     以兩個大小為 128 的表格同時記錄 s→t 與 t→s 映射；每一
- *     對字元都需符合既有雙向映射，否則回傳 false。
- *
- * Examples:
- *     Input: s = "egg", t = "add"
- *     Output: true
- *     Explanation:
- *     The strings s and t can be made identical by:
- *     Input: s = "foo", t = "bar"
- *     Output: false
- *     Explanation:
- *     The strings s and t can not be made identical as 'o' needs to
- *     be mapped to both 'a' and 'r' .
- *     Input: s = "paper", t = "title"
- *     Output: true
- *
- * Constraints:
- *   - 1 <= s.length <= 5 * 10^4
- *   - t.length == s.length
- *   - s and t consist of any valid ascii character.
- * ==========================================================================
+ * LeetCode 0205. Isomorphic Strings《同構字串》
+ * 題意：判斷兩字串能否透過一致的一對一字元替換而相同。每個來源字元必須總是映射到
+ *       同一個目標字元，且不同來源字元不能映射到同一目標字元；字元可以映射到自己。
+ * 範例："egg" 與 "add" -> true；"foo" 與 "bar" -> false；
+ *       "paper" 與 "title" -> true。
+ * 限制：1 <= s.length <= 5 * 10^4；兩字串長度相同；只含 ASCII 字元。
+ * 解法：用兩張表分別記錄 s->t 與 t->s。每一對字元都必須同時符合雙向映射。
+ * 複雜度：時間 O(n)，額外空間 O(1)（ASCII 字元表大小固定）。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -216,59 +180,31 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-205. Isomorphic Strings
-
-Given two strings s and t, determine if they are isomorphic.
-
-Two strings are isomorphic if the characters in s can be replaced to get t.
-
-All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character but a character may map to itself.
-
-For example,
-Given "egg", "add", return true.
-
-Given "foo", "bar", return false.
-
-Given "paper", "title", return true.
-
-Note:
-You may assume both s and t have the same length.
-*/
 
 bool isIsomorphic(char* s, char* t) {
-    char a[128] = { 0 };
-    char b[128] = { 0 };
-    while (*s) {
-        //printf("%c:%c\n", *s, *t);
-        if (a[*s] == 0 && b[*t] == 0) {
-            a[*s] = *t;
-            b[*t] = *s;
-        } else if (a[*s] == *t && b[*t] == *s) {
-        } else {
+    int mapST[128];
+    int mapTS[128];
+
+    /* -1 表示該 ASCII 字元尚未建立映射。 */
+    for (int ch = 0; ch < 128; ++ch) {
+        mapST[ch] = -1;
+        mapTS[ch] = -1;
+    }
+
+    for (int i = 0; s[i] != '\0'; ++i) {
+        unsigned char from = (unsigned char)s[i];
+        unsigned char to = (unsigned char)t[i];
+
+        if (mapST[from] == -1 && mapTS[to] == -1) {
+            mapST[from] = to;
+            mapTS[to] = from;
+        } else if (mapST[from] != to || mapTS[to] != from) {
+            /* 來源映射不一致，或兩個來源字元搶同一個目標字元。 */
             return false;
         }
-        s ++;
-        t ++;
     }
     return true;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:110.2K
-Total Submissions:326.3K
-
-
-Companies LinkedIn
-Related Topics Hash Table
-Similar Questions 
-                
-                  
-                    Word Pattern
-*/
 
 /* ---- generated tests ---- */
 int main(void){

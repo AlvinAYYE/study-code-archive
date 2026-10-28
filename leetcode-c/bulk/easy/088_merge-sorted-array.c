@@ -228,20 +228,23 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 
 /* ---- community solution ---- */
 static int lc_dummy_;
-int icmp(const void *x, const void *y) {
-  int a = *(const int *)x;
-  int b = *(const int *)y;
-
-  return (a > b) - (a < b);
-}
-
 void merge(int *nums1, int nums1Size, int m, int *nums2, int nums2Size, int n) {
-  // Copy elements from nums2 into nums1.
-  for (int i = 0; i < n; i++) {
-    *(nums1 + m + i) = *(nums2 + i);
+  int i = m - 1;
+  int j = n - 1;
+  int write = m + n - 1;
+
+  /* 長度參數依照平台函式簽名保留；有效範圍由 m、n 決定。 */
+  (void)nums1Size;
+  (void)nums2Size;
+
+  /* 從兩陣列尾端比較，將較大的值由 nums1 尾端往前放。 */
+  while (j >= 0) {
+    if (i >= 0 && nums1[i] > nums2[j]) {
+      nums1[write--] = nums1[i--];
+    } else {
+      nums1[write--] = nums2[j--];
+    }
   }
-  // Sort nums1
-  qsort(nums1, nums1Size, sizeof(*nums1), icmp);
 }
 /* ---- generated tests ---- */
 int main(void){

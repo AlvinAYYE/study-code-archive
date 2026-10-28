@@ -1,57 +1,35 @@
-# 0210. Course Schedule II《課程表 II》
+# LeetCode 0210. Course Schedule II
 
-- **Difficulty**: Medium
-- **Tags**: depth-first-search, breadth-first-search, graph, topological-sort
-- **題目連結**: https://leetcode.com/problems/course-schedule-ii/
-- **程式碼**: [`210_course-schedule-ii.c`](./210_course-schedule-ii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 課程表 II
 
-## 題目說明（中文）
+## 題目
 
-共有 numCourses 門編號課程，先修關係 [a, b] 表示必須先完成 b 才能修 a。請回傳任一可完成全部課程的修習順序；若存在循環而無法完成，回傳空陣列。
+共有 numCourses 門課，prerequisites[i] = [a, b] 表示必須先修完 b 才能修 a。請回傳一個能修完所有課程的順序；若無法完成（有循環），回傳空陣列。答案順序不唯一時，回傳任何一種都可以。
 
-**思路**：程式以鄰接矩陣與入度陣列建圖，從所有入度為零的課程做 DFS，走訪時遞減後繼入度並在歸零時遞迴加入，最後僅在輸出數量等於課程數時保留結果。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：numCourses = 2，prerequisites = [[1,0]]；輸出：[0,1]。
+2. 輸入：numCourses = 4，prerequisites = [[1,0],[2,0],[3,1],[3,2]]；輸出：[0,1,2,3] 或 [0,2,1,3]。
+3. 輸入：numCourses = 1，prerequisites = []；輸出：[0]。
 
-There are a total of numCourses courses you have to take, labeled from 0 to numCourses - 1. You are given an array prerequisites where prerequisites[i] = [ai, bi] indicates that you must take course bi first if you want to take course ai.
-Return the ordering of courses you should take to finish all courses. If there are many valid answers, return any of them. If it is impossible to finish all courses, return an empty array.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= numCourses <= 2000
+- 0 <= prerequisites.length <= numCourses * (numCourses - 1)
+- 每列長度為 2，且 ai != bi
+- 先修組合不重複
 
-```text
-Input: numCourses = 2, prerequisites = [[1,0]]
-Output: [0,1]
-Explanation: There are a total of 2 courses to take. To take course 1 you should have finished course 0. So the correct course order is [0,1].
+## 解題思路
 
-Input: numCourses = 4, prerequisites = [[1,0],[2,0],[3,1],[3,2]]
-Output: [0,2,1,3]
-Explanation: There are a total of 4 courses to take. To take course 3 you should have finished both courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0.
-So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3].
+1. 把每個先修條件轉成「先修課 -> 後續課」的邊，並計算每門課的入度。
+2. 先把所有入度為 0 的課放入佇列；這些課目前都可以直接修。
+3. 逐一取出課程加入答案，再沿著它的邊降低後續課程入度；入度歸零就加入佇列。
+4. 若答案包含所有課，回傳答案；若處理完仍有課未加入，表示有循環，釋放答案並回傳 NULL、將 returnSize 設為 0。
 
-Input: numCourses = 1, prerequisites = []
-Output: [0]
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(V + E)，額外空間 O(V + E)。
 
-1 <= numCourses <= 2000
-0 <= prerequisites.length <= numCourses * (numCourses - 1)
-prerequisites[i].length == 2
-0 <= ai, bi < numCourses
-ai != bi
-All the pairs [ai, bi] are distinct.
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-/**
- * Note: The returned array must be malloced, assume caller calls free().
- */
-int* findOrder(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize, int* returnSize) {
-    
-}
-```
+int* findOrder(int numCourses, int** prerequisites, int prerequisitesSize, int* prerequisitesColSize, int* returnSize)

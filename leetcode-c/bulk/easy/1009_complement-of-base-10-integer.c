@@ -1,38 +1,25 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1009. Complement of Base 10 Integer
- * Difficulty: Easy
- * Tags: bit-manipulation
- * URL: https://leetcode.com/problems/complement-of-base-10-integer/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     The complement of an integer is the integer you get when you flip
- *     all the 0's to 1's and all the 1's to 0's in its binary
- *     representation.
- *     Given an integer n, return its complement.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     The complement of an 整數 is the 整數 you get when you flip all the 0's
- *     to 1's and all the 1's to 0's in its binary representation.
+ * 【完整中文題意】給定非負整數 n，先寫出它不含前導零的二進位表示，再將每個位元 0 和 1 互換，最後把結果轉回十進位並回傳。特別地，0 的二進位表示是 0，因此它的補數是 1。
  *
- * Examples:
- *     Input: n = 5
- *     Output: 2
- *     Explanation: 5 is "10^1" in binary, with complement "010" in
- *     binary, which is 2 in base-10.
- *     Input: n = 7
- *     Output: 0
- *     Explanation: 7 is "111" in binary, with complement "000" in
- *     binary, which is 0 in base-10.
- *     Input: n = 10
- *     Output: 5
- *     Explanation: 10 is "1010" in binary, with complement "010^1"
- *     in binary, which is 5 in base-10.
+ * 【範例】
+ * 1. n = 5 → 2（101₂ 翻轉為 010₂，也就是 2）
+ * 2. n = 7 → 0（111₂ 翻轉為 000₂）
+ * 3. n = 10 → 5（1010₂ 翻轉為 0101₂）
  *
- * Constraints:
- *   - 0 <= n < 10^9
- * ==========================================================================
+ * 【限制】
+ * - 0 <= n < 10⁹
+ *
+ * 【解題步驟】
+ * 1. n 為 0 時直接回傳 1。
+ * 2. 從 1 開始左移，直到 mask 大於 n；此時 mask 的二進位只有最高位多一個 1。
+ * 3. mask - 1 會形成與 n 位數相同、每一位都是 1 的遮罩。將 n 與遮罩做 XOR，就能只翻轉 n 的有效位元。
+ *
+ * 【複雜度】時間 O(log n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int bitwiseComplement(int n)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -206,12 +193,15 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
 int bitwiseComplement(int n) {
-    int m = n, mask = 0;
     if (n == 0) return 1;
-    while (m) { mask = (mask << 1) | 1; m >>= 1; }
-    return (~n) & mask;
+
+    unsigned int mask = 1;
+    // 找到比 n 的最高有效位再高一位的 1。
+    while (mask <= (unsigned int)n) mask <<= 1;
+
+    // mask - 1 的低位全為 1，XOR 只翻轉 n 的有效位元。
+    return (int)((mask - 1u) ^ (unsigned int)n);
 }
 
 /* ---- generated tests ---- */

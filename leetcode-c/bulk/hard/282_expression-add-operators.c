@@ -244,80 +244,94 @@ typedef struct {
     int sz;
     int n;
 } res_t;
-int str2int(char *num, int l) {
-    int k, i;
-    k = 0;
-    while (l -- > 0) {
-        i = *num - '0';
-        if (k > 214748364 ||
-            (k == 214748364 && i > 7)) {
-            return -1;
+static void addExpressionResult(char *expression, res_t *results) {
+    size_t length = strlen(expression);
+    char *copy = (char*)malloc(length + 1);
+    if (!copy) return;
+    memcpy(copy, expression, length + 1);
+
+    if (results->n == results->sz) {
+        int newSize = results->sz * 2;
+        char **newItems = (char**)realloc(results->p, sizeof(char*) * (size_t)newSize);
+        if (!newItems) {
+            free(copy);
+            return;
         }
-        k = k * 10 + i;
-        num ++;
+        results->p = newItems;
+        results->sz = newSize;
     }
-    return k;
+    results->p[results->n++] = copy;
 }
-void add2res(char *buff, res_t *res) {
-    if (res->sz == res->n) {
-        res->sz *= 2;
-        res->p = realloc(res->p, res->sz * sizeof(char *));
-        //assert(res->p);
-    }
-    res->p[res->n ++] = strdup(buff);
-}
-void bt(char *num, int s, int e, long n, long m, int target, char *buff, int d, res_t *res) {
-    int l, k;
-    
-    if (s == e) {  // start == end, done!
-        if (n == target) {
-            //printf("%d, %d\n", n, target);
-            buff[d] = 0;
-            add2res(buff, res);
+
+static void addOperatorsDfs(const char *num, int length, int start,
+                            long long value, long long lastOperand,
+                            char *expression, int expressionLength,
+                            int target, res_t *results) {
+    long long operand = 0;
+
+    if (start == length) {
+        if (value == target) {
+            expression[expressionLength] = '\0';
+            addExpressionResult(expression, results);
         }
         return;
     }
-    
-    for (l = 1; l <= e - s && l <= 10; l ++) {
-        if (l > 1 && num[s] == '0') break;
-        k = str2int(&num[s], l);
-        if (k == -1) break;     // overflow
-        //printf("%d\n", k);
-        if (!d) {
-            strncpy(buff, &num[s], l);
-            bt(num, s + l, e, k, k, target, buff, l, res);
-        } else {
-            strncpy(&buff[d + 1], &num[s], l);
-            buff[d] = '+';
-            bt(num, s + l, e, n + k, k,             target, buff, d + 1 + l, res);
-            buff[d] = '-';
-            bt(num, s + l, e, n - k, -k,            target, buff, d + 1 + l, res);
-            buff[d] = '*';
-            bt(num, s + l, e, n - m + m * k, m * k, target, buff, d + 1 + l, res);
-            // m is previous k, n is overall total up to previous k
+
+    for (int end = start; end < length; ++end) {
+        /* 例如「05」不能當成一個運算元，但「0」可以。 */
+        if (end > start && num[start] == '0') break;
+        operand = operand * 10 + (num[end] - '0');
+
+        int tokenLength = end - start + 1;
+        if (start == 0) {
+            memcpy(expression + expressionLength, num + start, (size_t)tokenLength);
+            addOperatorsDfs(num, length, end + 1, operand, operand,
+                            expression, tokenLength, target, results);
+            continue;
         }
+
+        expression[expressionLength] = '+';
+        memcpy(expression + expressionLength + 1, num + start, (size_t)tokenLength);
+        addOperatorsDfs(num, length, end + 1, value + operand, operand,
+                        expression, expressionLength + 1 + tokenLength,
+                        target, results);
+
+        expression[expressionLength] = '-';
+        memcpy(expression + expressionLength + 1, num + start, (size_t)tokenLength);
+        addOperatorsDfs(num, length, end + 1, value - operand, -operand,
+                        expression, expressionLength + 1 + tokenLength,
+                        target, results);
+
+        /* 乘法優先：撤回上一個運算元，再用乘積替換它。 */
+        expression[expressionLength] = '*';
+        memcpy(expression + expressionLength + 1, num + start, (size_t)tokenLength);
+        addOperatorsDfs(num, length, end + 1,
+                        value - lastOperand + lastOperand * operand,
+                        lastOperand * operand, expression,
+                        expressionLength + 1 + tokenLength,
+                        target, results);
     }
 }
+
 char** addOperators(char* num, int target, int* returnSize) {
-    res_t res;
-    char *buff;
-    int l;
-    
-    res.sz = 10;
-    res.p = malloc(res.sz * sizeof(char *));
-    //assert(res.p);
-    res.n = 0;
-    
-    l = strlen(num);
-    buff = malloc(l * 2 * sizeof(char));
-    //assert(buff);
-    
-    bt(num, 0, l, 0, 0, target, buff, 0, &res);
-    
-    free(buff);
-    
-    *returnSize = res.n;
-    return res.p;
+    int length = (int)strlen(num);
+    char *expression = (char*)malloc((size_t)(2 * length + 1));
+    res_t results;
+
+    results.sz = 8;
+    results.n = 0;
+    results.p = (char**)malloc(sizeof(char*) * (size_t)results.sz);
+    *returnSize = 0;
+    if (!expression || !results.p) {
+        free(expression);
+        free(results.p);
+        return NULL;
+    }
+
+    addOperatorsDfs(num, length, 0, 0, 0, expression, 0, target, &results);
+    free(expression);
+    *returnSize = results.n;
+    return results.p;
 }
 
 
@@ -366,6 +380,20 @@ int main(void){
   char **act_2 = addOperators(num_2,(9191),&rsz_2);
   static char *cexp_2[] = {""};
   if (!(lc_eq_cands(act_2, rsz_2, cexp_2, 0))) { pass = 0; printf("  test 2 FAIL\n"); }
+  ntests++; }
+{
+  int rsz_3 = 0;
+  char num_3[] = "105";
+  char **act_3 = addOperators(num_3,(5),&rsz_3);
+  static char *cexp_3[] = {"1*0+5","10-5"};
+  if (!(lc_eq_cands(act_3, rsz_3, cexp_3, 2))) { pass = 0; printf("  test 3 FAIL\n"); }
+  ntests++; }
+{
+  int rsz_4 = 0;
+  char num_4[] = "00";
+  char **act_4 = addOperators(num_4,(0),&rsz_4);
+  static char *cexp_4[] = {"0+0","0-0","0*0"};
+  if (!(lc_eq_cands(act_4, rsz_4, cexp_4, 3))) { pass = 0; printf("  test 4 FAIL\n"); }
   ntests++; }
  printf("%s: %04d %s tests=%d\n", (pass&&ntests)?"PASS":"FAIL", 282, "addOperators", ntests);
  return (pass&&ntests)?0:1;

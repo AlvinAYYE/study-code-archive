@@ -16,37 +16,31 @@
  *
  * [中文] 題目: 買賣股票的最佳時機 III
  * [中文] 題目說明:
- *     給定每日股價 prices，求最多完成兩次交易可得到的最大利潤。不可
- *     同時進行多筆交易，必須先賣出才能再次買入。若不交易較佳，利潤可以是 
- *     0。prices 長度介於 1 至 10^5，股價介於 0 至 10
- *     ^5。
+ *     prices[i] 表示第 i 天的股價。請計算最多完成兩次交易可得到的最大
+ *     利潤；不可同時持有多筆交易，必須先賣出才能再次買入。若不交易較佳，
+ *     答案可以是 0。
  *
- * [中文] 思路:
- *     掃描股價並維護 buy1、sell1、buy2、sell2 四個狀態
- *     ，分別表示前後兩筆交易買入或賣出後的最佳利潤。
+ * [中文] 範例：
+ *   範例 1：輸入 prices = [3,3,5,0,0,3,1,4]；輸出 6。
+ *     說明：可用 0 買、3 賣，再用 1 買、4 賣，總利潤為 6。
+ *   範例 2：輸入 prices = [1,2,3,4,5]；輸出 4。
+ *     說明：第 1 天買入、第 5 天賣出即可得到最大利潤 4。
+ *   範例 3：輸入 prices = [7,6,4,3,1]；輸出 0。
+ *     說明：價格持續下跌，不交易最佳。
  *
- * Examples:
- *     Input: prices = [3,3,5,0,0,3,1,4]
- *     Output: 6
- *     Explanation: Buy on day 4 (price = 0) and sell on day 6 (price
- *     = 3), profit = 3-0 = 3.
- *     Then buy on day 7 (price = 1) and sell on day 8 (price = 4),
- *     profit = 4-1 = 3.
- *     Input: prices = [1,2,3,4,5]
- *     Output: 4
- *     Explanation: Buy on day 1 (price = 1) and sell on day 5 (price
- *     = 5), profit = 5-1 = 4.
- *     Note that you cannot buy on day 1, buy on day 2 and sell them
- *     later, as you are engaging multiple transactions at the same
- *     time. You must sell before buying again.
- *     Input: prices = [7,6,4,3,1]
- *     Output: 0
- *     Explanation: In this case, no transaction is done, i.e. max
- *     profit = 0.
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= prices.length <= 10^5
  *   - 0 <= prices[i] <= 10^5
+ *
+ * [中文] 直觀解題思路：
+ *   1. 掃描每一天，維護四個狀態：第一次買入後、第一次賣出後、第二次買入後、
+ *      第二次賣出後的最大帳面利潤。
+ *   2. buy1 = max(buy1, -price)，表示今天做第一次買入或保持原狀。
+ *   3. sell1 = max(sell1, buy1+price)，表示今天賣出第一次交易。
+ *   4. buy2 = max(buy2, sell1-price)，第二次買入時可帶著第一次交易的利潤。
+ *   5. sell2 = max(sell2, buy2+price)，掃描結束後即為最多兩次交易的答案。
+ *
+ * 複雜度：單次掃描，時間 O(n)，額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -234,15 +228,15 @@ You may not engage in multiple transactions at the same time (ie, you must sell 
 */
 
 int maxProfit(int* prices, int pricesSize) {
-    int buy1, buy2;     // max profit if I buy
-    int sell1, sell2;   // max profit if I sell
+    int buy1, buy2;     /* 各次買入後的最大帳面利潤 */
+    int sell1, sell2;   /* 各次賣出後的最大已實現利潤 */
     int i;
     
-    buy1 = buy2 = 0x80000000;   // min of integer
+    buy1 = buy2 = 0x80000000;   /* 以最小整數表示尚未買入 */
     sell1 = sell2 = 0;
     
     for (i = 0; i < pricesSize; i ++) {
-                        // possible profit
+        /* 更新順序對應第一次買、第一次賣、第二次買、第二次賣。 */
         buy1  = buy1  > 0     - prices[i] ? buy1  : 0     - prices[i];
         sell1 = sell1 > buy1  + prices[i] ? sell1 : buy1  + prices[i];
         buy2  = buy2  > sell1 - prices[i] ? buy2  : sell1 - prices[i];

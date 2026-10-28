@@ -15,32 +15,39 @@
  *     coins, return -1.
  *     You may assume that you have an infinite number of each kind of coin.
  *
- * [中文] 題目說明 (翻譯自官方英文題面)
- *     用最少的硬幣數湊出給定金額，無法湊出回傳 -1。
+ * [中文] 題目說明
+ *     給定不同面額的硬幣陣列 coins 與總金額 amount。每種硬幣都可以使用無限次，
+ *     請回傳剛好湊出 amount 所需的最少硬幣數；若任何組合都無法湊出，回傳 -1。
  *
- * Examples:
- *   Example 1:
- *     Input: coins = [1,2,5], amount = 11
- *     Output: 3
- *     Explanation: 11 = 5 + 5 + 1
- *   Example 2:
- *     Input: coins = [2], amount = 3
- *     Output: -1
- *   Example 3:
- *     Input: coins = [1], amount = 0
- *     Output: 0
+ * [中文] 範例
+ *   範例 1：
+ *     輸入：coins = [1,2,5], amount = 11
+ *     輸出：3
+ *     說明：11 = 5 + 5 + 1，共使用 3 枚硬幣。
+ *   範例 2：
+ *     輸入：coins = [2], amount = 3
+ *     輸出：-1
+ *     說明：只使用面額 2 無法剛好湊出 3。
+ *   範例 3：
+ *     輸入：coins = [1], amount = 0
+ *     輸出：0
+ *     說明：金額 0 不需要任何硬幣。
  *
- * Constraints:
- *   - 1 <= coins.length <= 12
- *   - 1 <= coins[i] <= 231 - 1
- *   - 0 <= amount <= 10^4
+ * [中文] 限制
+ *   - 1 <= coins.length <= 12。
+ *   - 1 <= coins[i] <= 2^31 - 1。
+ *   - 0 <= amount <= 10^4。
  *
  * LeetCode official C stub (函式簽名):
  *   int coinChange(int* coins, int coinsSize, int amount) {
  *   }
  *
- * [EN] Approach: Bottom-up DP: dp[a] = 1 + min(dp[a-coin]) over coins with coin<=a; dp[0]=0. Time O(amount*n), space O(amount).
- * [中文] 思路: 自底向上 DP：dp[a]=1+min(dp[a-coin])，dp[0]=0；無解維持 INF 並回傳 -1。時間 O(amount*n)。
+ * [中文] 直觀解題思路
+ *   1. 定義 dp[a] 為湊出金額 a 的最少硬幣數，dp[0] = 0。
+ *   2. 對每個金額 a，嘗試把每種不大於 a 的硬幣 coin 當作最後一枚。
+ *   3. 若 a - coin 可湊出，候選答案就是 dp[a - coin] + 1，取所有候選的最小值。
+ *   4. 初值 amount + 1 代表無法湊出；最後仍大於 amount 時回傳 -1。
+ *   時間複雜度 O(amount * coinsSize)，空間複雜度 O(amount)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -52,6 +59,7 @@ int coinChange(int *coins, int coinsSize, int amount) {
     int a, i;
     dp[0] = 0;
     for (a = 1; a <= amount; ++a) {
+        /* 最多使用 amount 枚面額 1；amount + 1 可安全代表無解。 */
         int best = amount + 1;
         for (i = 0; i < coinsSize; ++i)
             if (coins[i] <= a && dp[a - coins[i]] + 1 < best)

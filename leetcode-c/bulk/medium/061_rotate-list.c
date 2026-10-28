@@ -202,77 +202,35 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
+/* ---- 易讀解法：接成環，再從新尾端切開 ---- */
+struct ListNode* rotateRight(struct ListNode* head, int k) {
+    struct ListNode *tail;
+    struct ListNode *newTail;
+    struct ListNode *newHead;
+    int length = 1;
+    int shift;
+    int steps;
 
-61. Rotate List [M]
+    if (head == NULL || head->next == NULL || k == 0) return head;
 
-Given a linked list, rotate the list to the right by k places, where k is non-negative.
+    tail = head;
+    while (tail->next != NULL) {
+        tail = tail->next;
+        ++length;
+    }
 
-Example 1:
+    shift = k % length;
+    if (shift == 0) return head;
 
-Input: 1->2->3->4->5->NULL, k = 2
-Output: 4->5->1->2->3->NULL
-
-Explanation:
-rotate 1 steps to the right: 5->1->2->3->4->NULL
-rotate 2 steps to the right: 4->5->1->2->3->NULL
-Example 2:
-
-
-Input: 0->1->2->NULL, k = 4
-Output: 2->0->1->NULL
-
-Explanation:
-rotate 1 steps to the right: 2->0->1->NULL
-rotate 2 steps to the right: 1->2->0->NULL
-rotate 3 steps to the right: 0->1->2->NULL
-rotate 4 steps to the right: 2->0->1->NULL
-
-*/
-/**
- * Definition for singly-linked list.
- * 
- */
-
-typedef struct ListNode NODE;
-struct ListNode* rotateRight(struct ListNode* head, int k)
-{        
-	NODE *tmp = head;
-	if (tmp == NULL)
-	{
-		return NULL;
-	} else /* Non-empty Case (It means pre node must exist) */
-	{
-		NODE *pre = NULL;
-		int count = 0;
-		/* Count the len of the list, and update TAIL->next to HEAD to create a cycle */
-		while (tmp != NULL)
-		{
-			count++;
-			pre = tmp;
-			tmp = tmp->next;
-		}
-		pre->next = head;
-
-		k = count - (k % count);
-		count = 0;
-		while (head != NULL)
-		{
-			/* Find new head */
-			if (count == k)
-			{
-				pre->next = NULL;
-				break;
-			}        
-			count++;
-			pre = head;
-			head = head->next;
-		}    
-		return head;
-	}
+    tail->next = head;
+    steps = length - shift - 1;
+    newTail = head;
+    while (steps-- > 0) newTail = newTail->next;
+    newHead = newTail->next;
+    newTail->next = NULL;
+    return newHead;
 }
+
 
 /* ---- generated tests ---- */
 int main(void){

@@ -12,20 +12,19 @@
  *     raining.
  *
  * [中文] 題目說明 (翻譯自官方英文題面)
- *     給高度陣列，計算降雨後能滯留的總水量。
+ *     給定 n 個非負整數 height，代表每根寬度皆為 1 的柱子高度。
+ *     請計算下雨後，這張高度圖總共能接住多少單位的雨水。
  *
- * Examples:
- *   Example 1:
- *     Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
- *     Output: 6
- *     Explanation: The above elevation map (black section) is
- *     represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In this case, 6
- *     units of rain water (blue section) are being trapped.
- *   Example 2:
- *     Input: height = [4,2,0,3,2,5]
- *     Output: 9
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+ *     輸出：6
+ *     說明：各凹槽累計可接住 6 單位的雨水。
+ *   範例 2：
+ *     輸入：height = [4,2,0,3,2,5]
+ *     輸出：9
  *
- * Constraints:
+ * [中文] 限制：
  *   - n == height.length
  *   - 1 <= n <= 2 * 10^4
  *   - 0 <= height[i] <= 10^5
@@ -35,7 +34,15 @@
  *   }
  *
  * [EN] Approach: Two pointers with running leftMax/rightMax: water at i = min(leftMax,rightMax)-h[i], decided by the lower side. Time O(n), space O(1).
- * [中文] 思路: 雙指針+兩側最高柱：每列積水 = min(左最大, 右最大)-當前高，由較矮的一側決定。時間 O(n)、空間 O(1)。
+ * [中文] 直觀解題思路：
+ *   1. 位置 i 能裝的水量由左右兩側最高柱中較矮者決定：
+ *      min(左側最高, 右側最高) - height[i]。
+ *   2. 用 l、r 從兩端往中間走，並維護已看過的 leftMax、rightMax。
+ *   3. 當 height[l] < height[r] 時，右邊至少有 height[r] 這面牆，因此
+ *      左端水位可由 leftMax 安全決定；更新或結算 l 後將它右移。
+ *   4. 其餘情況同理從右端結算。每個位置只會被處理一次。
+ *
+ * 複雜度：時間 O(n)，額外空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -45,6 +52,7 @@ int trap(int *height, int heightSize) {
     int l = 0, r = heightSize - 1;
     int leftMax = 0, rightMax = 0, water = 0;
     while (l < r) {
+        /* 較矮的一端已有另一端作為邊界，可以立刻確定該位置的積水量。 */
         if (height[l] < height[r]) {
             if (height[l] >= leftMax) leftMax = height[l];
             else water += leftMax - height[l];

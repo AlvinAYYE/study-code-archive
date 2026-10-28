@@ -1,56 +1,52 @@
-# 0002. Add Two Numbers《两数相加》
+# 0002. Add Two Numbers｜兩數相加
 
-- **Difficulty**: Medium
-- **Tags**: linked-list, math, recursion
-- **題目連結**: https://leetcode.com/problems/add-two-numbers/
-- **程式碼**: [`002_add-two-numbers.c`](./002_add-two-numbers.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：鏈結串列、數學、遞迴
+- **題目連結**：[LeetCode 0002](https://leetcode.com/problems/add-two-numbers/)
+- **C 程式**：[002_add-two-numbers.c](./002_add-two-numbers.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定兩個非空連結串列，各自以反向位數表示一個非負整數，每個節點只存一位數字。請將兩數相加，並以相同反向格式回傳和的連結串列；除數字 0 外，原數不會有前導零。
+給定兩條非空鏈結串列 `l1`、`l2`，它們分別代表一個非負整數。每個節點只存一位數，且**個位數放在串列最前面**。請將兩數相加，再用相同的反向順序回傳總和。除了數字 0 本身，輸入不會有前導零。
 
-**思路**：程式先找出較長串列，直接在其節點上逐位加上另一串列與進位。走訪結束後若仍有進位，便在尾端新增值為 1 的節點。
+例如 `[2,4,3]` 代表 `342`，不是 `243`。
 
-## Problem Statement (English)
-
-You are given two non-empty linked lists representing two non-negative integers. The digits are stored in reverse order, and each of their nodes contains a single digit. Add the two numbers and return the sum as a linked list.
-You may assume the two numbers do not contain any leading zero, except the number 0 itself.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: l1 = [2,4,3], l2 = [5,6,4]
-Output: [7,0,8]
-Explanation: 342 + 465 = 807.
+輸入：l1 = [2,4,3], l2 = [5,6,4]
+輸出：[7,0,8]
+說明：342 + 465 = 807；由個位數開始記錄，所以輸出為 [7,0,8]。
 
-Input: l1 = [0], l2 = [0]
-Output: [0]
+輸入：l1 = [0], l2 = [0]
+輸出：[0]
 
-Input: l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
-Output: [8,9,9,9,0,0,0,1]
+輸入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
+輸出：[8,9,9,9,0,0,0,1]
 ```
 
-## 限制 Constraints
+## 限制
 
-The number of nodes in each linked list is in the range [1, 100].
-0 <= Node.val <= 9
-It is guaranteed that the list represents a number that does not have leading zeros.
+- 每條串列有 `1` 到 `100` 個節點。
+- `0 <= Node.val <= 9`。
+- 串列表示的數字沒有前導零，數字 0 除外。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 用 `l1`、`l2` 同步讀取兩個數的同一位；若其中一條已走完，該位當作 `0`。
+2. `carry` 保存上一位留下的進位。每輪計算 `sum = digit1 + digit2 + carry`。
+3. 建立新節點存 `sum % 10`，並令 `carry = sum / 10`。
+4. 只要兩條輸入還有節點，或 `carry` 尚未歸零，就繼續建立結果節點。
+
+例如第一輪 `2 + 5 = 7`，存入 7、沒有進位；第二輪 `4 + 6 = 10`，存入 0、把進位 1 帶到下一輪。
+
+## 複雜度
+
+- 時間：`O(max(m, n))`，逐位走訪兩條串列。
+- 額外空間：`O(1)`；回傳結果本身需要 `O(max(m, n))` 個節點。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     struct ListNode *next;
- * };
- */
-struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
-    
-}
+struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2);
 ```

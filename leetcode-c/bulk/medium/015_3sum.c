@@ -14,13 +14,20 @@
  *
  * [中文] 題目: 三數之和
  * [中文] 題目說明:
- *     給定整數陣列 nums，找出所有由三個不同索引 i、j、k 構成且 
- *     nums[i]+nums[j]+nums[k]=0 的三元組。結果不
- *     得包含重複的三元組。
+ *     給定整數陣列 nums，找出所有由三個不同索引 i、j、k 構成，且
+ *     nums[i] + nums[j] + nums[k] = 0 的三元組。答案順序不限，但相同
+ *     的三元組只能列一次。
  *
- * [中文] 思路:
- *     程式先排序，固定第一個數後以左右雙指針尋找其相反數的兩數和。它跳過重
- *     複的固定值與左指針值，以避免輸出重複組合。
+ * [中文] 範例：
+ *     nums = [-1,0,1,2,-1,-4] -> [[-1,-1,2],[-1,0,1]]。
+ *     nums = [0,1,1] -> []；nums = [0,0,0] -> [[0,0,0]]。
+ * [中文] 限制：3 <= nums.length <= 3000，-10^5 <= nums[i] <= 10^5。
+ * [中文] 分步思路：
+ *     1. 排序後逐一固定第一個數 nums[i]。
+ *     2. 在右側用 left、right 夾逼，尋找兩數和等於 -nums[i]。
+ *     3. 總和太小就增加 left，太大就減少 right，找到答案就記錄。
+ *     4. 跳過相同的固定值及左指標值，避免產生重複三元組。
+ *     時間 O(n^2)，搜尋額外空間 O(1)，不含排序空間及輸出。
  *
  * Examples:
  *     Input: nums = [-1,0,1,2,-1,-4]
@@ -215,89 +222,69 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/**
-    Given an array nums of n integers, are there elements a, b, c in nums such
-   that a + b + c = 0?
-    Find all unique triplets in the array which gives the sum of zero.
-
-    Note:
-        The solution set must not contain duplicate triplets.
-
-    Example:
-        Given array nums = [-1, 0, 1, 2, -1, -4],
-        A solution set is:
-            [
-                [-1, 0, 1],
-                [-1, -1, 2]
-            ]
-*/
-static int compare(void *a, void *b)
-{
-    return *(int *) a - *(int *) b;
+/* qsort 比較器不能直接相減，以免整數溢位。 */
+static int compareInts(const void *a, const void *b) {
+    int x = *(const int *)a;
+    int y = *(const int *)b;
+    return (x > y) - (x < y);
 }
 
+/* ---- 易讀解法：固定一數，再用雙指標找另外兩數 ---- */
+int** threeSum(int* nums, int numsSize, int* returnSize,
+               int** returnColumnSizes) {
+    int **answer = NULL;
+    int *columnSizes = NULL;
+    int count = 0;
+    int capacity = 0;
+    int i;
 
-#define MALLOC_UNIT 5000
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume
- * caller calls free().
- */
-int **threeSum(int *nums,
-               int numsSize,
-               int *returnSize,
-               int **returnColumnSizes)
-{
     *returnSize = 0;
-    if (numsSize < 3) {
-        return NULL;
-    }
+    *returnColumnSizes = NULL;
+    if (numsSize < 3) return NULL;
 
-    qsort(nums, numsSize, sizeof(int), compare);
+    qsort(nums, (size_t)numsSize, sizeof(int), compareInts);
 
-    int count = MALLOC_UNIT, ret_sz = 0;
-    int **ret = (int **) malloc(sizeof(int *) * count);
-    *returnColumnSizes = malloc(sizeof(int) * count);
-    for (int i = 0; i < numsSize - 2; i++) {
-        /* ignore the duplicate target */
-        if (i > 0 && nums[i] == nums[i - 1])
-            continue;
+    for (i = 0; i < numsSize - 2; ++i) {
+        int left;
+        int right;
+        if (i > 0 && nums[i] == nums[i - 1]) continue;
+        if (nums[i] > 0) break;
 
-        int target = (-1) * (nums[i]), left = i + 1, right = numsSize - 1;
+        left = i + 1;
+        right = numsSize - 1;
         while (left < right) {
-            if (left > i + 1 && nums[left - 1] == nums[left]) {
-                left++;
-                continue;
-            }
+            long long sum = (long long)nums[i] + nums[left] + nums[right];
 
-            if (nums[left] + nums[right] == target) {
-                ret_sz++;
-                if (ret_sz == count) {
-                    count <<= 1;
-                    ret = realloc(ret, sizeof(int *) * count);
-                    *returnColumnSizes =
-                        realloc(*returnColumnSizes, sizeof(int) * count);
-                }
-                ret[ret_sz - 1] = malloc(sizeof(int) * 3);
-                ret[ret_sz - 1][0] = nums[i];
-                ret[ret_sz - 1][1] = nums[left];
-                ret[ret_sz - 1][2] = nums[right];
-                (*returnColumnSizes)[ret_sz - 1] = 3;
-                left++;
-            } else if (nums[left] + nums[right] < target) {
-                left++;
+            if (sum < 0) {
+                ++left;
+            } else if (sum > 0) {
+                --right;
             } else {
-                /* nums[left] + nums[right] > target */
-                right--;
+                if (count == capacity) {
+                    capacity = capacity == 0 ? 16 : capacity * 2;
+                    answer = (int **)realloc(answer, (size_t)capacity * sizeof(int *));
+                    columnSizes = (int *)realloc(columnSizes, (size_t)capacity * sizeof(int));
+                }
+                answer[count] = (int *)malloc(3 * sizeof(int));
+                answer[count][0] = nums[i];
+                answer[count][1] = nums[left];
+                answer[count][2] = nums[right];
+                columnSizes[count] = 3;
+                ++count;
+
+                ++left;
+                --right;
+                while (left < right && nums[left] == nums[left - 1]) ++left;
+                while (left < right && nums[right] == nums[right + 1]) --right;
             }
         }
     }
-    *returnSize = ret_sz;
-    return ret;
+
+    *returnSize = count;
+    *returnColumnSizes = columnSizes;
+    return answer;
 }
+
 
 /* ---- generated tests ---- */
 int main(void){

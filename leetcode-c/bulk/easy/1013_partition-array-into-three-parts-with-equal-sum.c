@@ -1,36 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1013. Partition Array Into Three Parts With Equal Sum
- * Difficulty: Easy
- * Tags: array, greedy
- * URL: https://leetcode.com/problems/partition-array-into-three-parts-with-equal-sum/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array of integers arr, return true if we can partition the
- *     array into three non-empty parts with equal sums.
- *     Formally, we can partition the array if we can find indexes i + 1 <
- *     j with (arr[0] + arr[1] + ... + arr[i] == arr[i + 1] + arr[i + 2] +
- *     ... + arr[j - 1] == arr[j] + arr[j + 1] + ... + arr[arr.length - 1])
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 陣列 of integers arr, 若成立回傳 true， we can partition the 陣列
- *     into three 非空的 parts with equal sums.
+ * 【完整中文題意】給定整數陣列 arr，判斷能否用兩個切點把它切成三段非空且連續的子陣列，並且三段的元素總和都相同。回傳是否可以完成切分。
  *
- * Examples:
- *     Input: arr = [0,2,1,-6,6,-7,9,1,2,0,1]
- *     Output: true
- *     Explanation: 0 + 2 + 1 = -6 + 6 - 7 + 9 + 1 = 2 + 0 + 1
- *     Input: arr = [0,2,1,-6,6,7,9,-1,2,0,1]
- *     Output: false
- *     Input: arr = [3,3,6,5,-2,2,5,1,-9,4]
- *     Output: true
- *     Explanation: 3 + 3 = 6 = 5 - 2 + 2 + 5 + 1 - 9 + 4
+ * 【範例】
+ * 1. arr = [0,2,1,-6,6,-7,9,1,2,0,1] → true（三段總和都是 3）
+ * 2. arr = [0,2,1,-6,6,7,9,-1,2,0,1] → false
+ * 3. arr = [3,3,6,5,-2,2,5,1,-9,4] → true（三段總和都是 6）
  *
- * Constraints:
- *   - 3 <= arr.length <= 5 * 10^4
- *   - -10^4 <= arr[i] <= 10^4
- * ==========================================================================
+ * 【限制】
+ * - 3 <= arr.length <= 5 × 10⁴
+ * - -10⁴ <= arr[i] <= 10⁴
+ *
+ * 【解題步驟】
+ * 1. 計算整個陣列的總和；若不能被 3 整除，三段不可能有相同整數總和。
+ * 2. 令目標值為總和除以 3，由左至右累加，找到第一段總和等於目標值時記下一個切點並重新累加。
+ * 3. 再找到第二段總和等於目標值的切點。第二個切點必須早於最後一個元素，才能保證第三段非空；此時剩餘部分總和也必定等於目標值。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】bool canThreePartsEqualSum(int* arr, int arrSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -204,14 +194,25 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
 bool canThreePartsEqualSum(int* arr, int arrSize) {
-    int total = 0, i, cur = 0, parts = 0, target;
-    for (i = 0; i < arrSize; ++i) total += arr[i];
-    if (total % 3) return false;
-    target = total / 3;
-    for (i = 0; i < arrSize; ++i) { cur += arr[i]; if (cur == target) { ++parts; cur = 0; } }
-    return parts >= 3;
+    int total = 0;
+    for (int i = 0; i < arrSize; ++i) total += arr[i];
+
+    if (total % 3 != 0) return false;
+    int target = total / 3;
+    int current = 0;
+    int cuts = 0;
+
+    // 找到兩個目標前綴和；第二個切點不能落在陣列末端。
+    for (int i = 0; i < arrSize; ++i) {
+        current += arr[i];
+        if (current == target) {
+            ++cuts;
+            current = 0;
+            if (cuts == 2 && i < arrSize - 1) return true;
+        }
+    }
+    return false;
 }
 
 /* ---- generated tests ---- */

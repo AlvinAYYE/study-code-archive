@@ -226,120 +226,51 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-typedef struct linked_list
-{
-    char *str;
-    struct linked_list *next;
-} linked_list_t;
+/* ---- 易讀解法：把目錄片段放入堆疊，再組成標準路徑 ---- */
+char* simplifyPath(char* path) {
+    int length = (int)strlen(path);
+    int *starts = (int *)malloc((size_t)(length + 1) * sizeof(int));
+    int *lengths = (int *)malloc((size_t)(length + 1) * sizeof(int));
+    char *result = (char *)malloc((size_t)length + 2);
+    int depth = 0;
+    int i = 0;
+    int position = 0;
+    int part;
 
-typedef struct
-{
-    linked_list_t top;
-} stack_t;
+    while (i < length) {
+        int start;
+        int partLength;
 
-stack_t* stack_init()
-{
-    stack_t *s = malloc(sizeof(stack_t));
-    (s->top).next = NULL;
-    return s;
-}
+        while (i < length && path[i] == '/') ++i;
+        start = i;
+        while (i < length && path[i] != '/') ++i;
+        partLength = i - start;
+        if (partLength == 0) continue;
 
-void stack_deinit(stack_t *s)
-{
-    linked_list_t *root = (s->top).next, *tmp;
-    while (root) {
-        tmp = root->next;
-        free(root->str);
-        free(root);
-        root = tmp;
-    }
-    free(s);
-}
-
-bool stack_is_empty(stack_t *s)
-{
-    return ((s->top).next == NULL);
-}
-
-void stack_push(stack_t *s, char *target, int target_len)
-{
-    linked_list_t *node = malloc(sizeof(linked_list_t));
-    node->str = calloc(target_len + 1, sizeof(char));
-    strncpy(node->str, target, target_len);
-    node->next = s->top.next;
-    s->top.next = node;
-}
-
-void stack_pop(stack_t *s)
-{
-    if (stack_is_empty(s))
-        return;
-
-    linked_list_t *tmp_next = (s->top.next)->next;
-    free((s->top.next)->str);
-    free(s->top.next);
-    s->top.next = tmp_next;
-}
-
-void reverse(stack_t *s)
-{
-    linked_list_t *root = s->top.next, *prev = NULL;
-    while (root) {
-        linked_list_t *tmp_next = root->next;
-        root->next = prev;
-        prev = root;
-        root = tmp_next;
-    }
-    s->top.next = prev;
-}
-
-char * simplifyPath(char * path)
-{
-    int len = strlen(path);
-    if (!len)
-        return path;
-
-    stack_t *s = stack_init();
-
-    char *tmp = NULL, *token = NULL, *delim = "/";
-    tmp = calloc(len + 1, sizeof(char)); 
-    strncpy(tmp, path, len);
-
-    token = strtok(tmp, delim);
-    while (token != NULL) {
-        int token_len = strlen(token);
-        if (token_len == 2 && !strcmp(token, "..")) {
-            // Case: `..`
-            stack_pop(s);
-        } else if (token_len != 1 || strcmp(token, ".")) {
-            // Case: general string which excludes `.`
-            stack_push(s, token, token_len);
-        }
-        token = strtok(NULL, delim);
-    }
-
-    // Reverse to perform bottom-up path created
-    reverse(s);
-
-    // Prepare the result
-    memset(path, 0, sizeof(char) * len);    
-    if (stack_is_empty(s)) {
-        strcat(path, delim);
-    } else {
-        linked_list_t *root = s->top.next;
-        while (root)
-        {
-            strcat(path, delim);
-            strcat(path, root->str);
-            root =root->next;
+        if (partLength == 1 && path[start] == '.') {
+            continue;
+        } else if (partLength == 2 && path[start] == '.' && path[start + 1] == '.') {
+            if (depth > 0) --depth;
+        } else {
+            starts[depth] = start;
+            lengths[depth] = partLength;
+            ++depth;
         }
     }
 
-    stack_deinit(s);
-    return path;
+    result[position++] = '/';
+    for (part = 0; part < depth; ++part) {
+        if (part > 0) result[position++] = '/';
+        memcpy(result + position, path + starts[part], (size_t)lengths[part]);
+        position += lengths[part];
+    }
+    result[position] = '\0';
+
+    free(starts);
+    free(lengths);
+    return result;
 }
+
 
 /* ---- generated tests ---- */
 int main(void){

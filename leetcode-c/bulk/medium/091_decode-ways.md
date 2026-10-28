@@ -1,63 +1,50 @@
-# 0091. Decode Ways《解碼方法》
+# 0091. Decode Ways｜解碼方法
 
-- **Difficulty**: Medium
-- **Tags**: string, dynamic-programming
-- **題目連結**: https://leetcode.com/problems/decode-ways/
-- **程式碼**: [`091_decode-ways.c`](./091_decode-ways.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：字串、動態規劃
+- **題目連結**：[LeetCode 0091](https://leetcode.com/problems/decode-ways/)
+- **C 程式**：[091_decode-ways.c](./091_decode-ways.c)
 
-## 題目說明（中文）
+## 題目說明
 
-數字字串可依 1 對應 A、2 對應 B，一直到 26 對應 Z 的規則解碼。給定只含數字的字串，求所有有效完整解碼方式的數量；若無法有效解碼則回傳 0。前導 0 不可單獨解碼，且答案保證在 32 位元整數範圍內。
+訊息以數字字串 `s` 編碼：`1` 對應 A、`2` 對應 B，一直到 `26` 對應 Z。由於同一段數字可能有不同切法，請回傳所有有效解碼方式的數量。每一段只能是 `1` 到 `26`；`0` 不能單獨解碼，也不能把 `06` 當成 `6`。若整串無法解碼，回傳 `0`。
 
-**思路**：以三個變數滾動保存前綴 DP 值：目前字元可單獨解碼時承接前一值，與前字元能組成 10 到 26 時再加上前兩步的值。遇到 0 則必須由前一個 1 或 2 配對，否則立即失敗。
-
-## Problem Statement (English)
-
-You have intercepted a secret message encoded as a string of numbers. The message is decoded via the following mapping:
-"1" -> 'A'
-"2" -> 'B'
-...
-"25" -> 'Y'
-"26" -> 'Z'
-However, while decoding the message, you realize that there are many different ways you can decode the message because some codes are contained in other codes ("2" and "5" vs "25").
-For example, "11106" can be decoded into:
-Note: there may be strings that are impossible to decode.
-
-Given a string s containing only digits, return the number of ways to decode it. If the entire string cannot be decoded in any valid way, return 0.
-The test cases are generated so that the answer fits in a 32-bit integer.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: s = "12"
-Output: 2
-Explanation:
-"12" could be decoded as "AB" (1 2) or "L" (12).
+輸入：s = "12"
+輸出：2
+說明：可切成 1、2（AB），或 12（L）。
 
-Input: s = "226"
-Output: 3
-Explanation:
-"226" could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
+輸入：s = "226"
+輸出：3
+說明：可切成 2、26（BZ）、22、6（VF），或 2、2、6（BBF）。
 
-Input: s = "06"
-Output: 0
-Explanation:
-"06" cannot be mapped to "F" because of the leading zero ("6" is different from "06"). In this case, the string is not a valid encoding, so return 0.
+輸入：s = "06"
+輸出：0
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= s.length <= 100
-s contains only digits and may contain leading zero(s).
+- `1 <= s.length <= 100`。
+- `s` 只包含數字，可能以零開頭。
+- 答案可放入 32 位元有號整數。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. `currentWays` 表示處理到前一個字元為止的解碼數，`previousWays` 表示再往前一個前綴的解碼數。
+2. 第一個字元若不是 `0`，有一種解法；若是 `0`，就沒有有效解法。
+3. 每處理新字元，若它不是 `0`，可當成一位數，沿用 `currentWays`。
+4. 再把前後兩位組成數字；只有值介於 10 到 26 時，才可作為兩位數，並加上 `previousWays`。
+5. 更新兩個前綴計數繼續往右掃描。若遇到 `0` 且不能和前一位組成 10 或 20，計數自然變成 0。
+
+## 複雜度
+
+- 時間：`O(n)`，每個字元處理一次。
+- 額外空間：`O(1)`，只保存相鄰兩個前綴的計數。
+
+## LeetCode C 函式簽名
 
 ```c
-int numDecodings(char* s) {
-    
-}
+int numDecodings(char* s);
 ```

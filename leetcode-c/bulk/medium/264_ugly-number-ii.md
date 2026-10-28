@@ -1,44 +1,31 @@
-# 0264. Ugly Number II《醜數 II》
+# LeetCode 0264. Ugly Number II
 
-- **Difficulty**: Medium
-- **Tags**: hash-table, math, dynamic-programming, heap-(priority-queue
-- **題目連結**: https://leetcode.com/problems/ugly-number-ii/
-- **程式碼**: [`264_ugly-number-ii.c`](./264_ugly-number-ii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 醜數 II
 
-## 題目說明（中文）
+## 題目
 
-醜數是質因數只包含 2、3、5 的正整數。給定 n，回傳第 n 個醜數，並將 1 視為第一個醜數。
+醜數是正整數，且其質因數只能是 2、3、5。依從小到大的順序，回傳第 n 個醜數；1 是第一個醜數。
 
-**思路**：以動態規劃陣列保存已生成的醜數，並用三個指標維護下一個乘以 2、3、5 的候選值。每次選最小候選，且所有產生該值的指標都前進以去除重複。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：n = 10；輸出：12。前 10 個醜數是 1、2、3、4、5、6、8、9、10、12。
+2. 輸入：n = 1；輸出：1。
 
-An ugly number is a positive integer whose prime factors are limited to 2, 3, and 5.
-Given an integer n, return the nth ugly number.
-Example 1:
-Example 2:
-Constraints:
+## 限制
 
-## 範例 Examples
+- 1 <= n <= 1690
 
-```text
-Input: n = 10
-Output: 12
-Explanation: [1, 2, 3, 4, 5, 6, 8, 9, 10, 12] is the sequence of the first 10 ugly numbers.
+## 解題思路
 
-Input: n = 1
-Output: 1
-Explanation: 1 has no prime factors, therefore all of its prime factors are limited to 2, 3, and 5.
-```
+1. 第 1 個醜數先設為 1。後續每個醜數只能由已知醜數乘上 2、3 或 5 產生。
+2. 用三個索引分別指出目前尚未使用的乘 2、乘 3、乘 5 候選值。
+3. 每輪選三個候選值的最小者作為下一個醜數，再把所有產生相同最小值的索引都往前移，避免重複。
+4. 重複直到填滿 n 個值，最後一個就是答案。
 
-## 限制 Constraints
+## 複雜度
 
-1 <= n <= 1690
+時間 O(n)，額外空間 O(n)。
 
-## 官方 C 函式簽名 Signature
+## C 函式簽名
 
-```c
-int nthUglyNumber(int n) {
-    
-}
-```
+int nthUglyNumber(int n)

@@ -12,14 +12,154 @@
  * ==========================================================================
  */
 #include <stdio.h>
+#include <ctype.h>
+#include <stdlib.h>
 #include <string.h>
 
+static char *read_line(FILE *in) {
+    size_t capacity = 128;
+    size_t length = 0;
+    char *line = (char *)malloc(capacity);
+    int ch;
+
+    if (line == NULL) {
+        return NULL;
+    }
+    while ((ch = fgetc(in)) != EOF && ch != '\n') {
+        if (ch == '\r') {
+            continue;
+        }
+        if (length + 1 >= capacity) {
+            char *grown;
+            capacity *= 2;
+            grown = (char *)realloc(line, capacity);
+            if (grown == NULL) {
+                free(line);
+                return NULL;
+            }
+            line = grown;
+        }
+        line[length++] = (char)ch;
+    }
+    if (ch == EOF && length == 0) {
+        free(line);
+        return NULL;
+    }
+    line[length] = '\0';
+    return line;
+}
+
+static int line_is_blank(const char *line) {
+    while (*line != '\0') {
+        if (!isspace((unsigned char)*line)) {
+            return 0;
+        }
+        line++;
+    }
+    return 1;
+}
+
+static char *read_nonblank_line(FILE *in) {
+    char *line;
+    while ((line = read_line(in)) != NULL) {
+        if (!line_is_blank(line)) {
+            return line;
+        }
+        free(line);
+    }
+    return NULL;
+}
+
+void solve_uva482(FILE *in, FILE *out) {
+    char *line = read_nonblank_line(in);
+    int test_cases;
+    int test_case;
+
+    if (line == NULL) {
+        return;
+    }
+    test_cases = (int)strtol(line, NULL, 10);
+    free(line);
+
+    for (test_case = 0; test_case < test_cases; test_case++) {
+        char *index_line = read_nonblank_line(in);
+        char *value_line;
+        int *positions;
+        size_t capacity = 16;
+        size_t count = 0;
+        char *cursor;
+        char **ordered;
+        char *token;
+        size_t i;
+
+        if (index_line == NULL) {
+            return;
+        }
+        positions = (int *)malloc(capacity * sizeof(*positions));
+        if (positions == NULL) {
+            free(index_line);
+            return;
+        }
+        cursor = index_line;
+        while (*cursor != '\0') {
+            char *end;
+            long position = strtol(cursor, &end, 10);
+            if (end == cursor) {
+                cursor++;
+                continue;
+            }
+            if (count == capacity) {
+                int *grown;
+                capacity *= 2;
+                grown = (int *)realloc(positions, capacity * sizeof(*positions));
+                if (grown == NULL) {
+                    free(positions);
+                    free(index_line);
+                    return;
+                }
+                positions = grown;
+            }
+            positions[count++] = (int)position;
+            cursor = end;
+        }
+        free(index_line);
+
+        value_line = read_nonblank_line(in);
+        if (value_line == NULL) {
+            free(positions);
+            return;
+        }
+        ordered = (char **)calloc(count, sizeof(*ordered));
+        if (ordered == NULL) {
+            free(value_line);
+            free(positions);
+            return;
+        }
+
+        token = strtok(value_line, " \t");
+        i = 0;
+        while (token != NULL && i < count) {
+            if (positions[i] >= 1 && (size_t)positions[i] <= count) {
+                ordered[positions[i] - 1] = token;
+            }
+            i++;
+            token = strtok(NULL, " \t");
+        }
+
+        if (test_case > 0) {
+            fputc('\n', out);
+        }
+        for (i = 0; i < count; i++) {
+            fprintf(out, "%s\n", ordered[i] != NULL ? ordered[i] : "");
+        }
+
+        free(ordered);
+        free(value_line);
+        free(positions);
+    }
+}
+
 int main(void) {
-    const char *in[3] = {"3.14", "2.71", "1.41"};
-    int pos[3] = {2, 3, 1};
-    const char *out[3];
-    for (int i = 0; i < 3; i++) out[pos[i] - 1] = in[i];
-    int ok = (strcmp(out[0], "1.41") == 0);
-    printf("%s: UVa 482 - Permutation Arrays\n", ok ? "PASS" : "FAIL");
-    return ok ? 0 : 1;
+    solve_uva482(stdin, stdout);
+    return 0;
 }

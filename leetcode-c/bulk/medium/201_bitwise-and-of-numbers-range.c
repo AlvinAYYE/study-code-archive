@@ -1,37 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0201. Bitwise AND of Numbers Range
+ * LeetCode 0201. Bitwise AND of Numbers Range（範圍內數字的按位 AND）
  * Difficulty: Medium
- * Tags: bit-manipulation
- * URL: https://leetcode.com/problems/bitwise-and-of-numbers-range/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given two integers left and right that represent the range [left,
- *     right], return the bitwise AND of all numbers in this range,
- *     inclusive.
- *
- * [中文] 題目: 數字範圍的位元 AND
- * [中文] 題目說明:
- *     給定 left 與 right，代表閉區間 [left, right
- *     ]，請回傳區間內所有整數做位元 AND 的結果。輸入滿足 0 ≤ l
- *     eft ≤ right ≤ 2^31 - 1。
- *
- * [中文] 思路:
- *     程式由低位元開始清除遮罩中的位元，直到 left 與 right 的
- *     保留位元相同；最終以 left 與此共同前綴遮罩做 AND。
- *
- * Examples:
- *     Input: left = 5, right = 7
- *     Output: 4
- *     Input: left = 0, right = 0
- *     Output: 0
- *     Input: left = 1, right = 2147483647
- *     Output: 0
- *
- * Constraints:
- *   - 0 <= left <= right <= 231 - 1
- * ==========================================================================
+ * 題意：給定兩個整數 left 和 right，請計算從 left 到 right（包含兩端）所有整數的按位 AND。
+ * 範例：
+ *   1. 輸入：left = 5，right = 7；輸出：4。因為 5 AND 6 AND 7 = 4。
+ *   2. 輸入：left = 0，right = 0；輸出：0。
+ *   3. 輸入：left = 1，right = 2147483647；輸出：0。
+ * 限制：
+ *   - 0 <= left <= right <= 2^31 - 1
+ * 解法：
+ *   1. 把 left 和 right 同時右移，直到兩者相同。右移會保留共同的高位前綴，並逐步移除可能不同的低位。
+ *   2. 記錄右移次數 shift；相同前綴就是整個區間 AND 後一定保留的位元。
+ *   3. 最後把共同前綴左移 shift 位，低位補 0，得到區間 AND。
+ * 複雜度：時間 O(31)，額外空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,16 +186,18 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
+int rangeBitwiseAnd(int left, int right) {
+    int shift = 0;
 
-int rangeBitwiseAnd(int m, int n)
-{
-    int base = 0, ret = INT_MAX;
-    while ((m & ret) != (n & ret)) {
-        int cur = (0x1 << (base++));
-        ret &= ~cur;
+    // 區間端點尚有不同位元時，捨去兩端相同位置的最低位。
+    while (left != right) {
+        left >>= 1;
+        right >>= 1;
+        shift++;
     }
-    return m & ret;
+
+    // 找到共同高位前綴後，補回被移除的低位 0。
+    return left << shift;
 }
 
 /* ---- generated tests ---- */

@@ -208,8 +208,13 @@ static int lc_dummy_;
 struct ListNode* deleteDuplicates(struct ListNode* head) {
     struct ListNode *cur = head;
     while (cur && cur->next) {
-        if (cur->val == cur->next->val) cur->next = cur->next->next;
-        else cur = cur->next;
+        if (cur->val == cur->next->val) {
+            /* 串列已排序，重複值相鄰；跳過下一個節點即可保留一份。 */
+            cur->next = cur->next->next;
+        } else {
+            /* 值不同時才往前走，避免漏掉連續多個重複值。 */
+            cur = cur->next;
+        }
     }
     return head;
 }

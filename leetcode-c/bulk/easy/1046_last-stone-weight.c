@@ -1,44 +1,25 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1046. Last Stone Weight
- * Difficulty: Easy
- * Tags: array, heap-(priority-queue
- * URL: https://leetcode.com/problems/last-stone-weight/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     You are given an array of integers stones where stones[i] is the
- *     weight of the ith stone.
- *     We are playing a game with the stones. On each turn, we choose the
- *     heaviest two stones and smash them together. Suppose the heaviest
- *     two stones have weights x and y with x <= y. The result of this
- *     smash is:
- *     At the end of the game, there is at most one stone left.
- *     Return the weight of the last remaining stone. If there are no
- *     stones left, return 0.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     給定一個整數陣列 stones where stones[i] is the weight of the ith stone.
+ * 【完整中文題意】給定每顆石頭的正整數重量。每回合取出目前最重的兩顆 x 和 y（x <= y）互相碰撞：若 x == y，兩顆都消失；若 x != y，較輕的消失，較重的留下重量 y - x。重複直到最多只剩一顆，回傳最後重量；若全部消失則回傳 0。
  *
- * Examples:
- *     Input: stones = [2,7,4,1,8,1]
- *     Output: 1
- *     Explanation:
- *     We combine 7 and 8 to get 1 so the array converts to
- *     [2,4,1,1,1] then,
- *     we combine 2 and 4 to get 2 so the array converts to [2,1,1,1]
- *     then,
- *     we combine 2 and 1 to get 1 so the array converts to [1,1,1]
- *     then,
- *     we combine 1 and 1 to get 0 so the array converts to [1] then
- *     that's the value of the last stone.
- *     Input: stones = [1]
- *     Output: 1
+ * 【範例】
+ * 1. stones = [2,7,4,1,8,1] → 1
+ * 2. stones = [1] → 1
  *
- * Constraints:
- *   - 1 <= stones.length <= 30
- *   - 1 <= stones[i] <= 1000
- * ==========================================================================
+ * 【限制】
+ * - 1 <= stones.length <= 30
+ * - 1 <= stones[i] <= 1000
+ *
+ * 【解題步驟】
+ * 1. 每回合用排序找出最重的兩顆石頭。
+ * 2. 若重量相同，兩顆都移除；若不同，移除兩顆並把差值放回陣列。
+ * 3. 陣列剩下一顆時回傳它；沒有石頭時回傳 0。
+ *
+ * 【複雜度】時間 O(n² log n)（每回合排序，最多進行 n - 1 回合）；空間 O(log n)（排序呼叫堆疊；不計輸入陣列）
+ *
+ * 【LeetCode C 函式】int lastStoneWeight(int* stones, int stonesSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -212,37 +193,27 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#include <stdlib.h>
-
-int cmpi(const void *x, const void *y) {
-  int a = *(const int *)x;
-  int b = *(const int *)y;
-
-  return (a > b) - (a < b);
+static int compareWeights(const void* left, const void* right) {
+    int a = *(const int*)left;
+    int b = *(const int*)right;
+    return (a > b) - (a < b);
 }
 
-int lastStoneWeight(int *stones, int stonesSize) {
-  while (1) {
-    qsort(stones, stonesSize, sizeof(int), cmpi);
-    if (stonesSize >= 2) {
-      int e1 = stones[stonesSize - 1];
-      int diff = e1 - stones[stonesSize - 2];
-      if (diff) {
-        stones[stonesSize - 2] = diff;
-        stonesSize -= 1;
-      } else
+int lastStoneWeight(int* stones, int stonesSize) {
+    while (stonesSize > 1) {
+        // 升冪排序後，最後兩個元素就是當前最重的兩顆。
+        qsort(stones, (size_t)stonesSize, sizeof(int), compareWeights);
+        int heaviest = stones[stonesSize - 1];
+        int secondHeaviest = stones[stonesSize - 2];
         stonesSize -= 2;
-    } else {
-      if (stonesSize == 0)
-        return 0;
-      else if (stonesSize == 1) {
-        return stones[0];
-      }
+
+        // 相同重量會同時消失；不同重量留下差值。
+        if (heaviest > secondHeaviest) {
+            stones[stonesSize++] = heaviest - secondHeaviest;
+        }
     }
-  }
-  // unreachable.
-  return 0;
+
+    return stonesSize == 0 ? 0 : stones[0];
 }
 
 /* ---- generated tests ---- */

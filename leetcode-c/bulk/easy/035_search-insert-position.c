@@ -14,13 +14,25 @@
  *
  * [中文] 題目: 搜尋插入位置
  * [中文] 題目說明:
- *     給定遞增排序且元素互異的整數陣列 nums 與目標值 target，
- *     若 target 已存在就回傳其索引。否則回傳將它插入後仍能維持排序
- *     的索引，且需使用 O(log n) 時間。
+ *     給定嚴格遞增且元素互異的整數陣列 nums 與目標值 target。若 target
+ *     已存在，回傳其索引；否則回傳將它插入後仍能維持排序的位置。演算法必須
+ *     達到 O(log n) 時間。
  *
- * [中文] 思路:
- *     以 head、tail 進行二分搜尋；找不到時，最後的 head 正
- *     好是 target 應插入的位置。
+ * [中文] 範例:
+ *     1. nums = [1,3,5,6]、target = 5，輸出 2。
+ *     2. nums = [1,3,5,6]、target = 2，輸出 1。
+ *     3. nums = [1,3,5,6]、target = 7，輸出 4。
+ *
+ * [中文] 限制:
+ *     - 1 <= nums.length <= 10^4
+ *     - -10^4 <= nums[i], target <= 10^4
+ *     - nums 的元素互異且按嚴格遞增順序排列。
+ *
+ * [中文] 直觀解題思路:
+ *     1. 用 head、tail 表示尚待搜尋的閉區間，以中點 mid 比較 target。
+ *     2. 中點較小就捨棄左半部，否則捨棄右半部；相等時直接回傳 mid。
+ *     3. 找不到時 head 會停在第一個大於 target 的位置，也就是插入索引。
+ *        時間 O(log n)，額外空間 O(1)。
  *
  * Examples:
  *     Input: nums = [1,3,5,6], target = 5
@@ -217,6 +229,7 @@ int searchInsert(int* nums, int numsSize, int target)
 	int tail = numsSize-1;
 	while (head <= tail)
 	{
+		/* 這種寫法避免 head + tail 直接相加可能溢位。 */
 		int mid = (tail-head)/2 + head;
 		if (nums[mid] == target)
 		{
@@ -230,7 +243,7 @@ int searchInsert(int* nums, int numsSize, int target)
 		}
 	}
 
-	return head;
+	return head;  /* 搜尋區間清空時，head 就是應插入的位置。 */
 }
 
 

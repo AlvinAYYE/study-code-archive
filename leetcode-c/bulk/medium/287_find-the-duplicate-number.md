@@ -1,51 +1,35 @@
-# 0287. Find the Duplicate Number《尋找重複數》
+# LeetCode 0287. Find the Duplicate Number
 
-- **Difficulty**: Medium
-- **Tags**: array, two-pointers, binary-search, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/find-the-duplicate-number/
-- **程式碼**: [`287_find-the-duplicate-number.c`](./287_find-the-duplicate-number.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+Title-CN: 尋找重複數字
 
-## 題目說明（中文）
+## 題目
 
-nums 含有 n + 1 個整數，且每個值都在 [1, n] 範圍內，其中恰有一個數值重複出現，重複次數可能超過兩次。請找出該重複數，且不得修改陣列並只能使用 O(1) 額外空間。
+陣列 nums 長度為 n+1，元素值介於 1 和 n，且只有一個不同數字重複出現（可能出現多次）。請找出這個重複數字，不可修改陣列，並只使用常數額外空間。
 
-**思路**：把陣列值視為下一個索引，使用 Floyd 快慢指標先在環中相遇。再讓其中一指標回到起點並同步前進，第二次相遇的位置就是重複值。
+## 範例
 
-## Problem Statement (English)
+1. 輸入：nums = [1,3,4,2,2]；輸出：2。
+2. 輸入：nums = [3,1,3,4,2]；輸出：3。
+3. 輸入：nums = [3,3,3,3,3]；輸出：3。
 
-Given an array of integers nums containing n + 1 integers where each integer is in the range [1, n] inclusive.
-There is only one repeated number in nums, return this repeated number.
-You must solve the problem without modifying the array nums and using only constant extra space.
-Example 1:
-Example 2:
-Example 3:
-Constraints:
-Follow up:
+## 限制
 
-## 範例 Examples
+- 1 <= n <= 10^5
+- nums.length == n + 1
+- 1 <= nums[i] <= n
+- 只有一個不同數字重複，且重複至少兩次
 
-```text
-Input: nums = [1,3,4,2,2]
-Output: 2
+## 解題思路
 
-Input: nums = [3,1,3,4,2]
-Output: 3
+1. 把每個索引 i 看成節點，nums[i] 看成下一個索引。因為索引有 n+1 個，但可指向的值只有 1 到 n，走訪必定進入循環。
+2. 重複的數字就是循環入口。
+3. 使用 Floyd 快慢指標：快指標一次走兩步，慢指標一次走一步，兩者在循環內相遇。
+4. 把一個指標移回索引 0，兩者再各走一步；再次相遇的位置就是循環入口，也就是重複數字。
 
-Input: nums = [3,3,3,3,3]
-Output: 3
-```
+## 複雜度
 
-## 限制 Constraints
+時間 O(n)，額外空間 O(1)，不修改輸入陣列。
 
-1 <= n <= 105
-nums.length == n + 1
-1 <= nums[i] <= n
-All the integers in nums appear only once except for precisely one integer which appears two or more times.
+## C 函式簽名
 
-## 官方 C 函式簽名 Signature
-
-```c
-int findDuplicate(int* nums, int numsSize) {
-    
-}
-```
+int findDuplicate(int* nums, int numsSize)

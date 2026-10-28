@@ -1,34 +1,20 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1331. Rank Transform of an Array
- * Difficulty: Easy
- * Tags: array, hash-table, sorting
- * URL: https://leetcode.com/problems/rank-transform-of-an-array/
- * Source: community solution, repo self_sol (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array of integers arr, replace each element with its rank.
- *     The rank represents how large the element is. The rank has the
- *     following rules:
+ * Title-CN: 陣列的數值排名
+ * LeetCode 1331. Rank Transform of an Array (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 陣列 of integers arr, replace each element with its rank.
+ * 題意翻譯：給定整數陣列 arr，請把每個數值替換成它的排名。最小的不同數值排名為
+ * 1；數值越大排名越高；相同數值要得到相同排名；排名之間不留空號。例如值 10、20、
+ * 40 的排名分別是 1、2、3。
  *
- * Examples:
- *     Input: arr = [40,10,20,30]
- *     Output: [4,1,2,3]
- *     Explanation: 40 is the largest element. 10 is the smallest. 20
- *     is the second smallest. 30 is the third smallest.
- *     Input: arr = [100,100,100]
- *     Output: [1,1,1]
- *     Explanation: Same elements share the same rank.
- *     Input: arr = [37,12,28,9,100,56,80,5,12]
- *     Output: [5,3,4,2,8,6,7,1,3]
+ * 範例 1：arr = [40,10,20,30]，輸出 [4,1,2,3]。
+ * 範例 2：arr = [100,100,100]，輸出 [1,1,1]。
+ * 範例 3：arr = [37,12,28,9,100,56,80,5,12]，輸出 [5,3,4,2,8,6,7,1,3]。
  *
- * Constraints:
- *   - 0 <= arr.length <= 10^5
- *   - -10^9 <= arr[i] <= 10^9
- * ==========================================================================
+ * 限制：0 <= arr.length <= 10^5；-10^9 <= arr[i] <= 10^9。
+ *
+ * 解題思路：先複製並排序陣列，去掉重複值後，每個值在排序結果中的位置加 1 就是
+ * 它的排名。接著對原陣列每個元素用二分搜尋找到該位置，寫入答案。排序 O(n log n)，
+ * 每個元素查找 O(log n)，總時間 O(n log n)，空間 O(n)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,26 +187,52 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
+static int compareIntegers(const void *left, const void *right) {
+    int a = *(const int *)left;
+    int b = *(const int *)right;
+    return (a > b) - (a < b);
+}
 
-int cmp1331(const void* a, const void* b) { return (*(const int*)a) - (*(const int*)b); }
-int* arrayRankTransform(int* arr, int arrSize, int* returnSize) {
-    int *cp, *out, i, u = 0;
-    out = (int*)malloc((size_t)arrSize * sizeof(int));
-    cp = (int*)malloc((size_t)arrSize * sizeof(int));
-    memcpy(cp, arr, (size_t)arrSize * sizeof(int));
-    qsort(cp, (size_t)arrSize, sizeof(int), cmp1331);
-    { int w = 0;
-      for (i = 0; i < arrSize; ++i) if (i == 0 || cp[i] != cp[i-1]) cp[w++] = cp[i];
-      u = w; }
-    for (i = 0; i < arrSize; ++i) {
-        int lo = 0, hi = u;
-        while (lo < hi) { int mid = (lo + hi) / 2; if (cp[mid] < arr[i]) lo = mid + 1; else hi = mid; }
-        out[i] = lo + 1;
+int *arrayRankTransform(int *arr, int arrSize, int *returnSize) {
+    int *sorted;
+    int *ranked;
+    int uniqueCount = 0;
+    int i;
+
+    *returnSize = arrSize;
+    if (arrSize == 0) return NULL;
+    sorted = malloc(sizeof(*sorted) * (size_t)arrSize);
+    ranked = malloc(sizeof(*ranked) * (size_t)arrSize);
+    if (sorted == NULL || ranked == NULL) {
+        free(sorted);
+        free(ranked);
+        *returnSize = 0;
+        return NULL;
     }
-    free(cp);
-    *returnSize = arrSize; return out;
+    memcpy(sorted, arr, sizeof(*sorted) * (size_t)arrSize);
+    qsort(sorted, (size_t)arrSize, sizeof(*sorted), compareIntegers);
+
+    for (i = 0; i < arrSize; ++i) {
+        if (i == 0 || sorted[i] != sorted[i - 1]) {
+            sorted[uniqueCount++] = sorted[i];
+        }
+    }
+    for (i = 0; i < arrSize; ++i) {
+        int low = 0;
+        int high = uniqueCount;
+        while (low < high) {
+            int middle = low + (high - low) / 2;
+            if (sorted[middle] < arr[i]) {
+                low = middle + 1;
+            } else {
+                high = middle;
+            }
+        }
+        ranked[i] = low + 1;
+    }
+
+    free(sorted);
+    return ranked;
 }
 
 /* ---- generated tests ---- */

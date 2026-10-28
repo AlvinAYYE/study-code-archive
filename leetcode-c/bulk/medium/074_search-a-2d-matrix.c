@@ -209,42 +209,25 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
+/* ---- 易讀解法：將矩陣攤平後直接二分搜尋 ---- */
+bool searchMatrix(int** matrix, int matrixSize, int* matrixColSize, int target) {
+    int rows = matrixSize;
+    int columns = matrixColSize[0];
+    int left = 0;
+    int right = rows * columns - 1;
 
+    while (left <= right) {
+        int middle = left + (right - left) / 2;
+        int row = middle / columns;
+        int column = middle % columns;
+        int value = matrix[row][column];
 
-bool searchMatrix(int** matrix, int matrixSize, int* matrixColSize, int target)
-{
-	if (matrixSize == 0)
-	{
-		return false;
-	}
-
-	int colSize = matrixColSize[0];
-	int head = 0;
-	int tail = matrixSize*colSize - 1;
-
-	while (head <= tail)
-	{        
-		int mid = head + (tail-head)/2;
-		int r = mid / colSize;
-		int c = mid % colSize;
-		if (matrix[r][c] < target)
-		{
-			head = mid+1;
-		} else if (matrix[r][c] > target)
-		{
-			tail = mid-1;
-		} else
-		{
-			return true;
-		}
-	}
-
-	return false;
+        if (value == target) return true;
+        if (value < target) left = middle + 1;
+        else right = middle - 1;
+    }
+    return false;
 }
-
-
 
 /* ---- generated tests ---- */
 int main(void){

@@ -16,39 +16,40 @@
  *
  * [中文] 題目: 單字接龍
  * [中文] 題目說明:
- *     給定 beginWord、endWord 與字典 wordList，
- *     轉換序列中每一步只能改變一個字母，且每個轉換後的單字都必須在字典中。
- *     請回傳從 beginWord 到 endWord 的最短轉換序列所含
- *     單字數；若不存在則回傳 0。所有單字等長且由小寫英文字母組成，beg
- *     inWord 與 endWord 不同，字典單字不重複。單字長度至多
- *      10，wordList 長度至多 5000。
+ *     給定 beginWord、endWord 與字典 wordList。轉換序列每一步只能改變
+ *     一個字母，且轉換後的每個單字都必須在 wordList 中。請回傳從
+ *     beginWord 到 endWord 的最短轉換序列所含單字數；若不存在則回傳 0。
  *
- * [中文] 思路:
- *     從 beginWord 做廣度優先搜尋，以兩個佇列分層處理；對每個未
- *     拜訪字典單字檢查是否只差一個字母，首次到達 endWord 即得到最
- *     短層數。
+ * [中文] 範例：
+ *   範例 1：
+ *     輸入：beginWord = "hit", endWord = "cog",
+ *           wordList = ["hot","dot","dog","lot","log","cog"]
+ *     輸出：5
+ *     說明：最短序列之一為 hit -> hot -> dot -> dog -> cog，共 5 個單字。
+ *   範例 2：
+ *     輸入：beginWord = "hit", endWord = "cog",
+ *           wordList = ["hot","dot","dog","lot","log"]
+ *     輸出：0
+ *     說明：endWord 不在字典中，因此不存在合法序列。
  *
- * Examples:
- *     Input: beginWord = "hit", endWord = "cog", wordList =
- *     ["hot","dot","dog","lot","log","cog"]
- *     Output: 5
- *     Explanation: One shortest transformation sequence is "hit" ->
- *     "hot" -> "dot" -> "dog" -> cog", which is 5 words long.
- *     Input: beginWord = "hit", endWord = "cog", wordList =
- *     ["hot","dot","dog","lot","log"]
- *     Output: 0
- *     Explanation: The endWord "cog" is not in wordList, therefore
- *     there is no valid transformation sequence.
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= beginWord.length <= 10
  *   - endWord.length == beginWord.length
  *   - 1 <= wordList.length <= 5000
  *   - wordList[i].length == beginWord.length
- *   - beginWord, endWord, and wordList[i] consist of lowercase
- *   English letters.
+ *   - beginWord、endWord 與 wordList[i] 僅包含小寫英文字母。
  *   - beginWord != endWord
- *   - All the words in wordList are unique.
+ *   - wordList 中的單字互不重複。
+ *
+ * [中文] 直觀解題思路：
+ *   1. 把每個單字視為圖上的節點；兩個單字只差一個字母時，兩者之間有邊。
+ *   2. 從 beginWord 做 BFS。q1 保存目前層，q2 收集下一層，d 記錄已走邊數。
+ *   3. 對目前層的每個單字，掃描所有尚未拜訪的字典單字，用 one_diff 判斷
+ *      是否恰好只差一個字母；符合者標記並加入下一層。
+ *   4. 第一次遇到 endWord 時一定走的是最短路徑，立即回傳層數。
+ *   5. 佇列耗盡仍未找到時，bfs 回傳 -1，外層加一後得到題目要求的 0。
+ *
+ * 若字典有 N 個、單字長 L，時間 O(N^2 L)，visited 與佇列空間 O(N)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -289,7 +290,7 @@ int bfs(q_t *q1, q_t *q2, char *end, char **dict, int sz, int *v) {
                 if (v[i]) continue;
                 b = dict[i];
                 if (one_diff(a, b)) {
-                    if (!strcmp(b, end)) {  // done!
+                    if (!strcmp(b, end)) {  /* BFS 首次到達即為最短路徑 */
                         return d;
                     }
                     v[i] = 1;
@@ -297,7 +298,7 @@ int bfs(q_t *q1, q_t *q2, char *end, char **dict, int sz, int *v) {
                 }
             }
         }
-        tmp = q1;  // switch queues
+        tmp = q1;  /* 交換目前層與下一層佇列 */
         q1 = q2;
         q2 = tmp;
         d ++;
@@ -314,7 +315,7 @@ int ladderLength(char* beginWord, char* endWord, char** wordList, int wordListSi
     //assert(visited && q1);
     q2.q = &q1.q[wordListSize];
     
-    q1.q[q1.n ++] = beginWord;  // initialize q1
+    q1.q[q1.n ++] = beginWord;  /* BFS 起點 */
     
     n = bfs(&q1, &q2, endWord, wordList, wordListSize, visited);
     

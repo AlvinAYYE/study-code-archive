@@ -209,61 +209,61 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-409. Longest Palindrome
-
-Given a string which consists of lowercase or uppercase letters, find the length of the longest palindromes that can be built with those letters.
-
-This is case sensitive, for example "Aa" is not considered a palindrome here.
-
-Note:
-Assume the length of given string will not exceed 1,010.
-
-
-Example: 
-Input:
-"abccccdd"
-
-Output:
-7
-
-Explanation:
-One longest palindrome that can be built is "dccaccd", whose length is 7.
-*/
+/* 解題說明
+ * 題目：409. Longest Palindrome（最長回文）
+ *
+ * 題意完整翻譯：
+ *     給定只含大小寫英文字母的字串 s，使用其中的字母可以組成的最長回文，最多能有多長？大小寫視為不同字母，例如 A 與 a
+ *     不能互相配對。只需回傳最長回文的長度，不必建立回文字串。
+ *
+ * 範例：
+ *   輸入：s = "abccccdd"
+ *   輸出：7
+ *   說明：可組成 "dccaccd"，長度為 7。
+ *   輸入：s = "a"
+ *   輸出：1
+ *   說明：唯一的字母 a 可放在回文中央，長度為 1。
+ *
+ * 限制：
+ *   - 1 <= s.length <= 2000
+ *   - s 只含大小寫英文字母
+ *
+ * 解題步驟：
+ *   1. 分別統計 26 個小寫字母與 26 個大寫字母的次數。
+ *   2. 每種字母可放入左右兩側的數量是其出現次數向下取偶數，例如 5 個可用 4 個。
+ *   3. 若有任一字母出現奇數次，可從其中一種字母取 1 個放在回文中央。
+ *
+ * 複雜度：
+ *   時間：O(n + 52)，掃描字串並檢查固定 52 種字母。
+ *   空間：O(1)，只使用 52 個計數欄位。
+ */
 
 int longestPalindrome(char* s) {
-    int n[52] = { 0 };
-    int i, k, odd;
-    while (*s) {
-        if (*s >= 'a') i = *s - 'a';
-        else           i = *s - 'A' + 26;
-        n[i] ++;
-        s ++;
+    int frequency[52] = {0};
+    int length = 0;
+    bool hasMiddle = false;
+    int i;
+
+    for (i = 0; s[i] != '\0'; ++i) {
+        int letter;
+
+        if (s[i] >= 'a') {
+            letter = s[i] - 'a';
+        } else {
+            letter = s[i] - 'A' + 26;
+        }
+        ++frequency[letter];
     }
-    k = 0;
-    odd = 0;
-    for (i = 0; i < 52; i ++) {
-        odd |= n[i] % 2;
-        k += n[i] - (n[i] % 2); // can use part of them!!!
+
+    for (i = 0; i < 52; ++i) {
+        length += (frequency[i] / 2) * 2;
+        if (frequency[i] % 2 == 1) {
+            hasMiddle = true;
+        }
     }
-    return k + odd;
+
+    return length + (hasMiddle ? 1 : 0);
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:45.6K
-Total Submissions:100.4K
-
-
-Companies Google
-Related Topics Hash Table
-Similar Questions 
-                
-                  
-                    Palindrome Permutation
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,39 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0279. Perfect Squares
+ * LeetCode 0279. Perfect Squares（完全平方數）
  * Difficulty: Medium
- * Tags: math, dynamic-programming, breadth-first-search
- * URL: https://leetcode.com/problems/perfect-squares/
- * Source: community solution, repo vli02_leetcode (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer n, return the least number of perfect square
- *     numbers that sum to n.
- *     A perfect square is an integer that is the square of an integer; in
- *     other words, it is the product of some integer with itself. For
- *     example, 1, 4, 9, and 16 are perfect squares while 3 and 11 are not.
- *
- * [中文] 題目: 完全平方數
- * [中文] 題目說明:
- *     給定正整數 n，回傳和為 n 所需的完全平方數最少個數。完全平方數是
- *     某整數的平方，例如 1、4、9、16。
- *
- * [中文] 思路:
- *     以 dp[i] 記錄湊出 i 所需的最少平方數，初始可由 dp[i 
- *     - 1] + 1 得到。再枚舉所有不超過 i 的平方數 j²，以 d
- *     p[i - j²] + 1 取最小值。
- *
- * Examples:
- *     Input: n = 12
- *     Output: 3
- *     Explanation: 12 = 4 + 4 + 4.
- *     Input: n = 13
- *     Output: 2
- *     Explanation: 13 = 4 + 9.
- *
- * Constraints:
+ * 題意：給定正整數 n，回傳總和為 n 的完全平方數最少需要幾個。完全平方數是 1、4、9、16 等整數平方。
+ * 範例：
+ *   1. 輸入：n = 12；輸出：3，因為 12 = 4 + 4 + 4。
+ *   2. 輸入：n = 13；輸出：2，因為 13 = 4 + 9。
+ * 限制：
  *   - 1 <= n <= 10^4
- * ==========================================================================
+ * 解法：
+ *   1. 令 dp[x] 表示湊出總和 x 所需的最少完全平方數個數。
+ *   2. 對每個 x，先用 x 個 1 作為可行上限。
+ *   3. 逐一嘗試不超過 x 的平方數 square；若最後一個平方數取 square，候選數量是 dp[x-square] + 1。
+ *   4. 取所有候選中的最小值，最後回傳 dp[n]。
+ * 複雜度：時間 O(n√n)，額外空間 O(n)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -207,62 +186,28 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-279. Perfect Squares
-
-Given a positive integer n, find the least number of perfect square numbers (for example, 1, 4, 9, 16, ...) which sum to n.
-
-
-
-For example, given n = 12, return 3 because 12 = 4 + 4 + 4; given n = 13, return 2 because 13 = 4 + 9.
-
-
-Credits:Special thanks to @jianchao.li.fighter for adding this problem and creating all test cases.
-*/
-
 int numSquares(int n) {
-    int i, j, k;
-    int *dp;
-    
-    dp = malloc((n + 1) * sizeof(int));
-    //assert(dp);
-    
-    dp[0] = 0;
-    for (i = 1; i <= n; i ++) {
-        k = dp[i - 1] + 1;      // answer of preceeding number plus 1
-        j = 2;
-        while (i >= j * j) {    // after j ^ 2
-            if (k > dp[i - j * j] + 1) {
-                k = dp[i - j * j] + 1;
-            }
-            j ++;
-        }
-        dp[i] = k;
+    int *dp = (int *)malloc(sizeof(int) * (size_t)(n + 1));
+    if (dp == NULL) {
+        return 0;
     }
-    
-    k = dp[n];
+    dp[0] = 0;
+
+    for (int value = 1; value <= n; value++) {
+        dp[value] = value;  // 全用 1 的平方一定可行。
+        for (int root = 1; root <= value / root; root++) {
+            int square = root * root;
+            int candidate = dp[value - square] + 1;
+            if (candidate < dp[value]) {
+                dp[value] = candidate;
+            }
+        }
+    }
+
+    int answer = dp[n];
     free(dp);
-    
-    return k;
+    return answer;
 }
-
-
-/*
-Difficulty:Medium
-Total Accepted:81.3K
-Total Submissions:220.9K
-
-
-Companies Google
-Related Topics Dynamic Programming Breadth-first Search Math
-Similar Questions 
-                
-                  
-                    Count Primes
-                  
-                    Ugly Number II
-*/
 
 /* ---- generated tests ---- */
 int main(void){

@@ -1,30 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1287. Element Appearing More Than 25% In Sorted Array
- * Difficulty: Easy
- * Tags: array
- * URL: https://leetcode.com/problems/element-appearing-more-than-25-in-sorted-array/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array sorted in non-decreasing order, there is
- *     exactly one integer in the array that occurs more than 25% of the
- *     time, return that integer.
+ * Title-CN: 找出陣列中超過四分之一的元素
+ * LeetCode 1287. Element Appearing More Than 25% In Sorted Array (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 整數 陣列 已排序 in 非遞減 order, there is 恰好 one 整數 in the 陣列 that
- *     occurs more than 25% of the time, 回傳 that 整數.
+ * 題意翻譯：給定一個由小到大排序的整數陣列 arr。題目保證恰好有一個數字出現次數
+ * 超過陣列長度的四分之一，請回傳這個數字。
  *
- * Examples:
- *     Input: arr = [1,2,2,6,6,6,6,7,10]
- *     Output: 6
- *     Input: arr = [1,1]
- *     Output: 1
+ * 範例 1：arr = [1,2,2,6,6,6,6,7,10]，輸出 6。6 出現 4 次，超過 9 的四分之一。
+ * 範例 2：arr = [1,1]，輸出 1。
  *
- * Constraints:
- *   - 1 <= arr.length <= 10^4
- *   - 0 <= arr[i] <= 10^5
- * ==========================================================================
+ * 限制：1 <= arr.length <= 10^4；0 <= arr[i] <= 10^5；陣列已依非遞減順序排列。
+ *
+ * 解題思路：相同數字在排序陣列中會連在一起。從左到右掃描，記錄目前連續相同值
+ * 的次數；每次次數增加後，若 count * 4 > arrSize，就找到答案。題目保證答案存在，
+ * 因此一定會找到。時間 O(n)，空間 O(1)。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -197,19 +185,19 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
 int findSpecialInteger(int *arr, int arrSize) {
-  int threshold = (arrSize * 0.25), count = 1;
-  for (int i = 1; i < arrSize; i++) {
-    if (*(arr + i - 1) == *(arr + i)) {
-      count++;
-      if (count > threshold)
-        return *(arr + i);
-    } else
-      count = 1;
-  }
-  return arr[0];
+    int count = 1;
+    int i;
+
+    for (i = 1; i < arrSize; ++i) {
+        if (arr[i] == arr[i - 1]) {
+            ++count;
+        } else {
+            count = 1;
+        }
+        if (count * 4 > arrSize) return arr[i];
+    }
+    return arr[0];
 }
 
 /* ---- generated tests ---- */

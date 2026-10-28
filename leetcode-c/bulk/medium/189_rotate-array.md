@@ -1,51 +1,44 @@
-# 0189. Rotate Array《旋轉陣列》
+# 0189. Rotate Array｜旋轉陣列
 
-- **Difficulty**: Medium
-- **Tags**: array, math, two-pointers
-- **題目連結**: https://leetcode.com/problems/rotate-array/
-- **程式碼**: [`189_rotate-array.c`](./189_rotate-array.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、數學、雙指標
+- **題目連結**：[LeetCode 0189](https://leetcode.com/problems/rotate-array/)
+- **C 程式**：[189_rotate-array.c](./189_rotate-array.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定整數陣列 nums 與非負整數 k，請將陣列向右旋轉 k 步。k 可能大於陣列長度，元素值可為負數。
+給定陣列 `nums` 和非負整數 `k`，將陣列向右旋轉 `k` 步。必須直接修改原陣列；進階要求使用 `O(1)` 額外空間。
 
-**思路**：依 (目前索引 + k) mod n 進行循環置換，沿著一個環搬移元素；每當回到該環起點時，改由下一個尚未處理的起點繼續。
-
-## Problem Statement (English)
-
-Given an integer array nums, rotate the array to the right by k steps, where k is non-negative.
-Example 1:
-Example 2:
-Constraints:
-Follow up:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [1,2,3,4,5,6,7], k = 3
-Output: [5,6,7,1,2,3,4]
-Explanation:
-rotate 1 steps to the right: [7,1,2,3,4,5,6]
-rotate 2 steps to the right: [6,7,1,2,3,4,5]
-rotate 3 steps to the right: [5,6,7,1,2,3,4]
+輸入：nums = [1,2,3,4,5,6,7], k = 3
+輸出：[5,6,7,1,2,3,4]
 
-Input: nums = [-1,-100,3,99], k = 2
-Output: [3,99,-1,-100]
-Explanation: 
-rotate 1 steps to the right: [99,-1,-100,3]
-rotate 2 steps to the right: [3,99,-1,-100]
+輸入：nums = [-1,-100,3,99], k = 2
+輸出：[3,99,-1,-100]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= nums.length <= 105
--231 <= nums[i] <= 231 - 1
-0 <= k <= 105
+- `1 <= nums.length <= 10^5`。
+- `-2^31 <= nums[i] <= 2^31 - 1`。
+- `0 <= k <= 10^5`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 旋轉整整 `numsSize` 步會回到原狀，因此先令 `k %= numsSize`。
+2. 先反轉整個陣列，原本尾端的 `k` 個數字會移到前面，但兩段內部順序都反了。
+3. 再反轉前 `k` 個元素，恢復尾端那段的順序。
+4. 最後反轉剩下的元素，恢復前段順序，得到向右旋轉結果。
+
+## 複雜度
+
+- 時間：`O(n)`，總共反轉三次。
+- 額外空間：`O(1)`，原地交換元素。
+
+## LeetCode C 函式簽名
 
 ```c
-void rotate(int* nums, int numsSize, int k) {
-    
-}
+void rotate(int* nums, int numsSize, int k);
 ```

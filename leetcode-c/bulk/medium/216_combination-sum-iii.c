@@ -1,51 +1,20 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 0216. Combination Sum III
+ * LeetCode 0216. Combination Sum III（組合總和 III）
  * Difficulty: Medium
- * Tags: array, backtracking
- * URL: https://leetcode.com/problems/combination-sum-iii/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Find all valid combinations of k numbers that sum up to n such that
- *     the following conditions are true:
- *     Return a list of all possible valid combinations. The list must not
- *     contain the same combination twice, and the combinations may be
- *     returned in any order.
- *
- * [中文] 題目: 組合總和 III
- * [中文] 題目說明:
- *     從 1 到 9 中選出 k 個互不重複的數字，使其總和恰為 n。回傳
- *     所有可行組合，且相同組合不可重複，輸出順序不限。
- *
- * [中文] 思路:
- *     以回溯法由小到大選取數字，下一層只從目前數字之後繼續選，因而避免重複
- *     組合。當已選數量超過 k 或總和達到目標時停止，恰好符合時記錄結果。
- *
- * Examples:
- *     Input: k = 3, n = 7
- *     Output: [[1,2,4]]
- *     Explanation:
- *     1 + 2 + 4 = 7
- *     There are no other valid combinations.
- *     Input: k = 3, n = 9
- *     Output: [[1,2,6],[1,3,5],[2,3,4]]
- *     Explanation:
- *     1 + 2 + 6 = 9
- *     1 + 3 + 5 = 9
- *     2 + 3 + 4 = 9
- *     There are no other valid combinations.
- *     Input: k = 4, n = 1
- *     Output: []
- *     Explanation: There are no valid combinations.
- *     Using 4 different numbers in the range [1,9], the smallest sum
- *     we can get is 1+2+3+4 = 10 and since 10 > 1, there are no
- *     valid combination.
- *
- * Constraints:
+ * 題意：從 1 到 9 中選出 k 個互不重複的數字，使它們的總和等於 n。請回傳所有符合條件的組合；同一組數字的排列不算不同答案。
+ * 範例：
+ *   1. 輸入：k = 3，n = 7；輸出：[[1,2,4]]。
+ *   2. 輸入：k = 3，n = 9；輸出：[[1,2,6],[1,3,5],[2,3,4]]。
+ *   3. 輸入：k = 4，n = 1；輸出：[]。最小可能總和已是 1+2+3+4 = 10。
+ * 限制：
  *   - 2 <= k <= 9
  *   - 1 <= n <= 60
- * ==========================================================================
+ * 解法：
+ *   1. 用回溯法從小到大挑數字。每次只從比上一個數字大的候選繼續，確保數字不重複且組合不會因順序重複。
+ *   2. path 保存目前選到的數字，remaining 保存還需要湊出的總和。
+ *   3. 選滿 k 個數字時，只有 remaining 等於 0 才把 path 複製到答案。
+ *   4. 利用尚需幾個數字的最小和、最大和剪枝；若剩餘總和不可能達成，就不用繼續搜尋。
+ * 複雜度：最多檢查 1 到 9 的有限組合；額外遞迴空間 O(k)，輸出空間依答案數量而定。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -219,49 +188,68 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-#define MALLOC_UNIT  (1500)
-static bool backtrack(int target, int k, int cur, int*** ret, int* returnSize,
-                      int** returnColumnSizes, int sum, int* tmp, int tmp_ctr) {
-    if (tmp_ctr > k)
-        return false;
+typedef struct {
+    int k;
+    int path[9];
+    int **combinations;
+    int *columnSizes;
+    int count;
+} CombinationSearch;
 
-    if (sum >= target) {
-        if (sum == target && tmp_ctr == k) {
-            if (!(*returnSize % MALLOC_UNIT)) {
-                *ret = realloc(*ret, sizeof(int *)*(*returnSize + MALLOC_UNIT));
-                *returnColumnSizes = realloc(*returnColumnSizes, sizeof(int)*(*returnSize + MALLOC_UNIT));
+static void searchCombinationSum3(CombinationSearch *search, int start,
+                                  int depth, int remaining) {
+    int slots = search->k - depth;
+    if (slots == 0) {
+        if (remaining == 0) {
+            int *row = (int *)malloc(sizeof(int) * (size_t)search->k);
+            if (row == NULL) {
+                return;
             }
-            (*ret)[*returnSize] = malloc(sizeof(int) * k);
-            (*returnColumnSizes)[*returnSize] = k;
-            memcpy((*ret)[*returnSize], tmp, sizeof(int) * k);
-            *returnSize += 1;
+            for (int i = 0; i < search->k; i++) {
+                row[i] = search->path[i];
+            }
+            search->combinations[search->count] = row;
+            search->columnSizes[search->count] = search->k;
+            search->count++;
         }
-        // Return true to indicade that we don't need to add later element
-        // because sum is already >= target.
-        return true;
+        return;
     }
 
-    for (int i = cur; i <= 9; i++) {
-        tmp[tmp_ctr] = i;
-        if (backtrack(target, k, i + 1, ret, returnSize,
-                    returnColumnSizes, sum + i, tmp, tmp_ctr + 1))
-            break;
+    // 還要選 slots 個數字；用可達到的最小和與最大和提前剪枝。
+    int smallestSum = slots * (2 * start + slots - 1) / 2;
+    int largestSum = slots * (19 - slots) / 2;
+    if (remaining < smallestSum || remaining > largestSum) {
+        return;
     }
-    return false;
+
+    int largestNext = 10 - slots;
+    for (int number = start; number <= largestNext; number++) {
+        if (number > remaining) {
+            break;
+        }
+        search->path[depth] = number;
+        searchCombinationSum3(search, number + 1, depth + 1, remaining - number);
+    }
 }
 
-int** combinationSum3(int k, int n, int* returnSize, int** returnColumnSizes)
-{
-    int* tmp = malloc(sizeof(int)*9);
-    int** ret = malloc(sizeof(int*));
-    *returnColumnSizes = malloc(sizeof(int));
-    *returnSize = 0;
-    backtrack(n, k, 1, &ret, returnSize, returnColumnSizes, 0, tmp, 0);
-    free(tmp);
-    ret = realloc(ret, sizeof(int *)*(*returnSize));
-    *returnColumnSizes = realloc(*returnColumnSizes, sizeof(int)*(*returnSize));
-    return ret;
+int** combinationSum3(int k, int n, int* returnSize, int** returnColumnSizes) {
+    // 1 到 9 選 k 個的答案最多 126 組，配置 128 格足夠。
+    int **combinations = (int **)malloc(sizeof(int *) * 128);
+    int *columnSizes = (int *)malloc(sizeof(int) * 128);
+    if (combinations == NULL || columnSizes == NULL) {
+        free(combinations);
+        free(columnSizes);
+        *returnSize = 0;
+        *returnColumnSizes = NULL;
+        return NULL;
+    }
+
+    CombinationSearch search = {k, {0}, combinations, columnSizes, 0};
+    searchCombinationSum3(&search, 1, 0, n);
+
+    *returnSize = search.count;
+    *returnColumnSizes = columnSizes;
+    return combinations;
 }
 
 /* ---- generated tests ---- */

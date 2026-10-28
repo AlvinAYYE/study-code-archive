@@ -1,40 +1,26 @@
 ﻿/*
- * ==========================================================================
  * LeetCode 1217. Minimum Cost to Move Chips to The Same Position
- * Difficulty: Easy
- * Tags: array, math, greedy
- * URL: https://leetcode.com/problems/minimum-cost-to-move-chips-to-the-same-position/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     We have n chips, where the position of the ith chip is position[i].
- *     We need to move all the chips to the same position. In one step, we
- *     can change the position of the ith chip from position[i] to:
- *     Return the minimum cost needed to move all the chips to the same
- *     position.
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     We have n chips, where the position of the ith chip is position[i].
+ * 【完整中文題意】給定每個晶片所在的位置。每次可以把一個晶片移動 2 格，成本為 0；或移動 1 格，成本為 1。請找出讓所有晶片移到同一位置所需的最小總成本。
  *
- * Examples:
- *     Input: position = [1,2,3]
- *     Output: 1
- *     Explanation: First step: Move the chip at position 3 to
- *     position 1 with cost = 0.
- *     Second step: Move the chip at position 2 to position 1 with
- *     cost = 1.
- *     Total cost is 1.
- *     Input: position = [2,2,2,3,3]
- *     Output: 2
- *     Explanation: We can move the two chips at position 3 to
- *     position 2. Each move has cost = 1. The total cost = 2.
- *     Input: position = [1,1000000000]
- *     Output: 1
+ * 【範例】
+ * 1. position = [1,2,3] → 1
+ * 2. position = [2,2,2,3,3] → 2
+ * 3. position = [1,1000000000] → 1
  *
- * Constraints:
- *   - 1 <= position.length <= 100
- *   - 1 <= position[i] <= 10^9
- * ==========================================================================
+ * 【限制】
+ * - 1 <= position.length <= 100
+ * - 1 <= position[i] <= 10⁹
+ *
+ * 【解題步驟】
+ * 1. 移動 2 格不花成本，因此奇數位置的晶片可以免費移到任意奇數位置，偶數位置也能免費互相移動。
+ * 2. 要集中到偶數位置，就必須把所有奇數位置晶片各移 1 格；集中到奇數位置則要移動所有偶數位置晶片。
+ * 3. 統計奇數與偶數位置晶片數量，選較少的一邊支付成本。
+ *
+ * 【複雜度】時間 O(n)；空間 O(1)
+ *
+ * 【LeetCode C 函式】int minCostToMoveChips(int* position, int positionSize)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -208,14 +194,14 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-int minCostToMoveChips(int *position, int positionSize) {
-  int odds = 0;
-  for (int i = 0; i < positionSize; i++) {
-    if (position[i] % 2)
-      odds++;
-  }
-  return odds < positionSize - odds ? odds : positionSize - odds;
+int minCostToMoveChips(int* position, int positionSize) {
+    int oddCount = 0;
+    for (int i = 0; i < positionSize; ++i) {
+        if (position[i] % 2 != 0) ++oddCount;
+    }
+
+    int evenCount = positionSize - oddCount;
+    return oddCount < evenCount ? oddCount : evenCount;
 }
 
 /* ---- generated tests ---- */

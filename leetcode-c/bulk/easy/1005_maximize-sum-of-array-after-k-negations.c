@@ -1,40 +1,28 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1005. Maximize Sum Of Array After K Negations
- * Difficulty: Easy
- * Tags: array, greedy, sorting
- * URL: https://leetcode.com/problems/maximize-sum-of-array-after-k-negations/
- * Source: community solution, repo kenjin_Awesome-LC-Cracker (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an integer array nums and an integer k, modify the array in
- *     the following way:
- *     You should apply this process exactly k times. You may choose the
- *     same index i multiple times.
- *     Return the largest possible sum of the array after modifying it in
- *     this way.
+ * LeetCode 1005. Maximize Sum of Array After K Negations
+ * 難度：Easy
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 整數 陣列 nums and an 整數 k, modify the 陣列 in the following way:
+ * 【完整中文題意】給定整數陣列 nums 和整數 k。每次操作可選擇一個索引，將該位置的數乘以 -1；同一個索引可以重複選。恰好操作 k 次後，回傳可能得到的最大陣列總和。
  *
- * Examples:
- *     Input: nums = [4,2,3], k = 1
- *     Output: 5
- *     Explanation: Choose index 1 and nums becomes [4,-2,3].
- *     Input: nums = [3,-1,0,2], k = 3
- *     Output: 6
- *     Explanation: Choose indices (1, 2, 2) and nums becomes
- *     [3,1,0,2].
- *     Input: nums = [2,-3,-1,5,-4], k = 2
- *     Output: 13
- *     Explanation: Choose indices (1, 4) and nums becomes
- *     [2,3,-1,5,4].
+ * 【範例】
+ * 1. nums = [4,2,3], k = 1 → 5（把 2 乘以 -1，陣列變成 [4,-2,3]，總和為 5）
+ * 2. nums = [3,-1,0,2], k = 3 → 6
+ * 3. nums = [2,-3,-1,5,-4], k = 2 → 13
  *
- * Constraints:
- *   - 1 <= nums.length <= 10^4
- *   - -100 <= nums[i] <= 100
- *   - 1 <= k <= 10^4
- * ==========================================================================
+ * 【限制】
+ * - 1 <= nums.length <= 10⁴
+ * - -100 <= nums[i] <= 100
+ * - 1 <= k <= 10⁴
+ *
+ * 【解題步驟】
+ * 1. 先把陣列由小到大排序，讓最負的數排在前面。
+ * 2. 只要還有操作次數，就依序把負數變成正數；翻轉負數會增加總和。
+ * 3. 若剩下奇數次操作，必須再翻轉一次；此時翻轉絕對值最小的數，總和損失最少。若最小值是 0，總和不變。
+ * 4. 加總陣列並回傳。
+ *
+ * 【複雜度】時間 O(n log n)；空間 O(log n)（排序所需的呼叫堆疊；不計輸入陣列）
+ *
+ * 【LeetCode C 函式】int largestSumAfterKNegations(int* nums, int numsSize, int k)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -208,44 +196,34 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-
-static int compare(const void *a, const void *b)
-{
-    return *(int *)a - *(int *)b;
+static int compareInts(const void* left, const void* right) {
+    int a = *(const int*)left;
+    int b = *(const int*)right;
+    return (a > b) - (a < b);
 }
 
-int largestSumAfterKNegations(int* nums, int numsSize, int k)
-{
-    qsort(nums, numsSize, sizeof(int), compare);
+int largestSumAfterKNegations(int* nums, int numsSize, int k) {
+    qsort(nums, (size_t)numsSize, sizeof(int), compareInts);
 
-    // Calculate total sum and find the count of negative
-    int neg_ctr = 0, sum = 0;
-    for (int i = 0; i < numsSize; i++) {
-        sum += nums[i];
-        if (nums[i] < 0) {
-            neg_ctr++;
-        }
-    }
-
-    // Process all the negative
     int i = 0;
-    while (neg_ctr > 0 && k > 0) {
-        nums[i] *= -1;
-        sum = sum + nums[i]*2;
-        neg_ctr--;
-        k--;
-        i++;
+    // 優先翻轉最負的數，因為這樣最能增加總和。
+    while (i < numsSize && k > 0 && nums[i] < 0) {
+        nums[i] = -nums[i];
+        ++i;
+        --k;
     }
 
-    // Process the rest of positive, if k is a single value, choose the smallest positive element.
-    if (k % 2) {
-        int min = INT_MAX;
-        for (int x = neg_ctr; x < numsSize; x++) {
-            min = (min < nums[x] ? min : nums[x]);
+    // 奇數次剩餘操作等同於只需再翻轉一次絕對值最小的元素。
+    if (k % 2 == 1) {
+        int smallest = 0;
+        for (i = 1; i < numsSize; ++i) {
+            if (nums[i] < nums[smallest]) smallest = i;
         }
-        sum = sum - min*2;    
+        nums[smallest] = -nums[smallest];
     }
+
+    int sum = 0;
+    for (i = 0; i < numsSize; ++i) sum += nums[i];
     return sum;
 }
 

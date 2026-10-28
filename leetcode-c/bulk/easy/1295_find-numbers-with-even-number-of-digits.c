@@ -1,38 +1,18 @@
 ﻿/*
- * ==========================================================================
- * LeetCode 1295. Find Numbers with Even Number of Digits
- * Difficulty: Easy
- * Tags: array, math
- * URL: https://leetcode.com/problems/find-numbers-with-even-number-of-digits/
- * Source: community solution, repo DimitrisJim_leetcode_solutions (verified: compiles + passes example tests)
- * ==========================================================================
- * [EN] Problem (official statement, github mcaupybugs/leetcode-problems-db):
- *     Given an array nums of integers, return how many of them contain an
- *     even number of digits.
+ * Title-CN: 找出位數為偶數的數
+ * LeetCode 1295. Find Numbers with Even Number of Digits (Easy)
  *
- * [中文] 題目摘要 (術語規則翻譯, 供快速理解; 完整題意以上方英文為準):
- *     Given an 陣列 nums of integers, 回傳 how many of them contain an even
- *     number of 數位.
+ * 題意翻譯：給定整數陣列 nums，請計算其中有多少個數字的十進位位數是偶數。
  *
- * Examples:
- *     Input: nums = [12,345,2,6,7896]
- *     Output: 2
- *     Explanation:
- *     12 contains 2 digits (even number of digits).
- *     345 contains 3 digits (odd number of digits).
- *     2 contains 1 digit (odd number of digits).
- *     6 contains 1 digit (odd number of digits).
- *     7896 contains 4 digits (even number of digits).
- *     Therefore only 12 and 7896 contain an even number of digits.
- *     Input: nums = [555,901,482,1771]
- *     Output: 1
- *     Explanation:
- *     Only 1771 contains an even number of digits.
+ * 範例 1：nums = [12,345,2,6,7896]，輸出 2。12 有 2 位、7896 有 4 位；其餘數字
+ *         都是奇數位。
+ * 範例 2：nums = [555,901,482,1771]，輸出 1，只有 1771 是偶數位數。
  *
- * Constraints:
- *   - 1 <= nums.length <= 500
- *   - 1 <= nums[i] <= 10^5
- * ==========================================================================
+ * 限制：1 <= nums.length <= 500；1 <= nums[i] <= 10^5。
+ *
+ * 解題思路：逐一處理陣列中的數字，用整數除以 10 直到變成 0，每除一次就代表處理
+ * 一位數字。若位數是偶數，就把答案加一。每個數字最多 6 位，因此時間 O(n*d)，
+ * 空間 O(1)，d 是最大位數。
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -205,36 +185,20 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-int findNumbers(int* nums, int numsSize){
-    int sum = 0, j;
-    for(int i=0; i < numsSize; i++){
-        j = nums[i];
-        if (
-            ((9 < j) && (j < 100)) || 
-            ((999 < j) && (j < 10000)) || 
-            (j == 100000)
-        )
-            sum++;
-    }
-    return sum;
-}
+int findNumbers(int *nums, int numsSize) {
+    int evenDigitCount = 0;
+    int i;
 
-// Pointer arithmetic, leads to better exec speed.
-int findNumbers2(int* nums, int numsSize){
-    int sum = 0;
-    while(numsSize){
-        if (
-            ((9 < *nums) && (*nums < 100)) ||
-            ((999 < *nums) && (*nums < 10000)) ||
-            (*nums == 100000)
-        )
-            sum++;
-        nums++;
-        numsSize--;
+    for (i = 0; i < numsSize; ++i) {
+        int value = nums[i];
+        int digitCount = 0;
+        do {
+            ++digitCount;
+            value /= 10;
+        } while (value > 0);
+        if (digitCount % 2 == 0) ++evenDigitCount;
     }
-    return sum;
+    return evenDigitCount;
 }
 
 /* ---- generated tests ---- */

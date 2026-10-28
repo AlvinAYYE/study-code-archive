@@ -16,7 +16,7 @@
  * [中文] 題目: 有效的完全平方數
  * [中文] 題目說明:
  *     給定正整數 num，若它是完全平方數則回傳 true，否則回傳 fa
- *     lse。完全平方數是某個整數與自身相乘的結果，且不可使用 sqrt 
+ *     lse。完全平方數是某個整數與自身相乘的結果，且不可使用 sqrt
  *     等內建函式。
  *
  * [中文] 思路:
@@ -209,62 +209,55 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
 }
 
 /* ---- community solution ---- */
-static int lc_dummy_;
-/*
-367. Valid Perfect Square
+/* 解題說明
+ * 題目：367. Valid Perfect Square（有效的完全平方數）
+ *
+ * 題意完整翻譯：
+ *     給定正整數 num，判斷它是否為完全平方數。完全平方數可以寫成某個整數乘上自身，例如 16 = 4 × 4。不可使用 sqrt
+ *     等內建平方根函式。
+ *
+ * 範例：
+ *   輸入：num = 16
+ *   輸出：true
+ *   說明：4 × 4 = 16，且 4 是整數。
+ *   輸入：num = 14
+ *   輸出：false
+ *   說明：14 的平方根不是整數，因此不是完全平方數。
+ *
+ * 限制：
+ *   - 1 <= num <= 2^31 - 1
+ *
+ * 解題步驟：
+ *   1. 在 1 到 num 之間二分搜尋可能的整數平方根 middle。
+ *   2. 用 64 位元計算 middle × middle，避免 32 位元整數乘法溢位。
+ *   3. 若平方等於 num 就回傳 true；若平方太大，往左半部找；平方太小則往右半部找。
+ *   4. 搜尋範圍用完仍找不到時回傳 false。
+ *
+ * 複雜度：
+ *   時間：O(log num)，二分搜尋每次將範圍縮小一半。
+ *   空間：O(1)。
+ */
 
-Given a positive integer num, write a function which returns True if num is a perfect square else False.
+bool isPerfectSquare(int num) {
+    int left = 1;
+    int right = num;
 
+    while (left <= right) {
+        int middle = left + (right - left) / 2;
+        long long square = (long long)middle * middle;
 
-Note: Do not use any built-in library function such as sqrt.
-
-
-Example 1:
-Input: 16
-Returns: True
-
-
-
-Example 2:
-Input: 14
-Returns: False
-
-
-
-Credits:Special thanks to @elmirap for adding this problem and creating all test cases.
-*/
-
-bool isPerfectSquare(unsigned int num) {
-#define MAX_SQRT 46341
-    unsigned int start = 1, end, mid, k;
-    end = num < MAX_SQRT ? num : MAX_SQRT;
-    while (start <= end) {
-        mid = start + (end - start) / 2;
-        k = mid * mid;
-        //printf("%d:%d\n", mid, k);
-        if (k == num) return true;
-        else if (k > num) end = mid - 1;
-        else start = mid + 1;
+        if (square == num) {
+            return true;
+        }
+        if (square < num) {
+            left = middle + 1;
+        } else {
+            right = middle - 1;
+        }
     }
+
     return false;
 }
-
-
-/*
-Difficulty:Easy
-Total Accepted:49.4K
-Total Submissions:129.3K
-
-
-Companies LinkedIn
-Related Topics Binary Search Math
-Similar Questions 
-                
-                  
-                    Sqrt(x)
-                  
-                    Sum of Square Numbers
-*/
 
 /* ---- generated tests ---- */
 int main(void){

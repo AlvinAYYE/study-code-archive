@@ -1,44 +1,44 @@
-# 0137. Single Number II《只出現一次的數字 II》
+# 0137. Single Number II｜只出現一次的數字 II
 
-- **Difficulty**: Medium
-- **Tags**: array, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/single-number-ii/
-- **程式碼**: [`137_single-number-ii.c`](./137_single-number-ii.c) — 社群解答（repo vli02_leetcode），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、位元運算
+- **題目連結**：[LeetCode 0137](https://leetcode.com/problems/single-number-ii/)
+- **C 程式**：[137_single-number-ii.c](./137_single-number-ii.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定整數陣列 nums，除了某個元素恰好出現一次外，其餘每個元素都恰好出現三次。請找出並回傳這個唯一元素。解法必須為線性時間且只使用常數額外空間。nums 長度介於 1 至 3×10^4，元素值介於 -2^31 至 2^31−1。
+給定整數陣列，其中除了某個數字只出現一次外，其他數字都恰好出現三次。請找出只出現一次的數字。要求時間為線性，且額外空間為常數。
 
-**思路**：使用 ones 與 twos 兩個位元遮罩記錄每個位元出現次數對 3 取模後的狀態，掃描完後 ones 即為唯一數字。
-
-## Problem Statement (English)
-
-Given an integer array nums where every element appears three times except for one, which appears exactly once. Find the single element and return it.
-You must implement a solution with a linear runtime complexity and use only constant extra space.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: nums = [2,2,3,2]
-Output: 3
+輸入：nums = [2,2,3,2]
+輸出：3
 
-Input: nums = [0,1,0,1,0,1,99]
-Output: 99
+輸入：nums = [0,1,0,1,0,1,99]
+輸出：99
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= nums.length <= 3 * 104
--231 <= nums[i] <= 231 - 1
-Each element in nums appears exactly three times except for one element which appears once.
+- `1 <= nums.length <= 3 × 10^4`。
+- `-2^31 <= nums[i] <= 2^31 - 1`。
+- 除答案外，每個數字都恰好出現三次。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 對每個位元分別計數時，三次出現的數字會讓該位元的總數成為 3 的倍數；只出現一次的數字會留下餘數。
+2. 不逐位計數，而用兩個整數 `ones`、`twos` 同時記錄每個位元目前出現 1 次或 2 次的狀態。
+3. 每讀入一個數字，先更新 `ones`，再更新 `twos`；`~twos`、`~ones` 會把已達到三次的位元清掉。
+4. 全部掃描完成後，`ones` 就是只出現一次的數字位元型態。
+
+## 複雜度
+
+- 時間：`O(n)`，每個整數做固定次數位元運算。
+- 額外空間：`O(1)`。
+
+## LeetCode C 函式簽名
 
 ```c
-int singleNumber(int* nums, int numsSize) {
-    
-}
+int singleNumber(int* nums, int numsSize);
 ```

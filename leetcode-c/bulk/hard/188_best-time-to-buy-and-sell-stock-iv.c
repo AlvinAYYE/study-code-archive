@@ -17,29 +17,31 @@
  *
  * [中文] 題目: 買賣股票的最佳時機 IV
  * [中文] 題目說明:
- *     給定每日股價與整數 k，請求出至多完成 k 次買入及 k 次賣出交易
- *     所能取得的最大利潤。不可同時進行多筆交易，因此再次買入前必須先賣出持
- *     有的股票。
+ *     prices[i] 表示第 i 天的股價。給定 prices 與整數 k，請計算最多
+ *     完成 k 次交易所能取得的最大利潤。不可同時持有多筆交易，再次買入前
+ *     必須先賣出目前持有的股票。
  *
- * [中文] 思路:
- *     以陣列分別記錄每一筆交易序號的最佳買入與賣出利潤，逐日更新狀態；當 
- *     k 足夠大時，直接加總所有正向日差作為不限交易次數的結果。
+ * [中文] 範例：
+ *   範例 1：輸入 k = 2, prices = [2,4,1]；輸出 2。
+ *     說明：以 2 買入、4 賣出，利潤為 2。
+ *   範例 2：輸入 k = 2, prices = [3,2,6,5,0,3]；輸出 7。
+ *     說明：先以 2 買、6 賣獲利 4，再以 0 買、3 賣獲利 3。
  *
- * Examples:
- *     Input: k = 2, prices = [2,4,1]
- *     Output: 2
- *     Explanation: Buy on day 1 (price = 2) and sell on day 2 (price
- *     = 4), profit = 4-2 = 2.
- *     Input: k = 2, prices = [3,2,6,5,0,3]
- *     Output: 7
- *     Explanation: Buy on day 2 (price = 2) and sell on day 3 (price
- *     = 6), profit = 6-2 = 4. Then buy on day 5 (price = 0) and sell
- *     on day 6 (price = 3), profit = 3-0 = 3.
- *
- * Constraints:
+ * [中文] 限制：
  *   - 1 <= k <= 100
  *   - 1 <= prices.length <= 1000
  *   - 0 <= prices[i] <= 1000
+ *
+ * [中文] 直觀解題思路：
+ *   1. b[j] 表示完成前 j 次賣出後，再做第 j+1 次買入時的最佳帳面利潤；
+ *      s[j] 表示完成 j 次賣出後的最佳利潤。
+ *   2. 每天依交易次序更新：b[j] = max(b[j], s[j]-price)，決定是否今天買入；
+ *      s[j+1] = max(s[j+1], b[j]+price)，決定是否今天賣出。
+ *   3. 掃描完所有價格後，s[k] 即為最多 k 次交易的最佳結果。
+ *   4. 若 k >= n/2，交易次數已不構成限制；此時每段上漲都可獨立獲利，
+ *      直接加總所有正向相鄰價差即可，避免不必要的 DP。
+ *
+ * 一般情況時間 O(nk)、空間 O(k)；不限次數分支時間 O(n)、空間 O(1)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -249,7 +251,7 @@ int all_profits(int* prices, int pricesSize) {
     p = 0;
     for (i = 1; i < pricesSize; i ++) {
         d = prices[i] - prices[i - 1];
-        p = d > 0 ? p + d : p;  // get it as long as it is a profit!
+        p = d > 0 ? p + d : p;  /* 不限次數時收下每一段正向價差 */
     }
 
     return p;
@@ -267,16 +269,16 @@ int maxProfit(int k, int* prices, int pricesSize) {
     s = &buff[k];
     
     for (i = 0; i < k; i ++) {
-        b[i] = 0x80000000;  // min integer
+        b[i] = 0x80000000;  /* 尚未買入的負無限大狀態 */
         s[i] = 0;
     }
     s[k] = 0;
     
     for (i = 0; i < pricesSize; i ++) {
         for (j = 0; j < k; j ++) {
-            // profit on buy is current buy or last sale minus today's price
+            /* 保留舊狀態，或用前一次賣出利潤在今天買入。 */
             b[j]     = _max(b[j],     s[j] - prices[i]);
-            // profit on sale is current sale or last buy plus today's price
+            /* 保留舊狀態，或把第 j+1 筆持股在今天賣出。 */
             s[j + 1] = _max(s[j + 1], b[j] + prices[i]);
         }
     }

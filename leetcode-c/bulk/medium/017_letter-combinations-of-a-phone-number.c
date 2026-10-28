@@ -13,26 +13,26 @@
  *     A mapping of digits to letters (just like on the telephone buttons)
  *     is given below. Note that 1 does not map to any letters.
  *
- * [中文] 題目: 電話號碼的字母組合
- * [中文] 題目說明:
- *     給定只含 2 到 9 的數字字串，回傳電話按鍵對應的所有可能字母組合
- *     ，順序不限。數字 1 不對應任何字母；空字串的結果為空集合。
+ * [中文] 題目：電話號碼的字母組合
+ *     給定只含數字 2 到 9 的字串 digits，依傳統電話按鍵對應回傳所有可能
+ *     的字母組合，順序不限。空字串的答案是空集合。
  *
- * [中文] 思路:
- *     程式先依各按鍵可選字母數計算結果容量，再以深度優先搜尋逐位填入緩衝字
- *     串。遞迴走到輸入結尾時複製目前組合加入答案。
+ * [中文] 範例
+ *   範例 1：輸入 digits = "23"，輸出
+ *           ["ad","ae","af","bd","be","bf","cd","ce","cf"]。
+ *   範例 2：輸入 digits = ""，輸出 []。
+ *   範例 3：輸入 digits = "2"，輸出 ["a","b","c"]。
  *
- * Examples:
- *     Input: digits = "23"
- *     Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
- *     Input: digits = ""
- *     Output: []
- *     Input: digits = "2"
- *     Output: ["a","b","c"]
+ * [中文] 限制
+ *   - 0 <= digits.length <= 4。
+ *   - digits[i] 介於 '2' 到 '9'。
  *
- * Constraints:
- *   - 0 <= digits.length <= 4
- *   - digits[i] is a digit in the range ['2', '9'].
+ * [中文] 直觀解題思路
+ *   1. 用表格保存每個按鍵對應的字母。
+ *   2. 先將每一位可選數量相乘，配置剛好的答案指標陣列。
+ *   3. 回溯逐位挑選字母；走到字串末端時複製目前組合。
+ *   4. 返回上一層後改試下一個字母，直到列舉所有組合。
+ *   若答案數為 M、字串長度為 n，時間與輸出空間皆為 O(M * n)，遞迴空間 O(n)。
  * ==========================================================================
  */
 #include <stdio.h>
@@ -206,134 +206,55 @@ static void lc_canon_ii(int **rows, const int *rcs, int nr, char *buf, int cap) 
     buf[k] = 0;
 }
 
-/* ---- community solution ---- */
-static int lc_dummy_;
-/*
-17. Letter Combinations of a Phone Number
+/* 數字 2 到 9 對應電話按鍵上的字母。 */
+static const char *PHONE_LETTERS[10] = {
+    "", "", "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"
+};
 
-Given a digit string, return all possible letter combinations that the number could represent.
+/* 每一層選一個字母，填完所有位置時保存一份完整答案。 */
+static void buildLetterCombinations(const char *digits, int length, int position,
+                                    char *buffer, char **answer, int *count) {
+    const char *choices;
+    int i;
 
-
-
-A mapping of digit to letters (just like on the telephone buttons) is given below.
-
-
-Input:Digit string "23"
-Output: ["ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"].
-
-
-
-Note:
-Although the above answer is in lexicographical order, your answer could be in any order you want.
-*/
-
-const char *map[] = { "abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz" };
-const int   len[] = {  3,     3,     3,     3,     3,     4,      3,     4     };
- 
-void dfs(char *p, int d, char *buff, char **pp, int *n) {
-    const char *m;
-    
-    if (!*p) {
-        pp[*n] = strdup(buff);
-        (*n) ++;
+    if (position == length) {
+        answer[*count] = (char *)malloc((size_t)length + 1);
+        memcpy(answer[*count], buffer, (size_t)length + 1);
+        ++(*count);
         return;
     }
-    
-    m = map[(*p) - '2'];
-    while (*m) {
-        buff[d] = *m;
-        dfs(p + 1, d + 1, buff, pp, n);
-        m ++;
+
+    choices = PHONE_LETTERS[digits[position] - '0'];
+    for (i = 0; choices[i] != '\0'; ++i) {
+        buffer[position] = choices[i];
+        buildLetterCombinations(digits, length, position + 1,
+                                buffer, answer, count);
     }
 }
- 
-/**
- * Return an array of size *returnSize.
- * Note: The returned array must be malloced, assume caller calls free().
- */
+
+/* ---- 易讀解法：回溯枚舉每個按鍵的字母選擇 ---- */
 char** letterCombinations(char* digits, int* returnSize) {
-    char **pp;
-    char *buff;
-    char *d;
-    
-    const char *m;
-    int n, k, b, l;
-    int i, j;
-    
+    int length = (int)strlen(digits);
+    int total = 1;
+    int count = 0;
+    int i;
+    char **answer;
+    char buffer[5];
+
     *returnSize = 0;
-    
-    if (!digits || !*digits) {
-        return NULL;
+    if (length == 0) return NULL;
+
+    for (i = 0; i < length; ++i) {
+        total *= (int)strlen(PHONE_LETTERS[digits[i] - '0']);
     }
-    
-    n = 1;
-    d = digits;
-    while (*d) {
-        n = n * len[*d - '2'];
-        d ++;
-    }
-    
-    *returnSize = n;
-    l = d - digits;
-    pp = malloc(n * sizeof(char *));
-    buff = malloc(l + 1);
-    //assert(pp && buff);
-    buff[l] = 0;
-    
-#if 1
-    n = 0;
-    dfs(digits, 0, buff, pp, &n);
-    free(buff);
-#else
-    buff = malloc(n * (l + 1));
-    for (i = 0; i < n; i ++) {
-        pp[i] = &buff[i * (l + 1)];
-        pp[i][l] = 0;
-    }
-    
-    b = n;
-    i = 0;
-    d = digits;
-    while (*d) {
-        b = b / len[*d - '2'];
-        j = 0;
-        k = b;
-        do {
-            m = map[*d - '2'];
-            while (*m) {
-                while (j < k) {
-                    pp[j][i] = *m;
-                    j ++;
-                }
-                k += b;
-                m ++;
-            }
-        } while (j < n);
-        d ++; i ++;
-    }
-#endif
-    
-    return pp;
+    answer = (char **)malloc((size_t)total * sizeof(char *));
+    buffer[length] = '\0';
+    buildLetterCombinations(digits, length, 0, buffer, answer, &count);
+
+    *returnSize = count;
+    return answer;
 }
 
-
-/*
-Difficulty:Medium
-Total Accepted:163.5K
-Total Submissions:474.1K
-
-
-Companies Amazon Dropbox Google Uber Facebook
-Related Topics Backtracking String
-Similar Questions 
-                
-                  
-                    Generate Parentheses
-                  
-                    Combination Sum
-                  
-                    Binary Watch
-*/
 
 /* ---- generated tests ---- */
 int main(void){

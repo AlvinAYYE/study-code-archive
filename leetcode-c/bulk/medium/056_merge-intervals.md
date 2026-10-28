@@ -1,50 +1,45 @@
-# 0056. Merge Intervals《合併區間》
+# 0056. Merge Intervals｜合併區間
 
-- **Difficulty**: Medium
-- **Tags**: array, sorting
-- **題目連結**: https://leetcode.com/problems/merge-intervals/
-- **程式碼**: [`056_merge-intervals.c`](./056_merge-intervals.c) — 社群解答（repo kenjin_Awesome-LC-Cracker），已通過編譯+官方示例執行驗證
+- **難度**：中等
+- **標籤**：陣列、排序
+- **題目連結**：[LeetCode 0056](https://leetcode.com/problems/merge-intervals/)
+- **C 程式**：[056_merge-intervals.c](./056_merge-intervals.c)
 
-## 題目說明（中文）
+## 題目說明
 
-給定一組區間 intervals，其中每個區間為 [start, end]，請合併所有重疊區間。回傳能覆蓋所有輸入區間且彼此不重疊的區間集合。
+給定多個區間 `intervals[i] = [start, end]`，合併所有重疊區間，回傳彼此不重疊且能涵蓋原區間的結果。兩區間端點相接也算重疊，例如 `[1,4]` 和 `[4,5]` 要合併。
 
-**思路**：先依區間起點排序，再依序比較目前區間與前一個合併區間。若有重疊便擴大終點，否則輸出前一段並開始新的區間。
-
-## Problem Statement (English)
-
-Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
-Example 1:
-Example 2:
-Constraints:
-
-## 範例 Examples
+## 範例
 
 ```text
-Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
-Output: [[1,6],[8,10],[15,18]]
-Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+輸入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+輸出：[[1,6],[8,10],[15,18]]
 
-Input: intervals = [[1,4],[4,5]]
-Output: [[1,5]]
-Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+輸入：intervals = [[1,4],[4,5]]
+輸出：[[1,5]]
 ```
 
-## 限制 Constraints
+## 限制
 
-1 <= intervals.length <= 104
-intervals[i].length == 2
-0 <= starti <= endi <= 104
+- `1 <= intervals.length <= 10^4`。
+- `intervals[i].length == 2`。
+- `0 <= starti <= endi <= 10^4`。
 
-## 官方 C 函式簽名 Signature
+## 解題步驟
+
+1. 依區間起點由小到大排序。
+2. `current` 指向目前合併中的區間。若下一區間的起點小於或等於 `current` 的終點，兩者重疊，把終點更新成兩者較大的終點。
+3. 若下一區間起點大於目前終點，先將 `current` 複製到答案，再以新區間開始下一組合併。
+4. 掃描結束後，記得把最後一個 `current` 加入答案。
+
+## 複雜度
+
+- 時間：`O(n log n)`，排序主導；合併掃描為 `O(n)`。
+- 額外空間：`O(n)`，排序用的指標陣列與回傳區間。
+
+## LeetCode C 函式簽名
 
 ```c
-/**
- * Return an array of arrays of size *returnSize.
- * The sizes of the arrays are returned as *returnColumnSizes array.
- * Note: Both returned array and *columnSizes array must be malloced, assume caller calls free().
- */
-int** merge(int** intervals, int intervalsSize, int* intervalsColSize, int* returnSize, int** returnColumnSizes) {
-    
-}
+int** merge(int** intervals, int intervalsSize, int* intervalsColSize,
+            int* returnSize, int** returnColumnSizes);
 ```

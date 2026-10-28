@@ -1,46 +1,47 @@
 # 0190. Reverse Bits《反轉位元》
 
-- **Difficulty**: Easy
-- **Tags**: divide-and-conquer, bit-manipulation
-- **題目連結**: https://leetcode.com/problems/reverse-bits/
-- **程式碼**: [`190_reverse-bits.c`](./190_reverse-bits.c) — 社群解答（repo lennylxx_leetcode），已通過編譯+官方示例執行驗證
+- 難度：Easy
+- 題目連結：https://leetcode.com/problems/reverse-bits/
 
-## 題目說明（中文）
+## 題目翻譯
 
-給定一個 32 位元無號整數，請將它的 32 個二進位位元順序完全反轉，並回傳結果。題目也詢問在函式需多次呼叫時可如何最佳化。
+給定一個 32 位元整數，反轉它的 32 個二進位位元。例如最右邊的位元會移到最左邊，第二個位元會移到倒數第二位。
 
-**思路**：以遮罩分階段交換相鄰的 1、2、4、8 與 16 位元區塊，五輪即可完成整個 32 位元字的反轉。
+## 範例
 
-## Problem Statement (English)
+~~~text
+輸入：n = 43261596
+輸出：964176192
+原始 32 位元：00000010100101000001111010011100
+反轉後：      00111001011110000010100101000000
 
-Reverse bits of a given 32 bits unsigned integer.
-Note:
-Example 1:
-Example 2:
-Constraints:
-Follow up: If this function is called many times, how would you optimize it?
+輸入：n = 2147483644
+輸出：1073741822
+~~~
 
-## 範例 Examples
+## 限制
 
-```text
-Input: n = 43261596
-Output: 964176192
-Explanation:
+- 0 <= n <= 2^31 - 2
+- n 是偶數。
+- 位元寬度固定為 32 位。
 
-Input: n = 2147483644
-Output: 1073741822
-Explanation:
-```
+## 解題步驟
 
-## 限制 Constraints
+1. 準備 remaining 保存尚未處理的輸入位元，reversed 初始為 0。
+2. 重複 32 次，取 remaining 最右邊的位元。
+3. 將答案左移一格，並把取出的位元放到最右邊。
+4. 將 remaining 右移一格，接著處理下一位。
 
-0 <= n <= 231 - 2
-n is even.
+## 複雜度
 
-## 官方 C 函式簽名 Signature
+- 時間：O(1)，迴圈固定執行 32 次。
+- 空間：O(1)。
 
-```c
-int reverseBits(int n) {
-    
-}
-```
+## C 函式簽名
+
+~~~c
+int reverseBits(int n);
+~~~
+
+本地程式使用 uint32_t 暫存位元，避免對有號整數做位移時產生錯誤。
+~~~

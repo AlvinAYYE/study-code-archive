@@ -4,8 +4,10 @@
 004|Median of Two Sorted Arrays|尋找兩個正序數組的中位數|Hard|array, binary-search, divide-and-conquer|hard/004_median-of-two-sorted-arrays.c
 005|Longest Palindromic Substring|最長迴文子字串|Medium|two-pointers, string, dynamic-programming|medium/005_longest-palindromic-substring.c
 007|Reverse Integer|整數反轉|Medium|math|medium/007_reverse-integer.c
+008|String to Integer (atoi)|字串轉整數|Medium|string|medium/008_string-to-integer-atoi.c
 009|Palindrome Number|迴文數|Easy|math|easy/009_palindrome-number.c
 010|Regular Expression Matching|正則表達式匹配|Hard|string, dynamic-programming, recursion|hard/010_regular-expression-matching.c
+012|Integer to Roman|整數轉羅馬數字|Medium|hash-table, math, string|medium/012_integer-to-roman.c
 013|Roman to Integer|羅馬轉整數|Easy|hash-table, math, string|easy/013_roman-to-integer.c
 014|Longest Common Prefix|最長共同前綴|Easy|array, string, trie|easy/014_longest-common-prefix.c
 015|3Sum|三數之和|Medium|array, two-pointers, sorting|medium/015_3sum.c
@@ -13,21 +15,169 @@
 021|Merge Two Sorted Lists|合併兩個有序鏈表|Easy|linked-list, recursion|easy/021_merge-two-sorted-lists.c
 022|Generate Parentheses|括號生成|Medium|string, dynamic-programming, backtracking|medium/022_generate-parentheses.c
 023|Merge k Sorted Lists|合併 K 個升序鏈表|Hard|linked-list, divide-and-conquer, heap-priority-queue, merge-sort|hard/023_merge-k-sorted-lists.c
+036|Valid Sudoku|有效的數獨|Medium|array, hash-table, matrix|medium/036_valid-sudoku.c
+037|Sudoku Solver|解數獨|Hard|array, hash-table, backtracking, matrix|hard/037_sudoku-solver.c
+038|Count and Say|外觀數列|Medium|string|medium/038_count-and-say.c
 042|Trapping Rain Water|接雨水|Hard|array, two-pointers, dynamic-programming, stack, monotonic-stack|hard/042_trapping-rain-water.c
 046|Permutations|全排列|Medium|array, backtracking|medium/046_permutations.c
 049|Group Anagrams|字母異位詞分組|Medium|array, hash-table, string, sorting|medium/049_group-anagrams.c
 051|N-Queens|N 皇后|Hard|array, backtracking|hard/051_n-queens.c
 053|Maximum Subarray|最大子陣列和|Medium|array, divide-and-conquer, dynamic-programming|medium/053_maximum-subarray.c
 056|Merge Intervals|合併區間|Medium|array, sorting|medium/056_merge-intervals.c
+068|Text Justification|文字左右對齊|Hard|array, string, simulation|hard/068_text-justification.c
 070|Climbing Stairs|爬樓梯|Easy|math, dynamic-programming, memoization|easy/070_climbing-stairs.c
 076|Minimum Window Substring|最小覆蓋子串|Hard|hash-table, string, sliding-window|hard/076_minimum-window-substring.c
+079|Word Search|單字搜尋|Medium|array, string, backtracking, depthfirst-search, matrix|medium/079_word-search.c
 084|Largest Rectangle in Histogram|柱狀圖中最大的矩形|Hard|array, stack, monotonic-stack|hard/084_largest-rectangle-in-histogram.c
+085|Maximal Rectangle|最大矩形|Hard|array, dynamic-programming, stack, matrix, monotonic-stack|hard/085_maximal-rectangle.c
+095|Unique Binary Search Trees II|不同的二元搜尋樹 II|Medium|dynamic-programming, backtracking, tree, binary-search-tree, binary-tree|medium/095_unique-binary-search-trees-ii.c
+099|Recover Binary Search Tree|復原二元搜尋樹|Medium|tree, depthfirst-search, binary-search-tree, binary-tree|medium/099_recover-binary-search-tree.c
 102|Binary Tree Level Order Traversal|二叉樹的層序遍歷|Medium|tree, breadthfirst-search, binary-tree|medium/102_binary-tree-level-order-traversal.c
+103|Binary Tree Zigzag Level Order Traversal|二元樹之字形層序遍歷|Medium|tree, breadthfirst-search, binary-tree|medium/103_binary-tree-zigzag-level-order-traversal.c
 104|Maximum Depth of Binary Tree|二叉樹的最大深度|Easy|tree, depthfirst-search, breadthfirst-search, binary-tree|easy/104_maximum-depth-of-binary-tree.c
+105|Construct Binary Tree from Preorder and Inorder Traversal|從前序與中序走訪序列建立二元樹|Medium|array, hash-table, divide-and-conquer, tree, binary-tree|medium/105_construct-binary-tree-from-preorder-and-inorder-traversal.c
+106|Construct Binary Tree from Inorder and Postorder Traversal|從中序與後序走訪序列建立二元樹|Medium|array, hash-table, divide-and-conquer, tree, binary-tree|medium/106_construct-binary-tree-from-inorder-and-postorder-traversal.c
+107|Binary Tree Level Order Traversal II|二元樹的由下而上層序走訪|Medium|tree, breadthfirst-search, binary-tree|medium/107_binary-tree-level-order-traversal-ii.c
+108|Convert Sorted Array to Binary Search Tree|有序陣列轉平衡搜尋樹|Easy|array, divide-and-conquer, tree, binary-search-tree, binary-tree|easy/108_convert-sorted-array-to-binary-search-tree.c
+109|Convert Sorted List to Binary Search Tree|將排序連結串列轉換成二元搜尋樹|Medium|linked-list, divide-and-conquer, tree, binary-search-tree, binary-tree|medium/109_convert-sorted-list-to-binary-search-tree.c
+114|Flatten Binary Tree to Linked List|將二元樹展平成鏈結串列|Medium|linked-list, stack, tree, depthfirst-search, binary-tree|medium/114_flatten-binary-tree-to-linked-list.c
+116|Populating Next Right Pointers in Each Node|填充每個節點的下一個右側節點指標|Medium|linked-list, tree, depthfirst-search, breadthfirst-search, binary-tree|medium/116_populating-next-right-pointers-in-each-node.c
+117|Populating Next Right Pointers in Each Node II|填充每個節點的下一個右側節點指標 II|Medium|linked-list, tree, depthfirst-search, breadthfirst-search, binary-tree|medium/117_populating-next-right-pointers-in-each-node-ii.c
 121|Best Time to Buy and Sell Stock|買賣股票的最佳時機|Easy|array, dynamic-programming|easy/121_best-time-to-buy-and-sell-stock.c
+126|Word Ladder II|單字接龍 II|Hard|hash-table, string, backtracking, breadthfirst-search|medium/126_word-ladder-ii.c
+130|Surrounded Regions|被圍繞的區域|Medium|array, depthfirst-search, breadthfirst-search, union-find, matrix|medium/130_surrounded-regions.c
+131|Palindrome Partitioning|回文分割|Medium|string, dynamic-programming, backtracking|medium/131_palindrome-partitioning.c
+133|Clone Graph|克隆圖|Medium|hash-table, depthfirst-search, breadthfirst-search, graph|medium/133_clone-graph.c
 136|Single Number|只出現一次的數字|Easy|array, bit-manipulation|easy/136_single-number.c
+138|Copy List with Random Pointer|複製帶有隨機指標的鏈結串列|Medium|hash-table, linked-list|medium/138_copy-list-with-random-pointer.c
+141|Linked List Cycle|環形鏈結串列|Easy|hash-table, linked-list, two-pointers|easy/141_linked-list-cycle.c
+142|Linked List Cycle II|找出鏈結串列環的起點|Medium|hash-table, linked-list, two-pointers|medium/142_linked-list-cycle-ii.c
+143|Reorder List|重新排列鏈結串列|Medium|linked-list, two-pointers, stack, recursion|medium/143_reorder-list.c
 146|LRU Cache|LRU 緩存|Medium|hash-table, linked-list, design, doublylinked-list|medium/146_lru-cache.c
+155|Min Stack|最小堆疊|Medium|stack, design|medium/155_min-stack.c
+160|Intersection of Two Linked Lists|相交鏈結串列|Easy|hash-table, linked-list, two-pointers|easy/160_intersection-of-two-linked-lists.c
 169|Majority Element|多數元素|Easy|array, hash-table, divide-and-conquer, sorting, counting|easy/169_majority-element.c
+173|Binary Search Tree Iterator|二元搜尋樹迭代器|Medium|stack, tree, design, binary-search-tree, binary-tree, iterator|medium/173_binary-search-tree-iterator.c
+199|Binary Tree Right Side View|二元樹的右側視圖|Medium|tree, depthfirst-search, breadthfirst-search, binary-tree|medium/199_binary-tree-right-side-view.c
 200|Number of Islands|島嶼數量|Medium|array, depthfirst-search, breadthfirst-search, union-find, matrix|medium/200_number-of-islands.c
+208|Implement Trie (Prefix Tree)|實作 Trie（前綴樹）|Medium|hash-table, string, design, trie|medium/208_implement-trie-prefix-tree.c
+211|Design Add and Search Words Data Structure|設計加入與搜尋單字的資料結構|Medium|string, depthfirst-search, design, trie|medium/211_design-add-and-search-words-data-structure.c
+212|Word Search II|單字搜尋 II|Hard|array, string, backtracking, trie, matrix|medium/212_word-search-ii.c
+218|The Skyline Problem|天際線問題|Hard|array, divide-and-conquer, binary-indexed-tree, segment-tree, line-sweep, heap-priority-queue, ordered-set|hard/0218_the-skyline-problem.c
+221|Maximal Square|最大正方形|Medium|array, dynamic-programming, matrix|medium/221_maximal-square.c
+225|Implement Stack using Queues|用佇列實作堆疊|Easy|stack, design, queue|easy/225_implement-stack-using-queues.c
+226|Invert Binary Tree|翻轉二元樹|Easy|tree, depthfirst-search, breadthfirst-search, binary-tree|easy/226_invert-binary-tree.c
+232|Implement Queue using Stacks|用堆疊實作佇列|Easy|stack, design, queue|easy/232_implement-queue-using-stacks.c
+235|Lowest Common Ancestor of a Binary Search Tree|二元搜尋樹的最近共同祖先|Medium|tree, depthfirst-search, binary-search-tree, binary-tree|medium/235_lowest-common-ancestor-of-a-binary-search-tree.c
+236|Lowest Common Ancestor of a Binary Tree|二元樹的最近共同祖先|Medium|tree, depthfirst-search, binary-tree|medium/0236_lowest-common-ancestor-of-a-binary-tree.c
+237|Delete Node in a Linked List|刪除鏈結串列中的指定節點|Medium|linked-list|medium/0237_delete-node-in-a-linked-list.c
 239|Sliding Window Maximum|滑動視窗最大值|Hard|array, queue, sliding-window, heap-priority-queue, monotonic-queue|hard/239_sliding-window-maximum.c
+278|First Bad Version|第一個錯誤的版本|Easy|binary-search, interactive|easy/0278_first-bad-version.c
+295|Find Median from Data Stream|從資料串流中找中位數|Hard|two-pointers, design, sorting, heap-priority-queue, data-stream|medium/295_find-median-from-data-stream.c
+297|Serialize and Deserialize Binary Tree|二元樹序列化與反序列化|Hard|string, tree, depthfirst-search, breadthfirst-search, design, binary-tree|medium/297_serialize-and-deserialize-binary-tree.c
+303|Range Sum Query - Immutable|區域和查詢－不可變|Easy|array, design, prefix-sum|easy/0303_range-sum-query-immutable.c
+304|Range Sum Query 2D - Immutable|二維區域和查詢（不可修改）|Medium|array, design, matrix, prefix-sum|medium/0304_range-sum-query-2d-immutable.c
+307|Range Sum Query - Mutable|區域和查詢（可修改）|Medium|array, design, binary-indexed-tree, segment-tree|medium/0307_range-sum-query-mutable.c
 322|Coin Change|硬幣找零|Medium|array, dynamic-programming, breadthfirst-search|medium/322_coin-change.c
+344|Reverse String|反轉字串|Easy|two-pointers, string|easy/0344_reverse-string.c
+355|Design Twitter|設計推特|Medium|hash-table, linked-list, design, heap-priority-queue|medium/355_design-twitter.c
+365|Water and Jug Problem|水壺問題|Medium|math, depthfirst-search, breadthfirst-search|medium/0365_water-and-jug-problem.c
+374|Guess Number Higher or Lower|猜數字大小|Easy|binary-search, interactive|easy/0374_guess-number-higher-or-lower.c
+380|Insert Delete GetRandom O(1)|常數時間插入、刪除與隨機取值|Medium|array, hash-table, math, design, randomized|medium/380_insert-delete-getrandom-o1.c
+382|Linked List Random Node|隨機選取鏈結串列節點|Medium|linked-list, math, reservoir-sampling, randomized|medium/0382_linked-list-random-node.c
+384|Shuffle an Array|打亂陣列|Medium|array, math, design, randomized|medium/384_shuffle-an-array.c
+386|Lexicographical Numbers|字典序排列數字|Medium|depthfirst-search, trie|medium/0386_lexicographical-numbers.c
+388|Longest Absolute File Path|最長絕對檔案路徑|Medium|string, stack, depthfirst-search|medium/0388_longest-absolute-file-path.c
+390|Elimination Game|消除遊戲|Medium|math, recursion|medium/390_elimination-game.c
+395|Longest Substring with At Least K Repeating Characters|至少重複 k 次的最長子字串|Medium|hash-table, string, divide-and-conquer, sliding-window|medium/0395_longest-substring-with-at-least-k-repeating-characters.c
+396|Rotate Function|旋轉函式|Medium|array, math, dynamic-programming|medium/0396_rotate-function.c
+399|Evaluate Division|除法求值|Medium|array, string, depthfirst-search, breadthfirst-search, union-find, graph, shortest-path|medium/399_evaluate-division.c
+419|Battleships in a Board|棋盤上的戰艦|Medium|array, depthfirst-search, matrix|medium/419_battleships-in-a-board.c
+420|Strong Password Checker|強密碼檢查器|Hard|string, greedy, heap-priority-queue|hard/0420_strong-password-checker.c
+427|Construct Quad Tree|建立四叉樹|Medium|array, divide-and-conquer, tree, matrix|medium/0427_construct-quad-tree.c
+429|N-ary Tree Level Order Traversal|N 叉樹的層序遍歷|Medium|tree, breadthfirst-search|medium/0429_n-ary-tree-level-order-traversal.c
+430|Flatten a Multilevel Doubly Linked List|扁平化多級雙向鏈結串列|Medium|linked-list, depthfirst-search, doublylinked-list|medium/0430_flatten-a-multilevel-doubly-linked-list.c
+432|All O`one Data Structure|全 O(1) 資料結構|Hard|hash-table, linked-list, design, doublylinked-list|medium/432_all-oone-data-structure.c
+440|K-th Smallest in Lexicographical Order|字典序的第 K 小數字|Hard|trie|hard/0440_k-th-smallest-in-lexicographical-order.c
+443|String Compression|字串壓縮|Medium|two-pointers, string|medium/0443_string-compression.c
+449|Serialize and Deserialize BST|序列化與反序列化二元搜尋樹|Medium|string, tree, depthfirst-search, breadthfirst-search, design, binary-search-tree, binary-tree|medium/449_serialize-and-deserialize-bst.c
+450|Delete Node in a BST|刪除二元搜尋樹中的節點|Medium|tree, binary-search-tree, binary-tree|medium/0450_delete-node-in-a-bst.c
+451|Sort Characters By Frequency|依字元出現頻率排序|Medium|hash-table, string, sorting, heap-priority-queue, bucket-sort, counting|medium/0451_sort-characters-by-frequency.c
+460|LFU Cache|最不常使用快取|Hard|hash-table, linked-list, design, doublylinked-list|medium/460_lfu-cache.c
+462|Minimum Moves to Equal Array Elements II|讓陣列元素相等的最少移動次數 II|Medium|array, math, sorting|medium/462_minimum-moves-to-equal-array-elements-ii.c
+464|Can I Win|我能贏嗎|Medium|math, dynamic-programming, bit-manipulation, memoization, game-theory, bitmask|medium/464_can-i-win.c
+466|Count The Repetitions|統計重複次數|Hard|string, dynamic-programming|medium/466_count-the-repetitions.c
+470|Implement Rand10() Using Rand7()|用 Rand7() 實作 Rand10()|Medium|math, rejection-sampling, randomized, probability-and-statistics|medium/0470_implement-rand10-using-rand7.c
+473|Matchsticks to Square|火柴拼正方形|Medium|array, dynamic-programming, backtracking, bit-manipulation, bitmask|medium/0473_matchsticks-to-square.c
+478|Generate Random Point in a Circle|在圓內隨機生成點|Medium|math, geometry, rejection-sampling, randomized|medium/0478_generate-random-point-in-a-circle.c
+479|Largest Palindrome Product|最大回文乘積|Hard|math, enumeration|medium/479_largest-palindrome-product.c
+480|Sliding Window Median|滑動視窗中位數|Hard|array, hash-table, sliding-window, heap-priority-queue|medium/480_sliding-window-median.c
+481|Magical String|神奇字串|Medium|two-pointers, string|medium/0481_magical-string.c
+483|Smallest Good Base|最小好進制|Hard|math, binary-search|hard/0483_smallest-good-base.c
+486|Predict the Winner|預測勝者|Medium|array, math, dynamic-programming, recursion, game-theory|medium/0486_predict-the-winner.c
+488|Zuma Game|祖瑪遊戲|Hard|string, dynamic-programming, stack, breadthfirst-search, memoization|medium/488_zuma-game.c
+497|Random Point in Non-overlapping Rectangles|在不重疊矩形中隨機選點|Medium|array, math, binary-search, reservoir-sampling, prefix-sum, ordered-set, randomized|medium/0497_random-point-in-non-overlapping-rectangles.c
+514|Freedom Trail|自由之路|Hard|string, dynamic-programming, depthfirst-search, breadthfirst-search|medium/514_freedom-trail.c
+517|Super Washing Machines|超級洗衣機|Hard|array, greedy|medium/517_super-washing-machines.c
+522|Longest Uncommon Subsequence II|最長特殊序列 II|Medium|array, hash-table, two-pointers, string, sorting|medium/0522_longest-uncommon-subsequence-ii.c
+524|Longest Word in Dictionary through Deleting|刪除字元後字典中最長的單字|Medium|array, two-pointers, string, sorting|medium/0524_longest-word-in-dictionary-through-deleting.c
+529|Minesweeper|掃雷遊戲|Medium|array, depthfirst-search, breadthfirst-search, matrix|medium/0529_minesweeper.c
+535|Encode and Decode TinyURL|TinyURL 的編碼與解碼|Medium|hash-table, string, design, hash-function|medium/0535_encode-and-decode-tinyurl.c
+537|Complex Number Multiplication|複數相乘|Medium|math, string, simulation|medium/0537_complex-number-multiplication.c
+538|Convert BST to Greater Tree|把二元搜尋樹轉換成累加樹|Medium|tree, depthfirst-search, binary-search-tree, binary-tree|medium/0538_convert-bst-to-greater-tree.c
+540|Single Element in a Sorted Array|有序陣列中的單一元素|Medium|array, binary-search|medium/0540_single-element-in-a-sorted-array.c
+546|Remove Boxes|移除盒子|Hard|array, dynamic-programming, memoization|medium/546_remove-boxes.c
+552|Student Attendance Record II|學生出勤紀錄 II|Hard|dynamic-programming|medium/552_student-attendance-record-ii.c
+553|Optimal Division|最佳除法|Medium|array, math, dynamic-programming|medium/0553_optimal-division.c
+554|Brick Wall|磚牆|Medium|array, hash-table|medium/0554_brick-wall.c
+558|Logical OR of Two Binary Grids Represented as Quad-Trees|以四叉樹表示的兩個二元網格邏輯或|Medium|divide-and-conquer, tree|medium/0558_logical-or-of-two-binary-grids-represented-as-quad-trees.c
+559|Maximum Depth of N-ary Tree|N 叉樹的最大深度|Easy|tree, depthfirst-search, breadthfirst-search|easy/0559_maximum-depth-of-n-ary-tree.c
+564|Find the Closest Palindrome|尋找最近的回文數|Hard|math, string|medium/564_find-the-closest-palindrome.c
+587|Erect the Fence|安裝圍欄|Hard|array, math, geometry|medium/587_erect-the-fence.c
+589|N-ary Tree Preorder Traversal|N 叉樹的前序走訪|Easy|stack, tree, depthfirst-search|easy/0589_n-ary-tree-preorder-traversal.c
+590|N-ary Tree Postorder Traversal|N 叉樹的後序遍歷|Easy|stack, tree, depthfirst-search|easy/590_n-ary-tree-postorder-traversal.c
+591|Tag Validator|標籤驗證器|Hard|string, stack|medium/591_tag-validator.c
+592|Fraction Addition and Subtraction|分數加減運算|Medium|math, string, simulation|medium/0592_fraction-addition-and-subtraction.c
+593|Valid Square|判斷正方形|Medium|math, geometry|medium/0593_valid-square.c
+600|Non-negative Integers without Consecutive Ones|n=5，回傳 5。0、1、2、4、5 的二進位表示符合條件，只有 3 (11) 不符合。|Hard|dynamic-programming|medium/600_non-negative-integers-without-consecutive-ones.c
+609|Find Duplicate File in System|尋找重複檔案|Medium|array, hash-table, string|medium/0609_find-duplicate-file-in-system.c
+617|Merge Two Binary Trees|合併二元樹|Easy|tree, depthfirst-search, breadthfirst-search, binary-tree|easy/617_merge-two-binary-trees.c
+621|Task Scheduler|任務排程器|Medium|array, hash-table, greedy, sorting, heap-priority-queue, counting|medium/0621_task-scheduler.c
+622|Design Circular Queue|設計循環佇列|Medium|array, linked-list, design, queue|medium/0622_design-circular-queue.c
+623|Add One Row to Tree|在二元樹中增加一列|Medium|tree, depthfirst-search, breadthfirst-search, binary-tree|medium/0623_add-one-row-to-tree.c
+624|Maximum Distance in Arrays|多個陣列之間的最大距離|Medium|array, greedy|medium/0624_maximum-distance-in-arrays.c
+640|Solve the Equation|求解方程|Medium|math, string, simulation|medium/0640_solve-the-equation.c
+641|Design Circular Deque|設計循環雙端佇列|Medium|array, linked-list, design, queue|medium/0641_design-circular-deque.c
+650|2 Keys Keyboard|兩鍵鍵盤|Medium|math, dynamic-programming|medium/0650_2-keys-keyboard.c
+652|Find Duplicate Subtrees|尋找重複子樹|Medium|hash-table, tree, depthfirst-search, binary-tree|medium/0652_find-duplicate-subtrees.c
+654|Maximum Binary Tree|最大二元樹|Medium|array, divide-and-conquer, stack, tree, monotonic-stack, binary-tree|medium/0654_maximum-binary-tree.c
+655|Print Binary Tree|輸出二元樹|Medium|tree, depthfirst-search, breadthfirst-search, binary-tree|medium/0655_print-binary-tree.c
+664|Strange Printer|奇怪的印表機|Hard|string, dynamic-programming|medium/664_strange-printer.c
+669|Trim a Binary Search Tree|修剪二元搜尋樹|Medium|tree, depthfirst-search, binary-search-tree, binary-tree|medium/0669_trim-a-binary-search-tree.c
+670|Maximum Swap|最大交換|Medium|math, greedy|medium/0670_maximum-swap.c
+672|Bulb Switcher II|燈泡開關 II|Medium|math, bit-manipulation, depthfirst-search, breadthfirst-search|medium/0672_bulb-switcher-ii.c
+675|Cut Off Trees for Golf Event|高爾夫活動砍樹|Hard|array, breadthfirst-search, heap-priority-queue, matrix|medium/675_cut-off-trees-for-golf-event.c
+676|Implement Magic Dictionary|實作魔法字典|Medium|hash-table, string, depthfirst-search, design, trie|medium/0676_implement-magic-dictionary.c
+677|Map Sum Pairs|字串映射求和|Medium|hash-table, string, design, trie|medium/0677_map-sum-pairs.c
+682|Baseball Game|棒球比賽|Easy|array, stack, simulation|easy/682_baseball-game.c
+686|Repeated String Match|重複疊加字串匹配|Medium|string, string-matching|medium/0686_repeated-string-match.c
+688|Knight Probability in Chessboard|騎士在棋盤上的機率|Medium|dynamic-programming|medium/688_knight-probability-in-chessboard.c
+691|Stickers to Spell Word|貼紙拼字|Hard|array, hash-table, string, dynamic-programming, backtracking, bit-manipulation, memoization, bitmask|medium/691_stickers-to-spell-word.c
+699|Falling Squares|落下的方塊|Hard|array, segment-tree, ordered-set|medium/699_falling-squares.c
+700|Search in a Binary Search Tree|搜尋二元搜尋樹|Easy|tree, binary-search-tree, binary-tree|easy/0700_search-in-a-binary-search-tree.c
+701|Insert into a Binary Search Tree|將數值插入二元搜尋樹|Medium|tree, binary-search-tree, binary-tree|medium/0701_insert-into-a-binary-search-tree.c
+705|Design HashSet|設計雜湊集合|Easy|array, hash-table, linked-list, design, hash-function|easy/0705_design-hashset.c
+706|Design HashMap|設計雜湊映射|Easy|array, hash-table, linked-list, design, hash-function|easy/0706_design-hashmap.c
+710|Random Pick with Blacklist|黑名單中的隨機數|Hard|array, hash-table, math, binary-search, sorting, randomized|medium/710_random-pick-with-blacklist.c
+715|Range Module|區間模組|Hard|design, segment-tree, ordered-set|medium/715_range-module.c
+722|Remove Comments|移除註解|Medium|array, string|medium/0722_remove-comments.c
+725|Split Linked List in Parts|將鏈結串列拆成多段|Medium|linked-list|medium/0725_split-linked-list-in-parts.c
+726|Number of Atoms|原子數量|Hard|hash-table, string, stack, sorting|medium/726_number-of-atoms.c
+729|My Calendar I|我的日曆 I|Medium|array, binary-search, design, segment-tree, ordered-set|medium/0729_my-calendar-i.c
+730|Count Different Palindromic Subsequences|s="bccb"，回傳 6：b、c、bb、cc、bcb、bccb。|Hard|string, dynamic-programming|medium/730_count-different-palindromic-subsequences.c
+731|My Calendar II|我的日曆 II|Medium|array, binary-search, design, segment-tree, prefix-sum, ordered-set|medium/0731_my-calendar-ii.c
+732|My Calendar III|我的日曆 III|Hard|binary-search, design, segment-tree, prefix-sum, ordered-set|medium/732_my-calendar-iii.c
+744|Find Smallest Letter Greater Than Target|尋找比目標大的最小字母|Easy|array, binary-search|easy/0744_find-smallest-letter-greater-than-target.c
+819|Most Common Word|最常見的單字|Easy|array, hash-table, string, counting|easy/0819_most-common-word.c
+884|Uncommon Words from Two Sentences|兩句話中的不常見單字|Easy|hash-table, string, counting|easy/0884_uncommon-words-from-two-sentences.c
+897|Increasing Order Search Tree|遞增順序搜尋樹|Easy|stack, tree, depthfirst-search, binary-search-tree, binary-tree|easy/0897_increasing-order-search-tree.c
