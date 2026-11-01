@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import json
 import re
 from pathlib import Path
@@ -140,17 +141,36 @@ def leetcode_rows() -> list[str]:
 
 
 def uva_rows() -> list[str]:
+    base = ROOT / "UVa-c"
+    index_path = base / "INDEX.tsv"
+    with index_path.open(encoding="utf-8-sig", newline="") as stream:
+        problems = list(csv.DictReader(stream, delimiter="\t"))
+
+    # The detailed UVa index includes alternate implementations; the repository-wide
+    # catalog keeps one row per problem and prefers the established non-PR solution.
+    selected: dict[int, tuple[tuple[int, str], dict[str, str], Path]] = {}
+    for problem in problems:
+        number = int(problem["題號"])
+        path = base / problem["原始碼"]
+        if not path.is_file():
+            continue
+        is_pr_variant = bool(re.search(r"-pr(?:-\d+)?$", path.stem, re.IGNORECASE))
+        priority = (int(is_pr_variant), path.relative_to(ROOT).as_posix())
+        if number not in selected or priority < selected[number][0]:
+            selected[number] = (priority, problem, path)
+
     rows = []
-    for path in sorted((ROOT / "UVa-c").rglob("*.c"), key=lambda p: int(p.stem.split("_")[0])):
-        source = read(path)
-        title = re.search(r"UVa\s+\d+\s*[-–]\s*([^\n*]+)", source)
-        number = path.stem.split("_")[0]
-        en = title.group(1).strip() if title else path.stem.split("_", 1)[-1].replace("-", " ")
-        en_desc = c_section(source, "[EN] Problem")
-        zh_desc = c_section(source, "[中文] 題目說明")
-        zh = header(source, "Title-CN") or en
-        tags = header(source, "Tags")
-        rows.append(row(f"UVa {number}. {en}", en_desc, zh, zh_desc, tags, path))
+    for number, (_, problem, path) in sorted(selected.items()):
+        rows.append(
+            row(
+                f"UVa {number}. {problem['英文題名']}",
+                problem["英文描述"],
+                problem["中文題名"],
+                problem["中文詳細描述"],
+                problem["Tags"],
+                path,
+            )
+        )
     return rows
 
 

@@ -1,6 +1,6 @@
 # UVa Online Judge C 題庫
 
-收錄 217 份 C 題目檔，分布於 39 個 `volume` 資料夾。每題的卷別 `README.md` 都有英文題名與描述、繁體中文題名與詳細描述、涵蓋的演算法，以及原始碼連結。
+收錄 1116 份 C 解答，涵蓋 1024 個不同 UVa 題號，分布於 48 個 `volume` 資料夾。每題的卷別 `README.md` 都有英文題名與描述、繁體中文題名與詳細描述、難度、涵蓋的演算法，以及原始碼連結。
 
 ## 如何找題目
 
@@ -13,51 +13,61 @@
 
 ## 卷別目錄
 
-| 分卷 | 題數 | 收錄題號 |
-| --- | ---: | --- |
-| [volume001](volume001/README.md) | 13 | 100–160 |
-| [volume002](volume002/README.md) | 5 | 256–299 |
-| [volume003](volume003/README.md) | 5 | 350–389 |
-| [volume004](volume004/README.md) | 12 | 401–499 |
-| [volume005](volume005/README.md) | 11 | 530–591 |
-| [volume006](volume006/README.md) | 6 | 621–694 |
-| [volume008](volume008/README.md) | 1 | 847 |
-| [volume013](volume013/README.md) | 1 | 1368 |
-| [volume015](volume015/README.md) | 1 | 1585 |
-| [volume100](volume100/README.md) | 49 | 10000–10099 |
-| [volume101](volume101/README.md) | 23 | 10101–10193 |
-| [volume102](volume102/README.md) | 14 | 10200–10282 |
-| [volume103](volume103/README.md) | 8 | 10300–10370 |
-| [volume104](volume104/README.md) | 5 | 10409–10499 |
-| [volume105](volume105/README.md) | 2 | 10550–10591 |
-| [volume106](volume106/README.md) | 3 | 10608–10696 |
-| [volume107](volume107/README.md) | 2 | 10783–10784 |
-| [volume108](volume108/README.md) | 4 | 10810–10878 |
-| [volume109](volume109/README.md) | 7 | 10908–10954 |
-| [volume110](volume110/README.md) | 3 | 11005–11063 |
-| [volume111](volume111/README.md) | 3 | 11150–11185 |
-| [volume113](volume113/README.md) | 2 | 11332–11349 |
-| [volume114](volume114/README.md) | 5 | 11417–11498 |
-| [volume115](volume115/README.md) | 2 | 11547–11584 |
-| [volume117](volume117/README.md) | 4 | 11727–11799 |
-| [volume118](volume118/README.md) | 1 | 11854 |
-| [volume119](volume119/README.md) | 1 | 11984 |
-| [volume120](volume120/README.md) | 1 | 12015 |
-| [volume121](volume121/README.md) | 1 | 12149 |
-| [volume122](volume122/README.md) | 3 | 12250–12289 |
-| [volume124](volume124/README.md) | 2 | 12403–12468 |
-| [volume125](volume125/README.md) | 3 | 12577–12592 |
-| [volume126](volume126/README.md) | 3 | 12602–12696 |
-| [volume127](volume127/README.md) | 2 | 12700–12709 |
-| [volume128](volume128/README.md) | 1 | 12820 |
-| [volume129](volume129/README.md) | 2 | 12908–12918 |
-| [volume130](volume130/README.md) | 2 | 13012–13034 |
-| [volume131](volume131/README.md) | 2 | 13178–13185 |
-| [volume132](volume132/README.md) | 2 | 13216–13275 |
+| 分卷 | UVa 題號數 | C 解答數 | 收錄題號 |
+| --- | ---: | ---: | --- |
+| [volume001](volume001/README.md) | 96 | 102 | 100–196 |
+| [volume002](volume002/README.md) | 30 | 30 | 200–299 |
+| [volume003](volume003/README.md) | 38 | 38 | 300–394 |
+| [volume004](volume004/README.md) | 58 | 65 | 400–499 |
+| [volume005](volume005/README.md) | 40 | 41 | 501–599 |
+| [volume006](volume006/README.md) | 29 | 35 | 608–699 |
+| [volume007](volume007/README.md) | 27 | 27 | 700–796 |
+| [volume008](volume008/README.md) | 20 | 20 | 815–895 |
+| [volume009](volume009/README.md) | 16 | 16 | 900–993 |
+| [volume010](volume010/README.md) | 4 | 4 | 1001–1062 |
+| [volume011](volume011/README.md) | 9 | 9 | 1103–1197 |
+| [volume012](volume012/README.md) | 7 | 7 | 1203–1260 |
+| [volume013](volume013/README.md) | 4 | 4 | 1316–1395 |
+| [volume015](volume015/README.md) | 7 | 7 | 1583–1594 |
+| [volume016](volume016/README.md) | 1 | 1 | 1644 |
+| [volume100](volume100/README.md) | 62 | 73 | 10000–10099 |
+| [volume101](volume101/README.md) | 54 | 60 | 10100–10199 |
+| [volume102](volume102/README.md) | 40 | 44 | 10200–10299 |
+| [volume103](volume103/README.md) | 41 | 45 | 10300–10397 |
+| [volume104](volume104/README.md) | 31 | 35 | 10400–10499 |
+| [volume105](volume105/README.md) | 22 | 24 | 10502–10591 |
+| [volume106](volume106/README.md) | 29 | 30 | 10600–10699 |
+| [volume107](volume107/README.md) | 19 | 21 | 10700–10791 |
+| [volume108](volume108/README.md) | 23 | 26 | 10800–10895 |
+| [volume109](volume109/README.md) | 34 | 39 | 10901–10994 |
+| [volume110](volume110/README.md) | 23 | 23 | 11000–11094 |
+| [volume111](volume111/README.md) | 15 | 18 | 11100–11195 |
+| [volume112](volume112/README.md) | 17 | 17 | 11219–11292 |
+| [volume113](volume113/README.md) | 20 | 21 | 11300–11396 |
+| [volume114](volume114/README.md) | 27 | 30 | 11401–11498 |
+| [volume115](volume115/README.md) | 25 | 26 | 11503–11597 |
+| [volume116](volume116/README.md) | 18 | 18 | 11608–11690 |
+| [volume117](volume117/README.md) | 20 | 22 | 11703–11799 |
+| [volume118](volume118/README.md) | 16 | 17 | 11804–11889 |
+| [volume119](volume119/README.md) | 21 | 21 | 11900–11997 |
+| [volume120](volume120/README.md) | 7 | 7 | 12004–12096 |
+| [volume121](volume121/README.md) | 9 | 9 | 12100–12195 |
+| [volume122](volume122/README.md) | 7 | 9 | 12207–12289 |
+| [volume123](volume123/README.md) | 4 | 4 | 12342–12372 |
+| [volume124](volume124/README.md) | 8 | 10 | 12403–12478 |
+| [volume125](volume125/README.md) | 12 | 15 | 12502–12592 |
+| [volume126](volume126/README.md) | 8 | 10 | 12602–12696 |
+| [volume127](volume127/README.md) | 4 | 6 | 12700–12798 |
+| [volume128](volume128/README.md) | 4 | 5 | 12820–12895 |
+| [volume129](volume129/README.md) | 4 | 6 | 12908–12996 |
+| [volume130](volume130/README.md) | 4 | 6 | 13012–13059 |
+| [volume131](volume131/README.md) | 6 | 7 | 13109–13190 |
+| [volume132](volume132/README.md) | 4 | 6 | 13216–13279 |
 
 ## 索引說明
 
 - `volume100` 收錄 UVa 10069 的兩種 C 解法：二維 DP 與一維滾動 DP，可直接比較空間用量。
+- [UVa-c-2 整併紀錄](PR-IMPORT-NOTES.md)說明新增題目、保留的替代解法與重複檔案處理方式。
 - 索引建置會檢查每個 C 檔都有對應題目、英中描述、演算法範圍與有效連結。
 
 ## 編譯範例
@@ -71,4 +81,4 @@ gcc -std=c11 -O2 UVa-c/volume001/100_the-3n-plus-1-problem.c -o uva100.exe
 
 ## 更新索引
 
-新增 C 題目檔後，先在對應卷別 README 補上雙語題意和演算法，再執行 `python UVa-c/build_index.py`。腳本會檢查每個 `.c` 是否都有對應條目，並更新本頁、`INDEX.md`、`INDEX.tsv`、`TOPICS.md`。
+新增 C 題目檔後，先在程式檔頭填寫 `Difficulty` 和 `Tags`，再於對應卷別 README 補上雙語題意和演算法，最後執行 `python UVa-c/build_index.py`。腳本會檢查每個 `.c` 是否都有對應條目，並更新本頁、`INDEX.md`、`INDEX.tsv`、`TOPICS.md`。

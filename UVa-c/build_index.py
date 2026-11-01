@@ -26,6 +26,7 @@ class Problem:
     number: int
     english_title: str
     chinese_title: str
+    difficulty: str
     english_description: str
     chinese_description: str
     algorithms: str
@@ -52,7 +53,19 @@ def source_tags(path: Path) -> tuple[str, ...]:
     match = re.search(r"^\s*\*\s*Tags:\s*(.+?)\s*$", header, re.MULTILINE)
     if not match:
         raise ValueError(f"missing Tags in {path}")
-    return tuple(tag.strip() for tag in match.group(1).split(",") if tag.strip())
+    tags = (
+        re.sub(r"[^a-z0-9]+", "-", tag.strip().lower()).strip("-")
+        for tag in match.group(1).split(",")
+    )
+    return tuple(dict.fromkeys(tag for tag in tags if tag))
+
+
+def source_difficulty(path: Path) -> str:
+    header = path.read_text(encoding="utf-8-sig").split("*/", 1)[0]
+    match = re.search(r"^\s*\*\s*Difficulty:\s*(.+?)\s*$", header, re.MULTILINE)
+    if not match:
+        raise ValueError(f"missing Difficulty in {path}")
+    return match.group(1).strip()
 
 
 def source_status(path: Path) -> str:
@@ -107,6 +120,7 @@ def read_problems() -> list[Problem]:
                     number=int(heading.group(1)),
                     english_title=heading.group(2).strip(),
                     chinese_title=heading.group(3).strip(),
+                    difficulty=source_difficulty(source_path),
                     english_description=english_description,
                     chinese_description=chinese_description,
                     algorithms=algorithm_match.group(1).strip(),
@@ -125,13 +139,14 @@ def read_problems() -> list[Problem]:
 def write_indexes(problems: list[Problem]) -> None:
     with (ROOT / "INDEX.tsv").open("w", encoding="utf-8", newline="") as stream:
         writer = csv.writer(stream, delimiter="\t", lineterminator="\n")
-        writer.writerow(("題號", "英文題名", "中文題名", "演算法範圍", "Tags", "英文描述", "中文詳細描述", "檔案狀態", "原始碼", "詳細說明"))
+        writer.writerow(("題號", "英文題名", "中文題名", "難度", "演算法範圍", "Tags", "英文描述", "中文詳細描述", "檔案狀態", "原始碼", "詳細說明"))
         for problem in problems:
             writer.writerow(
                 (
                     problem.number,
                     problem.english_title,
                     problem.chinese_title,
+                    problem.difficulty,
                     problem.algorithms,
                     ", ".join(problem.tags),
                     problem.english_description,
@@ -145,14 +160,14 @@ def write_indexes(problems: list[Problem]) -> None:
     lines = [
         "# UVa 題目索引",
         "",
-        f"共 {len(problems)} 份 C 題目檔，依題號排序。使用編輯器搜尋題號、中英文題名或演算法；點選「詳細題意」可閱讀完整雙語描述。",
+        f"共 {len(problems)} 份 C 解答，涵蓋 {len({problem.number for problem in problems})} 個不同 UVa 題號，依題號排序。使用編輯器搜尋題號、中英文題名、難度或演算法；點選「詳細題意」可閱讀完整雙語描述。",
         "",
-        "| 題號 | English title | 中文題名 | 演算法範圍 | 檔案狀態 | 詳細題意 | C 原始碼 |",
-        "| ---: | --- | --- | --- | --- | --- | --- |",
+        "| 題號 | English title | 中文題名 | 難度 | 演算法範圍 | 檔案狀態 | 詳細題意 | C 原始碼 |",
+        "| ---: | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for problem in problems:
         lines.append(
-            f"| {problem.number} | {problem.english_title} | {problem.chinese_title} | "
+            f"| {problem.number} | {problem.english_title} | {problem.chinese_title} | {problem.difficulty} | "
             f"{problem.algorithms} | {problem.status} | [閱讀]({problem.details}) | [程式碼]({problem.source}) |"
         )
     lines.extend(("", "需要同時搜尋英文與中文題意時，請使用 [INDEX.tsv](INDEX.tsv)。", ""))
@@ -187,7 +202,7 @@ def write_indexes(problems: list[Problem]) -> None:
     readme_lines = [
         "# UVa Online Judge C 題庫",
         "",
-        f"收錄 {len(problems)} 份 C 題目檔，分布於 {len(by_volume)} 個 `volume` 資料夾。每題的卷別 `README.md` 都有英文題名與描述、繁體中文題名與詳細描述、涵蓋的演算法，以及原始碼連結。",
+        f"收錄 {len(problems)} 份 C 解答，涵蓋 {len({problem.number for problem in problems})} 個不同 UVa 題號，分布於 {len(by_volume)} 個 `volume` 資料夾。每題的卷別 `README.md` 都有英文題名與描述、繁體中文題名與詳細描述、難度、涵蓋的演算法，以及原始碼連結。",
         "",
         "## 如何找題目",
         "",
@@ -200,19 +215,20 @@ def write_indexes(problems: list[Problem]) -> None:
         "",
         "## 卷別目錄",
         "",
-        "| 分卷 | 題數 | 收錄題號 |",
-        "| --- | ---: | --- |",
+        "| 分卷 | UVa 題號數 | C 解答數 | 收錄題號 |",
+        "| --- | ---: | ---: | --- |",
     ]
     for volume, items in sorted(by_volume.items()):
         numbers = sorted({item.number for item in items})
         span = str(numbers[0]) if len(numbers) == 1 else f"{numbers[0]}–{numbers[-1]}"
-        readme_lines.append(f"| [{volume}]({volume}/README.md) | {len(items)} | {span} |")
+        readme_lines.append(f"| [{volume}]({volume}/README.md) | {len(numbers)} | {len(items)} | {span} |")
     readme_lines.extend(
         (
             "",
             "## 索引說明",
             "",
             "- `volume100` 收錄 UVa 10069 的兩種 C 解法：二維 DP 與一維滾動 DP，可直接比較空間用量。",
+            "- [UVa-c-2 整併紀錄](PR-IMPORT-NOTES.md)說明新增題目、保留的替代解法與重複檔案處理方式。",
             "- 索引建置會檢查每個 C 檔都有對應題目、英中描述、演算法範圍與有效連結。",
             "",
             "## 編譯範例",
@@ -226,7 +242,7 @@ def write_indexes(problems: list[Problem]) -> None:
             "",
             "## 更新索引",
             "",
-            "新增 C 題目檔後，先在對應卷別 README 補上雙語題意和演算法，再執行 `python UVa-c/build_index.py`。腳本會檢查每個 `.c` 是否都有對應條目，並更新本頁、`INDEX.md`、`INDEX.tsv`、`TOPICS.md`。",
+            "新增 C 題目檔後，先在程式檔頭填寫 `Difficulty` 和 `Tags`，再於對應卷別 README 補上雙語題意和演算法，最後執行 `python UVa-c/build_index.py`。腳本會檢查每個 `.c` 是否都有對應條目，並更新本頁、`INDEX.md`、`INDEX.tsv`、`TOPICS.md`。",
             "",
         )
     )
